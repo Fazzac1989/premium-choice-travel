@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import HeroSlideshow from '@/components/HeroSlideshow';
 import SectionHeading from '@/components/SectionHeading';
 import PackageCard from '@/components/PackageCard';
 import BrandGrid from '@/components/BrandGrid';
@@ -64,14 +65,7 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="relative flex min-h-[92svh] items-center">
-        <Image
-          src="/images/hero.jpg"
-          alt="White sand beach with leaning palm trees over turquoise water"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
+        <HeroSlideshow />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/70" />
         <div className="container-site relative pb-16 pt-28 text-white">
           <p className="eyebrow !text-teal">One trusted travel company · Dubai</p>
