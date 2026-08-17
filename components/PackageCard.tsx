@@ -1,0 +1,40 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Package } from '@/lib/types';
+import { durationLabel, formatPrice } from '@/lib/types';
+
+export default function PackageCard({ pkg, priority = false }: { pkg: Package; priority?: boolean }) {
+  return (
+    <Link href={`/packages/${pkg.slug}`} className="group card flex flex-col transition-shadow hover:shadow-xl hover:shadow-ink/10">
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <Image
+          src={pkg.heroImage}
+          alt={pkg.title}
+          fill
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-ink backdrop-blur">
+          {pkg.category}
+        </div>
+      </div>
+      <div className="flex flex-1 flex-col p-5">
+        <p className="eyebrow">{pkg.destinationName}</p>
+        <h3 className="mt-1.5 font-serif text-xl leading-snug text-ink group-hover:text-teal-deep">
+          {pkg.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-soft">{pkg.tagline}</p>
+        <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
+          <span className="text-xs text-ink-soft">{durationLabel(pkg)}</span>
+          {pkg.priceFrom !== null && (
+            <span className="text-sm text-ink-soft">
+              from <span className="text-lg font-semibold text-ink">{formatPrice(pkg.currency, pkg.priceFrom)}</span>
+              <span className="text-xs"> pp</span>
+            </span>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}

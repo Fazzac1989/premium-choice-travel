@@ -1,0 +1,109 @@
+import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
+import PackageCard from '@/components/PackageCard';
+import { getDestinations, getPublishedPackages } from '@/lib/data';
+import { CATEGORIES } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
+
+export const metadata = { title: 'Holiday packages' };
+
+export default async function PackagesPage({
+  searchParams,
+}: {
+  searchParams: { destination?: string; category?: string };
+}) {
+  const [packages, destinations] = await Promise.all([getPublishedPackages(), getDestinations()]);
+
+  const destination = searchParams.destination ?? '';
+  const category = searchParams.category ?? '';
+
+  const filtered = packages.filter(
+    (p) =>
+      (!destination || p.destinationSlug === destination) &&
+      (!category || p.category === category)
+  );
+
+  const filterHref = (d: string, c: string) => {
+    const q = new URLSearchParams();
+    if (d) q.set('destination', d);
+    if (c) q.set('category', c);
+    const s = q.toString();
+    return s ? `/packages?${s}` : '/packages';
+  };
+
+  return (
+    <>
+      <SiteHeader solid />
+      <main className="pt-[72px]">
+        <section className="border-b border-line bg-sand">
+          <div className="container-site py-14 sm:py-16">
+            <p className="eyebrow">Holiday packages</p>
+            <h1 className="mt-2 max-w-2xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
+              Starting points, not set menus
+            </h1>
+            <p className="mt-4 max-w-xl text-ink-soft">
+              Every itinerary below can be reshaped — different dates, better rooms, an extra
+              island. Prices are per person and refresh with the seasons.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-2">
+              <Link
+                href={filterHref('', category)}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${!destination ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+              >
+                All destinations
+              </Link>
+              {destinations.map((d) => (
+                <Link
+                  key={d.slug}
+                  href={filterHref(d.slug, category)}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${destination === d.slug ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+                >
+                  {d.name}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link
+                href={filterHref(destination, '')}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${!category ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+              >
+                All styles
+              </Link>
+              {CATEGORIES.map((c) => (
+                <Link
+                  key={c}
+                  href={filterHref(destination, c)}
+                  className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${category === c ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+                >
+                  {c}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-14 sm:py-16">
+          <div className="container-site">
+            {filtered.length === 0 ? (
+              <div className="rounded-2xl border border-line p-12 text-center">
+                <p className="font-serif text-2xl text-ink">Nothing matches that combination — yet.</p>
+                <p className="mt-3 text-ink-soft">
+                  We build trips to order every week. Tell us what you have in mind.
+                </p>
+                <Link href="/contact" className="btn-primary mt-6">Request a tailor-made quote</Link>
+              </div>
+            ) : (
+              <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((pkg, i) => (
+                  <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
