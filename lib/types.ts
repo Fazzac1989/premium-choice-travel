@@ -1,3 +1,5 @@
+export type GuideSection = { heading: string; body: string };
+
 export type Destination = {
   id: number;
   slug: string;
@@ -7,6 +9,12 @@ export type Destination = {
   heroImage: string;
   featured: boolean;
   sortOrder: number;
+  /** Introductory paragraphs for the destination guide. */
+  intro: string[];
+  /** Seasonal guidance, e.g. { heading: "November – April", body: "Dry season …" }. */
+  whenToTravel: GuideSection[];
+  /** Culture & know-before-you-go sections with headers. */
+  culture: GuideSection[];
 };
 
 export type ItineraryDay = { label: string; title: string; description: string };

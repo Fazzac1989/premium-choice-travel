@@ -115,54 +115,52 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
         </button>
       </div>
 
-      {/* Mega menu panel */}
+      {/* Mega menu panel — kit navy with white brand lockups */}
       {brandsOpen && (
         <div
           onMouseEnter={enterBrands}
           onMouseLeave={leaveBrands}
-          className="hidden border-t border-line bg-white shadow-2xl shadow-ink/10 lg:block"
+          className="hidden border-t border-white/10 bg-ink shadow-2xl shadow-ink/40 lg:block"
         >
           <div className="container-site grid grid-cols-3 gap-2 py-6">
             {BRANDS.map((b) => {
               const inner = (
                 <>
-                  <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg">
-                    <Image src={b.heroImage} alt="" fill sizes="80px" className="object-cover" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="flex items-center gap-1.5 text-sm font-bold text-ink group-hover:text-teal-deep">
-                      {b.name}
-                      <span className="text-teal transition-transform group-hover:translate-x-0.5">→</span>
-                    </p>
-                    <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-ink-soft">{b.description}</p>
-                  </div>
+                  {b.logoWhite ? (
+                    <Image
+                      src={b.logoWhite}
+                      alt={b.name}
+                      width={280}
+                      height={78}
+                      className="h-12 w-auto max-w-[220px] object-contain object-left"
+                    />
+                  ) : (
+                    <p className="font-serif text-lg text-white">{b.name}</p>
+                  )}
+                  <p className="mt-2 line-clamp-2 text-xs leading-snug text-white/60 group-hover:text-white/80">
+                    {b.description}
+                  </p>
+                  <p className="mt-2 text-xs font-bold text-teal">
+                    {b.cta} <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+                  </p>
                 </>
               );
+              const cls = 'group rounded-xl p-4 transition-colors hover:bg-white/5';
               return b.externalUrl ? (
-                <a
-                  key={b.slug}
-                  href={b.externalUrl}
-                  target="_blank"
-                  rel="noopener"
-                  className="group flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-sand"
-                >
+                <a key={b.slug} href={b.externalUrl} target="_blank" rel="noopener" className={cls}>
                   {inner}
                 </a>
               ) : (
-                <Link
-                  key={b.slug}
-                  href={`/brands/${b.slug}`}
-                  className="group flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-sand"
-                >
+                <Link key={b.slug} href={`/brands/${b.slug}`} className={cls}>
                   {inner}
                 </Link>
               );
             })}
           </div>
-          <div className="border-t border-line bg-sand">
+          <div className="border-t border-white/10 bg-white/5">
             <div className="container-site flex items-center justify-between py-3">
-              <p className="text-xs text-ink-soft">One trusted travel company. Specialist expertise for every journey.</p>
-              <Link href="/brands" className="text-xs font-bold text-teal-deep hover:underline">
+              <p className="text-xs text-white/50">One trusted travel company. Specialist expertise for every journey.</p>
+              <Link href="/brands" className="text-xs font-bold text-teal hover:underline">
                 All our brands →
               </Link>
             </div>

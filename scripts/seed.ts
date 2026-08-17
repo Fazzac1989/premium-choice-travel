@@ -60,6 +60,9 @@ async function seedCatalogue() {
           hero_image: d.heroImage,
           featured: d.featured,
           sort_order: d.sortOrder,
+          intro: d.intro ?? [],
+          when_to_travel: d.whenToTravel ?? [],
+          culture: d.culture ?? [],
         },
         { onConflict: 'slug' }
       )

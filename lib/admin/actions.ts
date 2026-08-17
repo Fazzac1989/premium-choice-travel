@@ -110,12 +110,28 @@ export async function saveDestination(_prev: ActionState, formData: FormData): P
     hero_image: String(formData.get('hero_image') ?? '').trim() || null,
     featured: formData.get('featured') === 'on',
     sort_order: Number(formData.get('sort_order') ?? 0) || 0,
+    intro: parseJson<string[]>(formData.get('intro'), []),
+    when_to_travel: parseJson<{ heading: string; body: string }[]>(formData.get('when_to_travel'), []),
+    culture: parseJson<{ heading: string; body: string }[]>(formData.get('culture'), []),
   };
 
-  const query = id
+  let { error } = await (id
     ? db.from('destinations').update(row).eq('id', id)
-    : db.from('destinations').insert(row);
-  const { error } = await query;
+    : db.from('destinations').insert(row));
+  if (error && /column|schema cache/i.test(error.message)) {
+    // Guide columns not migrated yet — save the basics and flag it.
+    const { intro: _i, when_to_travel: _w, culture: _c, ...basic } = row;
+    const retry = await (id
+      ? db.from('destinations').update(basic).eq('id', id)
+      : db.from('destinations').insert(basic));
+    if (!retry.error) {
+      return {
+        ok: false,
+        message: 'Saved the basics, but the guide sections need the database migration (supabase/RUN-ME.sql) before they can be stored.',
+      };
+    }
+    error = retry.error;
+  }
   if (error) return { ok: false, message: error.message };
 
   revalidatePath('/', 'layout');

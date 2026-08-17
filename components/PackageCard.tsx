@@ -4,9 +4,17 @@ import type { Package } from '@/lib/types';
 import { durationLabel, formatPrice } from '@/lib/types';
 import { brandLabel } from '@/lib/brands';
 
-export default function PackageCard({ pkg, priority = false }: { pkg: Package; priority?: boolean }) {
+export default function PackageCard({
+  pkg,
+  priority = false,
+  hrefBase = '/packages',
+}: {
+  pkg: Package;
+  priority?: boolean;
+  hrefBase?: string;
+}) {
   return (
-    <Link href={`/packages/${pkg.slug}`} className="group card flex flex-col transition-shadow hover:shadow-xl hover:shadow-ink/10">
+    <Link href={`${hrefBase}/${pkg.slug}`} className="group card flex flex-col transition-shadow hover:shadow-xl hover:shadow-ink/10">
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={pkg.heroImage}

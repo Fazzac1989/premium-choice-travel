@@ -23,6 +23,8 @@ export type Brand = {
   cta: string;
   externalUrl?: string;
   sellsPackages: boolean;
+  /** Hostnames that serve this brand's own website (www. handled automatically). */
+  domains: string[];
 };
 
 const img = (id: string, w = 1600) =>
@@ -44,6 +46,7 @@ export const BRANDS: Brand[] = [
     services: ['Tailor-made itineraries', 'Beach holidays', 'City breaks', 'Family holidays', 'Honeymoons', 'Escorted tours'],
     cta: 'Explore Holidays',
     sellsPackages: true,
+    domains: ['premiumchoiceholidays.com'],
   },
   {
     key: 'school-trips',
@@ -55,12 +58,13 @@ export const BRANDS: Brand[] = [
     longDescription:
       'Educational travel designed around students, teachers and the curriculum — with the planning tools, communication and safeguarding schools actually need. School Trips runs on its own dedicated platform.',
     logo: null,
-    logoWhite: null,
+    logoWhite: '/images/brands/school-trips-white.png',
     heroImage: img('photo-1526481280693-3bfa7568e0f3'),
     services: ['Curriculum-linked trips', 'Teacher planning portal', 'Parent communication', 'Risk assessment support', 'Trip management app'],
     cta: 'Explore School Trips',
     externalUrl: 'https://premiumchoiceschooltrips.com',
     sellsPackages: false,
+    domains: [],
   },
   {
     key: 'staycations',
@@ -77,6 +81,7 @@ export const BRANDS: Brand[] = [
     services: ['Weekend escapes', 'Family staycations', 'Beach resorts', 'Desert retreats', 'Romantic breaks', 'All-inclusive offers'],
     cta: 'Find a Staycation',
     sellsPackages: true,
+    domains: ['premiumchoicestaycations.com'],
   },
   {
     key: 'cruises',
@@ -93,6 +98,7 @@ export const BRANDS: Brand[] = [
     services: ['Arabian Gulf cruises', 'Mediterranean sailings', 'Northern Europe & fjords', 'River cruising', 'Fly-cruise packages', 'Group sailings'],
     cta: 'Explore Cruises',
     sellsPackages: true,
+    domains: ['premiumchoicecruise.com','premiumchoicecruises.com'],
   },
   {
     key: 'golf',
@@ -109,6 +115,7 @@ export const BRANDS: Brand[] = [
     services: ['International golf holidays', 'Golf groups & societies', 'Guaranteed tee times', 'Golf & beach combinations', 'Tailor-made golf itineraries'],
     cta: 'Explore Golf Holidays',
     sellsPackages: true,
+    domains: ['premiumchoicegolf.com','premiumchoicegolfholidays.com'],
   },
   {
     key: 'corporate',
@@ -125,6 +132,7 @@ export const BRANDS: Brand[] = [
     services: ['Corporate travel management', 'Flights & accommodation', 'Group travel', 'Meetings & events', 'Incentive travel', 'Account management'],
     cta: 'Explore Corporate Travel',
     sellsPackages: false,
+    domains: ['premiumchoicecorporate.com'],
   },
 ];
 

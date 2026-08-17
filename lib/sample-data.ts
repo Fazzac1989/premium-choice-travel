@@ -10,7 +10,7 @@ import type { Destination, Package } from './types';
 const img = (id: string, w = 1600) =>
   `https://images.unsplash.com/${id}?q=80&w=${w}&auto=format&fit=crop`;
 
-export const sampleDestinations: Destination[] = [
+const baseDestinations: Omit<Destination, 'intro' | 'whenToTravel' | 'culture'>[] = [
   {
     id: 1, slug: 'maldives', name: 'Maldives', region: 'Indian Ocean',
     blurb: 'Overwater villas, house reefs and sunsets that stop time. Paradise, made easy from the UAE.',
@@ -82,6 +82,13 @@ export const sampleDestinations: Destination[] = [
     heroImage: img('photo-1722502831583-b4e93ecc6027'), featured: false, sortOrder: 14,
   },
 ];
+
+import { DESTINATION_GUIDES, EMPTY_GUIDE } from './destination-guides';
+
+export const sampleDestinations: Destination[] = baseDestinations.map((d) => ({
+  ...d,
+  ...(DESTINATION_GUIDES[d.slug] ?? EMPTY_GUIDE),
+}));
 
 export const samplePackages: Package[] = [
   {

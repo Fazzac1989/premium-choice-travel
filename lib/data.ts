@@ -19,6 +19,9 @@ export function mapDestination(row: any): Destination {
     heroImage: row.hero_image ?? '',
     featured: Boolean(row.featured),
     sortOrder: row.sort_order ?? 0,
+    intro: row.intro ?? [],
+    whenToTravel: row.when_to_travel ?? [],
+    culture: row.culture ?? [],
   };
 }
 

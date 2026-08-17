@@ -16,7 +16,10 @@ export default async function AdminQuotesPage() {
             Build a quote, share the link or PDF, track its status.
           </p>
         </div>
-        <Link href="/admin/quotes/new" className="btn-primary">New quote</Link>
+        <div className="flex gap-3">
+          <Link href="/admin/quotes/import" className="btn-outline !bg-white">AI import</Link>
+          <Link href="/admin/quotes/new" className="btn-primary">New quote</Link>
+        </div>
       </div>
 
       <div className="card mt-8 divide-y divide-line">

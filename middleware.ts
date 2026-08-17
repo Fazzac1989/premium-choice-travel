@@ -1,7 +1,50 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { BRANDS } from '@/lib/brands';
+
+/**
+ * Two jobs:
+ *  1. Multi-domain routing — each brand's own domain serves its own website
+ *     (rewritten to /sites/<brand-slug>/…) from this one codebase and admin.
+ *  2. Admin session guard on the master site.
+ */
+
+function brandForHost(hostHeader: string | null) {
+  if (!hostHeader) return null;
+  const host = hostHeader.toLowerCase().split(':')[0].replace(/^www\./, '');
+  return BRANDS.find((b) => b.domains.includes(host)) ?? null;
+}
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // ── Brand domains ─────────────────────────────────────────────
+  const brand = brandForHost(request.headers.get('host'));
+  if (brand) {
+    // Admin always lives on the master site.
+    if (pathname.startsWith('/admin')) {
+      const master = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://premium-choice-travel.vercel.app';
+      return NextResponse.redirect(`${master}${pathname}`);
+    }
+    // Shared endpoints pass straight through on any domain.
+    const passthrough =
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/quotes') ||
+      pathname.startsWith('/sites') ||
+      pathname.startsWith('/images') ||
+      pathname === '/robots.txt' ||
+      pathname === '/sitemap.xml';
+    if (!passthrough) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/sites/${brand.slug}${pathname === '/' ? '' : pathname}`;
+      return NextResponse.rewrite(url);
+    }
+    return NextResponse.next();
+  }
+
+  // ── Master site: admin guard ──────────────────────────────────
+  if (!pathname.startsWith('/admin')) return NextResponse.next();
+
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return new NextResponse(
       'Admin unavailable: Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY — see README.',
@@ -34,10 +77,9 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname } = request.nextUrl;
   const isLogin = pathname.startsWith('/admin/login');
 
-  if (pathname.startsWith('/admin') && !isLogin && !user) {
+  if (!isLogin && !user) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/login';
     return NextResponse.redirect(url);
@@ -52,5 +94,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icon.png|images/).*)'],
 };

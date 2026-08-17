@@ -2,21 +2,23 @@
 
 import { useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { importPackage, type ImportState } from '@/lib/admin/import-actions';
+import { importPackage, importQuote, type ImportState } from '@/lib/admin/import-actions';
 
-function SubmitButton({ hasSource }: { hasSource: boolean }) {
+function SubmitButton({ hasSource, label }: { hasSource: boolean; label: string }) {
   const { pending } = useFormStatus();
   return (
     <button type="submit" disabled={pending || !hasSource} className="btn-primary w-full !py-4 disabled:opacity-50">
-      {pending ? 'Claude is reading the document…' : 'Import with AI'}
+      {pending ? 'Claude is reading the source…' : label}
     </button>
   );
 }
 
-export default function ImportForm() {
-  const [state, formAction] = useFormState<ImportState, FormData>(importPackage, null);
+export default function ImportForm({ kind = 'package' }: { kind?: 'package' | 'quote' }) {
+  const action = kind === 'quote' ? importQuote : importPackage;
+  const [state, formAction] = useFormState<ImportState, FormData>(action, null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
+  const [url, setUrl] = useState('');
   const [text, setText] = useState('');
   const [dragOver, setDragOver] = useState(false);
 
@@ -41,7 +43,7 @@ export default function ImportForm() {
           }
         }}
         onClick={() => fileRef.current?.click()}
-        className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 text-center transition-colors ${
+        className={`flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-colors ${
           dragOver ? 'border-teal bg-teal/5' : 'border-line hover:border-teal/60'
         }`}
       >
@@ -63,15 +65,30 @@ export default function ImportForm() {
 
       <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-ink-soft">
         <span className="h-px flex-1 bg-line" />
+        or import from a web page
+        <span className="h-px flex-1 bg-line" />
+      </div>
+
+      <input
+        name="url"
+        type="url"
+        className="field"
+        placeholder="https://… — paste a link to online content"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+      />
+
+      <div className="my-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-ink-soft">
+        <span className="h-px flex-1 bg-line" />
         or paste the text
         <span className="h-px flex-1 bg-line" />
       </div>
 
       <textarea
         name="text"
-        rows={6}
+        rows={5}
         className="field"
-        placeholder="Paste the package description here instead…"
+        placeholder={kind === 'quote' ? 'Paste the costing sheet or quotation text…' : 'Paste the package description here instead…'}
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
@@ -79,11 +96,15 @@ export default function ImportForm() {
       {state && !state.ok && <p className="mt-4 text-sm text-danger">{state.error}</p>}
 
       <div className="mt-6">
-        <SubmitButton hasSource={Boolean(fileName || text.trim())} />
+        <SubmitButton
+          hasSource={Boolean(fileName || url.trim() || text.trim())}
+          label={kind === 'quote' ? 'Import quote with AI' : 'Import package with AI'}
+        />
       </div>
       <p className="mt-3 text-center text-xs text-ink-soft">
-        Claude reads the document, sorts it into the right brand section and opens a draft for
-        your review — nothing is published until you say so.
+        {kind === 'quote'
+          ? 'Claude reads the costings as supplier cost before markup and opens a draft quote for your review — check every figure before sending.'
+          : 'Claude reads the source, sorts it into the right brand section and opens a draft for your review — nothing is published until you say so.'}
       </p>
     </form>
   );
