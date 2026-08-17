@@ -22,9 +22,9 @@ const SLIDES: { src: string; alt: string }[] = [
   },
 ];
 
-const HOLD_MS = 5000;
+const HOLD_MS = 8000;
 
-/** Full-bleed hero slideshow: 4 images, slow crossfade, 5 seconds per image. */
+/** Full-bleed hero slideshow: 4 images, slow crossfade, 8 seconds per image. */
 export default function HeroSlideshow() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
