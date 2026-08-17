@@ -5,26 +5,26 @@ import { useEffect, useState } from 'react';
 
 const SLIDES: { src: string; alt: string }[] = [
   {
-    src: '/images/hero.jpg',
-    alt: 'White sand beach with leaning palm trees over turquoise water',
+    src: '/images/hero/hero-1.jpg',
+    alt: 'Wooden jetty leading to a palm-fringed island over turquoise water',
   },
   {
-    src: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=2400&auto=format&fit=crop',
-    alt: 'Red torii gates of Fushimi Inari shrine, Japan',
+    src: '/images/hero/hero-2.jpg',
+    alt: 'Boardwalk winding to overwater villas under a fiery sunset sky',
   },
   {
-    src: 'https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=2400&auto=format&fit=crop',
-    alt: 'Cruise ship sailing a deep blue sea',
+    src: '/images/hero/hero-3.jpg',
+    alt: 'Overwater villas and a curving jetty at dusk',
   },
   {
-    src: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=2400&auto=format&fit=crop',
-    alt: 'Dubai skyline at dusk',
+    src: '/images/hero/hero-4.jpg',
+    alt: 'Boat crossing a lagoon at sunset, palm trees on the horizon',
   },
 ];
 
-const HOLD_MS = 3000;
+const HOLD_MS = 5000;
 
-/** Full-bleed hero slideshow: 4 images, slow crossfade, 3 seconds per image. */
+/** Full-bleed hero slideshow: 4 images, slow crossfade, 5 seconds per image. */
 export default function HeroSlideshow() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
