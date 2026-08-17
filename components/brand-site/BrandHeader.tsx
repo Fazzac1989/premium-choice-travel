@@ -26,7 +26,7 @@ export default function BrandHeader({
       <div className="container-site flex h-[72px] items-center justify-between gap-6">
         <Link href={home} aria-label={`${name} — home`} className="shrink-0">
           {logoWhite ? (
-            <Image src={logoWhite} alt={name} width={280} height={78} priority className="h-11 w-auto" />
+            <Image src={logoWhite} alt={name} width={320} height={89} priority className="h-14 w-auto" />
           ) : (
             <span className="font-serif text-xl text-white">{name}</span>
           )}

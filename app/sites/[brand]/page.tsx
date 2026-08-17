@@ -32,6 +32,16 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
         <Image src={brand.heroImage} alt={brand.name} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/25 to-ink/70" />
         <div className="container-site relative py-20 text-white">
+          {brand.logoCard && (
+            <Image
+              src={brand.logoCard}
+              alt={brand.name}
+              width={560}
+              height={155}
+              priority
+              className="mb-7 h-24 w-auto max-w-full rounded-xl shadow-2xl shadow-ink/40 sm:h-28"
+            />
+          )}
           <p className="eyebrow !text-teal">A Premium Choice Travel brand</p>
           <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl">{brand.tagline}</h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85">{brand.description}</p>

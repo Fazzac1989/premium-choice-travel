@@ -18,6 +18,8 @@ export type Brand = {
   longDescription: string;
   logo: string | null;
   logoWhite: string | null;
+  /** Full-colour lockup on a white panel — used on cards and page heroes. */
+  logoCard: string | null;
   heroImage: string;
   services: string[];
   cta: string;
@@ -41,6 +43,7 @@ export const BRANDS: Brand[] = [
     longDescription:
       'From Maldives overwater villas to Japan by bullet train, Premium Choice Holidays designs each trip around the people travelling — your dates, your pace, your budget. Real specialists plan it; one point of contact looks after it from enquiry to touchdown home.',
     logo: '/images/brands/holidays.png',
+    logoCard: '/images/brands/holidays-card.png',
     logoWhite: '/images/brands/holidays-white.png',
     heroImage: '/images/hero.jpg',
     services: ['Tailor-made itineraries', 'Beach holidays', 'City breaks', 'Family holidays', 'Honeymoons', 'Escorted tours'],
@@ -57,7 +60,8 @@ export const BRANDS: Brand[] = [
     description: 'Purpose-built educational travel experiences for schools, teachers and students.',
     longDescription:
       'Educational travel designed around students, teachers and the curriculum — with the planning tools, communication and safeguarding schools actually need. School Trips runs on its own dedicated platform.',
-    logo: null,
+    logo: '/images/brands/school-trips.png',
+    logoCard: '/images/brands/school-trips-card.png',
     logoWhite: '/images/brands/school-trips-white.png',
     heroImage: img('photo-1526481280693-3bfa7568e0f3'),
     services: ['Curriculum-linked trips', 'Teacher planning portal', 'Parent communication', 'Risk assessment support', 'Trip management app'],
@@ -76,6 +80,7 @@ export const BRANDS: Brand[] = [
     longDescription:
       'Preferred rates at the UAE’s standout resorts — Palm Jumeirah icons, Saadiyat beach houses, Ras Al Khaimah cliffs and Fujairah’s mountain coast. Tell us the vibe and we’ll send hand-picked options, usually with breakfast, late checkout or resort credit thrown in.',
     logo: '/images/brands/staycations.png',
+    logoCard: '/images/brands/staycations-card.png',
     logoWhite: '/images/brands/staycations-white.png',
     heroImage: img('photo-1512453979798-5ea266f8880c'),
     services: ['Weekend escapes', 'Family staycations', 'Beach resorts', 'Desert retreats', 'Romantic breaks', 'All-inclusive offers'],
@@ -93,6 +98,7 @@ export const BRANDS: Brand[] = [
     longDescription:
       'Cruising from Dubai’s doorstep or flying out to join a ship anywhere in the world. We match you to the right line, the right ship and the right cabin — then wrap flights, transfers and hotel stays around the sailing so the whole journey is one booking.',
     logo: '/images/brands/cruises.png',
+    logoCard: '/images/brands/cruises-card.png',
     logoWhite: '/images/brands/cruises-white.png',
     heroImage: img('photo-1548574505-5e239809ee19'),
     services: ['Arabian Gulf cruises', 'Mediterranean sailings', 'Northern Europe & fjords', 'River cruising', 'Fly-cruise packages', 'Group sailings'],
@@ -110,6 +116,7 @@ export const BRANDS: Brand[] = [
     longDescription:
       'Links pilgrimages in Scotland, winter sun in the Algarve, all-inclusive golf in Belek or a round above the Indian Ocean in Mauritius. We build golf trips course-first: guaranteed tee times, the right resorts, and itineraries that keep non-golfers happy too.',
     logo: '/images/brands/golf.png',
+    logoCard: '/images/brands/golf-card.png',
     logoWhite: '/images/brands/golf-white.png',
     heroImage: img('photo-1587174486073-ae5e5cff23aa'),
     services: ['International golf holidays', 'Golf groups & societies', 'Guaranteed tee times', 'Golf & beach combinations', 'Tailor-made golf itineraries'],
@@ -127,6 +134,7 @@ export const BRANDS: Brand[] = [
     longDescription:
       'Flights, hotels and ground arrangements for businesses that want a person, not a portal. One account manager who knows your travellers and your policies, competitive fares through our trade partnerships, and someone to call when plans change mid-trip.',
     logo: '/images/brands/corporate.png',
+    logoCard: '/images/brands/corporate-card.png',
     logoWhite: '/images/brands/corporate-white.png',
     heroImage: img('photo-1436491865332-7a61a109cc05'),
     services: ['Corporate travel management', 'Flights & accommodation', 'Group travel', 'Meetings & events', 'Incentive travel', 'Account management'],

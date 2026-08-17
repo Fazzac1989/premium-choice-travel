@@ -28,8 +28,8 @@ export default async function BrandPage({ params }: { params: { slug: string } }
         <Image src={brand.heroImage} alt={brand.name} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/30 to-ink/30" />
         <div className="container-site relative pb-14 pt-44 text-white">
-          {brand.logoWhite ? (
-            <Image src={brand.logoWhite} alt={brand.name} width={420} height={116} className="h-16 w-auto rounded-lg" />
+          {brand.logoCard ? (
+            <Image src={brand.logoCard} alt={brand.name} width={560} height={155} className="h-24 w-auto max-w-full rounded-xl shadow-2xl shadow-ink/40 sm:h-28" />
           ) : (
             <p className="eyebrow !text-teal">Premium Choice</p>
           )}

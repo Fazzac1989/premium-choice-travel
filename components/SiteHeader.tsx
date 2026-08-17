@@ -130,9 +130,9 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
                     <Image
                       src={b.logoWhite}
                       alt={b.name}
-                      width={280}
-                      height={78}
-                      className="h-12 w-auto max-w-[220px] object-contain object-left"
+                      width={380}
+                      height={106}
+                      className="h-[76px] w-auto max-w-full object-contain object-left"
                     />
                   ) : (
                     <p className="font-serif text-lg text-white">{b.name}</p>

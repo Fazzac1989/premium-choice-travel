@@ -37,8 +37,8 @@ export default function BrandsPage() {
                 <Image src={b.heroImage} alt={b.name} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
               </div>
               <div>
-                {b.logo ? (
-                  <Image src={b.logo} alt={b.name} width={360} height={100} className="h-14 w-auto" />
+                {b.logoCard ? (
+                  <Image src={b.logoCard} alt={b.name} width={560} height={155} className="h-24 w-auto max-w-full rounded-xl border border-line sm:h-28" />
                 ) : (
                   <p className="eyebrow">Premium Choice</p>
                 )}
