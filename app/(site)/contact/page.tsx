@@ -32,7 +32,7 @@ export default function ContactPage() {
                 <a href="tel:+97144206965" className="mt-2 block font-serif text-2xl text-ink hover:text-teal-deep">
                   +971 4 420 6965
                 </a>
-                <p className="mt-1 text-sm text-ink-soft">Sunday–Thursday, 9am–6pm GST</p>
+                <p className="mt-1 text-sm text-ink-soft">Monday–Friday, 9.00am–7.30pm GST</p>
               </div>
               <div>
                 <p className="eyebrow">Email</p>

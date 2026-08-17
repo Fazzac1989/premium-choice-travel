@@ -5,8 +5,10 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { deletePackage, savePackage, type ActionState } from '@/lib/admin/actions';
 import ListEditor from '@/components/admin/ListEditor';
 import ItineraryEditor from '@/components/admin/ItineraryEditor';
+import { GalleryField, ImageField } from '@/components/admin/ImageField';
 import type { Destination, ItineraryDay, Package } from '@/lib/types';
 import { CATEGORIES } from '@/lib/types';
+import { PACKAGE_BRANDS } from '@/lib/brands';
 
 function SaveButton() {
   const { pending } = useFormStatus();
@@ -30,6 +32,7 @@ export default function PackageForm({
   const [highlights, setHighlights] = useState<string[]>(pkg?.highlights ?? ['']);
   const [includes, setIncludes] = useState<string[]>(pkg?.includes ?? ['']);
   const [excludes, setExcludes] = useState<string[]>(pkg?.excludes ?? ['']);
+  const [heroImage, setHeroImage] = useState<string>(pkg?.heroImage ?? '');
   const [gallery, setGallery] = useState<string[]>(pkg?.gallery ?? []);
   const [itinerary, setItinerary] = useState<ItineraryDay[]>(pkg?.itinerary ?? []);
 
@@ -43,6 +46,7 @@ export default function PackageForm({
       <input type="hidden" name="includes" value={JSON.stringify(clean(includes))} />
       <input type="hidden" name="excludes" value={JSON.stringify(clean(excludes))} />
       <input type="hidden" name="gallery" value={JSON.stringify(clean(gallery))} />
+      <input type="hidden" name="hero_image" value={heroImage} />
       <input
         type="hidden"
         name="itinerary"
@@ -59,6 +63,14 @@ export default function PackageForm({
           <div className="sm:col-span-2">
             <label className="field-label">Tagline</label>
             <input name="tagline" defaultValue={pkg?.tagline} className="field" placeholder="One irresistible sentence shown on cards and the page header" />
+          </div>
+          <div>
+            <label className="field-label">Brand section</label>
+            <select name="brand" className="field" defaultValue={pkg?.brand ?? 'holidays'}>
+              {PACKAGE_BRANDS.map((b) => (
+                <option key={b.key} value={b.key}>Premium Choice {b.label}</option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="field-label">Destination</label>
@@ -112,14 +124,11 @@ export default function PackageForm({
       <section className="card p-6">
         <h2 className="font-serif text-xl text-ink">Images</h2>
         <p className="mt-1 text-sm text-ink-soft">
-          Paste image URLs (Unsplash, your Supabase storage, or any https image).
+          Upload straight from your computer — images are stored on your own Supabase storage.
         </p>
-        <div className="mt-5 space-y-5">
-          <div>
-            <label className="field-label">Hero image URL</label>
-            <input name="hero_image" defaultValue={pkg?.heroImage} className="field" placeholder="https://…" />
-          </div>
-          <ListEditor label="Gallery images" items={gallery} onChange={setGallery} placeholder="https://…" />
+        <div className="mt-5 space-y-6">
+          <ImageField label="Hero image" value={heroImage} onChange={setHeroImage} />
+          <GalleryField label="Gallery images" images={gallery} onChange={setGallery} />
         </div>
       </section>
 

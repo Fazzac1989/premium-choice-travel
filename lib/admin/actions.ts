@@ -42,10 +42,12 @@ export async function savePackage(_prev: ActionState, formData: FormData): Promi
   const slug = slugify(slugInput || title);
   const priceRaw = String(formData.get('price_from') ?? '').trim();
 
+  const brandRaw = String(formData.get('brand') ?? 'holidays');
   const row = {
     slug,
     title,
     tagline: String(formData.get('tagline') ?? '').trim() || null,
+    brand: ['holidays', 'golf', 'cruises', 'staycations', 'corporate'].includes(brandRaw) ? brandRaw : 'holidays',
     destination_id: formData.get('destination_id') ? Number(formData.get('destination_id')) : null,
     category: String(formData.get('category') ?? '').trim() || null,
     nights: Number(formData.get('nights') ?? 0) || 0,

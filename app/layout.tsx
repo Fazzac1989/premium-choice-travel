@@ -31,10 +31,36 @@ export const metadata: Metadata = {
   },
 };
 
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TravelAgency',
+  name: 'Premium Choice Travel',
+  url: siteUrl,
+  logo: `${siteUrl}/images/logo.png`,
+  telephone: '+971 4 420 6965',
+  email: 'info@premiumchoicetravel.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Jumeirah Lakes Towers, Dubai',
+    addressCountry: 'AE',
+  },
+  sameAs: [
+    'https://www.facebook.com/profile.php?id=100057396162736',
+    'https://www.instagram.com/premiumchoicetravel1/',
+    'https://www.linkedin.com/company/premiumchoicetravel/',
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${archivo.variable} ${fraunces.variable}`}>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+      </body>
     </html>
   );
 }

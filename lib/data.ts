@@ -31,6 +31,9 @@ export function mapPackage(row: any): Package {
     destinationSlug: row.destinations?.slug ?? row.destination_slug ?? '',
     destinationName: row.destinations?.name ?? row.destination_name ?? '',
     region: row.destinations?.region ?? row.region ?? '',
+    brand:
+      row.brand ??
+      (row.category === 'Staycations' ? 'staycations' : row.category === 'Cruises' ? 'cruises' : 'holidays'),
     category: row.category ?? '',
     nights: row.nights ?? 0,
     days: row.days ?? 0,
@@ -97,4 +100,19 @@ export async function getPackage(slug: string): Promise<Package | null> {
 export async function getPackagesForDestination(destinationSlug: string): Promise<Package[]> {
   const all = await getPublishedPackages();
   return all.filter((p) => p.destinationSlug === destinationSlug);
+}
+
+export async function getPackagesByBrand(brand: string, limit?: number): Promise<Package[]> {
+  const all = await getPublishedPackages();
+  const filtered = all.filter((p) => p.brand === brand);
+  return limit ? filtered.slice(0, limit) : filtered;
+}
+
+/** The four brand rows shown on the homepage, each with its hero packages. */
+export async function getHomepageBrandSections(): Promise<{ brand: string; packages: Package[] }[]> {
+  const all = await getPublishedPackages();
+  return ['holidays', 'golf', 'cruises', 'staycations'].map((brand) => ({
+    brand,
+    packages: all.filter((p) => p.brand === brand).slice(0, 4),
+  }));
 }

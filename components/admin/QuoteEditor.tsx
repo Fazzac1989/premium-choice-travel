@@ -12,6 +12,7 @@ import {
 import ListEditor from '@/components/admin/ListEditor';
 import ItineraryEditor from '@/components/admin/ItineraryEditor';
 import StatusBadge from '@/components/admin/StatusBadge';
+import { GalleryField, ImageField } from '@/components/admin/ImageField';
 import {
   formatMoney,
   lineTotal,
@@ -292,11 +293,8 @@ export default function QuoteEditor({ quote, siteUrl }: { quote: Quote; siteUrl:
           <h2 className="font-serif text-xl text-ink">Presentation</h2>
           <p className="mt-1 text-sm text-ink-soft">What the client sees on their quote page and PDF.</p>
           <div className="mt-5 space-y-6">
-            <div>
-              <label className="field-label">Cover image URL</label>
-              <input className="field" value={heroImage} onChange={(e) => setHeroImage(e.target.value)} placeholder="https://…" />
-            </div>
-            <ListEditor label="Gallery images" items={images} onChange={setImages} placeholder="https://…" />
+            <ImageField label="Cover image" value={heroImage} onChange={setHeroImage} />
+            <GalleryField label="Gallery images" images={images} onChange={setImages} />
             <ItineraryEditor items={itinerary} onChange={setItinerary} />
             <div className="grid gap-6 sm:grid-cols-2">
               <ListEditor label="Inclusions" items={inclusions} onChange={setInclusions} placeholder="e.g. Return speedboat transfers" />

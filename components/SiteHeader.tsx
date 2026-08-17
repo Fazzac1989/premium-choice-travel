@@ -3,12 +3,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { BRANDS } from '@/lib/brands';
 
 const NAV = [
+  { href: '/about', label: 'About' },
   { href: '/destinations', label: 'Destinations' },
   { href: '/packages', label: 'Packages' },
-  { href: '/about', label: 'About us' },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -16,6 +17,8 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [brandsOpen, setBrandsOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -24,9 +27,20 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    setOpen(false);
+    setBrandsOpen(false);
+  }, [pathname]);
 
-  const isSolid = solid || scrolled || open;
+  const isSolid = solid || scrolled || open || brandsOpen;
+
+  const enterBrands = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setBrandsOpen(true);
+  };
+  const leaveBrands = () => {
+    closeTimer.current = setTimeout(() => setBrandsOpen(false), 150);
+  };
 
   return (
     <header
@@ -46,8 +60,32 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV.map((item) => (
+        <nav className="hidden items-center gap-7 lg:flex">
+          <Link
+            href="/about"
+            className={`text-sm font-semibold transition-colors ${isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'}`}
+          >
+            About
+          </Link>
+
+          {/* Our Brands mega menu */}
+          <div onMouseEnter={enterBrands} onMouseLeave={leaveBrands} className="relative">
+            <button
+              type="button"
+              onClick={() => setBrandsOpen((v) => !v)}
+              aria-expanded={brandsOpen}
+              className={`flex items-center gap-1.5 text-sm font-semibold transition-colors ${
+                isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'
+              }`}
+            >
+              Our Brands
+              <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${brandsOpen ? 'rotate-180' : ''}`}>
+                <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+
+          {NAV.slice(1).map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -58,19 +96,16 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
               {item.label}
             </Link>
           ))}
-          <a
-            href="tel:+97144206965"
-            className={`text-sm font-semibold ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}
-          >
+          <a href="tel:+97144206965" className={`text-sm font-semibold ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
             +971 4 420 6965
           </a>
-          <Link href="/contact" className="btn-primary !px-5 !py-2.5">
-            Plan my trip
+          <Link href="/plan" className="btn-primary !px-5 !py-2.5">
+            Plan My Trip
           </Link>
         </nav>
 
         <button
-          className={`md:hidden ${isSolid ? 'text-ink' : 'text-white'}`}
+          className={`lg:hidden ${isSolid ? 'text-ink' : 'text-white'}`}
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -80,15 +115,84 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
         </button>
       </div>
 
+      {/* Mega menu panel */}
+      {brandsOpen && (
+        <div
+          onMouseEnter={enterBrands}
+          onMouseLeave={leaveBrands}
+          className="hidden border-t border-line bg-white shadow-2xl shadow-ink/10 lg:block"
+        >
+          <div className="container-site grid grid-cols-3 gap-2 py-6">
+            {BRANDS.map((b) => {
+              const inner = (
+                <>
+                  <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg">
+                    <Image src={b.heroImage} alt="" fill sizes="80px" className="object-cover" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="flex items-center gap-1.5 text-sm font-bold text-ink group-hover:text-teal-deep">
+                      {b.name}
+                      <span className="text-teal transition-transform group-hover:translate-x-0.5">→</span>
+                    </p>
+                    <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-ink-soft">{b.description}</p>
+                  </div>
+                </>
+              );
+              return b.externalUrl ? (
+                <a
+                  key={b.slug}
+                  href={b.externalUrl}
+                  target="_blank"
+                  rel="noopener"
+                  className="group flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-sand"
+                >
+                  {inner}
+                </a>
+              ) : (
+                <Link
+                  key={b.slug}
+                  href={`/brands/${b.slug}`}
+                  className="group flex items-center gap-4 rounded-xl p-3 transition-colors hover:bg-sand"
+                >
+                  {inner}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="border-t border-line bg-sand">
+            <div className="container-site flex items-center justify-between py-3">
+              <p className="text-xs text-ink-soft">One trusted travel company. Specialist expertise for every journey.</p>
+              <Link href="/brands" className="text-xs font-bold text-teal-deep hover:underline">
+                All our brands →
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile menu */}
       {open && (
-        <nav className="border-t border-line bg-white px-5 py-4 md:hidden">
-          {NAV.map((item) => (
+        <nav className="max-h-[calc(100svh-72px)] overflow-y-auto border-t border-line bg-white px-5 py-4 lg:hidden">
+          <Link href="/about" className="block py-3 text-base font-semibold text-ink">About</Link>
+          <p className="pb-1 pt-3 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-soft">Our brands</p>
+          {BRANDS.map((b) =>
+            b.externalUrl ? (
+              <a key={b.slug} href={b.externalUrl} target="_blank" rel="noopener" className="block py-2.5 pl-3 text-sm font-semibold text-ink">
+                {b.name} ↗
+              </a>
+            ) : (
+              <Link key={b.slug} href={`/brands/${b.slug}`} className="block py-2.5 pl-3 text-sm font-semibold text-ink">
+                {b.name}
+              </Link>
+            )
+          )}
+          {NAV.slice(1).map((item) => (
             <Link key={item.href} href={item.href} className="block py-3 text-base font-semibold text-ink">
               {item.label}
             </Link>
           ))}
-          <Link href="/contact" className="btn-primary mt-3 w-full">
-            Plan my trip
+          <Link href="/plan" className="btn-primary mt-3 w-full">
+            Plan My Trip
           </Link>
         </nav>
       )}

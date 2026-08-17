@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Package } from '@/lib/types';
 import { durationLabel, formatPrice } from '@/lib/types';
+import { brandLabel } from '@/lib/brands';
 
 export default function PackageCard({ pkg, priority = false }: { pkg: Package; priority?: boolean }) {
   return (
@@ -20,7 +21,10 @@ export default function PackageCard({ pkg, priority = false }: { pkg: Package; p
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <p className="eyebrow">{pkg.destinationName}</p>
+        <p className="eyebrow">
+          {pkg.destinationName}
+          <span className="font-normal normal-case tracking-normal text-ink-soft/70"> · Premium Choice {brandLabel(pkg.brand)}</span>
+        </p>
         <h3 className="mt-1.5 font-serif text-xl leading-snug text-ink group-hover:text-teal-deep">
           {pkg.title}
         </h3>

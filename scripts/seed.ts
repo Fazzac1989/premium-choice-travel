@@ -77,6 +77,7 @@ async function seedCatalogue() {
         title: p.title,
         tagline: p.tagline,
         destination_id: destIdBySlug.get(p.destinationSlug) ?? null,
+        brand: p.brand,
         category: p.category,
         nights: p.nights,
         days: p.days,

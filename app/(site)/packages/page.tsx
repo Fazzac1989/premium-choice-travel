@@ -2,7 +2,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PackageCard from '@/components/PackageCard';
 import { getDestinations, getPublishedPackages } from '@/lib/data';
-import { CATEGORIES } from '@/lib/types';
+import { PACKAGE_BRANDS } from '@/lib/brands';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,23 +11,23 @@ export const metadata = { title: 'Holiday packages' };
 export default async function PackagesPage({
   searchParams,
 }: {
-  searchParams: { destination?: string; category?: string };
+  searchParams: { destination?: string; brand?: string };
 }) {
   const [packages, destinations] = await Promise.all([getPublishedPackages(), getDestinations()]);
 
   const destination = searchParams.destination ?? '';
-  const category = searchParams.category ?? '';
+  const brand = searchParams.brand ?? '';
 
   const filtered = packages.filter(
     (p) =>
       (!destination || p.destinationSlug === destination) &&
-      (!category || p.category === category)
+      (!brand || p.brand === brand)
   );
 
-  const filterHref = (d: string, c: string) => {
+  const filterHref = (d: string, b: string) => {
     const q = new URLSearchParams();
     if (d) q.set('destination', d);
-    if (c) q.set('category', c);
+    if (b) q.set('brand', b);
     const s = q.toString();
     return s ? `/packages?${s}` : '/packages';
   };
@@ -49,35 +49,35 @@ export default async function PackagesPage({
 
             <div className="mt-8 flex flex-wrap gap-2">
               <Link
-                href={filterHref('', category)}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${!destination ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+                href={filterHref(destination, '')}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${!brand ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+              >
+                All brands
+              </Link>
+              {PACKAGE_BRANDS.filter((b) => b.key !== 'corporate').map((b) => (
+                <Link
+                  key={b.key}
+                  href={filterHref(destination, b.key)}
+                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${brand === b.key ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+                >
+                  {b.label}
+                </Link>
+              ))}
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link
+                href={filterHref('', brand)}
+                className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${!destination ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
               >
                 All destinations
               </Link>
               {destinations.map((d) => (
                 <Link
                   key={d.slug}
-                  href={filterHref(d.slug, category)}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${destination === d.slug ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
+                  href={filterHref(d.slug, brand)}
+                  className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${destination === d.slug ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
                 >
                   {d.name}
-                </Link>
-              ))}
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link
-                href={filterHref(destination, '')}
-                className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${!category ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
-              >
-                All styles
-              </Link>
-              {CATEGORIES.map((c) => (
-                <Link
-                  key={c}
-                  href={filterHref(destination, c)}
-                  className={`rounded-full px-4 py-2 text-xs font-semibold transition-colors ${category === c ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`}
-                >
-                  {c}
                 </Link>
               ))}
             </div>

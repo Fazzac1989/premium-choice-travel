@@ -1,7 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { deleteDestination, saveDestination, type ActionState } from '@/lib/admin/actions';
+import { ImageField } from '@/components/admin/ImageField';
 import type { Destination } from '@/lib/types';
 
 function SaveButton() {
@@ -15,10 +17,12 @@ function SaveButton() {
 
 export default function DestinationForm({ destination }: { destination: Destination | null }) {
   const [state, formAction] = useFormState<ActionState, FormData>(saveDestination, null);
+  const [heroImage, setHeroImage] = useState(destination?.heroImage ?? '');
 
   return (
     <form action={formAction} className="grid gap-4 sm:grid-cols-2">
       {destination && <input type="hidden" name="id" value={destination.id} />}
+      <input type="hidden" name="hero_image" value={heroImage} />
       <div>
         <label className="field-label">Name *</label>
         <input name="name" required defaultValue={destination?.name} className="field" />
@@ -32,8 +36,7 @@ export default function DestinationForm({ destination }: { destination: Destinat
         <textarea name="blurb" rows={2} defaultValue={destination?.blurb} className="field" placeholder="One or two enticing sentences" />
       </div>
       <div className="sm:col-span-2">
-        <label className="field-label">Hero image URL</label>
-        <input name="hero_image" defaultValue={destination?.heroImage} className="field" placeholder="https://…" />
+        <ImageField label="Hero image" value={heroImage} onChange={setHeroImage} />
       </div>
       <div>
         <label className="field-label">Sort order</label>

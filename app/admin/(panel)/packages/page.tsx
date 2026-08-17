@@ -22,7 +22,10 @@ export default async function AdminPackagesPage() {
           <h1 className="font-serif text-3xl text-ink">Packages</h1>
           <p className="mt-1 text-sm text-ink-soft">{packages.length} package{packages.length === 1 ? '' : 's'} · drafts are hidden from the website.</p>
         </div>
-        <Link href="/admin/packages/new" className="btn-primary">New package</Link>
+        <div className="flex gap-3">
+          <Link href="/admin/import" className="btn-outline !bg-white">AI import</Link>
+          <Link href="/admin/packages/new" className="btn-primary">New package</Link>
+        </div>
       </div>
 
       <div className="card mt-8 divide-y divide-line">
@@ -39,7 +42,7 @@ export default async function AdminPackagesPage() {
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-ink">{p.title}</p>
               <p className="mt-0.5 text-xs text-ink-soft">
-                {p.destinationName || '—'} · {p.category || '—'} · {durationLabel(p)}
+                <span className="font-semibold text-teal-deep">{p.brand}</span> · {p.destinationName || '—'} · {p.category || '—'} · {durationLabel(p)}
               </p>
             </div>
             <div className="hidden shrink-0 text-right sm:block">

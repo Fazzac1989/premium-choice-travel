@@ -19,6 +19,7 @@ export type Package = {
   destinationSlug: string;
   destinationName: string;
   region: string;
+  brand: string;
   category: string;
   nights: number;
   days: number;
