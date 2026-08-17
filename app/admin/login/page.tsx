@@ -17,9 +17,16 @@ export default function AdminLoginPage() {
     setError(null);
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
     if (error) {
-      setError('Incorrect email or password.');
+      setError(
+        error.message === 'Invalid login credentials'
+          ? 'Incorrect email or password.'
+          : `Sign-in failed: ${error.message}`
+      );
       setLoading(false);
       return;
     }
