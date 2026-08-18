@@ -4,6 +4,7 @@ import { WAVE1 } from './catalogue/wave1';
 import { WAVE2 } from './catalogue/wave2';
 import { WAVE3 } from './catalogue/wave3';
 import { DESTINATION_GUIDES, EMPTY_GUIDE } from './destination-guides';
+import { ABOUT_COPY } from './catalogue/about-copy';
 import IMAGES from './generated/destination-images.json';
 
 const img = (id: string, w = 1600) =>
@@ -88,7 +89,11 @@ function toDestination(entry: CatalogueEntry, id: number): Destination {
     heroImage: entry.heroImage ?? HEROES[entry.slug] ?? gallery[0]?.url ?? '',
     featured: entry.featured ?? false,
     sortOrder: entry.priorityRank,
-    intro: entry.intro ?? guide.intro,
+    intro: entry.intro?.length
+      ? entry.intro
+      : guide.intro.length
+        ? guide.intro
+        : ABOUT_COPY[entry.slug] ?? [],
     whenToTravel: entry.whenToTravel ?? guide.whenToTravel,
     culture: guide.culture,
     strapline: entry.strapline,
