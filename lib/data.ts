@@ -151,6 +151,49 @@ export async function getPackagesForDestination(destinationSlug: string): Promis
   return all.filter((p) => p.destinationSlug === destinationSlug);
 }
 
+export function mapHotel(row: any) {
+  return {
+    id: row.id,
+    destinationId: row.destination_id,
+    name: row.name,
+    area: row.area ?? '',
+    style: row.style ?? '',
+    description: row.description ?? '',
+    image: row.image ?? '',
+    sortOrder: row.sort_order ?? 0,
+  };
+}
+
+export function mapExperience(row: any) {
+  return {
+    id: row.id,
+    destinationId: row.destination_id,
+    title: row.title,
+    body: row.body ?? '',
+    image: row.image ?? '',
+    sortOrder: row.sort_order ?? 0,
+  };
+}
+
+/** Hotels + experiences referenced by a journey's itinerary stages. */
+export async function getJourneyStays(pkg: Package) {
+  if (!isSupabaseConfigured()) return { hotels: [], experiences: [] };
+  const hotelIds = Array.from(new Set(pkg.itinerary.flatMap((d) => d.hotelIds ?? [])));
+  const experienceIds = Array.from(new Set(pkg.itinerary.flatMap((d) => d.experienceIds ?? [])));
+  if (hotelIds.length === 0 && experienceIds.length === 0) return { hotels: [], experiences: [] };
+  const db = createAdminClient();
+  const hotelRows = hotelIds.length
+    ? (await db.from('hotels').select('*').in('id', hotelIds)).data ?? []
+    : [];
+  const experienceRows = experienceIds.length
+    ? (await db.from('experiences').select('*').in('id', experienceIds)).data ?? []
+    : [];
+  return {
+    hotels: hotelRows.map(mapHotel),
+    experiences: experienceRows.map(mapExperience),
+  };
+}
+
 export async function getPackagesByBrand(brand: string, limit?: number): Promise<Package[]> {
   const all = await getPublishedPackages();
   const filtered = all.filter((p) => p.brand === brand);

@@ -23,10 +23,14 @@ export default function PackageForm({
   pkg,
   destinations,
   defaultBrand,
+  hotelOptions = [],
+  experienceOptions = [],
 }: {
   pkg: Package | null;
   destinations: Destination[];
   defaultBrand?: string;
+  hotelOptions?: { id: number; label: string }[];
+  experienceOptions?: { id: number; label: string }[];
 }) {
   const [state, formAction] = useFormState<ActionState, FormData>(savePackage, null);
 
@@ -139,7 +143,18 @@ export default function PackageForm({
         <div className="mt-5 space-y-6">
           <ListEditor label="Overview paragraphs" items={overview} onChange={setOverview} multiline placeholder="A paragraph of sales copy…" />
           <ListEditor label="Highlights" items={highlights} onChange={setHighlights} placeholder="e.g. 15-minute speedboat transfer" />
-          <ItineraryEditor items={itinerary} onChange={setItinerary} />
+          <ItineraryEditor
+            items={itinerary}
+            onChange={setItinerary}
+            hotelOptions={hotelOptions}
+            experienceOptions={experienceOptions}
+          />
+          {pkg && hotelOptions.length === 0 && experienceOptions.length === 0 && (
+            <p className="-mt-3 text-xs text-ink-soft">
+              Add hotels and experiences for {pkg.destinationName || 'this destination'} in the
+              Hotels / Experiences sections, then reopen this journey to link them to stages.
+            </p>
+          )}
           <div className="grid gap-6 sm:grid-cols-2">
             <ListEditor label="What's included" items={includes} onChange={setIncludes} placeholder="e.g. Daily breakfast" />
             <ListEditor label="Not included" items={excludes} onChange={setExcludes} placeholder="e.g. International flights" />

@@ -1,22 +1,34 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import PackageCard from '@/components/PackageCard';
 import EnquiryForm from '@/components/EnquiryForm';
-import type { Package } from '@/lib/types';
+import SeasonalityBar from '@/components/SeasonalityBar';
+import type { Destination, Experience, Hotel, Package } from '@/lib/types';
 import { durationLabel, formatPrice } from '@/lib/types';
 
 /**
- * Everything below the hero on a package page — shared between the master
+ * Everything below the hero on a journey page — shared between the master
  * site and each brand's own website.
  */
 export default function PackageDetailBody({
   pkg,
   related,
-  hrefBase = '/packages',
+  hrefBase = '/journeys',
+  hotels = [],
+  experiences = [],
+  destination = null,
+  destinationHref,
 }: {
   pkg: Package;
   related: Package[];
   hrefBase?: string;
+  hotels?: Hotel[];
+  experiences?: Experience[];
+  destination?: Destination | null;
+  destinationHref?: string;
 }) {
+  const hotelById = new Map(hotels.map((h) => [h.id, h]));
+  const experienceById = new Map(experiences.map((x) => [x.id, x]));
   return (
     <>
       {/* Facts bar */}
@@ -68,15 +80,88 @@ export default function PackageDetailBody({
             <section className="mt-12">
               <h2 className="font-serif text-2xl text-ink">Day by day</h2>
               <ol className="mt-6 space-y-0">
-                {pkg.itinerary.map((day, i) => (
-                  <li key={i} className="relative border-l-2 border-teal/30 pb-8 pl-6 last:pb-0">
-                    <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-teal" />
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-deep">{day.label}</p>
-                    <h3 className="mt-1 font-semibold text-ink">{day.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{day.description}</p>
-                  </li>
-                ))}
+                {pkg.itinerary.map((day, i) => {
+                  const stayNames = (day.hotelIds ?? [])
+                    .map((id) => hotelById.get(id))
+                    .filter(Boolean) as Hotel[];
+                  const dayExperiences = (day.experienceIds ?? [])
+                    .map((id) => experienceById.get(id))
+                    .filter(Boolean) as Experience[];
+                  return (
+                    <li key={i} className="relative border-l-2 border-teal/30 pb-8 pl-6 last:pb-0">
+                      <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-teal" />
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-deep">{day.label}</p>
+                      <h3 className="mt-1 font-semibold text-ink">{day.title}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{day.description}</p>
+                      {stayNames.length > 0 && (
+                        <p className="mt-2 text-xs text-ink">
+                          <span className="font-bold uppercase tracking-wider text-ink-soft">Stay:</span>{' '}
+                          {stayNames.map((h) => h.name).join(' · ')}
+                          <span className="text-ink-soft"> — or an alternative your specialist suggests</span>
+                        </p>
+                      )}
+                      {dayExperiences.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {dayExperiences.map((x) => (
+                            <span key={x.id} className="rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold text-teal-deep">
+                              {x.title}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
               </ol>
+            </section>
+          )}
+
+          {/* Where you'll stay */}
+          {hotels.length > 0 && (
+            <section className="mt-12">
+              <h2 className="font-serif text-2xl text-ink">Where you’ll stay</h2>
+              <p className="mt-1.5 text-sm text-ink-soft">
+                Our editorial picks for this journey — your specialist confirms availability
+                and can suggest alternatives to match your style and budget.
+              </p>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
+                {hotels.map((h) => (
+                  <div key={h.id} className="card overflow-hidden">
+                    {h.image && (
+                      <div className="relative aspect-[16/9]">
+                        <Image src={h.image} alt={h.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-serif text-xl text-ink">{h.name}</h3>
+                      <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-teal-deep">
+                        {[h.area, h.style].filter(Boolean).join(' · ')}
+                      </p>
+                      {h.description && (
+                        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{h.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* When to go */}
+          {destination && destination.seasonality.best.length > 0 && (
+            <section className="mt-12">
+              <h2 className="font-serif text-2xl text-ink">When to go</h2>
+              <div className="mt-5">
+                <SeasonalityBar seasonality={destination.seasonality} />
+              </div>
+              {destinationHref && (
+                <p className="mt-3 text-sm text-ink-soft">
+                  Planning around seasons, regions and style? Read the full{' '}
+                  <Link href={destinationHref} className="font-semibold text-teal-deep hover:underline">
+                    {destination.name} destination guide →
+                  </Link>
+                </p>
+              )}
             </section>
           )}
 

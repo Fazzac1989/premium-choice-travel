@@ -19,7 +19,7 @@ export default function BrandEnquirePage({ params }: { params: { brand: string }
             Let’s plan something wonderful
           </h1>
           <p className="mt-3 text-ink-soft">
-            Tell us what you have in mind and a specialist replies within one working day.
+            Tell us what you have in mind and a specialist replies typically within one working day.
           </p>
         </div>
         <div className="card mx-auto max-w-2xl p-8">

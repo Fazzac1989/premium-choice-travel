@@ -128,7 +128,7 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
                 Let’s make it happen.
               </h2>
               <p className="mx-auto mt-4 max-w-lg text-white/80">
-                Tell us what you have in mind — a specialist replies within one working day.
+                Tell us what you have in mind — a specialist replies typically within one working day.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-4">
                 <Link href={`${base}/enquire`} className="btn-primary !px-8 !py-3.5">

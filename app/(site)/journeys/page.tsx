@@ -6,7 +6,10 @@ import { PACKAGE_BRANDS } from '@/lib/brands';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Holiday packages' };
+export const metadata = {
+  title: 'Journeys',
+  description: 'Tailor-made journey ideas from Dubai and the UAE — starting points our specialists reshape around you.',
+};
 
 export default async function PackagesPage({
   searchParams,
@@ -29,7 +32,7 @@ export default async function PackagesPage({
     if (d) q.set('destination', d);
     if (b) q.set('brand', b);
     const s = q.toString();
-    return s ? `/packages?${s}` : '/packages';
+    return s ? `/journeys?${s}` : '/journeys';
   };
 
   return (
@@ -38,7 +41,7 @@ export default async function PackagesPage({
       <main className="pt-[72px]">
         <section className="border-b border-line bg-sand">
           <div className="container-site py-14 sm:py-16">
-            <p className="eyebrow">Holiday packages</p>
+            <p className="eyebrow">Journeys</p>
             <h1 className="mt-2 max-w-2xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
               Starting points, not set menus
             </h1>

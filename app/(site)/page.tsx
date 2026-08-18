@@ -42,7 +42,7 @@ const SECTION_INTRO: Record<string, { eyebrow: string; title: string; text: stri
   golf: {
     eyebrow: 'Premium Choice Golf Holidays',
     title: 'Where will golf take you?',
-    text: 'Course-first golf trips with guaranteed tee times — links, winter sun and golf-plus-beach combinations.',
+    text: 'Course-first golf trips with tee times arranged in advance — links, winter sun and golf-plus-beach combinations.',
   },
   cruises: {
     eyebrow: 'Premium Choice Cruise',
@@ -52,7 +52,7 @@ const SECTION_INTRO: Record<string, { eyebrow: string; title: string; text: stri
   staycations: {
     eyebrow: 'Premium Choice Staycations',
     title: 'The UAE. Rediscovered.',
-    text: 'Preferred rates at the Emirates’ finest resorts, usually with breakfast, late checkout or resort credit thrown in.',
+    text: 'The Emirates’ finest resorts, hand-picked — with breakfast, late checkout or resort credit negotiated wherever possible.',
   },
 };
 
@@ -133,7 +133,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 gap-4">
             {[
               ['6', 'specialist travel brands'],
-              ['40+', 'destinations, hand-picked'],
+              ['65', 'destinations, hand-picked'],
               ['Dubai', 'based & UAE-licensed'],
               ['1', 'point of contact, always'],
             ].map(([n, label]) => (
@@ -265,7 +265,7 @@ export default async function HomePage() {
               </h2>
               <p className="mx-auto mt-5 max-w-xl text-white/80">
                 Tell us where you want to go — or simply what kind of experience you’re
-                looking for. A specialist replies within one working day.
+                looking for. A specialist replies quickly — typically within one working day.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Link href="/plan" className="btn-primary !px-9 !py-4 !text-base">

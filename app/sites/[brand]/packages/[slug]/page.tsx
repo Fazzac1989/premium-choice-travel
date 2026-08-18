@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import PackageDetailBody from '@/components/PackageDetailBody';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getPackage, getPackagesByBrand } from '@/lib/data';
+import { getJourneyStays, getPackage, getPackagesByBrand } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,9 +19,8 @@ export default async function BrandPackagePage({
   const pkg = await getPackage(params.slug);
   if (!pkg || pkg.status !== 'published' || pkg.brand !== brand.key) notFound();
 
-  const related = (await getPackagesByBrand(brand.key))
-    .filter((p) => p.slug !== pkg.slug)
-    .slice(0, 3);
+  const [relatedAll, stays] = await Promise.all([getPackagesByBrand(brand.key), getJourneyStays(pkg)]);
+  const related = relatedAll.filter((p) => p.slug !== pkg.slug).slice(0, 3);
 
   return (
     <>
@@ -36,7 +35,13 @@ export default async function BrandPackagePage({
           <p className="mt-4 max-w-2xl text-lg text-white/85">{pkg.tagline}</p>
         </div>
       </section>
-      <PackageDetailBody pkg={pkg} related={related} hrefBase={`${base}/packages`} />
+      <PackageDetailBody
+        pkg={pkg}
+        related={related}
+        hrefBase={`${base}/packages`}
+        hotels={stays.hotels}
+        experiences={stays.experiences}
+      />
     </>
   );
 }

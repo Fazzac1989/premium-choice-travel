@@ -122,7 +122,7 @@ export const samplePackages: Package[] = [
       'Private transport with English-speaking guide',
       'All entrance fees on the itinerary',
       'Airport transfers',
-      'PCT 24/7 in-trip support line',
+      'PCT in-trip support line',
     ],
     excludes: ['International flights', 'Travel insurance', 'Lunches and personal expenses', 'Gratuities'],
     itinerary: [
@@ -277,7 +277,7 @@ export const samplePackages: Package[] = [
       'All ferries, speedboats and private land transfers',
       'Phi Phi early-bird tour with lunch',
       'Krabi four-island longtail tour with lunch',
-      'PCT 24/7 in-trip support line',
+      'PCT in-trip support line',
     ],
     excludes: ['International flights', 'Travel insurance', 'National park fees (paid locally)', 'Dinners'],
     itinerary: [
@@ -338,7 +338,7 @@ export const samplePackages: Package[] = [
     heroImage: img('photo-1512453979798-5ea266f8880c'),
     gallery: [img('photo-1512453979798-5ea266f8880c', 1200), img('photo-1518684079-3c830dcef090', 1200)],
     overview: [
-      'No airport required. We hold preferred rates at the UAE’s standout resorts — Saadiyat Island beach houses, Ras Al Khaimah cliffside retreats, Palm Jumeirah icons and desert camps under Fujairah’s mountains — usually with breakfast, late checkout and a resort credit thrown in.',
+      'No airport required. We hand-pick the UAE’s standout resorts — Saadiyat Island beach houses, Ras Al Khaimah cliffside retreats, Palm Jumeirah icons and desert camps under Fujairah’s mountains — and chase the extras — breakfast, late checkout, resort credit — wherever they’re available.',
       'Tell us the vibe (beach, desert, mountains or skyline) and we’ll send three tailored options within a day.',
     ],
     highlights: [
@@ -378,7 +378,7 @@ export const samplePackages: Package[] = [
       'The pilgrimage every golfer owes themselves: four nights in the Kingdom of Fife with three confirmed links rounds, sea views from the tee and a clubhouse dram waiting at the end of each day. We arrange tee times, club hire and transfers — you bring the swing.',
     ],
     highlights: [
-      'Three confirmed links rounds with guaranteed tee times',
+      'Three confirmed links rounds with tee times booked in advance',
       'Stay in the heart of the historic golf coast',
       'St Andrews town — the home of golf — on your doorstep',
       'Private transfers between hotel and courses',
@@ -728,25 +728,12 @@ export const samplePackages: Package[] = [
   },
 ];
 
-export const sampleTestimonials = [
-  {
-    quote: 'Every detail was handled — transfers, dinners, even a birthday cake in the villa. The best travel company we have used in the UAE.',
-    name: 'Sarah & James M.', trip: 'Varu by Atmosphere, Maldives',
-  },
-  {
-    quote: 'Our Georgia tour felt private and personal. The guide became a friend and the itinerary was paced perfectly.',
-    name: 'The Al Rashid family', trip: 'Grand Georgia Discovery',
-  },
-  {
-    quote: 'From first enquiry to the quote PDF to the trip itself — professional at every step. Japan was flawless.',
-    name: 'Daniel K.', trip: 'Japan Golden Route',
-  },
-];
+// (Sample testimonials removed — only real, verifiable reviews may be added.)
 
 export const SERVICES = [
   { title: 'Tailor-made packages', text: 'Flights, hotels and experiences shaped around you — not off a shelf.' },
   { title: 'Cruises', text: 'Local Arabian Gulf sailings and international itineraries with the major lines.' },
-  { title: 'Staycations', text: 'Preferred rates at the UAE’s finest resorts, often with extras included.' },
+  { title: 'Staycations', text: 'Hand-picked UAE resorts, with extras negotiated wherever possible.' },
   { title: 'Travel insurance', text: 'Comprehensive cover arranged in minutes alongside your booking.' },
   { title: 'Car hire', text: 'Self-drive and chauffeur options at your destination, ready on arrival.' },
   { title: 'Airport lounges', text: 'Lounge access worldwide to start the holiday before boarding.' },

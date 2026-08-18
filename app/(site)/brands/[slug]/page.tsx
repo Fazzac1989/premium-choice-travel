@@ -73,7 +73,7 @@ export default async function BrandPage({ params }: { params: { slug: string } }
               <h3 className="font-serif text-xl">Start a conversation</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
                 Tell us what you have in mind and a {brand.shortName.toLowerCase()} specialist
-                will come back within one working day.
+                will come back quickly — typically within one working day.
               </p>
               <Link href="/plan" className="btn-primary mt-5 w-full">
                 Plan my trip

@@ -20,6 +20,20 @@ export default async function EditPackagePage({ params }: { params: { id: string
   const pkg = mapPackage(pkgRes.data);
   const destinations = (destRes.data ?? []).map(mapDestination);
 
+  // Linkable hotels & experiences for this journey's destination.
+  const destId = pkgRes.data.destination_id;
+  const [hotelRes, expRes] = destId
+    ? await Promise.all([
+        db.from('hotels').select('id, name, area').eq('destination_id', destId).order('sort_order'),
+        db.from('experiences').select('id, title').eq('destination_id', destId).order('sort_order'),
+      ])
+    : [{ data: [] }, { data: [] }];
+  const hotelOptions = (hotelRes.data ?? []).map((h: any) => ({
+    id: h.id,
+    label: h.area ? `${h.name} (${h.area})` : h.name,
+  }));
+  const experienceOptions = (expRes.data ?? []).map((x: any) => ({ id: x.id, label: x.title }));
+
   return (
     <div className="mx-auto max-w-3xl">
       <div className="flex items-center justify-between">
@@ -32,7 +46,12 @@ export default async function EditPackagePage({ params }: { params: { id: string
       </div>
       <h1 className="mt-2 font-serif text-3xl text-ink">{pkg.title}</h1>
       <div className="mt-8">
-        <PackageForm pkg={pkg} destinations={destinations} />
+        <PackageForm
+          pkg={pkg}
+          destinations={destinations}
+          hotelOptions={hotelOptions}
+          experienceOptions={experienceOptions}
+        />
       </div>
     </div>
   );

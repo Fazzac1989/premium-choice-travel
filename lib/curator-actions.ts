@@ -257,5 +257,5 @@ export async function submitInspirationLead(payload: {
     });
   }
 
-  return { ok: true, message: 'A specialist will come back within one working day with real availability and pricing.' };
+  return { ok: true, message: 'A specialist will come back — typically within one working day — with real availability and pricing.' };
 }

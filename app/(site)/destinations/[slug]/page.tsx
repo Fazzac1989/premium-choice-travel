@@ -38,7 +38,7 @@ export default async function DestinationPage({ params }: { params: { slug: stri
           plan: '/plan',
           inspire: `/inspiration?destination=${encodeURIComponent(destination.name)}`,
           destBase: '/destinations',
-          pkgBase: '/packages',
+          pkgBase: '/journeys',
         }}
       />
     </>

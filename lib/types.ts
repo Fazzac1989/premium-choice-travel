@@ -41,7 +41,35 @@ export type Destination = {
   published: boolean;
 };
 
-export type ItineraryDay = { label: string; title: string; description: string };
+export type ItineraryDay = {
+  label: string;
+  title: string;
+  description: string;
+  /** Linked hotel ids for this stage (optional). */
+  hotelIds?: number[];
+  /** Linked experience ids for this stage (optional). */
+  experienceIds?: number[];
+};
+
+export type Hotel = {
+  id: number;
+  destinationId: number | null;
+  name: string;
+  area: string;
+  style: string;
+  description: string;
+  image: string;
+  sortOrder: number;
+};
+
+export type Experience = {
+  id: number;
+  destinationId: number | null;
+  title: string;
+  body: string;
+  image: string;
+  sortOrder: number;
+};
 
 export type Package = {
   id: number;

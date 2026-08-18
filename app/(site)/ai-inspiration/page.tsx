@@ -43,7 +43,7 @@ const BRAND_USES = [
   ['Holidays', '“Somewhere warm in the Eid break, two kids, mid-range” → three tailor-made holiday shapes, from Thailand family resorts to a Sri Lanka mini-tour.'],
   ['Staycations', '“One night, this weekend, somewhere quiet” → desert camps, RAK beach resorts or a Saadiyat reset — matched to your budget band.'],
   ['Cruises', '“First cruise, no flights please” → Gulf sailings from Dubai’s doorstep, sized against fly-cruise alternatives for later.'],
-  ['Golf Holidays', '“Four golfers, January, guaranteed tee times” → links, winter-sun and all-inclusive golf concepts with non-golfer options flagged.'],
+  ['Golf Holidays', '“Four golfers, January, tee times sorted” → links, winter-sun and all-inclusive golf concepts with non-golfer options flagged.'],
   ['Corporate', '“Offsite for 20, three nights, wow-factor” → incentive-style concepts your account manager then builds properly.'],
   ['School Trips', 'Teachers use the dedicated School Trips platform — but tell the curator you’re planning for a school and it hands you straight to that team.'],
 ];
@@ -134,7 +134,7 @@ export default function AiInspirationPage() {
                 <p className="mt-2 text-sm leading-relaxed text-ink-soft">
                   Pick your favourite and it lands with a Premium Choice specialist as a
                   structured brief. They confirm availability, check entry requirements
-                  and price it properly — usually within one working day.
+                  and price it properly — typically within one working day.
                 </p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function AiInspirationPage() {
                 <div className="rounded-xl border border-teal/40 bg-teal/5 p-5 text-center">
                   <p className="font-serif text-2xl text-teal-deep">Thanks. Leave the planning to us.</p>
                   <p className="mx-auto mt-2 max-w-xs text-xs leading-relaxed text-ink-soft">
-                    A specialist will come back within one working day with real
+                    A specialist will typically come back within one working day with real
                     availability and pricing — by WhatsApp, phone or email, your choice.
                   </p>
                 </div>

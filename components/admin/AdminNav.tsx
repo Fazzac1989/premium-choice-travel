@@ -8,9 +8,11 @@ type NavItem = { href: string; label: string; exact?: boolean };
 
 const GROUP_ITEMS: NavItem[] = [
   { href: '/admin', label: 'Dashboard', exact: true },
-  { href: '/admin/packages', label: 'All packages' },
+  { href: '/admin/packages', label: 'All journeys' },
   { href: '/admin/import', label: 'AI Importer' },
   { href: '/admin/destinations', label: 'Destinations' },
+  { href: '/admin/hotels', label: 'Hotels' },
+  { href: '/admin/experiences', label: 'Experiences' },
   { href: '/admin/quotes', label: 'Quotes' },
   { href: '/admin/enquiries', label: 'Enquiries' },
 ];

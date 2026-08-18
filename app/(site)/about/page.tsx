@@ -21,7 +21,7 @@ const BELIEFS = [
   },
   {
     title: 'Honest value',
-    text: 'Clear, itemised pricing with no hidden extras. What we quote is what you pay.',
+    text: 'Clear, itemised pricing with no hidden extras — and quotes that stay valid until the date on the page.',
   },
   {
     title: 'Trust',

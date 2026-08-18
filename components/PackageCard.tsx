@@ -7,7 +7,7 @@ import { brandLabel } from '@/lib/brands';
 export default function PackageCard({
   pkg,
   priority = false,
-  hrefBase = '/packages',
+  hrefBase = '/journeys',
 }: {
   pkg: Package;
   priority?: boolean;

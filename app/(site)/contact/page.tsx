@@ -16,7 +16,7 @@ export default function ContactPage() {
             </h1>
             <p className="mt-4 max-w-xl text-ink-soft">
               Tell us where you’re dreaming of — or let us surprise you. A specialist replies
-              within one working day with ideas and a personal quote.
+              with ideas and a personal quote — typically within one working day.
             </p>
           </div>
         </section>

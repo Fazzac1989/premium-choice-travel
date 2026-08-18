@@ -58,5 +58,5 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
     });
   }
 
-  return { ok: true, message: 'Thank you — we’ll come back to you within one working day.' };
+  return { ok: true, message: 'Thank you — we’ll come back to you as quickly as we can — typically within one working day.' };
 }

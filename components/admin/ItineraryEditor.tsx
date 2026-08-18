@@ -2,12 +2,54 @@
 
 import type { ItineraryDay } from '@/lib/types';
 
+export type LinkOption = { id: number; label: string };
+
+function LinkPicker({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string;
+  options: LinkOption[];
+  selected: number[];
+  onToggle: (id: number) => void;
+}) {
+  if (options.length === 0) return null;
+  return (
+    <div>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-ink-soft">{label}</p>
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        {options.map((o) => {
+          const active = selected.includes(o.id);
+          return (
+            <button
+              key={o.id}
+              type="button"
+              onClick={() => onToggle(o.id)}
+              className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                active ? 'border-teal bg-teal text-white' : 'border-line bg-white text-ink-soft hover:border-teal hover:text-teal-deep'
+              }`}
+            >
+              {o.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function ItineraryEditor({
   items,
   onChange,
+  hotelOptions = [],
+  experienceOptions = [],
 }: {
   items: ItineraryDay[];
   onChange: (items: ItineraryDay[]) => void;
+  hotelOptions?: LinkOption[];
+  experienceOptions?: LinkOption[];
 }) {
   const update = (i: number, patch: Partial<ItineraryDay>) => {
     const next = items.slice();
@@ -55,6 +97,34 @@ export default function ItineraryEditor({
               placeholder="What happens on this day…"
               onChange={(e) => update(i, { description: e.target.value })}
             />
+            {(hotelOptions.length > 0 || experienceOptions.length > 0) && (
+              <div className="mt-3 space-y-2.5 rounded-lg border border-line bg-white p-3">
+                <LinkPicker
+                  label="Stay on this stage"
+                  options={hotelOptions}
+                  selected={day.hotelIds ?? []}
+                  onToggle={(id) =>
+                    update(i, {
+                      hotelIds: (day.hotelIds ?? []).includes(id)
+                        ? (day.hotelIds ?? []).filter((x) => x !== id)
+                        : [...(day.hotelIds ?? []), id],
+                    })
+                  }
+                />
+                <LinkPicker
+                  label="Experiences on this stage"
+                  options={experienceOptions}
+                  selected={day.experienceIds ?? []}
+                  onToggle={(id) =>
+                    update(i, {
+                      experienceIds: (day.experienceIds ?? []).includes(id)
+                        ? (day.experienceIds ?? []).filter((x) => x !== id)
+                        : [...(day.experienceIds ?? []), id],
+                    })
+                  }
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -266,7 +266,7 @@ export default function DestinationGuide({
               Ready when you are.
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-white/75">
-              Tell us your dates and your dream — a {destination.name} specialist replies within one working day.
+              Tell us your dates and your dream — a {destination.name} specialist replies typically within one working day.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-4">
               <Link href={links.plan} className="btn-primary !px-8 !py-3.5">Start planning</Link>

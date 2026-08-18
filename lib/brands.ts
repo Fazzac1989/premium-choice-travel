@@ -78,7 +78,7 @@ export const BRANDS: Brand[] = [
     tagline: 'The UAE. Rediscovered.',
     description: 'Exceptional hotels and escapes across all seven emirates, often with extras included.',
     longDescription:
-      'Preferred rates at the UAE’s standout resorts — Palm Jumeirah icons, Saadiyat beach houses, Ras Al Khaimah cliffs and Fujairah’s mountain coast. Tell us the vibe and we’ll send hand-picked options, usually with breakfast, late checkout or resort credit thrown in.',
+      'The UAE’s standout resorts, hand-picked — Palm Jumeirah icons, Saadiyat beach houses, Ras Al Khaimah cliffs and Fujairah’s mountain coast. Tell us the vibe and we’ll send hand-picked options, and we chase the extras — breakfast, late checkout, resort credit — wherever they’re available.',
     logo: '/images/brands/staycations.png',
     logoCard: '/images/brands/staycations-card.png',
     logoWhite: '/images/brands/staycations-white.png',
@@ -114,12 +114,12 @@ export const BRANDS: Brand[] = [
     tagline: 'Great courses. Great destinations. Better golf trips.',
     description: 'Golf holidays designed around great courses — for pairs, groups and societies.',
     longDescription:
-      'Links pilgrimages in Scotland, winter sun in the Algarve, all-inclusive golf in Belek or a round above the Indian Ocean in Mauritius. We build golf trips course-first: guaranteed tee times, the right resorts, and itineraries that keep non-golfers happy too.',
+      'Links pilgrimages in Scotland, winter sun in the Algarve, all-inclusive golf in Belek or a round above the Indian Ocean in Mauritius. We build golf trips course-first: tee times booked ahead, the right resorts, and itineraries that keep non-golfers happy too.',
     logo: '/images/brands/golf.png',
     logoCard: '/images/brands/golf-card.png',
     logoWhite: '/images/brands/golf-white.png',
     heroImage: img('photo-1587174486073-ae5e5cff23aa'),
-    services: ['International golf holidays', 'Golf groups & societies', 'Guaranteed tee times', 'Golf & beach combinations', 'Tailor-made golf itineraries'],
+    services: ['International golf holidays', 'Golf groups & societies', 'Tee times arranged in advance', 'Golf & beach combinations', 'Tailor-made golf itineraries'],
     cta: 'Explore Golf Holidays',
     sellsPackages: true,
     domains: ['premiumchoicegolfholidays.com'],

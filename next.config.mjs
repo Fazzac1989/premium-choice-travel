@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      // "Packages" became "Journeys" — permanent redirects preserve links and SEO.
+      { source: '/packages', destination: '/journeys', permanent: true },
+      { source: '/packages/:slug', destination: '/journeys/:slug', permanent: true },
+    ];
+  },
   experimental: {
     // mammoth is CommonJS and reads files at runtime — keep it out of the bundle.
     serverComponentsExternalPackages: ['mammoth'],

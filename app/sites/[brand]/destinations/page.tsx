@@ -83,8 +83,7 @@ export default async function BrandDestinationsPage({
             Where will you go next?
           </h1>
           <p className="mt-4 max-w-xl text-ink-soft">
-            {all.length} destinations, hand-picked for travellers from the UAE — every one
-            backed by a specialist who has been there.
+            {all.length} destinations, hand-picked for travellers from the UAE.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">
