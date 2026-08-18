@@ -1,6 +1,8 @@
 import SiteHeader from '@/components/SiteHeader';
 import InspirationCurator from '@/components/InspirationCurator';
 
+export const maxDuration = 120;
+
 export const metadata = {
   title: 'Give me some inspiration',
   description:

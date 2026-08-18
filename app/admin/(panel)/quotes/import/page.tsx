@@ -2,6 +2,7 @@ import Link from 'next/link';
 import ImportForm from '@/components/admin/ImportForm';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 120;
 
 export default function QuoteImportPage() {
   return (

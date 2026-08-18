@@ -47,9 +47,7 @@ const CONCEPTS_SCHEMA = {
   properties: {
     concepts: {
       type: 'array',
-      minItems: 3,
-      maxItems: 3,
-      description: 'Three genuinely differentiated holiday concepts — different destinations or clearly different trip shapes, never three near-identical variants.',
+      description: 'EXACTLY three genuinely differentiated holiday concepts — different destinations or clearly different trip shapes, never three near-identical variants.',
       items: {
         type: 'object',
         properties: {
@@ -59,7 +57,7 @@ const CONCEPTS_SCHEMA = {
           nights: { type: 'integer', description: 'Suggested total nights, matching the requested duration band' },
           whyItFits: { type: 'string', description: '2-3 sentences connecting this concept to what the traveller said they want' },
           rhythm: { type: 'string', description: 'One sentence on trip pace/shape, e.g. "Two-centre: four active days, then five slow beach days"' },
-          experiences: { type: 'array', items: { type: 'string' }, minItems: 4, maxItems: 6, description: 'Signature experiences on this trip' },
+          experiences: { type: 'array', items: { type: 'string' }, description: 'Four to six signature experiences on this trip' },
           accommodationStyle: { type: 'string', description: 'Suggested accommodation style matching their preference' },
           bestSeason: { type: 'string', description: 'When this trip is at its best, phrased as guidance' },
           budgetBand: { type: 'string', description: 'Qualitative fit against their stated budget, e.g. "Comfortably within your range" or "At the upper end of your range". Never a number. Empty string if no budget given.' },
@@ -113,7 +111,8 @@ export async function generateConcepts(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-opus-5',
+      // Sonnet keeps the curator conversational-fast; concept quality holds up well.
+      model: 'claude-sonnet-5',
       max_tokens: 8000,
       output_config: { effort: 'medium', format: { type: 'json_schema', schema: CONCEPTS_SCHEMA } },
       system: SYSTEM,
@@ -147,7 +146,8 @@ Create the three concepts.`,
     const text = response.content.find((b) => b.type === 'text');
     if (!text || text.type !== 'text') return { ok: false, error: 'No ideas came back — please try again.' };
     const parsed = JSON.parse(text.text) as { concepts: TripConcept[] };
-    return { ok: true, concepts: parsed.concepts };
+    if (!parsed.concepts?.length) return { ok: false, error: 'No ideas came back — please try again.' };
+    return { ok: true, concepts: parsed.concepts.slice(0, 3) };
   } catch (e: any) {
     console.error('[curator]', e?.message);
     return { ok: false, error: 'The inspiration service is busy — give it another try in a moment.' };
