@@ -153,6 +153,8 @@ export async function listStCountries(): Promise<{ id: number; name: string }[]>
 
 /* ────────────────────────────── quotes ───────────────────────────── */
 
+export type StQuoteLine = { description: string; qty: number; unitCost: number; markupPct: number };
+
 export type StQuote = {
   id: number;
   ref: string;
@@ -160,17 +162,23 @@ export type StQuote = {
   title: string;
   status: string;
   schoolName: string;
+  schoolLogo: string;
   teacherName: string;
   teacherEmail: string;
   travelDates: string;
   validity: string | null;
   pupils: number | null;
   staff: number | null;
+  notes: string;
   currency: string;
+  defaultMarkupPct: number;
+  itinerary: { label: string; title: string; description: string }[];
+  images: string[];
+  terms: string[];
   total: number;
   perStudent: number | null;
   updatedAt: string;
-  lines: { description: string; qty: number; unitCost: number; markupPct: number }[];
+  lines: StQuoteLine[];
 };
 
 export function stQuoteClientUrl(q: Pick<StQuote, 'publicToken'>) {
@@ -197,13 +205,19 @@ function mapStQuote(row: any): StQuote {
     title: row.title,
     status: row.status,
     schoolName: row.school_name ?? '',
+    schoolLogo: row.school_logo ?? '',
     teacherName: row.teacher_name ?? '',
     teacherEmail: row.teacher_email ?? '',
     travelDates: row.travel_dates ?? '',
     validity: row.validity,
     pupils: row.pupils,
     staff: row.staff,
+    notes: row.notes ?? '',
     currency: row.currency ?? 'AED',
+    defaultMarkupPct: Number(row.default_markup_pct ?? 0),
+    itinerary: row.itinerary ?? [],
+    images: row.images ?? [],
+    terms: row.terms ?? [],
     total,
     perStudent: row.pupils > 0 ? total / row.pupils : null,
     updatedAt: row.published_at ?? row.created_at,

@@ -71,8 +71,8 @@ export default async function AdminDashboard() {
                 )}
               </div>
               <div className="mt-5 flex gap-2 border-t border-line pt-4">
-                <Link href={`/admin/packages?brand=${b.key}`} className="btn-primary flex-1 !px-4 !py-2 text-xs">
-                  Edit content
+                <Link href={`/admin/brands/${b.key}`} className="btn-primary flex-1 !px-4 !py-2 text-xs">
+                  Open workspace
                 </Link>
                 <a href={liveUrl} target="_blank" rel="noopener" className="btn-outline flex-1 !px-4 !py-2 text-xs">
                   View site ↗
@@ -103,7 +103,7 @@ export default async function AdminDashboard() {
             </div>
             <div className="mt-5 flex gap-2 border-t border-line pt-4">
               <Link href="/admin/school-trips" className="btn-primary flex-1 !px-4 !py-2 text-xs">
-                Edit content
+                Open workspace
               </Link>
               <a href={schoolTrips.externalUrl} target="_blank" rel="noopener" className="btn-outline flex-1 !px-4 !py-2 text-xs">
                 View site ↗
