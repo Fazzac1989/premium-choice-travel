@@ -44,7 +44,7 @@ export default async function BrandWorkspacePage({ params }: { params: { brand: 
         </div>
         <div className="flex gap-3">
           <a href={liveUrl} target="_blank" rel="noopener" className="btn-outline !bg-white">View site ↗</a>
-          <Link href="/admin/packages/new" className="btn-primary">New package</Link>
+          <Link href={`/admin/packages/new?brand=${brandKey}`} className="btn-primary">New package</Link>
         </div>
       </div>
 

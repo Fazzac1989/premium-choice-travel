@@ -30,8 +30,8 @@ export default async function BrandPackagesAdminPage({ params }: { params: { bra
           </p>
         </div>
         <div className="flex gap-3">
-          <Link href="/admin/import" className="btn-outline !bg-white">AI import</Link>
-          <Link href="/admin/packages/new" className="btn-primary">New package</Link>
+          <Link href={`/admin/brands/${brandKey}/import`} className="btn-outline !bg-white">AI import</Link>
+          <Link href={`/admin/packages/new?brand=${brandKey}`} className="btn-primary">New package</Link>
         </div>
       </div>
       <div className="mt-6">

@@ -13,7 +13,14 @@ function SubmitButton({ hasSource, label }: { hasSource: boolean; label: string 
   );
 }
 
-export default function ImportForm({ kind = 'package' }: { kind?: 'package' | 'quote' }) {
+export default function ImportForm({
+  kind = 'package',
+  defaultBrand,
+}: {
+  kind?: 'package' | 'quote';
+  /** When set (brand workspaces), imported packages are filed under this brand. */
+  defaultBrand?: string;
+}) {
   const action = kind === 'quote' ? importQuote : importPackage;
   const [state, formAction] = useFormState<ImportState, FormData>(action, null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -24,6 +31,7 @@ export default function ImportForm({ kind = 'package' }: { kind?: 'package' | 'q
 
   return (
     <form action={formAction} className="card p-8">
+      {defaultBrand && <input type="hidden" name="brand" value={defaultBrand} />}
       {/* Drop zone */}
       <div
         onDragOver={(e) => {

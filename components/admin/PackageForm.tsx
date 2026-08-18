@@ -22,9 +22,11 @@ function SaveButton() {
 export default function PackageForm({
   pkg,
   destinations,
+  defaultBrand,
 }: {
   pkg: Package | null;
   destinations: Destination[];
+  defaultBrand?: string;
 }) {
   const [state, formAction] = useFormState<ActionState, FormData>(savePackage, null);
 
@@ -66,7 +68,7 @@ export default function PackageForm({
           </div>
           <div>
             <label className="field-label">Brand section</label>
-            <select name="brand" className="field" defaultValue={pkg?.brand ?? 'holidays'}>
+            <select name="brand" className="field" defaultValue={pkg?.brand ?? defaultBrand ?? 'holidays'}>
               {PACKAGE_BRANDS.map((b) => (
                 <option key={b.key} value={b.key}>Premium Choice {b.label}</option>
               ))}

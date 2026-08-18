@@ -236,6 +236,12 @@ Extract the package.`,
     return { ok: false, error: `Could not read that document: ${e.message}` };
   }
 
+  // A brand workspace can pin the brand, overriding Claude's classification.
+  const forcedBrand = String(formData.get('brand') ?? '');
+  if (['holidays', 'golf', 'cruises', 'staycations', 'corporate'].includes(forcedBrand)) {
+    draft.brand = forcedBrand as ParsedPackage['brand'];
+  }
+
   // Match destination by name, loosely
   const needle = draft.destination.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
   const destRow =
