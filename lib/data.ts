@@ -1,6 +1,7 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { sampleDestinations, samplePackages } from '@/lib/sample-data';
+import { catalogueBySlug } from '@/lib/destination-catalogue';
 import type { Destination, Package } from '@/lib/types';
 
 /**
@@ -22,6 +23,42 @@ export function mapDestination(row: any): Destination {
     intro: row.intro ?? [],
     whenToTravel: row.when_to_travel ?? [],
     culture: row.culture ?? [],
+    strapline: row.strapline ?? '',
+    tags: row.tags ?? [],
+    seasonality: row.seasonality ?? { best: [], good: [], possible: [] },
+    subDestinations: row.sub_destinations ?? [],
+    experiences: row.experiences ?? [],
+    stay: row.stay ?? [],
+    journeyIdeas: row.journey_ideas ?? [],
+    gallery: row.gallery ?? [],
+    priorityRank: row.priority_rank ?? 999,
+    published: row.published ?? true,
+  };
+}
+
+/**
+ * Fill any empty rich fields on a DB row from the built-in catalogue, so the
+ * site stays complete while the database is still being migrated/seeded.
+ */
+function enrichDestination(d: Destination): Destination {
+  const c = catalogueBySlug.get(d.slug);
+  if (!c) return d;
+  return {
+    ...d,
+    strapline: d.strapline || c.strapline,
+    blurb: d.blurb || c.blurb,
+    heroImage: d.heroImage || c.heroImage,
+    intro: d.intro.length ? d.intro : c.intro,
+    whenToTravel: d.whenToTravel.length ? d.whenToTravel : c.whenToTravel,
+    culture: d.culture.length ? d.culture : c.culture,
+    tags: d.tags.length ? d.tags : c.tags,
+    seasonality: d.seasonality.best.length || d.seasonality.good.length ? d.seasonality : c.seasonality,
+    subDestinations: d.subDestinations.length ? d.subDestinations : c.subDestinations,
+    experiences: d.experiences.length ? d.experiences : c.experiences,
+    stay: d.stay.length ? d.stay : c.stay,
+    journeyIdeas: d.journeyIdeas.length ? d.journeyIdeas : c.journeyIdeas,
+    gallery: d.gallery.length ? d.gallery : c.gallery,
+    priorityRank: d.priorityRank !== 999 ? d.priorityRank : c.priorityRank,
   };
 }
 
@@ -64,14 +101,23 @@ export async function getDestinations(): Promise<Destination[]> {
   const db = createAdminClient();
   const { data, error } = await db.from('destinations').select('*').order('sort_order');
   if (error || !data) return sampleDestinations;
-  return data.map(mapDestination);
+
+  // DB rows first (enriched), then catalogue-only destinations not yet seeded.
+  const rows = data.map(mapDestination).filter((d) => d.published).map(enrichDestination);
+  const dbSlugs = new Set(rows.map((d) => d.slug));
+  const extras = sampleDestinations.filter((d) => !dbSlugs.has(d.slug));
+  return [...rows, ...extras].sort((a, b) => a.priorityRank - b.priorityRank);
 }
 
 export async function getDestination(slug: string): Promise<Destination | null> {
   if (!isSupabaseConfigured()) return sampleDestinations.find((d) => d.slug === slug) ?? null;
   const db = createAdminClient();
   const { data } = await db.from('destinations').select('*').eq('slug', slug).maybeSingle();
-  return data ? mapDestination(data) : null;
+  if (data) {
+    const mapped = mapDestination(data);
+    return mapped.published ? enrichDestination(mapped) : null;
+  }
+  return sampleDestinations.find((d) => d.slug === slug) ?? null;
 }
 
 export async function getPublishedPackages(): Promise<Package[]> {

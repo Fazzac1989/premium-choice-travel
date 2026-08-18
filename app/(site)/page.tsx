@@ -271,6 +271,9 @@ export default async function HomePage() {
                 <Link href="/plan" className="btn-primary !px-9 !py-4 !text-base">
                   Start planning
                 </Link>
+                <Link href="/inspiration" className="btn !border !border-teal/70 !bg-teal/20 !px-9 !py-4 !text-base text-white backdrop-blur hover:!bg-teal">
+                  ✨ Give me some inspiration
+                </Link>
                 <a href="tel:+97144206965" className="btn !border !border-white/40 !px-9 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
                   Call +971 4 420 6965
                 </a>

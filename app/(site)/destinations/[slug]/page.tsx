@@ -3,52 +3,123 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import PackageCard from '@/components/PackageCard';
-import { getDestination, getPackagesForDestination } from '@/lib/data';
+import GalleryLightbox from '@/components/GalleryLightbox';
+import SeasonalityBar from '@/components/SeasonalityBar';
+import { getDestination, getDestinations, getPackagesForDestination } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const d = await getDestination(params.slug);
+  if (!d) return {};
+  return {
+    title: `${d.name} holidays`,
+    description: d.strapline ? `${d.strapline} ${d.blurb}` : d.blurb,
+  };
+}
+
+function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <>
+      <p className="eyebrow">{eyebrow}</p>
+      <h2 className="mt-1 font-serif text-3xl text-ink">{title}</h2>
+    </>
+  );
+}
 
 export default async function DestinationPage({ params }: { params: { slug: string } }) {
   const destination = await getDestination(params.slug);
   if (!destination) notFound();
-  const packages = await getPackagesForDestination(destination.slug);
+  const [packages, allDestinations] = await Promise.all([
+    getPackagesForDestination(destination.slug),
+    getDestinations(),
+  ]);
 
-  const hasGuide =
-    destination.intro.length > 0 ||
-    destination.whenToTravel.length > 0 ||
-    destination.culture.length > 0;
+  const related = allDestinations
+    .filter((d) => d.slug !== destination.slug && d.region === destination.region)
+    .slice(0, 3);
+  const inspireHref = `/inspiration?destination=${encodeURIComponent(destination.name)}`;
+  const packageSlugs = new Set(packages.map((p) => p.title.toLowerCase()));
+  const conceptIdeas = destination.journeyIdeas.filter((j) => !packageSlugs.has(j.toLowerCase()));
 
   return (
     <>
       <SiteHeader />
-      <section className="relative flex min-h-[60svh] items-end">
+
+      {/* Hero */}
+      <section className="relative flex min-h-[62svh] items-end">
         <Image src={destination.heroImage} alt={destination.name} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
         <div className="container-site relative pb-12 pt-40 text-white">
-          <p className="eyebrow !text-teal">{destination.region} · Destination guide</p>
-          <h1 className="mt-3 font-serif text-5xl sm:text-6xl">{destination.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/85">{destination.blurb}</p>
+          <nav aria-label="Breadcrumb" className="text-xs text-white/70">
+            <Link href="/" className="hover:text-teal">Home</Link> ›{' '}
+            <Link href="/destinations" className="hover:text-teal">Destinations</Link> ›{' '}
+            <span className="text-white">{destination.name}</span>
+          </nav>
+          <p className="eyebrow mt-4 !text-teal">{destination.region} · Destination guide</p>
+          <h1 className="mt-2 font-serif text-5xl sm:text-6xl">{destination.name}</h1>
+          <p className="mt-3 max-w-2xl font-serif text-2xl text-white/90">{destination.strapline}</p>
+          <div className="mt-7 flex flex-wrap gap-4">
+            <a href="#holidays" className="btn-primary !px-7 !py-3.5">Explore holidays</a>
+            <Link href={inspireHref} className="btn !border !border-teal/70 !bg-teal/20 !px-7 !py-3.5 text-white backdrop-blur hover:!bg-teal">
+              ✨ Give me some inspiration
+            </Link>
+          </div>
+          {destination.tags.length > 0 && (
+            <div className="mt-6 flex flex-wrap gap-2">
+              {destination.tags.map((t) => (
+                <Link
+                  key={t}
+                  href={`/destinations?style=${encodeURIComponent(t)}`}
+                  className="rounded-full border border-white/30 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white/85 hover:border-teal hover:text-teal"
+                >
+                  {t}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Guide */}
-      {hasGuide && (
-        <section className="py-14 sm:py-16">
-          <div className="container-site grid gap-14 lg:grid-cols-[1fr_360px] lg:gap-20">
-            <div className="min-w-0">
-              {destination.intro.length > 0 && (
-                <div className="space-y-4 text-[15px] leading-relaxed text-ink-soft">
-                  {destination.intro.map((para, i) => (
-                    <p key={i} className={i === 0 ? 'font-serif text-xl leading-relaxed text-ink' : ''}>
-                      {para}
-                    </p>
+      {/* About + sidebar */}
+      <section className="py-14 sm:py-16">
+        <div className="container-site grid gap-14 lg:grid-cols-[1fr_360px] lg:gap-20">
+          <div className="min-w-0">
+            {destination.intro.length > 0 && (
+              <div className="space-y-4 text-[15px] leading-relaxed text-ink-soft">
+                {destination.intro.map((para, i) => (
+                  <p key={i} className={i === 0 ? 'font-serif text-xl leading-relaxed text-ink' : ''}>
+                    {para}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {/* Where to go */}
+            {destination.subDestinations.length > 0 && (
+              <div className="mt-12">
+                <SectionTitle eyebrow="Where to go" title={`Finding your ${destination.name}`} />
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  {destination.subDestinations.map((s, i) => (
+                    <div key={i} className="rounded-2xl border border-line p-5">
+                      <h3 className="font-serif text-lg text-teal-deep">{s.heading}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{s.body}</p>
+                    </div>
                   ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              {destination.whenToTravel.length > 0 && (
-                <div className="mt-12">
-                  <p className="eyebrow">Seasons</p>
-                  <h2 className="mt-1 font-serif text-3xl text-ink">When to travel</h2>
+            {/* When to go */}
+            {(destination.seasonality.best.length > 0 || destination.whenToTravel.length > 0) && (
+              <div className="mt-12">
+                <SectionTitle eyebrow="Seasons" title="When to go" />
+                {destination.seasonality.best.length > 0 && (
+                  <div className="mt-6">
+                    <SeasonalityBar seasonality={destination.seasonality} />
+                  </div>
+                )}
+                {destination.whenToTravel.length > 0 && (
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {destination.whenToTravel.map((s, i) => (
                       <div key={i} className="rounded-2xl bg-sand p-6">
@@ -57,67 +128,166 @@ export default async function DestinationPage({ params }: { params: { slug: stri
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+            )}
 
-              {destination.culture.length > 0 && (
-                <div className="mt-12">
-                  <p className="eyebrow">Know before you go</p>
-                  <h2 className="mt-1 font-serif text-3xl text-ink">Culture & flavour</h2>
-                  <div className="mt-6 space-y-8">
-                    {destination.culture.map((s, i) => (
-                      <div key={i} className="border-l-2 border-teal pl-6">
-                        <h3 className="font-serif text-xl text-ink">{s.heading}</h3>
-                        <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{s.body}</p>
+            {/* Experiences */}
+            {destination.experiences.length > 0 && (
+              <div className="mt-12">
+                <SectionTitle eyebrow="Things to experience" title="Moments worth flying for" />
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {destination.experiences.map((s, i) => (
+                    <div key={i} className="flex items-start gap-3 rounded-xl bg-sand px-4 py-3.5">
+                      <span className="mt-0.5 text-teal">✦</span>
+                      <div>
+                        <h3 className="text-sm font-bold text-ink">{s.heading}</h3>
+                        <p className="mt-0.5 text-sm leading-relaxed text-ink-soft">{s.body}</p>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              <div className="rounded-2xl bg-ink p-7 text-white">
-                <h3 className="font-serif text-xl">Talk to a {destination.name} specialist</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/70">
-                  First-hand advice on islands, seasons and the details guidebooks miss.
-                </p>
-                <Link href="/plan" className="btn-primary mt-5 w-full">Plan my trip</Link>
-                <p className="mt-4 text-center text-xs text-white/60">
-                  or call <a className="font-semibold text-teal" href="tel:+97144206965">+971 4 420 6965</a>
+            {/* Culture */}
+            {destination.culture.length > 0 && (
+              <div className="mt-12">
+                <SectionTitle eyebrow="Know before you go" title="Culture & flavour" />
+                <div className="mt-6 space-y-8">
+                  {destination.culture.map((s, i) => (
+                    <div key={i} className="border-l-2 border-teal pl-6">
+                      <h3 className="font-serif text-xl text-ink">{s.heading}</h3>
+                      <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{s.body}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Where to stay */}
+            {destination.stay.length > 0 && (
+              <div className="mt-12">
+                <SectionTitle eyebrow="Where to stay" title="Styles that suit" />
+                <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                  {destination.stay.map((s, i) => (
+                    <div key={i} className="rounded-2xl border border-line p-5">
+                      <h3 className="font-serif text-lg text-teal-deep">{s.heading}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{s.body}</p>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-ink-soft">
+                  We recommend specific hotels once we know your dates and party — availability and rates are always confirmed by a specialist.
                 </p>
               </div>
-            </aside>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+            <div className="rounded-2xl bg-ink p-7 text-white">
+              <h3 className="font-serif text-xl">Talk to a {destination.name} specialist</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/70">
+                First-hand advice on regions, seasons and the details guidebooks miss —
+                before any quote, without any obligation.
+              </p>
+              <Link href="/plan" className="btn-primary mt-5 w-full">Plan my trip</Link>
+              <p className="mt-4 text-center text-xs text-white/60">
+                or call <a className="font-semibold text-teal" href="tel:+97144206965">+971 4 420 6965</a>
+              </p>
+            </div>
+            <div className="rounded-2xl border border-teal/40 bg-teal/5 p-7">
+              <h3 className="font-serif text-xl text-teal-deep">Not sure where to start?</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Answer a few questions and our AI curator sketches three trip ideas —
+                then a human expert takes over.
+              </p>
+              <Link href={inspireHref} className="btn-dark mt-4 w-full">✨ Give me some inspiration</Link>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* Holidays */}
+      <section id="holidays" className="border-t border-line bg-sand py-14 sm:py-16">
+        <div className="container-site">
+          <SectionTitle eyebrow="Popular holidays" title={`Trips we build to ${destination.name}`} />
+          <p className="mt-3 max-w-xl text-sm text-ink-soft">
+            Our itineraries are starting points, not fixed packages — open one for the full
+            day-by-day plan, then let us reshape it around you.
+          </p>
+          {packages.length > 0 && (
+            <div className="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              {packages.map((p, i) => (
+                <PackageCard key={p.slug} pkg={p} priority={i < 3} />
+              ))}
+            </div>
+          )}
+          {conceptIdeas.length > 0 && (
+            <div className={`grid gap-4 sm:grid-cols-2 lg:grid-cols-4 ${packages.length > 0 ? 'mt-8' : 'mt-8'}`}>
+              {conceptIdeas.map((idea) => (
+                <Link
+                  key={idea}
+                  href={`/plan`}
+                  className="group rounded-2xl border border-line bg-white p-5 transition-shadow hover:shadow-lg"
+                >
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-teal-deep">Holiday concept</p>
+                  <h3 className="mt-1.5 font-serif text-lg leading-snug text-ink group-hover:text-teal-deep">{idea}</h3>
+                  <p className="mt-2 text-xs text-ink-soft">Built to order — ask us to shape this trip →</p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Gallery */}
+      {destination.gallery.length > 0 && (
+        <section className="py-14 sm:py-16">
+          <div className="container-site">
+            <SectionTitle eyebrow="Gallery" title={`${destination.name}, in pictures`} />
+            <div className="mt-7">
+              <GalleryLightbox images={destination.gallery} title={destination.name} />
+            </div>
           </div>
         </section>
       )}
 
-      {/* Sample itineraries */}
-      <section className={`py-14 sm:py-16 ${hasGuide ? 'border-t border-line bg-sand' : ''}`}>
+      {/* Related + closing CTA */}
+      <section className="border-t border-line py-14 sm:py-16">
         <div className="container-site">
-          {packages.length > 0 ? (
+          {related.length > 0 && (
             <>
-              <p className="eyebrow">Sample itineraries</p>
-              <h2 className="mt-1 font-serif text-3xl text-ink">Trips we run to {destination.name}</h2>
-              <p className="mt-3 max-w-xl text-sm text-ink-soft">
-                Each itinerary is a proven starting point — open one for the full day-by-day plan,
-                then let us reshape it around you.
-              </p>
-              <div className="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-                {packages.map((p, i) => (
-                  <PackageCard key={p.slug} pkg={p} priority={i < 3} />
+              <SectionTitle eyebrow="Keep exploring" title="You may also like" />
+              <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                {related.map((d) => (
+                  <Link key={d.slug} href={`/destinations/${d.slug}`} className="group relative block aspect-[4/3] overflow-hidden rounded-2xl">
+                    <Image src={d.heroImage} alt={d.name} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-5">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-teal">{d.region}</p>
+                      <h3 className="mt-1 font-serif text-2xl text-white">{d.name}</h3>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </>
-          ) : (
-            <div className="rounded-2xl border border-line bg-white p-12 text-center">
-              <p className="font-serif text-2xl text-ink">We build {destination.name} trips to order.</p>
-              <p className="mx-auto mt-3 max-w-md text-ink-soft">
-                Tell us your dates and style and we’ll craft a personal itinerary with transparent pricing.
-              </p>
-              <Link href="/plan" className="btn-primary mt-6">Request a tailor-made quote</Link>
-            </div>
           )}
+          <div className="mt-12 rounded-3xl bg-ink px-8 py-12 text-center text-white sm:px-16">
+            <h2 className="mx-auto max-w-2xl font-serif text-3xl leading-tight sm:text-4xl">
+              Ready when you are.
+            </h2>
+            <p className="mx-auto mt-4 max-w-lg text-white/75">
+              Tell us your dates and your dream — a {destination.name} specialist replies within one working day.
+            </p>
+            <div className="mt-7 flex flex-wrap justify-center gap-4">
+              <Link href="/plan" className="btn-primary !px-8 !py-3.5">Start planning</Link>
+              <Link href={inspireHref} className="btn !border !border-white/40 !px-8 !py-3.5 text-white hover:!border-teal hover:text-teal">
+                ✨ Give me some inspiration
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

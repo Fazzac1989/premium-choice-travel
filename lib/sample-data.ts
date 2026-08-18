@@ -1,4 +1,4 @@
-import type { Destination, Package } from './types';
+import type { Package } from './types';
 
 /**
  * Sample content — used two ways:
@@ -10,85 +10,8 @@ import type { Destination, Package } from './types';
 const img = (id: string, w = 1600) =>
   `https://images.unsplash.com/${id}?q=80&w=${w}&auto=format&fit=crop`;
 
-const baseDestinations: Omit<Destination, 'intro' | 'whenToTravel' | 'culture'>[] = [
-  {
-    id: 1, slug: 'maldives', name: 'Maldives', region: 'Indian Ocean',
-    blurb: 'Overwater villas, house reefs and sunsets that stop time. Paradise, made easy from the UAE.',
-    heroImage: img('photo-1514282401047-d79a71a590e8'), featured: true, sortOrder: 1,
-  },
-  {
-    id: 2, slug: 'georgia', name: 'Georgia', region: 'Caucasus',
-    blurb: 'Ancient monasteries, mountain silhouettes and legendary hospitality — a short flight, a world away.',
-    heroImage: img('photo-1565008576549-57569a49371d'), featured: true, sortOrder: 2,
-  },
-  {
-    id: 3, slug: 'japan', name: 'Japan', region: 'Asia & Far East',
-    blurb: 'Unique culture, stunning scenery. Temples and bullet trains, ryokans and neon nights.',
-    heroImage: img('photo-1493976040374-85c8e12f0c0e'), featured: true, sortOrder: 3,
-  },
-  {
-    id: 4, slug: 'switzerland', name: 'Switzerland', region: 'Europe',
-    blurb: 'Explore the heart of the Alps — glacier peaks, lake towns and the world’s most scenic railways.',
-    heroImage: img('photo-1530122037265-a5f1f91d3b99'), featured: true, sortOrder: 4,
-  },
-  {
-    id: 5, slug: 'thailand', name: 'Thailand', region: 'Asia & Far East',
-    blurb: 'Pristine beaches, exceptional value. Island-hop the Andaman Sea and eat like royalty.',
-    heroImage: img('photo-1552465011-b4e21bf6e79a'), featured: true, sortOrder: 5,
-  },
-  {
-    id: 6, slug: 'jordan', name: 'Jordan', region: 'Middle East',
-    blurb: 'Ancient wonders, modern discoveries. Petra at dawn, Wadi Rum by starlight, the Dead Sea in between.',
-    heroImage: img('photo-1548786811-dd6e453ccca7'), featured: true, sortOrder: 6,
-  },
-  {
-    id: 7, slug: 'united-arab-emirates', name: 'United Arab Emirates', region: 'Middle East',
-    blurb: 'Special offers on the UAE’s finest hotels — desert resorts, beach clubs and skyline suites.',
-    heroImage: img('photo-1512453979798-5ea266f8880c'), featured: true, sortOrder: 7,
-  },
-  {
-    id: 8, slug: 'scotland', name: 'Scotland', region: 'Europe',
-    blurb: 'The home of golf — ancient links, whisky evenings and coastline that made the game.',
-    heroImage: img('photo-1672871582992-1b30b19878f5'), featured: false, sortOrder: 8,
-  },
-  {
-    id: 9, slug: 'portugal', name: 'Portugal', region: 'Europe',
-    blurb: 'Algarve cliffs, Atlantic light and Europe’s most reliable winter-sun golf.',
-    heroImage: img('photo-1562760156-9353a70352ef'), featured: false, sortOrder: 9,
-  },
-  {
-    id: 10, slug: 'turkey', name: 'Turkey', region: 'Europe',
-    blurb: 'Belek’s championship fairways and all-inclusive resorts, four hours from the Gulf.',
-    heroImage: img('photo-1764562155715-40df5778946e'), featured: false, sortOrder: 10,
-  },
-  {
-    id: 11, slug: 'mauritius', name: 'Mauritius', region: 'Indian Ocean',
-    blurb: 'Lagoon blues, volcanic peaks and ocean-view golf — the Indian Ocean at its most generous.',
-    heroImage: img('photo-1513415277900-a62401e19be4'), featured: false, sortOrder: 11,
-  },
-  {
-    id: 12, slug: 'mediterranean', name: 'Mediterranean', region: 'Cruise Seas',
-    blurb: 'Santorini sunsets, Amalfi lemons and Barcelona nights — one sailing, many worlds.',
-    heroImage: img('photo-1613395877344-13d4a8e0d49e'), featured: false, sortOrder: 12,
-  },
-  {
-    id: 13, slug: 'northern-europe', name: 'Northern Europe', region: 'Cruise Seas',
-    blurb: 'Fjords, midnight sun and Baltic capitals — cruising at its most dramatic.',
-    heroImage: img('photo-1518124880777-cf8c82231ffb'), featured: false, sortOrder: 13,
-  },
-  {
-    id: 14, slug: 'arabian-gulf', name: 'Arabian Gulf', region: 'Cruise Seas',
-    blurb: 'Sail from Dubai’s doorstep — skylines, souks and desert islands without a flight.',
-    heroImage: img('photo-1722502831583-b4e93ecc6027'), featured: false, sortOrder: 14,
-  },
-];
+export { DESTINATION_CATALOGUE as sampleDestinations } from './destination-catalogue';
 
-import { DESTINATION_GUIDES, EMPTY_GUIDE } from './destination-guides';
-
-export const sampleDestinations: Destination[] = baseDestinations.map((d) => ({
-  ...d,
-  ...(DESTINATION_GUIDES[d.slug] ?? EMPTY_GUIDE),
-}));
 
 export const samplePackages: Package[] = [
   {

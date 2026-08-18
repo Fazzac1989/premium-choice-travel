@@ -1,5 +1,10 @@
 export type GuideSection = { heading: string; body: string };
 
+export type GalleryImage = { url: string; alt: string };
+
+/** 1-12 month numbers per suitability band. */
+export type Seasonality = { best: number[]; good: number[]; possible: number[] };
+
 export type Destination = {
   id: number;
   slug: string;
@@ -9,12 +14,31 @@ export type Destination = {
   heroImage: string;
   featured: boolean;
   sortOrder: number;
-  /** Introductory paragraphs for the destination guide. */
+  /** "About the country" editorial paragraphs. */
   intro: string[];
-  /** Seasonal guidance, e.g. { heading: "November – April", body: "Dry season …" }. */
+  /** Seasonal guidance prose, e.g. { heading: "November – April", body: "Dry season …" }. */
   whenToTravel: GuideSection[];
   /** Culture & know-before-you-go sections with headers. */
   culture: GuideSection[];
+  /** One-line proposition under the country name. */
+  strapline: string;
+  /** Why go / who it suits tags: Family, Couples, Beach, Golf … */
+  tags: string[];
+  /** Month-by-month suitability for the seasonality bar. */
+  seasonality: Seasonality;
+  /** Regions/cities within the country. */
+  subDestinations: GuideSection[];
+  /** Things to experience cards. */
+  experiences: GuideSection[];
+  /** Where to stay: styles and areas (no invented hotel partnerships). */
+  stay: GuideSection[];
+  /** Holiday concepts we can build — content anchors, not fixed packages. */
+  journeyIdeas: string[];
+  /** Lightbox gallery images. */
+  gallery: GalleryImage[];
+  /** Editorial/commercial priority (1 = highest). */
+  priorityRank: number;
+  published: boolean;
 };
 
 export type ItineraryDay = { label: string; title: string; description: string };
