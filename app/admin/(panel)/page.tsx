@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { formatMoney, mapQuote, quoteTotal } from '@/lib/quotes';
 import { BRANDS } from '@/lib/brands';
-import { getPcstStats, PCST_ADMIN_URL } from '@/lib/pcst';
+import { getPcstStats } from '@/lib/pcst';
 import StatusBadge from '@/components/admin/StatusBadge';
 
 export const dynamic = 'force-dynamic';
@@ -102,9 +102,9 @@ export default async function AdminDashboard() {
               )}
             </div>
             <div className="mt-5 flex gap-2 border-t border-line pt-4">
-              <a href={PCST_ADMIN_URL} target="_blank" rel="noopener" className="btn-primary flex-1 !px-4 !py-2 text-xs">
-                Open School Trips admin ↗
-              </a>
+              <Link href="/admin/school-trips" className="btn-primary flex-1 !px-4 !py-2 text-xs">
+                Edit content
+              </Link>
               <a href={schoolTrips.externalUrl} target="_blank" rel="noopener" className="btn-outline flex-1 !px-4 !py-2 text-xs">
                 View site ↗
               </a>
