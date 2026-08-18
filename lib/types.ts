@@ -60,6 +60,22 @@ export type Hotel = {
   description: string;
   image: string;
   sortOrder: number;
+  /** Editorial introduction paragraphs. */
+  intro: string[];
+  /** Feature bullet points (kids' club, house reef, spa …). */
+  features: string[];
+  /** Room categories with a short description each. */
+  roomTypes: GuideSection[];
+  /** Restaurants & bars with a short description each. */
+  restaurants: GuideSection[];
+  /** Available board bases, e.g. "Bed & Breakfast", "All-Inclusive". */
+  mealPlans: string[];
+  /** How to get there, in prose. */
+  gettingThere: string;
+  /** e.g. "15 minutes by speedboat from Malé airport". */
+  transferDuration: string;
+  /** Gallery image URLs. */
+  gallery: string[];
 };
 
 export type Experience = {

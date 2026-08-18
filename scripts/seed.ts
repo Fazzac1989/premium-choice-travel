@@ -188,6 +188,74 @@ async function seedStays() {
     console.log(`✓ Experience ${x.title}`);
   }
 
+  // Detail content for the starter hotels — drawn from copy already on the site.
+  const details: Record<string, Record<string, unknown>> = {
+    'Hard Rock Hotel Maldives': {
+      intro: [
+        'Set on the Crossroads lifestyle marina, Hard Rock Hotel Maldives pairs the islands’ turquoise calm with a beat you can actually feel — in-room Fender guitars, a serious spa and the biggest kids’ club in the atoll.',
+        'The Marina @ Crossroads promenade sits on the doorstep: a dozen restaurants, boutiques and a beach club without ever needing another boat.',
+      ],
+      features: ['Marina @ Crossroads on the doorstep', 'Rock Spa® and Body Rock® gym', 'Roxity Kids Club®', 'House reef snorkelling', 'Complimentary non-motorised water sports'],
+      room_types: [
+        { heading: 'Silver Beach Studio', body: 'Garden-wrapped beach studios — the sweet spot for families and value.' },
+        { heading: 'Overwater villas', body: 'The postcard: steps into the lagoon and sunset decks. Ask your specialist about current categories.' },
+      ],
+      restaurants: [
+        { heading: 'Sessions', body: 'International all-day dining and the daily breakfast venue.' },
+        { heading: 'The Marina', body: 'A dozen independent restaurants and a beach club, a short stroll along the promenade.' },
+      ],
+      meal_plans: ['Bed & Breakfast', 'Half Board', 'All-Inclusive'],
+      getting_there: 'Fly to Malé (Velana International), where the resort’s speedboat collects you from the airport marina — no seaplane needed.',
+      transfer_duration: '15 minutes by speedboat from Malé airport',
+    },
+    'Varu by Atmosphere': {
+      intro: [
+        'Varu is the Maldives with the brakes off: a genuine premium all-inclusive where sunset cruises, snorkel safaris, fine wines and a spa credit are part of the plan — and the house reef has resident turtles.',
+      ],
+      features: ['Premium all-inclusive Varu Plan™', 'Vivid house reef with resident turtles', 'Weekly sunset cruise, fishing trip and snorkel safari', 'Overwater teppanyaki dining'],
+      room_types: [
+        { heading: 'Beach Villa', body: 'Wrapped in tropical garden, steps from the sand.' },
+        { heading: 'Water Villa', body: 'On stilts over the lagoon — the full postcard.' },
+      ],
+      restaurants: [
+        { heading: 'Lime & Chilli', body: 'The main restaurant, covering world cuisines across the week.' },
+        { heading: 'Teppanyaki grill', body: 'Overwater counter dining — the night to book first.' },
+      ],
+      meal_plans: ['Premium All-Inclusive (Varu Plan™)'],
+      getting_there: 'Fly to Malé (Velana International), then the resort speedboat across the North Malé Atoll.',
+      transfer_duration: '40 minutes by speedboat from Malé airport',
+    },
+    'The Sarojin': {
+      intro: [
+        'A grown-up boutique on a quiet stretch of Khao Lak sand — unhurried, beautifully kept and an easy base for Khao Sok and the Similan Islands in season.',
+      ],
+      features: ['Quiet stretch of Khao Lak beach', 'Adults-oriented calm', 'Day trips to Khao Sok national park'],
+      meal_plans: ['Bed & Breakfast', 'Half Board'],
+      getting_there: 'Fly to Phuket, then a private road transfer north along the Andaman coast.',
+      transfer_duration: 'Around 1 hour by car from Phuket airport',
+    },
+    Rayavadee: {
+      intro: [
+        'Pavilions scattered between limestone cliffs and three beaches at the tip of the Railay peninsula — reached by boat, and better for it.',
+      ],
+      features: ['Three beaches around the resort', 'Railay’s limestone scenery', 'Arrival by boat'],
+      meal_plans: ['Bed & Breakfast', 'Half Board'],
+      getting_there: 'Fly to Krabi, then the resort’s boat transfer from Ao Nang.',
+      transfer_duration: 'Around 45 minutes door-to-door from Krabi airport',
+    },
+  };
+  let detailsOk = true;
+  for (const [name, patch] of Object.entries(details)) {
+    if (!detailsOk) break;
+    const { error } = await db.from('hotels').update(patch).eq('name', name);
+    if (error && /column|schema cache/i.test(error.message)) {
+      console.warn('⚠ Hotel detail columns not migrated (006) — run supabase/RUN-ME.sql, then npm run seed again.');
+      detailsOk = false;
+    } else if (!error) {
+      console.log(`✓ Hotel details ${name}`);
+    }
+  }
+
   // Link onto journey stages (only where not already linked).
   const links: { slug: string; stageMatch: string; hotels?: string[]; experiences?: string[] }[] = [
     { slug: 'hard-rock-hotel-maldives', stageMatch: 'Arrival', hotels: ['Hard Rock Hotel Maldives'], experiences: [] },

@@ -161,6 +161,14 @@ export function mapHotel(row: any) {
     description: row.description ?? '',
     image: row.image ?? '',
     sortOrder: row.sort_order ?? 0,
+    intro: row.intro ?? [],
+    features: row.features ?? [],
+    roomTypes: row.room_types ?? [],
+    restaurants: row.restaurants ?? [],
+    mealPlans: row.meal_plans ?? [],
+    gettingThere: row.getting_there ?? '',
+    transferDuration: row.transfer_duration ?? '',
+    gallery: row.gallery ?? [],
   };
 }
 
