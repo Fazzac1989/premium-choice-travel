@@ -3,7 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { emailShell, sendEmail } from '@/lib/email';
-import { getDestinations } from '@/lib/data';
+import { getDestinations, getPublishedPackages } from '@/lib/data';
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -36,6 +36,7 @@ export type TripConcept = {
   accommodationStyle: string;
   bestSeason: string;
   budgetBand: string;
+  startingJourney: string;
 };
 
 export type ConceptsResult =
@@ -61,8 +62,9 @@ const CONCEPTS_SCHEMA = {
           accommodationStyle: { type: 'string', description: 'Suggested accommodation style matching their preference' },
           bestSeason: { type: 'string', description: 'When this trip is at its best, phrased as guidance' },
           budgetBand: { type: 'string', description: 'Qualitative fit against their stated budget, e.g. "Comfortably within your range" or "At the upper end of your range". Never a number. Empty string if no budget given.' },
+          startingJourney: { type: 'string', description: 'EXACT title of the Premium Choice journey from the library this concept adapts, when one fits. Empty string if the concept is fully bespoke.' },
         },
-        required: ['title', 'destinations', 'route', 'nights', 'whyItFits', 'rhythm', 'experiences', 'accommodationStyle', 'bestSeason', 'budgetBand'],
+        required: ['title', 'destinations', 'route', 'nights', 'whyItFits', 'rhythm', 'experiences', 'accommodationStyle', 'bestSeason', 'budgetBand', 'startingJourney'],
         additionalProperties: false,
       },
     },
@@ -100,12 +102,15 @@ export async function generateConcepts(
     return { ok: false, error: 'The inspiration service is not configured yet — please use Plan My Trip instead.' };
   }
 
-  const destinations = await getDestinations();
+  const [destinations, journeys] = await Promise.all([getDestinations(), getPublishedPackages()]);
   const destinationList = destinations
     .filter((d) => d.region !== 'Cruise Seas')
     .sort((a, b) => a.priorityRank - b.priorityRank)
     .map((d) => d.name)
     .join(', ');
+  const journeyLibrary = journeys
+    .map((p) => `${p.title} [${p.brand}] — ${p.destinationName || '—'}, ${p.nights}n${p.tags?.length ? ` (${p.tags.join(', ')})` : ''}`)
+    .join('\n');
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -120,6 +125,9 @@ export async function generateConcepts(
         {
           role: 'user',
           content: `Destinations Premium Choice Travel actively sells (prefer these, strongest first): ${destinationList}.
+
+Premium Choice journey library (existing designed journeys — where one fits the brief, use it as a concept's starting point, put its EXACT title in startingJourney, and adapt pace/duration to the traveller; personalise rather than invent availability):
+${journeyLibrary || '(no journeys published yet)'}
 
 The traveller answered:
 - Trip type: ${answers.tripType || 'open'}
@@ -186,7 +194,7 @@ export async function submitInspirationLead(payload: {
     answers.destinationHint ? `Was browsing: ${answers.destinationHint}` : null,
     '',
     selected
-      ? `RECOMMENDED STARTING ITINERARY\n${selected.title} — ${selected.destinations} (${selected.nights} nights)\nRoute: ${selected.route}\nWhy it fits: ${selected.whyItFits}\nExperiences: ${selected.experiences.join('; ')}\nStay: ${selected.accommodationStyle} · Season: ${selected.bestSeason}`
+      ? `RECOMMENDED STARTING ITINERARY\n${selected.title} — ${selected.destinations} (${selected.nights} nights)${selected.startingJourney ? `\nBased on PCT journey: ${selected.startingJourney}` : ''}\nRoute: ${selected.route}\nWhy it fits: ${selected.whyItFits}\nExperiences: ${selected.experiences.join('; ')}\nStay: ${selected.accommodationStyle} · Season: ${selected.bestSeason}`
       : 'No concept selected — customer asked to speak to an expert directly.',
     '',
     `OTHER CONCEPTS SHOWN: ${concepts.filter((c) => c.title !== selected?.title).map((c) => c.title).join(' | ') || '—'}`,

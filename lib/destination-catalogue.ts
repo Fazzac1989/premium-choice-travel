@@ -63,6 +63,42 @@ const EXTRAS: CatalogueEntry[] = [
     journeyIdeas: ['Norwegian Fjords Cruise', 'Baltic Capitals Sailing', 'Midnight Sun Voyage', 'British Isles Circuit'],
   },
   {
+    slug: 'caribbean', name: 'Caribbean', region: 'Cruise Seas', priorityRank: 95,
+    strapline: 'Island time, taken seriously.',
+    blurb: 'Powder beaches, rum-shack lunches and a different island every morning when you sail.',
+    tags: ['Cruise', 'Beach', 'Islands', 'Winter Sun', 'Family'],
+    seasonality: { best: [12, 1, 2, 3, 4], good: [5, 11], possible: [6, 7, 8, 9, 10] },
+    intro: [
+      'The Caribbean stretches from the Bahamas down to the South American coast, and no two islands play the same tune. Barbados is polished and British-tinged, St Lucia is all volcanic drama, Grenada smells of nutmeg, and Aruba barely sees a drop of rain. For UAE travellers it pairs naturally with a cruise: unpack once and let the ship do the island-hopping.',
+      'The classic season runs December to April — dry, warm and reliably calm — which lines up neatly with the UAE winter and the festive break. Fly via London, Paris or the US East Coast; most sailings leave from Miami, Fort Lauderdale, San Juan or Barbados.',
+    ],
+    journeyIdeas: ['Eastern Caribbean Cruise & Florida', 'Southern Caribbean Island Cruise', 'Panama Canal Journey', 'Caribbean Golf & Beach'],
+  },
+  {
+    slug: 'antarctica', name: 'Antarctica', region: 'Polar', priorityRank: 96,
+    strapline: 'The last true wilderness.',
+    blurb: 'Icebergs the size of districts, penguin colonies and a silence you will not find anywhere else.',
+    tags: ['Expedition', 'Wildlife', 'Cruise', 'Adventure', 'Once in a Lifetime'],
+    seasonality: { best: [12, 1, 2], good: [11, 3], possible: [4, 5, 6, 7, 8, 9, 10] },
+    intro: [
+      'Antarctica is not a holiday in the usual sense — it is an expedition, run from purpose-built ships that sail from Ushuaia at the tip of Argentina across the Drake Passage to the Antarctic Peninsula. Days are shaped by ice and weather: zodiac cruises among icebergs, landings at penguin colonies, and lectures from the expedition team in between.',
+      'The season is short — November to March, the Antarctic summer — with December and January bringing the longest daylight and the busiest penguin rookeries. No operator can promise specific wildlife or landings, and the honest ones say so; flexibility is part of the deal.',
+    ],
+    journeyIdeas: ['Antarctica Expedition Cruise', 'Patagonia & Antarctica Combination', 'South Georgia Wildlife Voyage', 'Fly-the-Drake Express Expedition'],
+  },
+  {
+    slug: 'dominican-republic', name: 'Dominican Republic', region: 'Caribbean', priorityRank: 97,
+    strapline: 'The Caribbean’s golf capital.',
+    blurb: 'Championship courses carved along the ocean, all-inclusive resorts and merengue after dark.',
+    tags: ['Golf', 'Beach', 'All-Inclusive', 'Winter Sun', 'Couples'],
+    seasonality: { best: [12, 1, 2, 3, 4], good: [5, 11], possible: [6, 7, 8, 9, 10] },
+    intro: [
+      'The Dominican Republic occupies the eastern half of Hispaniola and has quietly built the strongest golf offering in the Caribbean — oceanside championship courses around Punta Cana and La Romana that regularly top regional rankings, backed by resorts that understand the all-inclusive format better than almost anywhere.',
+      'Beyond the fairways there are 16th-century streets in Santo Domingo, whale-watching in Samaná Bay in late winter, and beaches that hold their own against any neighbour. December to April is the dry, settled season and the natural window for UAE travellers chasing winter sun.',
+    ],
+    journeyIdeas: ['Punta Cana Golf & All-Inclusive', 'La Romana Championship Golf', 'Santo Domingo & Beach Twin-Centre', 'Samaná Whales & North Coast'],
+  },
+  {
     slug: 'arabian-gulf', name: 'Arabian Gulf', region: 'Cruise Seas', priorityRank: 94,
     strapline: 'Sail from Dubai’s doorstep.',
     blurb: 'Skylines, souks and desert islands without a flight.',

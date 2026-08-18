@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "seed": "tsx scripts/seed.ts",
-    "audit": "tsx scripts/audit.ts"
+    "audit": "tsx scripts/audit.ts",
+    "seed:journeys": "tsx scripts/seed-journeys.ts",
+    "journey:images": "tsx scripts/fetch-journey-images.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.117.1",

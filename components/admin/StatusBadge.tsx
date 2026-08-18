@@ -1,6 +1,7 @@
 export default function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     draft: 'bg-line text-ink-soft',
+    review: 'bg-[#F2E4C4] text-[#8A6D1A]',
     sent: 'bg-teal/15 text-teal-deep',
     accepted: 'bg-teal text-white',
     declined: 'bg-danger/10 text-danger',

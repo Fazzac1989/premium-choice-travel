@@ -6,6 +6,7 @@ import { deletePackage, savePackage, type ActionState } from '@/lib/admin/action
 import ListEditor from '@/components/admin/ListEditor';
 import ItineraryEditor from '@/components/admin/ItineraryEditor';
 import { GalleryField, ImageField } from '@/components/admin/ImageField';
+import BrandDetailsFields from '@/components/admin/BrandDetailsFields';
 import type { Destination, ItineraryDay, Package } from '@/lib/types';
 import { CATEGORIES } from '@/lib/types';
 import { PACKAGE_BRANDS } from '@/lib/brands';
@@ -41,6 +42,12 @@ export default function PackageForm({
   const [heroImage, setHeroImage] = useState<string>(pkg?.heroImage ?? '');
   const [gallery, setGallery] = useState<string[]>(pkg?.gallery ?? []);
   const [itinerary, setItinerary] = useState<ItineraryDay[]>(pkg?.itinerary ?? []);
+  const [tags, setTags] = useState<string[]>(pkg?.tags ?? []);
+  const [whoFor, setWhoFor] = useState<string[]>(pkg?.whoFor ?? []);
+  const [whyWorks, setWhyWorks] = useState<string[]>(pkg?.whyWorks ?? []);
+  const [extensions, setExtensions] = useState<string[]>(pkg?.extensions ?? []);
+  const [brandSel, setBrandSel] = useState<string>(pkg?.brand ?? defaultBrand ?? 'holidays');
+  const [details, setDetails] = useState<Record<string, any>>(pkg?.details ?? {});
 
   const clean = (xs: string[]) => xs.map((x) => x.trim()).filter(Boolean);
 
@@ -53,6 +60,11 @@ export default function PackageForm({
       <input type="hidden" name="excludes" value={JSON.stringify(clean(excludes))} />
       <input type="hidden" name="gallery" value={JSON.stringify(clean(gallery))} />
       <input type="hidden" name="hero_image" value={heroImage} />
+      <input type="hidden" name="tags" value={JSON.stringify(clean(tags))} />
+      <input type="hidden" name="who_for" value={JSON.stringify(clean(whoFor))} />
+      <input type="hidden" name="why_works" value={JSON.stringify(clean(whyWorks))} />
+      <input type="hidden" name="extensions" value={JSON.stringify(clean(extensions))} />
+      <input type="hidden" name="details" value={JSON.stringify(details)} />
       <input
         type="hidden"
         name="itinerary"
@@ -72,7 +84,7 @@ export default function PackageForm({
           </div>
           <div>
             <label className="field-label">Brand section</label>
-            <select name="brand" className="field" defaultValue={pkg?.brand ?? defaultBrand ?? 'holidays'}>
+            <select name="brand" className="field" value={brandSel} onChange={(e) => setBrandSel(e.target.value)}>
               {PACKAGE_BRANDS.map((b) => (
                 <option key={b.key} value={b.key}>Premium Choice {b.label}</option>
               ))}
@@ -128,6 +140,43 @@ export default function PackageForm({
       </section>
 
       <section className="card p-6">
+        <h2 className="font-serif text-xl text-ink">Journey content</h2>
+        <div className="mt-5 space-y-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <ListEditor label="Who it suits" items={whoFor} onChange={setWhoFor} placeholder="e.g. Families with under-10s" />
+            <ListEditor label="Why this journey works" items={whyWorks} onChange={setWhyWorks} placeholder="e.g. One flight, two very different islands" />
+          </div>
+          <ListEditor label="AI inspiration tags" hint="family, winter-sun, multi-centre…" items={tags} onChange={setTags} placeholder="e.g. winter-sun" />
+          <ListEditor label="Suggested extensions" items={extensions} onChange={setExtensions} placeholder="e.g. Add 3 nights in Singapore" />
+          <div>
+            <label className="field-label">Seasonal advice</label>
+            <textarea name="seasonal_notes" rows={2} defaultValue={pkg?.seasonalNotes} className="field" placeholder="When this journey is at its best — guidance, never a weather promise." />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="field-label">SEO title</label>
+              <input name="seo_title" defaultValue={pkg?.seoTitle} className="field" placeholder="e.g. Thailand Island Hopping Holiday from Dubai" />
+            </div>
+            <div>
+              <label className="field-label">SEO description</label>
+              <input name="seo_description" defaultValue={pkg?.seoDescription} className="field" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {['golf', 'cruises', 'staycations'].includes(brandSel) && (
+        <section className="card p-6">
+          <h2 className="font-serif text-xl text-ink">
+            {brandSel === 'golf' ? 'Golf details' : brandSel === 'cruises' ? 'Cruise details' : 'Staycation details'}
+          </h2>
+          <div className="mt-5">
+            <BrandDetailsFields brand={brandSel} details={details} onChange={setDetails} />
+          </div>
+        </section>
+      )}
+
+      <section className="card p-6">
         <h2 className="font-serif text-xl text-ink">Images</h2>
         <p className="mt-1 text-sm text-ink-soft">
           Upload straight from your computer — images are stored on your own Supabase storage.
@@ -169,19 +218,28 @@ export default function PackageForm({
             Featured on homepage
           </label>
           <label className="flex items-center gap-2 text-sm font-semibold text-ink">
-            <input
-              type="checkbox"
-              name="status"
-              value="published"
-              defaultChecked={pkg?.status === 'published'}
-              className="h-4 w-4 accent-teal"
-            />
-            Published (visible on the website)
+            Status
+            <select name="status" defaultValue={pkg?.status ?? 'draft'} className="field !w-auto !py-1.5">
+              <option value="draft">Draft — commercial review required</option>
+              <option value="review">Ready for review</option>
+              <option value="published">Published (live)</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm font-semibold text-ink">
+            Pricing
+            <select name="price_status" defaultValue={pkg?.priceStatus ?? 'on_request'} className="field !w-auto !py-1.5">
+              <option value="on_request">On request</option>
+              <option value="approved">Approved to display</option>
+            </select>
           </label>
         </div>
         <div className="flex items-center gap-3">
           {state && !state.ok && <p className="text-sm text-danger">{state.message}</p>}
           <SaveButton />
+        </div>
+        <div className="w-full">
+          <label className="field-label">Review note (why this is held back)</label>
+          <input name="review_note" defaultValue={pkg?.reviewNote} className="field" placeholder="e.g. Course access unverified · supplier rates pending" />
         </div>
       </section>
 

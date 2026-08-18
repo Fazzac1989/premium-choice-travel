@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import PackageDetailBody from '@/components/PackageDetailBody';
-import { getDestination, getJourneyStays, getPackage, getPackagesForDestination } from '@/lib/data';
+import { getDestination, getJourneyStays, getPackage, getRelatedJourneys } from '@/lib/data';
 import { durationLabel } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -13,8 +13,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   if (!pkg || pkg.status !== 'published') return {};
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   return {
-    title: `${pkg.title} — ${pkg.destinationName} holiday from Dubai`,
-    description: pkg.tagline || pkg.overview[0]?.slice(0, 155),
+    title: pkg.seoTitle || `${pkg.title} — ${pkg.destinationName} holiday from Dubai`,
+    description: pkg.seoDescription || pkg.tagline || pkg.overview[0]?.slice(0, 155),
     alternates: { canonical: `${siteUrl}/journeys/${pkg.slug}` },
     openGraph: {
       title: `${pkg.title} | Premium Choice Travel`,
@@ -28,12 +28,11 @@ export default async function JourneyPage({ params }: { params: { slug: string }
   const pkg = await getPackage(params.slug);
   if (!pkg || pkg.status !== 'published') notFound();
 
-  const [relatedAll, stays, destination] = await Promise.all([
-    getPackagesForDestination(pkg.destinationSlug),
+  const [related, stays, destination] = await Promise.all([
+    getRelatedJourneys(pkg),
     getJourneyStays(pkg),
     pkg.destinationSlug ? getDestination(pkg.destinationSlug) : Promise.resolve(null),
   ]);
-  const related = relatedAll.filter((p) => p.slug !== pkg.slug).slice(0, 3);
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
   const tripSchema = {

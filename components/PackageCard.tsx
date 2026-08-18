@@ -39,11 +39,13 @@ export default function PackageCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-soft">{pkg.tagline}</p>
         <div className="mt-4 flex items-end justify-between border-t border-line pt-4">
           <span className="text-xs text-ink-soft">{durationLabel(pkg)}</span>
-          {pkg.priceFrom !== null && (
+          {pkg.priceFrom !== null && (pkg.priceStatus === undefined || pkg.priceStatus === 'approved') ? (
             <span className="text-sm text-ink-soft">
               from <span className="text-lg font-semibold text-ink">{formatPrice(pkg.currency, pkg.priceFrom)}</span>
               <span className="text-xs"> pp</span>
             </span>
+          ) : (
+            <span className="text-xs font-semibold text-teal-deep">Price on request</span>
           )}
         </div>
       </div>

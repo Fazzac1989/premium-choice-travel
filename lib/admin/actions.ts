@@ -64,13 +64,41 @@ export async function savePackage(_prev: ActionState, formData: FormData): Promi
     hotel_name: String(formData.get('hotel_name') ?? '').trim() || null,
     board_basis: String(formData.get('board_basis') ?? '').trim() || null,
     featured: formData.get('featured') === 'on',
-    status: formData.get('status') === 'published' ? 'published' : 'draft',
+    status: ['draft', 'review', 'published'].includes(String(formData.get('status')))
+      ? String(formData.get('status'))
+      : 'draft',
+  };
+  const libraryFields = {
+    tags: parseJson<string[]>(formData.get('tags'), []),
+    who_for: parseJson<string[]>(formData.get('who_for'), []),
+    why_works: parseJson<string[]>(formData.get('why_works'), []),
+    extensions: parseJson<string[]>(formData.get('extensions'), []),
+    details: parseJson<Record<string, unknown>>(formData.get('details'), {}),
+    seasonal_notes: String(formData.get('seasonal_notes') ?? '').trim() || null,
+    seo_title: String(formData.get('seo_title') ?? '').trim() || null,
+    seo_description: String(formData.get('seo_description') ?? '').trim() || null,
+    price_status: formData.get('price_status') === 'approved' ? 'approved' : 'on_request',
+    review_note: String(formData.get('review_note') ?? '').trim() || null,
   };
 
-  const query = id
-    ? db.from('packages').update(row).eq('id', id)
-    : db.from('packages').insert(row);
-  const { error } = await query;
+  const fullRow = { ...row, ...libraryFields };
+  let { error } = await (id
+    ? db.from('packages').update(fullRow).eq('id', id)
+    : db.from('packages').insert(fullRow));
+  if (error && /column|schema cache|packages_status_check/i.test(error.message)) {
+    // Library columns / review status not migrated yet — save what the schema allows.
+    const legacyRow = { ...row, status: row.status === 'review' ? 'draft' : row.status };
+    const retry = await (id
+      ? db.from('packages').update(legacyRow).eq('id', id)
+      : db.from('packages').insert(legacyRow));
+    if (!retry.error) {
+      return {
+        ok: false,
+        message: 'Saved the basics, but the journey-library fields need the database migration (supabase/RUN-ME.sql) before they can be stored.',
+      };
+    }
+    error = retry.error;
+  }
   if (error) {
     const message = error.message.includes('duplicate')
       ? `The slug "${slug}" is already in use — choose another.`

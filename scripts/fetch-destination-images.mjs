@@ -32,6 +32,9 @@ const QUERIES = {
   scotland: 'scotland highlands golf', 'united-arab-emirates': 'dubai abu dhabi',
   mediterranean: 'mediterranean cruise santorini', 'northern-europe': 'norway fjord cruise',
   'arabian-gulf': 'dubai marina cruise',
+  caribbean: 'caribbean beach island turquoise',
+  antarctica: 'antarctica icebergs penguins expedition',
+  'dominican-republic': 'dominican republic punta cana beach',
 };
 
 const out = {};

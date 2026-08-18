@@ -111,8 +111,26 @@ export type Package = {
   hotelName: string | null;
   boardBasis: string | null;
   featured: boolean;
-  status: 'draft' | 'published';
+  status: 'draft' | 'review' | 'published';
   updatedAt?: string;
+  /** AI-inspiration and filter tags: family, winter-sun, multi-centre … */
+  tags?: string[];
+  /** Who this journey suits. */
+  whoFor?: string[];
+  /** Why this journey works, in short points. */
+  whyWorks?: string[];
+  /** Seasonal advice prose (never a weather promise). */
+  seasonalNotes?: string;
+  /** Suggested extensions. */
+  extensions?: string[];
+  /** Brand-specific structured details (rounds/courses, ports, emirate …). */
+  details?: Record<string, any>;
+  seoTitle?: string;
+  seoDescription?: string;
+  /** 'on_request' hides numeric pricing until commercially approved. */
+  priceStatus?: 'on_request' | 'approved';
+  /** Why this record is held in draft/review. */
+  reviewNote?: string;
 };
 
 export type Enquiry = {

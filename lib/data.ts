@@ -91,6 +91,16 @@ export function mapPackage(row: any): Package {
     featured: Boolean(row.featured),
     status: row.status ?? 'published',
     updatedAt: row.updated_at,
+    tags: row.tags ?? [],
+    whoFor: row.who_for ?? [],
+    whyWorks: row.why_works ?? [],
+    seasonalNotes: row.seasonal_notes ?? '',
+    extensions: row.extensions ?? [],
+    details: row.details ?? {},
+    seoTitle: row.seo_title ?? '',
+    seoDescription: row.seo_description ?? '',
+    priceStatus: row.price_status ?? 'on_request',
+    reviewNote: row.review_note ?? '',
   };
 }
 
@@ -149,6 +159,30 @@ export async function getPackage(slug: string): Promise<Package | null> {
 export async function getPackagesForDestination(destinationSlug: string): Promise<Package[]> {
   const all = await getPublishedPackages();
   return all.filter((p) => p.destinationSlug === destinationSlug);
+}
+
+/**
+ * Intelligent related journeys: scored by shared AI tags, destination, brand
+ * and journey type, so a Maldives family journey suggests Mauritius/Seychelles
+ * family journeys rather than whatever shares a destination row.
+ */
+export async function getRelatedJourneys(pkg: Package, limit = 3): Promise<Package[]> {
+  const all = await getPublishedPackages();
+  const tags = new Set((pkg.tags ?? []).map((t) => t.toLowerCase()));
+  return all
+    .filter((p) => p.slug !== pkg.slug)
+    .map((p) => {
+      let score = 0;
+      for (const t of p.tags ?? []) if (tags.has(t.toLowerCase())) score += 2;
+      if (p.destinationSlug && p.destinationSlug === pkg.destinationSlug) score += 3;
+      if (p.brand === pkg.brand) score += 1;
+      if (p.category && p.category === pkg.category) score += 1;
+      return { p, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((x) => x.p);
 }
 
 export function mapHotel(row: any) {

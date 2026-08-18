@@ -252,6 +252,11 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
                     <span><strong>Best time:</strong> {c.bestSeason}</span>
                     {c.budgetBand && <span><strong>Budget:</strong> {c.budgetBand}</span>}
                   </div>
+                  {c.startingJourney && (
+                    <p className="mt-2 text-xs text-ink-soft">
+                      Adapted from our designed journey <strong className="text-teal-deep">{c.startingJourney}</strong>
+                    </p>
+                  )}
                   <button type="button" onClick={() => setSelected(c)} className="btn-primary mt-5 !px-6 !py-2.5">
                     I like this — send to an expert
                   </button>

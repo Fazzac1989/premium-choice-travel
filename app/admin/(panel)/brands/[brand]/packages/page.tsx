@@ -3,11 +3,17 @@ import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { mapPackage } from '@/lib/data';
 import { PACKAGE_BRANDS, brandLabel } from '@/lib/brands';
-import PackagesTable from '@/components/admin/PackagesTable';
+import PackagesTable, { StatusFilters, filterByStatus } from '@/components/admin/PackagesTable';
 
 export const dynamic = 'force-dynamic';
 
-export default async function BrandPackagesAdminPage({ params }: { params: { brand: string } }) {
+export default async function BrandPackagesAdminPage({
+  params,
+  searchParams,
+}: {
+  params: { brand: string };
+  searchParams: { status?: string };
+}) {
   const brandKey = params.brand;
   if (!PACKAGE_BRANDS.some((b) => b.key === brandKey)) notFound();
 
@@ -17,7 +23,8 @@ export default async function BrandPackagesAdminPage({ params }: { params: { bra
     .select('*, destinations(slug, name, region)')
     .eq('brand', brandKey)
     .order('updated_at', { ascending: false });
-  const packages = (data ?? []).map(mapPackage);
+  const status = searchParams.status ?? '';
+  const packages = filterByStatus((data ?? []).map(mapPackage), status);
 
   return (
     <>
@@ -34,7 +41,8 @@ export default async function BrandPackagesAdminPage({ params }: { params: { bra
           <Link href={`/admin/packages/new?brand=${brandKey}`} className="btn-primary">New package</Link>
         </div>
       </div>
-      <div className="mt-6">
+      <StatusFilters base={`/admin/brands/${brandKey}/packages`} active={status} />
+      <div className="mt-4">
         <PackagesTable packages={packages} showBrand={false} />
       </div>
     </>

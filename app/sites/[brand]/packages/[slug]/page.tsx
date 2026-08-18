@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import PackageDetailBody from '@/components/PackageDetailBody';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getJourneyStays, getPackage, getPackagesByBrand } from '@/lib/data';
+import { getDestination, getJourneyStays, getPackage, getRelatedJourneys } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,8 +19,13 @@ export default async function BrandPackagePage({
   const pkg = await getPackage(params.slug);
   if (!pkg || pkg.status !== 'published' || pkg.brand !== brand.key) notFound();
 
-  const [relatedAll, stays] = await Promise.all([getPackagesByBrand(brand.key), getJourneyStays(pkg)]);
-  const related = relatedAll.filter((p) => p.slug !== pkg.slug).slice(0, 3);
+  const [relatedAll, stays, destination] = await Promise.all([
+    getRelatedJourneys(pkg, 12),
+    getJourneyStays(pkg),
+    pkg.destinationSlug ? getDestination(pkg.destinationSlug) : Promise.resolve(null),
+  ]);
+  // Brand sites stay inside their own brand for suggestions.
+  const related = relatedAll.filter((p) => p.brand === brand.key).slice(0, 3);
 
   return (
     <>
@@ -41,6 +46,7 @@ export default async function BrandPackagePage({
         hrefBase={`${base}/packages`}
         hotels={stays.hotels}
         experiences={stays.experiences}
+        destination={destination}
       />
     </>
   );
