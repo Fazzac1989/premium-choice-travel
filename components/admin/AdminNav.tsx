@@ -25,9 +25,10 @@ const ST_ITEMS: NavItem[] = [
 
 const brandItems = (key: string): NavItem[] => [
   { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
-  { href: `/admin/brands/${key}/packages`, label: 'Packages' },
+  { href: `/admin/brands/${key}/packages`, label: 'Journeys' },
   { href: `/admin/brands/${key}/import`, label: 'AI Importer' },
   { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
+  { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
   { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
   { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
 ];

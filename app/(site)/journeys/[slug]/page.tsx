@@ -93,6 +93,7 @@ export default async function JourneyPage({ params }: { params: { slug: string }
         experiences={stays.experiences}
         destination={destination}
         destinationHref={destination ? `/destinations/${destination.slug}` : undefined}
+        hotelBase="/hotels"
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(tripSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />

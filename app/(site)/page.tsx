@@ -1,12 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import HeroSlideshow from '@/components/HeroSlideshow';
 import SectionHeading from '@/components/SectionHeading';
 import PackageCard from '@/components/PackageCard';
 import BrandGrid from '@/components/BrandGrid';
-import { getHomepageBrandSections } from '@/lib/data';
-import { BRANDS, getBrand } from '@/lib/brands';
+import HeroSlideshow from '@/components/HeroSlideshow';
+import { getDestinations, getPublishedPackages } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -33,31 +32,15 @@ const DIFFERENCE = [
   },
 ];
 
-const SECTION_INTRO: Record<string, { eyebrow: string; title: string; text: string }> = {
-  holidays: {
-    eyebrow: 'Premium Choice Holidays',
-    title: 'Holidays, made yours',
-    text: 'Tailor-made escapes our specialists are booking right now — every one reshapeable around your dates and budget.',
-  },
-  golf: {
-    eyebrow: 'Premium Choice Golf Holidays',
-    title: 'Where will golf take you?',
-    text: 'Course-first golf trips with tee times arranged in advance — links, winter sun and golf-plus-beach combinations.',
-  },
-  cruises: {
-    eyebrow: 'Premium Choice Cruise',
-    title: 'See more. Unpack once.',
-    text: 'From Gulf sailings on your doorstep to the Mediterranean and the fjords — flights and transfers bundled in.',
-  },
-  staycations: {
-    eyebrow: 'Premium Choice Staycations',
-    title: 'The UAE. Rediscovered.',
-    text: 'The Emirates’ finest resorts, hand-picked — with breakfast, late checkout or resort credit negotiated wherever possible.',
-  },
-};
-
 export default async function HomePage() {
-  const sections = await getHomepageBrandSections();
+  const [destinations, packages] = await Promise.all([getDestinations(), getPublishedPackages()]);
+
+  const topDestinations = destinations
+    .filter((d) => d.region !== 'Cruise Seas')
+    .sort((a, b) => a.priorityRank - b.priorityRank)
+    .slice(0, 6);
+
+  const featuredJourneys = packages.filter((p) => p.featured).slice(0, 6);
 
   return (
     <>
@@ -76,78 +59,68 @@ export default async function HomePage() {
             Holidays, cruises, staycations, school travel, golf and corporate travel —
             all backed by the experience and personal service of Premium Choice Travel.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link href="/brands" className="btn-primary !px-8 !py-4 !text-base">
-              Explore our brands
+
+          {/* Dual path */}
+          <div className="mt-9 grid max-w-2xl gap-4 sm:grid-cols-2">
+            <Link
+              href="/destinations"
+              className="group rounded-2xl border border-white/25 bg-ink/40 p-5 backdrop-blur transition-colors hover:border-teal"
+            >
+              <p className="text-sm text-white/70">Know where you want to go?</p>
+              <p className="mt-1 font-serif text-2xl text-white group-hover:text-teal">
+                Explore destinations <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+              </p>
             </Link>
-            <Link href="/about" className="btn !border !border-white/40 !px-8 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
-              Our story
+            <Link
+              href="/inspiration"
+              className="group rounded-2xl border border-teal/60 bg-teal/20 p-5 backdrop-blur transition-colors hover:bg-teal"
+            >
+              <p className="text-sm text-white/80">No idea where to start?</p>
+              <p className="mt-1 font-serif text-2xl text-white">
+                ✨ Inspire me
+              </p>
             </Link>
           </div>
-          {/* Brand selector chips */}
-          <div className="mt-12 flex flex-wrap gap-2.5">
-            {BRANDS.map((b) =>
-              b.externalUrl ? (
-                <a
-                  key={b.slug}
-                  href={b.externalUrl}
-                  target="_blank"
-                  rel="noopener"
-                  className="rounded-full border border-white/30 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white/85 backdrop-blur transition-colors hover:border-teal hover:text-teal"
-                >
-                  {b.shortName}
-                </a>
-              ) : (
-                <Link
-                  key={b.slug}
-                  href={`/brands/${b.slug}`}
-                  className="rounded-full border border-white/30 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white/85 backdrop-blur transition-colors hover:border-teal hover:text-teal"
-                >
-                  {b.shortName}
-                </Link>
-              )
-            )}
-          </div>
+          <Link href="/about" className="mt-6 inline-block text-sm font-semibold text-white/70 underline-offset-4 hover:text-teal hover:underline">
+            Our story →
+          </Link>
         </div>
       </section>
 
-      {/* Editorial intro */}
-      <section className="py-20 sm:py-24">
-        <div className="container-site grid items-center gap-12 lg:grid-cols-[1.2fr_1fr]">
-          <div>
-            <p className="eyebrow">Introducing Premium Choice Travel</p>
-            <h2 className="mt-3 max-w-xl font-serif text-3xl leading-tight text-ink sm:text-5xl">
-              Travel is what we know. Personal service is what we’re known for.
-            </h2>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft">
-              Premium Choice Travel is a Dubai-based travel company behind a family of
-              specialist travel brands. Whether it’s a Maldives holiday, a school
-              expedition, a weekend up the coast or a company on the move, the same
-              principle applies: a real specialist listens first, designs second, and
-              stays reachable until you’re home.
-            </p>
-            <Link href="/about" className="mt-7 inline-block text-sm font-bold text-teal-deep hover:underline">
-              Discover our story →
+      {/* Where to go now */}
+      <section className="py-16 sm:py-20">
+        <div className="container-site">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <SectionHeading
+              eyebrow="Where to go now"
+              title="The places our specialists are booking"
+            />
+            <Link href="/destinations" className="btn-outline shrink-0">
+              All 65 destinations
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              ['6', 'specialist travel brands'],
-              ['65', 'destinations, hand-picked'],
-              ['Dubai', 'based & UAE-licensed'],
-              ['1', 'point of contact, always'],
-            ].map(([n, label]) => (
-              <div key={label} className="rounded-2xl bg-sand p-6">
-                <p className="font-serif text-3xl text-teal-deep">{n}</p>
-                <p className="mt-1 text-sm leading-snug text-ink-soft">{label}</p>
-              </div>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-6">
+            {topDestinations.map((d) => (
+              <Link key={d.slug} href={`/destinations/${d.slug}`} className="group relative block aspect-[3/4] overflow-hidden rounded-2xl">
+                <Image
+                  src={d.heroImage}
+                  alt={d.name}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 16vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-4">
+                  <h3 className="font-serif text-xl text-white">{d.name}</h3>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* Our Brands */}
-      <section className="bg-sand py-20 sm:py-24">
+      <section className="bg-sand py-16 sm:py-20">
         <div className="container-site">
           <SectionHeading
             eyebrow="Our brands"
@@ -161,34 +134,31 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Brand package sections */}
-      {sections.map(({ brand, packages }) => {
-        const meta = SECTION_INTRO[brand];
-        const brandDef = BRANDS.find((b) => b.key === brand);
-        if (!meta || packages.length === 0) return null;
-        return (
-          <section key={brand} className="py-16 sm:py-20 odd:bg-white even:bg-sand/60">
-            <div className="container-site">
-              <div className="flex flex-wrap items-end justify-between gap-6">
-                <SectionHeading eyebrow={meta.eyebrow} title={meta.title} text={meta.text} />
-                {brandDef && (
-                  <Link href={`/brands/${brandDef.slug}`} className="btn-outline shrink-0 !bg-white">
-                    {brandDef.cta}
-                  </Link>
-                )}
-              </div>
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {packages.map((pkg) => (
-                  <PackageCard key={pkg.slug} pkg={pkg} />
-                ))}
-              </div>
+      {/* Journeys we're excited about */}
+      {featuredJourneys.length > 0 && (
+        <section className="py-16 sm:py-20">
+          <div className="container-site">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading
+                eyebrow="Journeys we’re excited about"
+                title="Starting points, not set menus"
+                text="Open one for the full day-by-day plan — then let a specialist reshape it around you."
+              />
+              <Link href="/journeys" className="btn-outline shrink-0">
+                All journeys
+              </Link>
             </div>
-          </section>
-        );
-      })}
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredJourneys.map((pkg, i) => (
+                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Difference */}
-      <section className="bg-ink py-20 text-white sm:py-24">
+      <section className="bg-ink py-16 text-white sm:py-20">
         <div className="container-site">
           <SectionHeading
             eyebrow="The Premium Choice difference"
@@ -218,10 +188,10 @@ export default async function HomePage() {
       </section>
 
       {/* Founder */}
-      <section className="py-20 sm:py-24">
+      <section className="py-16 sm:py-20">
         <div className="container-site grid items-center gap-12 lg:grid-cols-2">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-sand lg:order-2">
-            <Image src="/images/hero.jpg" alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+            <Image src="/images/hero/hero-2.jpg" alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
             <div className="absolute bottom-0 p-6">
               <p className="font-serif text-2xl text-white">Paul Farrell</p>
@@ -253,8 +223,39 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* AI inspiration band */}
+      <section className="bg-sand py-16 sm:py-20">
+        <div className="container-site grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
+          <div>
+            <p className="eyebrow">AI Inspiration</p>
+            <h2 className="mt-2 max-w-xl font-serif text-3xl leading-tight text-ink sm:text-4xl">
+              Sixty seconds from now, you could have three trips to argue about.
+            </h2>
+            <p className="mt-4 max-w-xl text-ink-soft">
+              Tell our AI Holiday Curator how you like to travel and it sketches three
+              genuinely different ideas — then a human specialist prices the one you love.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Link href="/inspiration" className="btn-primary !px-7 !py-3.5">✨ Give me some inspiration</Link>
+              <Link href="/ai-inspiration" className="btn-outline !bg-white !px-7 !py-3.5">How it works</Link>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-line bg-white p-6 shadow-xl shadow-ink/5">
+            <p className="font-serif text-lg text-ink">“Somewhere warm in the Eid break, two kids, surprise us.”</p>
+            <div className="mt-4 space-y-2">
+              {['Thailand Beach & Kids’ Club Escape', 'Sri Lanka Beach & Wildlife Discovery', 'Maldives Island Family Retreat'].map((t) => (
+                <div key={t} className="flex items-center gap-2 rounded-lg bg-sand px-3.5 py-2.5 text-sm font-semibold text-ink">
+                  <span className="text-teal">✦</span> {t}
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-ink-soft">Real output from the curator — ideas, never invented prices.</p>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="pb-20 sm:pb-24">
+      <section className="py-16 sm:py-20">
         <div className="container-site">
           <div className="relative overflow-hidden rounded-3xl">
             <Image src="/images/hero.jpg" alt="" fill className="object-cover object-bottom" sizes="(max-width: 1240px) 100vw, 1240px" />
@@ -270,9 +271,6 @@ export default async function HomePage() {
               <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Link href="/plan" className="btn-primary !px-9 !py-4 !text-base">
                   Start planning
-                </Link>
-                <Link href="/inspiration" className="btn !border !border-teal/70 !bg-teal/20 !px-9 !py-4 !text-base text-white backdrop-blur hover:!bg-teal">
-                  ✨ Give me some inspiration
                 </Link>
                 <a href="tel:+97144206965" className="btn !border !border-white/40 !px-9 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
                   Call +971 4 420 6965

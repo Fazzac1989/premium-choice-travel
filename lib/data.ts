@@ -175,6 +175,26 @@ export function mapExperience(row: any) {
   };
 }
 
+export const hotelSlug = (name: string) =>
+  name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_-]+/g, '-');
+
+export async function getHotels() {
+  if (!isSupabaseConfigured()) return [];
+  const db = createAdminClient();
+  const { data } = await db.from('hotels').select('*').order('sort_order');
+  return (data ?? []).map(mapHotel);
+}
+
+/** Resolve a hotel by its name-derived slug, plus the journeys that feature it. */
+export async function getHotelBySlug(slug: string) {
+  const hotels = await getHotels();
+  const hotel = hotels.find((h) => hotelSlug(h.name) === slug) ?? null;
+  if (!hotel) return null;
+  const all = await getPublishedPackages();
+  const journeys = all.filter((p) => p.itinerary.some((d) => (d.hotelIds ?? []).includes(hotel.id)));
+  return { hotel, journeys };
+}
+
 /** Hotels + experiences referenced by a journey's itinerary stages. */
 export async function getJourneyStays(pkg: Package) {
   if (!isSupabaseConfigured()) return { hotels: [], experiences: [] };

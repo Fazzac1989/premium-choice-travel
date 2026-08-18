@@ -10,6 +10,9 @@ import { durationLabel, formatPrice } from '@/lib/types';
  * Everything below the hero on a journey page — shared between the master
  * site and each brand's own website.
  */
+const hotelSlug = (name: string) =>
+  name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_-]+/g, '-');
+
 export default function PackageDetailBody({
   pkg,
   related,
@@ -18,6 +21,7 @@ export default function PackageDetailBody({
   experiences = [],
   destination = null,
   destinationHref,
+  hotelBase,
 }: {
   pkg: Package;
   related: Package[];
@@ -26,9 +30,12 @@ export default function PackageDetailBody({
   experiences?: Experience[];
   destination?: Destination | null;
   destinationHref?: string;
+  /** When set (master site), hotel names/cards link to their own pages. */
+  hotelBase?: string;
 }) {
   const hotelById = new Map(hotels.map((h) => [h.id, h]));
   const experienceById = new Map(experiences.map((x) => [x.id, x]));
+  const hotelHref = (h: Hotel) => (hotelBase ? `${hotelBase}/${hotelSlug(h.name)}` : null);
   return (
     <>
       {/* Facts bar */}
@@ -96,7 +103,19 @@ export default function PackageDetailBody({
                       {stayNames.length > 0 && (
                         <p className="mt-2 text-xs text-ink">
                           <span className="font-bold uppercase tracking-wider text-ink-soft">Stay:</span>{' '}
-                          {stayNames.map((h) => h.name).join(' · ')}
+                          {stayNames.map((h, idx) => {
+                            const href = hotelHref(h);
+                            return (
+                              <span key={h.id}>
+                                {idx > 0 && ' · '}
+                                {href ? (
+                                  <Link href={href} className="font-semibold text-teal-deep hover:underline">{h.name}</Link>
+                                ) : (
+                                  h.name
+                                )}
+                              </span>
+                            );
+                          })}
                           <span className="text-ink-soft"> — or an alternative your specialist suggests</span>
                         </p>
                       )}
@@ -125,24 +144,39 @@ export default function PackageDetailBody({
                 and can suggest alternatives to match your style and budget.
               </p>
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                {hotels.map((h) => (
-                  <div key={h.id} className="card overflow-hidden">
-                    {h.image && (
-                      <div className="relative aspect-[16/9]">
-                        <Image src={h.image} alt={h.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
-                      </div>
-                    )}
-                    <div className="p-5">
-                      <h3 className="font-serif text-xl text-ink">{h.name}</h3>
-                      <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-teal-deep">
-                        {[h.area, h.style].filter(Boolean).join(' · ')}
-                      </p>
-                      {h.description && (
-                        <p className="mt-2 text-sm leading-relaxed text-ink-soft">{h.description}</p>
+                {hotels.map((h) => {
+                  const href = hotelHref(h);
+                  const card = (
+                    <>
+                      {h.image && (
+                        <div className="relative aspect-[16/9]">
+                          <Image src={h.image} alt={h.name} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </div>
                       )}
-                    </div>
-                  </div>
-                ))}
+                      <div className="p-5">
+                        <h3 className="font-serif text-xl text-ink group-hover:text-teal-deep">{h.name}</h3>
+                        <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-teal-deep">
+                          {[h.area, h.style].filter(Boolean).join(' · ')}
+                        </p>
+                        {h.description && (
+                          <p className="mt-2 text-sm leading-relaxed text-ink-soft">{h.description}</p>
+                        )}
+                        {href && (
+                          <p className="mt-3 text-sm font-bold text-teal-deep">
+                            About this hotel <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+                          </p>
+                        )}
+                      </div>
+                    </>
+                  );
+                  return href ? (
+                    <Link key={h.id} href={href} className="card group overflow-hidden transition-shadow hover:shadow-xl hover:shadow-ink/10">
+                      {card}
+                    </Link>
+                  ) : (
+                    <div key={h.id} className="card overflow-hidden">{card}</div>
+                  );
+                })}
               </div>
             </section>
           )}
