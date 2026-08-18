@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps';
 import worldData from 'world-atlas/countries-110m.json';
 
@@ -51,8 +50,12 @@ const LAND = '#E7E3DA';
 const LAND_STROKE = '#FFFFFF';
 
 export default function WorldMapExplorer({ destinations }: { destinations: MapDestination[] }) {
-  const router = useRouter();
   const [hovered, setHovered] = useState<MapDestination | null>(null);
+  // Clicking pins a country so the list below stays filtered (tap-friendly too).
+  const [selected, setSelected] = useState<MapDestination | null>(null);
+
+  const pick = (dest: MapDestination) =>
+    setSelected((cur) => (cur?.slug === dest.slug ? null : dest));
 
   const { nameToDest, bySlug } = useMemo(() => {
     const bySlug = new Map(destinations.map((d) => [d.slug, d]));
@@ -77,32 +80,42 @@ export default function WorldMapExplorer({ destinations }: { destinations: MapDe
     return order.map((r) => ({ region: r, items: groups.get(r)! }));
   }, [destinations]);
 
-  const shown = hovered ? regions.filter((g) => g.region === hovered.region) : regions;
+  const active = hovered ?? selected;
+  const shown = active ? regions.filter((g) => g.region === active.region) : regions;
 
   const fillFor = (dest: MapDestination | undefined) => {
     if (!dest) return LAND;
-    if (hovered?.slug === dest.slug) return TEAL;
-    if (hovered && hovered.region === dest.region) return TEAL_SOFT;
-    return hovered ? '#BFE9E3' : TEAL_SOFT;
+    if (active?.slug === dest.slug) return TEAL;
+    if (active && active.region === dest.region) return TEAL_SOFT;
+    return active ? '#BFE9E3' : TEAL_SOFT;
   };
 
   return (
     <div>
       {/* Map */}
       <div className="relative overflow-hidden rounded-3xl border border-line bg-white">
-        <div className="pointer-events-none absolute left-5 top-4 z-10 min-h-[3.5rem]">
-          {hovered ? (
+        <div className="absolute left-5 top-4 z-10 min-h-[3.5rem]">
+          {active ? (
             <>
-              <p className="eyebrow">{hovered.region}</p>
-              <p className="font-serif text-2xl text-ink">{hovered.name}</p>
+              <p className="eyebrow">{active.region}</p>
+              <p className="font-serif text-2xl text-ink">{active.name}</p>
             </>
           ) : (
             <>
               <p className="eyebrow">Explore the map</p>
-              <p className="text-sm text-ink-soft">Hover a glowing country · click to open its guide</p>
+              <p className="text-sm text-ink-soft">Hover a glowing country · click to filter the list below</p>
             </>
           )}
         </div>
+        {selected && (
+          <button
+            type="button"
+            onClick={() => setSelected(null)}
+            className="absolute right-5 top-4 z-10 rounded-full border border-line bg-white px-4 py-2 text-xs font-bold text-ink-soft transition-colors hover:border-teal hover:text-teal-deep"
+          >
+            ✕ Show all regions
+          </button>
+        )}
 
         <ComposableMap
           projection="geoEqualEarth"
@@ -121,8 +134,8 @@ export default function WorldMapExplorer({ destinations }: { destinations: MapDe
                     geography={geo}
                     onMouseEnter={dest ? () => setHovered(dest) : undefined}
                     onMouseLeave={dest ? () => setHovered(null) : undefined}
-                    onClick={dest ? () => router.push(`/destinations/${dest.slug}`) : undefined}
-                    aria-label={dest ? `${dest.name} — open destination guide` : undefined}
+                    onClick={dest ? () => pick(dest) : () => setSelected(null)}
+                    aria-label={dest ? `${dest.name} — filter the list below` : undefined}
                     style={{
                       default: {
                         fill: fillFor(dest),
@@ -150,24 +163,24 @@ export default function WorldMapExplorer({ destinations }: { destinations: MapDe
           {ISLAND_MARKERS.map(({ slug, coordinates }) => {
             const dest = bySlug.get(slug);
             if (!dest) return null;
-            const active = hovered?.slug === slug;
+            const lit = active?.slug === slug;
             return (
               <Marker
                 key={slug}
                 coordinates={coordinates}
                 onMouseEnter={() => setHovered(dest)}
                 onMouseLeave={() => setHovered(null)}
-                onClick={() => router.push(`/destinations/${dest.slug}`)}
+                onClick={() => pick(dest)}
                 style={{ default: { cursor: 'pointer' }, hover: { cursor: 'pointer' } }}
               >
                 <circle
-                  r={active ? 7 : 5}
-                  fill={active ? TEAL : TEAL_SOFT}
+                  r={lit ? 7 : 5}
+                  fill={lit ? TEAL : TEAL_SOFT}
                   stroke="#fff"
                   strokeWidth={1.5}
                   style={{ transition: 'all 250ms ease' }}
                 />
-                {active && (
+                {lit && (
                   <circle r={11} fill="none" stroke={TEAL} strokeWidth={1.5} opacity={0.5} />
                 )}
               </Marker>
