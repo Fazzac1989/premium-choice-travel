@@ -28,7 +28,12 @@ export default function BrandSiteLayout({
 
   return (
     <>
-      <BrandHeader base={base} name={brand.name} logoWhite={brand.logoWhite} />
+      <BrandHeader
+        base={base}
+        name={brand.name}
+        logoWhite={brand.logoWhite}
+        showDestinations={brand.slug === 'holidays'}
+      />
       {children}
       <BrandFooter name={brand.name} description={brand.description} logoWhite={brand.logoWhite} />
     </>

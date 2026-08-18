@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Archivo, Fraunces } from 'next/font/google';
+import { Archivo, Fraunces, Great_Vibes } from 'next/font/google';
 import './globals.css';
 
 const archivo = Archivo({
@@ -13,6 +13,13 @@ const fraunces = Fraunces({
   variable: '--font-fraunces',
   display: 'swap',
   axes: ['SOFT', 'WONK', 'opsz'],
+});
+
+const greatVibes = Great_Vibes({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-script',
+  display: 'swap',
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -53,7 +60,7 @@ const orgSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${archivo.variable} ${fraunces.variable} ${greatVibes.variable}`}>
       <body className="font-sans">
         {children}
         <script

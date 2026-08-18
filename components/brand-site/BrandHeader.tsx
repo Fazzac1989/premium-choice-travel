@@ -8,15 +8,18 @@ export default function BrandHeader({
   base,
   name,
   logoWhite,
+  showDestinations = false,
 }: {
   base: string;
   name: string;
   logoWhite: string | null;
+  showDestinations?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const home = base || '/';
 
   const links = [
+    ...(showDestinations ? [{ href: `${base}/destinations`, label: 'Destinations' }] : []),
     { href: `${base}/packages`, label: 'Our trips' },
     { href: `${base}/enquire`, label: 'Contact' },
   ];
