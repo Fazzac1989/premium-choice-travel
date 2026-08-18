@@ -104,7 +104,7 @@ export const BRANDS: Brand[] = [
     services: ['Arabian Gulf cruises', 'Mediterranean sailings', 'Northern Europe & fjords', 'River cruising', 'Fly-cruise packages', 'Group sailings'],
     cta: 'Explore Cruises',
     sellsPackages: true,
-    domains: ['premiumchoicecruise.com','premiumchoicecruises.com'],
+    domains: ['premiumchoicecruise.com'],
   },
   {
     key: 'golf',
@@ -122,7 +122,7 @@ export const BRANDS: Brand[] = [
     services: ['International golf holidays', 'Golf groups & societies', 'Guaranteed tee times', 'Golf & beach combinations', 'Tailor-made golf itineraries'],
     cta: 'Explore Golf Holidays',
     sellsPackages: true,
-    domains: ['premiumchoicegolf.com','premiumchoicegolfholidays.com'],
+    domains: ['premiumchoicegolfholidays.com'],
   },
   {
     key: 'corporate',
