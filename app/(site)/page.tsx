@@ -80,8 +80,8 @@ export default async function HomePage() {
             <Link href="/brands" className="btn-primary !px-8 !py-4 !text-base">
               Explore our brands
             </Link>
-            <Link href="/plan" className="btn !border !border-white/40 !px-8 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
-              Plan my trip
+            <Link href="/about" className="btn !border !border-white/40 !px-8 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
+              Our story
             </Link>
           </div>
           {/* Brand selector chips */}

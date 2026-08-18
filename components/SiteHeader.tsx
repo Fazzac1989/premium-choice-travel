@@ -9,7 +9,6 @@ import { BRANDS } from '@/lib/brands';
 const NAV = [
   { href: '/about', label: 'About' },
   { href: '/destinations', label: 'Destinations' },
-  { href: '/packages', label: 'Packages' },
   { href: '/contact', label: 'Contact' },
 ];
 

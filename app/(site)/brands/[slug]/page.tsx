@@ -39,8 +39,11 @@ export default async function BrandPage({ params }: { params: { slug: string } }
             <Link href="/plan" className="btn-primary !px-8 !py-4">
               Plan my trip
             </Link>
-            <a href="tel:+97144206965" className="btn !border !border-white/40 !px-8 !py-4 text-white hover:!border-teal hover:text-teal">
-              Talk to a specialist
+            <a
+              href={brand.domains[0] ? `https://${brand.domains[0]}` : `/sites/${brand.slug}`}
+              className="btn !border !border-white/40 !px-8 !py-4 text-white hover:!border-teal hover:text-teal"
+            >
+              View website →
             </a>
           </div>
         </div>
