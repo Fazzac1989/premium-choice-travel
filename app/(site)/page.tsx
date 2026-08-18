@@ -61,22 +61,22 @@ export default async function HomePage() {
           </p>
 
           {/* Dual path */}
-          <div className="mt-9 grid max-w-2xl gap-4 sm:grid-cols-2">
+          <div className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
             <Link
               href="/destinations"
-              className="group rounded-2xl border border-white/25 bg-ink/40 p-5 backdrop-blur transition-colors hover:border-teal"
+              className="group rounded-xl border border-white/25 bg-ink/40 px-4 py-3 backdrop-blur transition-colors hover:border-teal"
             >
-              <p className="text-sm text-white/70">Know where you want to go?</p>
-              <p className="mt-1 font-serif text-2xl text-white group-hover:text-teal">
+              <p className="text-xs text-white/70">Know where you want to go?</p>
+              <p className="mt-0.5 font-serif text-lg text-white group-hover:text-teal">
                 Explore destinations <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </p>
             </Link>
             <Link
               href="/inspiration"
-              className="group rounded-2xl border border-teal/60 bg-teal/20 p-5 backdrop-blur transition-colors hover:bg-teal"
+              className="group rounded-xl border border-teal/60 bg-teal/20 px-4 py-3 backdrop-blur transition-colors hover:bg-teal"
             >
-              <p className="text-sm text-white/80">No idea where to start?</p>
-              <p className="mt-1 font-serif text-2xl text-white">
+              <p className="text-xs text-white/80">No idea where to start?</p>
+              <p className="mt-0.5 font-serif text-lg text-white">
                 ✨ Inspire me
               </p>
             </Link>
