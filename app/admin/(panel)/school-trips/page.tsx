@@ -18,7 +18,10 @@ export default async function SchoolTripsPage() {
             {trips.length} trip{trips.length === 1 ? '' : 's'} · edits publish straight to {PCST_SITE_URL.replace('https://', '')}.
           </p>
         </div>
-        <Link href="/admin/school-trips/trips/new" className="btn-primary">New trip</Link>
+        <div className="flex gap-3">
+          <Link href="/admin/school-trips/import" className="btn-outline !bg-white">AI import</Link>
+          <Link href="/admin/school-trips/trips/new" className="btn-primary">New trip</Link>
+        </div>
       </div>
 
       <div className="card mt-8 divide-y divide-line">

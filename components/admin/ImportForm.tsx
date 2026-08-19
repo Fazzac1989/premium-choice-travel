@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
-import { importPackage, importQuote, type ImportState } from '@/lib/admin/import-actions';
+import { importPackage, importQuote, importStTrip, type ImportState } from '@/lib/admin/import-actions';
 
 function SubmitButton({ hasSource, label }: { hasSource: boolean; label: string }) {
   const { pending } = useFormStatus();
@@ -17,11 +17,11 @@ export default function ImportForm({
   kind = 'package',
   defaultBrand,
 }: {
-  kind?: 'package' | 'quote';
+  kind?: 'package' | 'quote' | 'st-trip';
   /** When set (brand workspaces), imported packages are filed under this brand. */
   defaultBrand?: string;
 }) {
-  const action = kind === 'quote' ? importQuote : importPackage;
+  const action = kind === 'quote' ? importQuote : kind === 'st-trip' ? importStTrip : importPackage;
   const [state, formAction] = useFormState<ImportState, FormData>(action, null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState('');
@@ -96,7 +96,13 @@ export default function ImportForm({
         name="text"
         rows={5}
         className="field"
-        placeholder={kind === 'quote' ? 'Paste the costing sheet or quotation text…' : 'Paste the package description here instead…'}
+        placeholder={
+          kind === 'quote'
+            ? 'Paste the costing sheet or quotation text…'
+            : kind === 'st-trip'
+              ? 'Paste the school-trip description here instead…'
+              : 'Paste the package description here instead…'
+        }
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
@@ -106,13 +112,15 @@ export default function ImportForm({
       <div className="mt-6">
         <SubmitButton
           hasSource={Boolean(fileName || url.trim() || text.trim())}
-          label={kind === 'quote' ? 'Import quote with AI' : 'Import package with AI'}
+          label={kind === 'quote' ? 'Import quote with AI' : kind === 'st-trip' ? 'Import trip with AI' : 'Import package with AI'}
         />
       </div>
       <p className="mt-3 text-center text-xs text-ink-soft">
         {kind === 'quote'
           ? 'Claude reads the costings as supplier cost before markup and opens a draft quote for your review — check every figure before sending.'
-          : 'Claude reads the source, sorts it into the right brand section and opens a draft for your review — nothing is published until you say so.'}
+          : kind === 'st-trip'
+            ? 'Claude drafts the trip directly on the School Trips platform and opens it in the editor — nothing is published until you say so.'
+            : 'Claude reads the source, sorts it into the right brand section and opens a draft for your review — nothing is published until you say so.'}
       </p>
     </form>
   );

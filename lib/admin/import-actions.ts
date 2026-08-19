@@ -4,6 +4,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
+import { pcstClient } from '@/lib/pcst';
 
 export type ImportState = { ok: false; error: string } | null;
 
@@ -285,6 +286,185 @@ Extract the package.`,
   if (error || !created) return { ok: false, error: error?.message ?? 'Could not save the draft.' };
 
   redirect(`/admin/packages/${created.id}?imported=1`);
+}
+
+/* ------------------------------------------------------------------ */
+/* School Trips importer (writes to the PCST platform)                 */
+/* ------------------------------------------------------------------ */
+
+type ParsedStTrip = {
+  title: string;
+  subject: string;
+  country: string;
+  city: string;
+  departs: string;
+  duration_days: number;
+  duration_nights: number;
+  base_price_pp: number;
+  overview: string[];
+  includes: string[];
+  itinerary: { label: string; title: string; description: string }[];
+};
+
+const ST_TRIP_SCHEMA = {
+  type: 'object',
+  properties: {
+    title: { type: 'string', description: 'Trip title, e.g. "Geography Field Study — Iceland"' },
+    subject: {
+      type: 'string',
+      description: 'The school subject this trip serves, e.g. Geography, History, STEM, Sport, Languages, Art, Music, Business. Empty string if unclear.',
+    },
+    country: { type: 'string', description: 'Destination country, e.g. "Iceland"; empty string if not stated' },
+    city: { type: 'string', description: 'Main city or area, e.g. "Reykjavik"; empty string if not stated' },
+    departs: { type: 'string', description: 'Departure point or airport if stated, e.g. "Dubai"; empty string otherwise' },
+    duration_days: { type: 'integer', description: 'Number of days; 0 if not stated' },
+    duration_nights: { type: 'integer', description: 'Number of nights; 0 if not stated' },
+    base_price_pp: { type: 'number', description: 'Per-student lead-in price, numbers only; 0 if not stated' },
+    overview: { type: 'array', items: { type: 'string' }, description: 'Two or three clean paragraphs introducing the trip for teachers — learning outcomes first.' },
+    includes: { type: 'array', items: { type: 'string' }, description: 'One short line per inclusion. Strip bullet characters. Empty array if none.' },
+    itinerary: {
+      type: 'array',
+      description: 'One entry per day, in order. Empty array if the document has no day-by-day plan.',
+      items: {
+        type: 'object',
+        properties: {
+          label: { type: 'string', description: 'e.g. "Day 1"' },
+          title: { type: 'string', description: 'Short heading for the day' },
+          description: { type: 'string', description: 'What the group does that day' },
+        },
+        required: ['label', 'title', 'description'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: [
+    'title', 'subject', 'country', 'city', 'departs', 'duration_days',
+    'duration_nights', 'base_price_pp', 'overview', 'includes', 'itinerary',
+  ],
+  additionalProperties: false,
+} as const;
+
+const ST_SYSTEM = `You turn a school-trip description into structured data for Premium Choice School Trips, an educational travel company serving schools in the UAE.
+
+Extract only what the document actually says. Never invent destinations, prices, dates, hotels or activities that are not in the source. When a field is not stated, return an empty string, 0, or an empty array as the schema allows — do not guess facts.
+
+Guidance:
+- The audience is teachers and school leaders: lead the overview with learning outcomes and curriculum links the document mentions, then logistics. Mention safeguarding/supervision arrangements only if the source states them.
+- includes: one short line each ("Return flights", "Full-board hostel accommodation"). Strip bullet characters.
+- itinerary: one entry per day in order. Merge per-day bullet lists into readable prose.
+- Use British English, clear and professional. Avoid clichés like "unforgettable" or "once in a lifetime".`;
+
+/**
+ * Parse a document/URL with Claude and create a DRAFT trip directly on the
+ * School Trips platform, then open it in the console's trip editor.
+ */
+export async function importStTrip(_prev: ImportState, formData: FormData): Promise<ImportState> {
+  await requireAdmin();
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return { ok: false, error: 'The Claude API key is not configured — add ANTHROPIC_API_KEY to the environment.' };
+  }
+
+  const read = await readSource(formData);
+  if ('error' in read) return { ok: false, error: read.error };
+
+  const db = pcstClient();
+  const [{ data: subjects }, { data: countries }] = await Promise.all([
+    db.from('subjects').select('id, name').order('name'),
+    db.from('countries').select('id, name').order('name'),
+  ]);
+
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+  let draft: ParsedStTrip;
+  try {
+    const response = await client.messages.create({
+      model: 'claude-opus-5',
+      max_tokens: 16000,
+      output_config: { effort: 'medium', format: { type: 'json_schema', schema: ST_TRIP_SCHEMA } },
+      system: ST_SYSTEM,
+      messages: [
+        {
+          role: 'user',
+          content: `Existing subjects on the platform: ${(subjects ?? []).map((s) => s.name).join(', ') || '(none yet)'}.
+Existing destination countries: ${(countries ?? []).map((c) => c.name).join(', ') || '(none yet)'}.
+Prefer these exact names when the document matches one.
+
+Here is the trip document:
+
+---
+${read.text.slice(0, 120_000)}
+---
+
+Extract the school trip.`,
+        },
+      ],
+    });
+
+    if (response.stop_reason === 'refusal') return { ok: false, error: 'Claude declined to process this document.' };
+    if (response.stop_reason === 'max_tokens') {
+      return { ok: false, error: 'The document is too long — split it and import each trip separately.' };
+    }
+    const text = response.content.find((b) => b.type === 'text');
+    if (!text || text.type !== 'text') return { ok: false, error: 'Claude returned no content — try again.' };
+    draft = JSON.parse(text.text) as ParsedStTrip;
+  } catch (e: any) {
+    if (e instanceof Anthropic.AuthenticationError) {
+      return { ok: false, error: 'The Claude API key was rejected — check ANTHROPIC_API_KEY.' };
+    }
+    if (e instanceof Anthropic.RateLimitError) {
+      return { ok: false, error: 'Claude is rate limited right now — wait a moment and retry.' };
+    }
+    return { ok: false, error: `Could not read that document: ${e.message}` };
+  }
+
+  // Match subject and country by name, loosely.
+  const loose = (s: string) => s.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  const subjectRow = (subjects ?? []).find((s) => loose(s.name) === loose(draft.subject)) ?? null;
+  const countryRow = (countries ?? []).find((c) => loose(c.name) === loose(draft.country)) ?? null;
+
+  // Unique slug on the PCST platform.
+  let slug = slugify(draft.title) || 'imported-trip';
+  const { data: existing } = await db.from('trips').select('slug').like('slug', `${slug}%`);
+  if ((existing ?? []).some((r) => r.slug === slug)) {
+    slug = `${slug}-${(existing ?? []).length + 1}`;
+  }
+
+  const { data: created, error } = await db
+    .from('trips')
+    .insert({
+      slug,
+      title: draft.title || 'Imported trip',
+      subject_id: subjectRow?.id ?? null,
+      country_id: countryRow?.id ?? null,
+      city: draft.city || null,
+      departs: draft.departs || null,
+      duration_days: draft.duration_days || 0,
+      duration_nights: draft.duration_nights || 0,
+      base_price_pp: draft.base_price_pp > 0 ? draft.base_price_pp : null,
+      overview: draft.overview,
+      includes: draft.includes,
+      featured: false,
+      status: 'draft',
+    })
+    .select('id')
+    .single();
+  if (error || !created) return { ok: false, error: error?.message ?? 'Could not save the draft trip.' };
+
+  const days = draft.itinerary.filter((d) => d.label.trim() || d.title.trim() || d.description.trim());
+  if (days.length > 0) {
+    await db.from('itinerary_days').insert(
+      days.map((d, i) => ({
+        trip_id: created.id,
+        sort_order: i,
+        label: d.label,
+        title: d.title,
+        description: d.description,
+      }))
+    );
+  }
+
+  redirect(`/admin/school-trips/trips/${created.id}?imported=1`);
 }
 
 /* ------------------------------------------------------------------ */
