@@ -1,15 +1,28 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function BrandFooter({
   name,
   description,
   logoWhite,
+  base = '',
+  isHolidays = false,
 }: {
   name: string;
   description: string;
   logoWhite: string | null;
+  base?: string;
+  isHolidays?: boolean;
 }) {
   const masterUrl = 'https://premiumchoicetravel.com';
+  const links = [
+    ...(isHolidays ? [
+      { href: `${base}/destinations`, label: 'Destinations' },
+      { href: `${base}/inspiration`, label: 'AI Inspiration' },
+    ] : []),
+    { href: `${base}/packages`, label: 'Journeys' },
+    { href: `${base}/enquire`, label: 'Plan my trip' },
+  ];
   return (
     <footer className="bg-ink text-white">
       <div className="container-site grid gap-10 py-12 md:grid-cols-3">
@@ -20,6 +33,13 @@ export default function BrandFooter({
             <p className="font-serif text-xl">{name}</p>
           )}
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/70">{description}</p>
+          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold text-white/80">
+            {links.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="hover:text-teal">{l.label}</Link>
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
           <p className="eyebrow !text-teal">Talk to us</p>

@@ -43,7 +43,7 @@ export default async function BrandDestinationPage({
       links={{
         home: base || '/',
         plan: `${base}/enquire`,
-        inspire: `${base}/enquire`,
+        inspire: `${base}/inspiration`,
         destBase: `${base}/destinations`,
         pkgBase: `${base}/packages`,
       }}

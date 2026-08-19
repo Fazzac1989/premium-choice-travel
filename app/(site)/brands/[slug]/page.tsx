@@ -41,9 +41,11 @@ export default async function BrandPage({ params }: { params: { slug: string } }
             </Link>
             <a
               href={brand.domains[0] ? `https://${brand.domains[0]}` : `/sites/${brand.slug}`}
+              target="_blank"
+              rel="noopener"
               className="btn !border !border-white/40 !px-8 !py-4 text-white hover:!border-teal hover:text-teal"
             >
-              View website →
+              View website ↗
             </a>
           </div>
         </div>

@@ -49,7 +49,13 @@ const TEAL_SOFT = '#8ADCD3';
 const LAND = '#E7E3DA';
 const LAND_STROKE = '#FFFFFF';
 
-export default function WorldMapExplorer({ destinations }: { destinations: MapDestination[] }) {
+export default function WorldMapExplorer({
+  destinations,
+  destBase = '/destinations',
+}: {
+  destinations: MapDestination[];
+  destBase?: string;
+}) {
   const [hovered, setHovered] = useState<MapDestination | null>(null);
   // Clicking pins a country so the list below stays filtered (tap-friendly too).
   const [selected, setSelected] = useState<MapDestination | null>(null);
@@ -201,7 +207,7 @@ export default function WorldMapExplorer({ destinations }: { destinations: MapDe
               {items.map((d) => (
                 <Link
                   key={d.slug}
-                  href={`/destinations/${d.slug}`}
+                  href={`${destBase}/${d.slug}`}
                   onMouseEnter={() => setHovered(d)}
                   onMouseLeave={() => setHovered(null)}
                   className={`group rounded-xl border p-4 transition-all ${
