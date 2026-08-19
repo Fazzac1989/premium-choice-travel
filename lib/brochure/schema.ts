@@ -1,12 +1,12 @@
-/**
+﻿/**
  * Brochure page model.
  *
  * Pages are modular blocks rather than a fixed running order, so the structure
  * of a brochure is data: an admin can reorder, hide or add pages without a code
  * change, and new page types can be introduced later without a migration.
  *
- * Nothing here duplicates trip data. A page carries only editorial copy — the
- * headline written for the brochure, the condensed highlights — plus a
+ * Nothing here duplicates trip data. A page carries only editorial copy â€” the
+ * headline written for the brochure, the condensed highlights â€” plus a
  * reference to the trip it presents. Titles, photography and itineraries are
  * read from the trips tables when the brochure renders.
  *
@@ -17,6 +17,7 @@
 export const PAGE_TYPES = [
   'cover',
   'brandIntroduction',
+  'contents',
   'textEditorial',
   'subjectDivider',
   'destinationDivider',
@@ -145,7 +146,7 @@ export type Brochure = {
   updatedAt: string;
 };
 
-/* ─────────────────────────────── mapping ─────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 const asArray = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
@@ -207,6 +208,7 @@ export const isSingleLeaf = (p: BrochurePage) =>
 export const PAGE_LABELS: Record<PageType, string> = {
   cover: 'Cover',
   brandIntroduction: 'Introduction',
+  contents: 'Contents',
   textEditorial: 'Editorial',
   subjectDivider: 'Subject divider',
   destinationDivider: 'Destination divider',

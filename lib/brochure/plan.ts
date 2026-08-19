@@ -121,6 +121,10 @@ export function planPages(input: PlanInput): PlannedPage[] {
 
   const pages: PlannedPage[] = [{ pageType: 'cover' }, { pageType: 'brandIntroduction' }];
 
+  // Contents earn their place once a reader can no longer hold the shape of the
+  // brochure in their head. Below that they are a page of nothing.
+  if (trips.length > 2) pages.push({ pageType: 'contents' });
+
   // A short bespoke proposal does not need the full corporate front matter.
   if (trips.length > 4) pages.push({ pageType: 'howItWorks' });
 
