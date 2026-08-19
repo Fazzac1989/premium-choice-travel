@@ -20,6 +20,8 @@ const GROUP_ITEMS: NavItem[] = [
 const ST_ITEMS: NavItem[] = [
   { href: '/admin/school-trips', label: 'Trips', exact: true },
   { href: '/admin/school-trips/import', label: 'AI Importer' },
+  { href: '/admin/school-trips/subjects', label: 'Subjects' },
+  { href: '/admin/school-trips/countries', label: 'Countries' },
   { href: '/admin/school-trips/quotes', label: 'Quotes' },
   { href: '/admin/school-trips/requests', label: 'Appointments' },
 ];

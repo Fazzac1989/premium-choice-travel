@@ -10,9 +10,10 @@ import { PCST_SITE_URL } from '@/lib/pcst';
  * the public site until its next deploy.
  *
  * Always rebuilds the home page and the trips index; pass a slug to rebuild
- * that trip's own page too.
+ * that trip's own page too, or scope 'taxonomy' to rebuild the country and
+ * subject pages after a rename.
  */
-export async function revalidatePcst(slug?: string | null) {
+export async function revalidatePcst(slug?: string | null, scope?: 'taxonomy') {
   const secret = process.env.PCST_REVALIDATE_SECRET;
   if (!secret) {
     console.warn(
@@ -23,7 +24,8 @@ export async function revalidatePcst(slug?: string | null) {
 
   const url =
     `${PCST_SITE_URL}/api/revalidate?secret=${encodeURIComponent(secret)}` +
-    (slug ? `&slug=${encodeURIComponent(slug)}` : '');
+    (slug ? `&slug=${encodeURIComponent(slug)}` : '') +
+    (scope ? `&scope=${scope}` : '');
 
   try {
     const res = await fetch(url, { method: 'POST', cache: 'no-store' });
