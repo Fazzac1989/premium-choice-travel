@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient } from '@/lib/pcst';
+import { revalidatePcst } from '@/lib/pcst-revalidate';
 
 export type StActionState = { ok: boolean; message: string } | null;
 
@@ -87,6 +88,9 @@ export async function saveStTrip(_prev: StActionState, formData: FormData): Prom
   }
 
   revalidatePath('/admin/school-trips');
+  // The trip lives in the School Trips database but is rendered by that site's
+  // own deployment, so it must be told to rebuild or a publish stays invisible.
+  await revalidatePcst(row.slug);
   redirect('/admin/school-trips?saved=1');
 }
 
@@ -95,9 +99,13 @@ export async function deleteStTrip(formData: FormData) {
   const id = Number(formData.get('id'));
   if (!id) return;
   const db = pcstClient();
+  // Read the slug first: after the delete there is nothing left to name the
+  // public page that now has to be cleared.
+  const { data: existing } = await db.from('trips').select('slug').eq('id', id).maybeSingle();
   await db.from('itinerary_days').delete().eq('trip_id', id);
   await db.from('trips').delete().eq('id', id);
   revalidatePath('/admin/school-trips');
+  await revalidatePcst(existing?.slug ?? null);
   redirect('/admin/school-trips');
 }
 

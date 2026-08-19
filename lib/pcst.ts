@@ -8,7 +8,12 @@ import { createClient } from '@supabase/supabase-js';
  * deployment; this writes to the same database they read from.
  */
 
-export const PCST_SITE_URL = 'https://premiumchoiceschooltrips.com';
+/**
+ * Where the School Trips public site actually answers. The custom domain still
+ * serves the legacy site, so this points at the platform deployment; set
+ * PCST_SITE_URL once the domain is switched over.
+ */
+export const PCST_SITE_URL = process.env.PCST_SITE_URL ?? 'https://pcst-platform.vercel.app';
 
 export function isPcstConfigured() {
   return Boolean(process.env.PCST_SUPABASE_URL && process.env.PCST_SUPABASE_SERVICE_ROLE_KEY);

@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/guard';
-import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
+import { pcstClient, isPcstConfigured } from '@/lib/pcst';
+import { revalidatePcst } from '@/lib/pcst-revalidate';
 import { extractDay, extractTripHighlights, EXTRACT_MODEL } from '@/lib/itinerary/extract';
 import type { StructuredDay } from '@/lib/itinerary/schema';
 
@@ -34,26 +35,6 @@ const toRow = (s: StructuredDay) => ({
   structured_at: new Date().toISOString(),
   structured_model: EXTRACT_MODEL,
 });
-
-/**
- * Ask the School Trips site to rebuild a cached trip page. Without this the
- * public page keeps serving whatever it rendered at its last deploy.
- */
-async function revalidatePcst(slug: string) {
-  const secret = process.env.PCST_REVALIDATE_SECRET;
-  if (!secret) {
-    console.warn('[school-trips] PCST_REVALIDATE_SECRET not set — public page will stay stale until redeploy');
-    return;
-  }
-  const base = process.env.PCST_SITE_URL ?? PCST_SITE_URL;
-  try {
-    await fetch(`${base}/api/revalidate?secret=${encodeURIComponent(secret)}&slug=${encodeURIComponent(slug)}`, {
-      method: 'POST',
-    });
-  } catch {
-    console.warn('[school-trips] revalidate call failed; public page may be stale');
-  }
-}
 
 /** Rebuild the journey rail and trip highlights from the structured days. */
 async function rollUpTrip(tripId: number) {
