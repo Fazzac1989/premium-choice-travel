@@ -79,12 +79,21 @@ export async function middleware(request: NextRequest) {
 
   const isLogin = pathname.startsWith('/admin/login');
 
-  if (!isLogin && !user) {
+  // This Supabase project is shared with the School Trips teacher portal, so a
+  // session alone proves nothing — only a profiles row with role 'admin' does.
+  const isAdmin = user
+    ? (await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle()).data?.role ===
+      'admin'
+    : false;
+
+  if (!isLogin && !isAdmin) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin/login';
     return NextResponse.redirect(url);
   }
-  if (isLogin && user) {
+  // Only bounce an actual admin away from the form; anyone else needs to reach
+  // it to sign in as themselves.
+  if (isLogin && isAdmin) {
     const url = request.nextUrl.clone();
     url.pathname = '/admin';
     return NextResponse.redirect(url);

@@ -36,7 +36,7 @@ export async function saveStTrip(_prev: StActionState, formData: FormData): Prom
     subject_id: formData.get('subject_id') ? Number(formData.get('subject_id')) : null,
     country_id: formData.get('country_id') ? Number(formData.get('country_id')) : null,
     city: String(formData.get('city') ?? '').trim() || null,
-    departs: String(formData.get('departs') ?? '').trim() || null,
+    departs: String(formData.get('departs') ?? '').trim() || 'Dubai',
     duration_days: Number(formData.get('duration_days') ?? 0) || 0,
     duration_nights: Number(formData.get('duration_nights') ?? 0) || 0,
     base_price_pp: priceRaw === '' ? null : Number(priceRaw),
