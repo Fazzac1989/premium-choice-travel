@@ -6,7 +6,13 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 const ALLOWED = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'];
-const MAX_BYTES = 8 * 1024 * 1024;
+
+// Vercel rejects a serverless request body over 4.5MB before this handler is
+// reached, so anything larger can never be answered politely here. Staying
+// under that keeps the error a readable JSON message rather than a raw 413.
+// The admin form also resizes images in the browser, so real uploads land far
+// below this.
+const MAX_BYTES = 4 * 1024 * 1024;
 
 export async function POST(request: NextRequest) {
   const supabase = createClient();
@@ -24,7 +30,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: 'Only JPG, PNG, WebP, AVIF or GIF images' }, { status: 400 });
   }
   if (file.size > MAX_BYTES) {
-    return NextResponse.json({ ok: false, error: 'Image is over 8MB — resize it first' }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: 'Image is too large even after resizing — save it at a smaller size first' },
+      { status: 400 }
+    );
   }
 
   const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
