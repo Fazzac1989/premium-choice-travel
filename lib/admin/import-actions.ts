@@ -4,6 +4,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
+import { structureStTrip } from '@/lib/admin/st-itinerary-actions';
 import { pcstClient } from '@/lib/pcst';
 
 export type ImportState = { ok: false; error: string } | null;
@@ -453,15 +454,25 @@ Extract the school trip.`,
 
   const days = draft.itinerary.filter((d) => d.label.trim() || d.title.trim() || d.description.trim());
   if (days.length > 0) {
+    // 1-based, matching what the School Trips app writes for the same table.
     await db.from('itinerary_days').insert(
       days.map((d, i) => ({
         trip_id: created.id,
-        sort_order: i,
+        sort_order: i + 1,
         label: d.label,
         title: d.title,
         description: d.description,
       }))
     );
+
+    // Build the scannable day cards now, so the trip is ready to publish
+    // rather than needing a second pass. A failure here leaves the trip
+    // intact; the public page simply falls back to plain days.
+    try {
+      await structureStTrip(created.id);
+    } catch (e) {
+      console.warn('[school-trips] structuring failed after import', e);
+    }
   }
 
   redirect(`/admin/school-trips/trips/${created.id}?imported=1`);
