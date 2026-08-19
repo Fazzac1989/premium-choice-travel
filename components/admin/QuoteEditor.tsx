@@ -109,6 +109,7 @@ export default function QuoteEditor({ quote, siteUrl }: { quote: Quote; siteUrl:
   const travellers = (Number(adults) || 0) + (Number(children) || 0);
   const shareUrl = `${siteUrl}/quotes/${quote.publicToken}`;
   const pdfUrl = `/api/quotes/pdf?token=${quote.publicToken}`;
+  const deckUrl = `/api/quotes/deck?token=${quote.publicToken}`;
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -122,6 +123,7 @@ export default function QuoteEditor({ quote, siteUrl }: { quote: Quote; siteUrl:
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <a href={pdfUrl} target="_blank" className="btn-outline !bg-white !px-5 !py-2.5">Download PDF</a>
+          <a href={deckUrl} target="_blank" className="btn-outline !bg-white !px-5 !py-2.5">Sales presentation</a>
           <a href={shareUrl} target="_blank" className="btn-outline !bg-white !px-5 !py-2.5">Preview client page ↗</a>
         </div>
       </div>

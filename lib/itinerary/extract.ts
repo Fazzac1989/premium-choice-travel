@@ -31,8 +31,12 @@ const DAY_SCHEMA = {
       type: 'string',
       description:
         'Exactly ONE town or city, e.g. "Tokyo". Never a pair, never "Tokyo and Nikko", never a ' +
-        'region or country. On a day that travels between places, give the destination — where the ' +
-        'group ends up that night. This drives a journey rail, so it must be a single place name.',
+        'region or country. This drives a journey rail showing where the trip goes, so give the ' +
+        'place the day is ABOUT, not where the beds are. On a day that moves on to a new base, ' +
+        'give the destination. On a full-day excursion to another town or site — even when the ' +
+        'group sleeps back at the same hotel — give the excursion destination, so a day trip to ' +
+        'Delphi reads as Delphi rather than Athens. Only give the base city when the day is genuinely ' +
+        'spent in and around it.',
     },
     highlights: {
       type: 'array',
