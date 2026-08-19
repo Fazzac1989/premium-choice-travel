@@ -1,4 +1,5 @@
 import { listStRequests } from '@/lib/pcst';
+import StRequestStatus from '@/components/admin/StRequestStatus';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,10 +29,17 @@ export default async function StRequestsPage() {
               <p className="text-xs font-bold uppercase tracking-wider text-teal-deep">
                 {r.table === 'appointment_requests' ? 'Appointment request' : 'Enquiry'}
               </p>
-              <p className="text-xs text-ink-soft">
-                {new Date(r.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}
-                {r.status ? ` · ${r.status}` : ''}
-              </p>
+              <div className="flex items-center gap-3">
+                <p className="text-xs text-ink-soft">
+                  {new Date(r.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}
+                </p>
+                {/* Only appointments carry a workflow status; enquiries are just read. */}
+                {r.table === 'appointment_requests' ? (
+                  <StRequestStatus id={r.id} status={r.status ?? 'new'} />
+                ) : (
+                  r.status && <span className="text-xs text-ink-soft">{r.status}</span>
+                )}
+              </div>
             </div>
             <dl className="mt-3 grid gap-x-8 gap-y-1.5 text-sm sm:grid-cols-2">
               {Object.entries(r.fields).map(([k, v]) => (

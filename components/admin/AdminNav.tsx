@@ -26,6 +26,9 @@ const ST_ITEMS: NavItem[] = [
   { href: '/admin/school-trips/requests', label: 'Appointments' },
   { href: '/admin/school-trips/teachers', label: 'Teachers' },
   { href: '/admin/school-trips/planning', label: 'Trip planning' },
+  { href: '/admin/school-trips/analytics', label: 'Analytics' },
+  { href: '/admin/school-trips/media', label: 'Media' },
+  { href: '/admin/school-trips/terms', label: 'Booking terms' },
 ];
 
 const brandItems = (key: string): NavItem[] => [

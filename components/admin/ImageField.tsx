@@ -1,73 +1,10 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import { uploadTo } from '@/lib/compress-image';
 
-/**
- * Shrink a photo in the browser before it is sent.
- *
- * Vercel rejects any serverless request body over 4.5MB, and a phone photo is
- * routinely larger than that. Resizing here keeps uploads well under the limit
- * and gives the site web-sized images rather than 12-megapixel originals.
- */
-async function compressImage(file: File, maxEdge = 2000, quality = 0.85): Promise<File> {
-  if (!file.type.startsWith('image/') || file.type === 'image/gif') return file;
-
-  const bitmap = await createImageBitmap(file).catch(() => null);
-  if (!bitmap) return file; // unsupported by this browser — let the server decide
-
-  const scale = Math.min(1, maxEdge / Math.max(bitmap.width, bitmap.height));
-  // Already small enough, and not a heavyweight format worth re-encoding.
-  if (scale === 1 && file.size <= 3 * 1024 * 1024) {
-    bitmap.close();
-    return file;
-  }
-
-  const canvas = document.createElement('canvas');
-  canvas.width = Math.round(bitmap.width * scale);
-  canvas.height = Math.round(bitmap.height * scale);
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    bitmap.close();
-    return file;
-  }
-  ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  bitmap.close();
-
-  const blob = await new Promise<Blob | null>((resolve) =>
-    canvas.toBlob(resolve, 'image/jpeg', quality)
-  );
-  if (!blob || blob.size >= file.size) return file; // no gain, keep the original
-
-  const name = file.name.replace(/\.[^.]+$/, '') + '.jpg';
-  return new File([blob], name, { type: 'image/jpeg', lastModified: Date.now() });
-}
-
-async function uploadFile(file: File): Promise<string> {
-  const prepared = await compressImage(file);
-
-  const fd = new FormData();
-  fd.append('file', prepared);
-  const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
-
-  // A rejected upload comes back as plain text, not JSON — read it as text
-  // first so the user sees the reason rather than a parser error.
-  const raw = await res.text();
-  let json: any;
-  try {
-    json = JSON.parse(raw);
-  } catch {
-    if (res.status === 413) {
-      throw new Error(
-        `“${file.name}” is too large to upload even after resizing. Save it at a smaller size and try again.`
-      );
-    }
-    throw new Error(`Upload failed (${res.status}). ${raw.slice(0, 120)}`);
-  }
-
-  if (!json.ok) throw new Error(json.error || 'Upload failed');
-  return json.url as string;
-}
+const uploadFile = (file: File) => uploadTo('/api/admin/upload', file);
 
 /** Single image: upload from computer (or paste a URL as fallback). */
 export function ImageField({
@@ -114,7 +51,7 @@ export function ImageField({
               onClick={() => inputRef.current?.click()}
               className="btn-outline !px-4 !py-2 text-xs disabled:opacity-50"
             >
-              {busy ? 'Uploading…' : value ? 'Replace image' : 'Upload image'}
+              {busy ? 'Uploadingâ€¦' : value ? 'Replace image' : 'Upload image'}
             </button>
             {value && (
               <button type="button" onClick={() => onChange('')} className="rounded-full px-3 py-2 text-xs font-semibold text-danger hover:bg-sand">
@@ -124,7 +61,7 @@ export function ImageField({
           </div>
           <input
             className="field !py-2 text-xs"
-            placeholder="…or paste an image URL"
+            placeholder="â€¦or paste an image URL"
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />
@@ -197,15 +134,15 @@ export function GalleryField({
           <div key={`${src}-${i}`} className="group relative h-24 w-36 overflow-hidden rounded-xl border border-line bg-sand">
             <Image src={src} alt="" fill sizes="144px" className="object-cover" />
             <div className="absolute inset-x-0 bottom-0 flex justify-center gap-1 bg-ink/70 py-1 opacity-0 transition-opacity group-hover:opacity-100">
-              <button type="button" onClick={() => move(i, -1)} className="px-1.5 text-xs text-white" aria-label="Move left">←</button>
-              <button type="button" onClick={() => move(i, 1)} className="px-1.5 text-xs text-white" aria-label="Move right">→</button>
+              <button type="button" onClick={() => move(i, -1)} className="px-1.5 text-xs text-white" aria-label="Move left">â†</button>
+              <button type="button" onClick={() => move(i, 1)} className="px-1.5 text-xs text-white" aria-label="Move right">â†’</button>
               <button
                 type="button"
                 onClick={() => onChange(images.filter((_, idx) => idx !== i))}
                 className="px-1.5 text-xs text-white hover:text-danger"
                 aria-label="Remove"
               >
-                ✕
+                âœ•
               </button>
             </div>
           </div>
@@ -216,7 +153,7 @@ export function GalleryField({
           onClick={() => inputRef.current?.click()}
           className="flex h-24 w-36 items-center justify-center rounded-xl border-2 border-dashed border-line text-xs font-semibold text-ink-soft transition-colors hover:border-teal hover:text-teal-deep disabled:opacity-50"
         >
-          {busy ? 'Uploading…' : '+ Add images'}
+          {busy ? 'Uploadingâ€¦' : '+ Add images'}
         </button>
       </div>
       {error && <p className="mt-2 text-xs text-danger">{error}</p>}
