@@ -2,14 +2,14 @@ import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * Throws unless a signed-in ADMIN session exists. Call at the top of every
+ * Throws unless a signed-in admin session exists. Call at the top of every
  * admin action.
  *
- * The role check is not optional. This Supabase project is shared with the
- * School Trips teacher portal, whose teachers are ordinary auth users. A
- * session check alone would let any teacher into this admin — and once the
- * school-trips tools live here, that includes student passport copies and
- * medical notes.
+ * A session check is sufficient here: this app authenticates against its own
+ * Supabase project, which contains only Premium Choice staff accounts. The
+ * School Trips teacher portal lives in a separate project that this app reaches
+ * only through the service-role PCST_* credentials, so a teacher login cannot
+ * produce a session here.
  */
 export async function requireAdmin() {
   const supabase = createClient();
@@ -17,22 +17,5 @@ export async function requireAdmin() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authorised');
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
-  if (profile?.role !== 'admin') throw new Error('Not authorised');
-
   return user;
-}
-
-/** Non-throwing variant, for layouts that render a message rather than crash. */
-export async function getAdminUser() {
-  try {
-    return await requireAdmin();
-  } catch {
-    return null;
-  }
 }
