@@ -37,7 +37,11 @@ export default function StTripForm({
     (trip?.itinerary ?? []).map((d) => ({ label: d.label, title: d.title, description: d.description }))
   );
 
-  const clean = (xs: string[]) => xs.map((x) => x.trim()).filter(Boolean);
+  // Drop anything that is not a string rather than trusting the shape: these
+  // lists come from a JSON column that has held more than one format over the
+  // years, and calling .trim() on an object takes the whole editor down.
+  const clean = (xs: unknown[]) =>
+    xs.filter((x): x is string => typeof x === 'string').map((x) => x.trim()).filter(Boolean);
 
   return (
     <form action={formAction} className="space-y-8">

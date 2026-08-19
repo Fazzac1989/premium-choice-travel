@@ -19,6 +19,20 @@ export function isPcstConfigured() {
   return Boolean(process.env.PCST_SUPABASE_URL && process.env.PCST_SUPABASE_SERVICE_ROLE_KEY);
 }
 
+/**
+ * The legacy gallery column holds either bare URL strings or {url, alt}
+ * objects, depending on when a trip was migrated. The editor and its
+ * GalleryField work in URLs, so flatten on read: handed an object it called
+ * .trim() on it and took the whole trip editor down with a client-side
+ * exception. Alt text for gallery photography lives in trip_images now.
+ */
+function galleryUrls(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((item) => (typeof item === 'string' ? item : ((item as { url?: unknown })?.url ?? '')))
+    .filter((url): url is string => typeof url === 'string' && url.trim().length > 0);
+}
+
 export function pcstClient() {
   return createClient(
     process.env.PCST_SUPABASE_URL!,
@@ -111,7 +125,7 @@ function mapTrip(row: any, days: any[] = []): StTrip {
     departs: row.departs ?? '',
     heroImage: row.hero_image ?? '',
     heroAlt: row.hero_alt ?? '',
-    gallery: row.gallery ?? [],
+    gallery: galleryUrls(row.gallery),
     overview: row.overview ?? [],
     includes: row.includes ?? [],
     basePricePp: row.base_price_pp === null || row.base_price_pp === undefined ? null : Number(row.base_price_pp),
