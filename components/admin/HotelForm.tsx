@@ -106,6 +106,10 @@ export default function HotelForm({
           <label className="field-label">One-line summary (shown on journey cards)</label>
           <textarea name="description" rows={2} defaultValue={hotel?.description} className="field" placeholder="One or two editorial sentences — no rates or availability claims." />
         </div>
+        <div className="sm:col-span-2">
+          <label className="field-label">Guide price (optional — always shown as guidance, never a quote)</label>
+          <input name="price_guide" defaultValue={hotel?.priceGuide} className="field" placeholder='e.g. "From around AED 900 B&B in winter, AED 600 in summer"' />
+        </div>
       </div>
 
       <ListEditor

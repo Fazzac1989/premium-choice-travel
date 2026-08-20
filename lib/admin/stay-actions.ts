@@ -46,6 +46,7 @@ export async function saveHotel(_prev: StayActionState, formData: FormData): Pro
     best_for: parseJson<string[]>(formData.get('best_for'), []),
     featured: formData.get('featured') === 'on',
     status: formData.get('status') === 'draft' ? 'draft' : 'published',
+    price_guide: String(formData.get('price_guide') ?? '').trim() || null,
   };
 
   let { error } = await (id ? db.from('hotels').update(row).eq('id', id) : db.from('hotels').insert(row));

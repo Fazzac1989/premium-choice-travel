@@ -129,3 +129,8 @@ alter table hotels add column if not exists status text not null default 'publis
 alter table hotels drop constraint if exists hotels_status_check;
 alter table hotels add constraint hotels_status_check
   check (status in ('draft','published'));
+-- Migration 009 — admin-entered guide price for staycation hotels.
+-- Free text, shown only when set, always labelled as guidance.
+-- Run in the Supabase SQL editor. Safe to re-run.
+
+alter table hotels add column if not exists price_guide text;

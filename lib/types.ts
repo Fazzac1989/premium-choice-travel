@@ -85,6 +85,8 @@ export type Hotel = {
   featured?: boolean;
   /** 'draft' hotels are hidden from the websites. */
   status?: 'draft' | 'published';
+  /** Admin-entered guide price text — always shown as guidance, never a quote. */
+  priceGuide?: string;
 };
 
 export type Experience = {

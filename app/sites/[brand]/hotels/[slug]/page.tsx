@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import GalleryLightbox from '@/components/GalleryLightbox';
+import AvailabilityCheck from '@/components/AvailabilityCheck';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
@@ -170,12 +171,17 @@ export default async function StaycationHotelPage({
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <div className="rounded-2xl bg-ink p-7 text-white">
-            <h3 className="font-serif text-xl">Ask us about {hotel.name}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-white/70">
-              Dates, room categories, meal plans, kids’ setups — a specialist confirms
-              what’s possible, chases the extras and prices it personally.
-            </p>
-            <Link href={`${base}/enquire`} className="btn-primary mt-5 w-full">Plan my staycation</Link>
+            <h3 className="font-serif text-xl">Check dates at {hotel.name}</h3>
+            {hotel.priceGuide && (
+              <p className="mt-2 rounded-lg bg-white/10 px-3 py-2 text-sm text-white/85">
+                <span className="font-semibold text-teal">Guide: </span>
+                {hotel.priceGuide}
+                <span className="block text-[11px] text-white/50">Guidance only — your price is confirmed when we quote.</span>
+              </p>
+            )}
+            <div className="mt-4">
+              <AvailabilityCheck hotelName={hotel.name} emirate={hotel.emirate ?? ''} mealPlans={hotel.mealPlans} />
+            </div>
             <p className="mt-4 text-center text-xs text-white/60">
               or call <a className="font-semibold text-teal" href="tel:+97144206965">+971 4 420 6965</a>
             </p>
