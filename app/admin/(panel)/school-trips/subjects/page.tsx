@@ -15,16 +15,16 @@ export default async function StSubjectsPage() {
   }
 
   const db = pcstClient();
-  let { data, error } = await db
+  const withDescription = await db
     .from('subjects')
     .select('id, name, slug, description, trips(count)')
     .order('name');
   // Until the subject_description migration has been run, fall back without it.
-  if (error?.message.includes('description')) {
-    ({ data } = await db.from('subjects').select('id, name, slug, trips(count)').order('name'));
-  }
+  const data: any[] = withDescription.error?.message.includes('description')
+    ? ((await db.from('subjects').select('id, name, slug, trips(count)').order('name')).data as any[]) ?? []
+    : (withDescription.data as any[]) ?? [];
 
-  const rows: TaxonomyRow[] = (data ?? []).map((s: any) => ({
+  const rows: TaxonomyRow[] = data.map((s: any) => ({
     id: s.id,
     name: s.name,
     slug: s.slug,
