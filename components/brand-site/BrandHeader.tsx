@@ -95,7 +95,7 @@ export default function BrandHeader({
                 width={524}
                 height={130}
                 priority
-                className={`w-auto transition-[height] duration-300 ${isSolid ? 'h-20' : 'h-[100px]'}`}
+                className={`h-auto transition-[width] duration-300 ${isSolid ? 'w-[320px] max-w-[52vw]' : 'w-[400px] max-w-[60vw]'}`}
               />
             ) : (
               <span className={`font-serif text-xl ${isSolid ? 'text-ink' : 'text-white'}`}>{name}</span>
