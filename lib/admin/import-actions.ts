@@ -466,13 +466,19 @@ Extract the school trip.`,
     );
 
     // Build the scannable day cards now, so the trip is ready to publish
-    // rather than needing a second pass. A failure here leaves the trip
-    // intact; the public page simply falls back to plain days.
+    // rather than needing a second pass. A failure leaves the trip intact —
+    // the public page falls back to plain days — but it must be SEEN:
+    // structureStTrip reports errors in its return value rather than by
+    // throwing, and discarding that value once left four imported trips
+    // without the new layout and nobody knowing.
+    let structured: 'ok' | 'failed' = 'failed';
     try {
-      await structureStTrip(created.id);
+      const result = await structureStTrip(created.id);
+      if (result.ok && !result.failed) structured = 'ok';
     } catch (e) {
       console.warn('[school-trips] structuring failed after import', e);
     }
+    redirect(`/admin/school-trips/trips/${created.id}?imported=1&structured=${structured}`);
   }
 
   redirect(`/admin/school-trips/trips/${created.id}?imported=1`);

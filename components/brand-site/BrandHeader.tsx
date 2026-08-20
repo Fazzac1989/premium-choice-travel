@@ -88,10 +88,10 @@ export default function BrandHeader({
               <Image
                 src={(isSolid ? logo : logoWhite)!}
                 alt={name}
-                width={320}
-                height={89}
+                width={430}
+                height={120}
                 priority
-                className="h-12 w-auto"
+                className="h-16 w-auto"
               />
             ) : (
               <span className={`font-serif text-xl ${isSolid ? 'text-ink' : 'text-white'}`}>{name}</span>

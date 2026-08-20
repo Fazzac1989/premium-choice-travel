@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getStTrip, listStCountries, listStSubjects, PCST_SITE_URL } from '@/lib/pcst';
+import { getStTrip, listStCountries, listStSubjects, pcstClient, PCST_SITE_URL } from '@/lib/pcst';
 import StTripForm from '@/components/admin/StTripForm';
+import StStructureBanner from '@/components/admin/StStructureBanner';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,15 @@ export default async function EditStTripPage({ params }: { params: { id: string 
   ]);
   if (!trip) notFound();
 
+  // Whether the scannable day cards exist, so a failed import pass is visible
+  // here rather than only on the public page.
+  const { data: dayRows } = await pcstClient()
+    .from('itinerary_days')
+    .select('structured_at, description')
+    .eq('trip_id', id);
+  const withText = (dayRows ?? []).filter((d) => d.description?.trim());
+  const structuredDays = withText.filter((d) => d.structured_at).length;
+
   return (
     <div className="mx-auto max-w-3xl">
       <div className="flex items-center justify-between">
@@ -27,6 +37,7 @@ export default async function EditStTripPage({ params }: { params: { id: string 
         )}
       </div>
       <h1 className="mt-2 font-serif text-3xl text-ink">{trip.title}</h1>
+      <StStructureBanner tripId={id} structuredDays={structuredDays} totalDays={withText.length} />
       <div className="mt-8">
         <StTripForm trip={trip} subjects={subjects} countries={countries} />
       </div>
