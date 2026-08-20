@@ -82,16 +82,20 @@ export default function BrandHeader({
           isSolid ? 'border-b border-line bg-white/95 backdrop-blur' : 'bg-transparent'
         }`}
       >
-        <div className="container-site flex h-[72px] items-center justify-between gap-6">
+        <div
+          className={`container-site flex items-center justify-between gap-6 transition-[height] duration-300 ${
+            isSolid ? 'h-[84px]' : 'h-[104px]'
+          }`}
+        >
           <Link href={home} aria-label={`${name} — home`} className="shrink-0">
             {(isSolid ? logo : logoWhite) ? (
               <Image
                 src={(isSolid ? logo : logoWhite)!}
                 alt={name}
-                width={430}
-                height={120}
+                width={524}
+                height={130}
                 priority
-                className="h-16 w-auto"
+                className={`w-auto transition-[height] duration-300 ${isSolid ? 'h-20' : 'h-[100px]'}`}
               />
             ) : (
               <span className={`font-serif text-xl ${isSolid ? 'text-ink' : 'text-white'}`}>{name}</span>
@@ -177,7 +181,7 @@ export default function BrandHeader({
 
         {/* Mobile menu */}
         {open && (
-          <nav className="max-h-[calc(100svh-72px)] overflow-y-auto border-t border-line bg-white px-5 py-4 lg:hidden">
+          <nav className="max-h-[calc(100svh-84px)] overflow-y-auto border-t border-line bg-white px-5 py-4 lg:hidden">
             {isHolidays && (
               <Link href={`${base}/destinations`} className="block py-3 text-base font-semibold text-ink">
                 Destinations
@@ -195,7 +199,7 @@ export default function BrandHeader({
         )}
       </header>
       {/* Fixed header needs an offset on pages without a full-bleed hero. */}
-      {!isHeroPage && <div className="h-[72px]" />}
+      {!isHeroPage && <div className="h-[84px]" />}
     </>
   );
 }
