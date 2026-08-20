@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { uploadTo } from '@/lib/compress-image';
+import ShutterstockPicker from '@/components/admin/ShutterstockPicker';
 
 const uploadFile = (file: File) => uploadTo('/api/admin/upload', file);
 
@@ -19,6 +20,7 @@ export function ImageField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stockOpen, setStockOpen] = useState(false);
 
   const handleFile = async (file: File) => {
     setBusy(true);
@@ -53,6 +55,13 @@ export function ImageField({
             >
               {busy ? 'Uploadingâ€¦' : value ? 'Replace image' : 'Upload image'}
             </button>
+            <button
+              type="button"
+              onClick={() => setStockOpen(true)}
+              className="btn-outline !px-4 !py-2 text-xs"
+            >
+              Search Shutterstock
+            </button>
             {value && (
               <button type="button" onClick={() => onChange('')} className="rounded-full px-3 py-2 text-xs font-semibold text-danger hover:bg-sand">
                 Remove
@@ -79,6 +88,7 @@ export function ImageField({
           e.target.value = '';
         }}
       />
+      {stockOpen && <ShutterstockPicker onPick={onChange} onClose={() => setStockOpen(false)} />}
     </div>
   );
 }
@@ -96,6 +106,7 @@ export function GalleryField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [stockOpen, setStockOpen] = useState(false);
 
   const handleFiles = async (files: FileList) => {
     setBusy(true);
@@ -155,7 +166,17 @@ export function GalleryField({
         >
           {busy ? 'Uploadingâ€¦' : '+ Add images'}
         </button>
+        <button
+          type="button"
+          onClick={() => setStockOpen(true)}
+          className="flex h-24 w-36 items-center justify-center rounded-xl border-2 border-dashed border-line text-xs font-semibold text-ink-soft transition-colors hover:border-teal hover:text-teal-deep"
+        >
+          Search Shutterstock
+        </button>
       </div>
+      {stockOpen && (
+        <ShutterstockPicker onPick={(url) => onChange([...images, url])} onClose={() => setStockOpen(false)} />
+      )}
       {error && <p className="mt-2 text-xs text-danger">{error}</p>}
       <input
         ref={inputRef}
