@@ -40,7 +40,7 @@ export default async function BrandPackagesPage({ params }: { params: { brand: s
           ) : (
             <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((pkg, i) => (
-                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/packages`} />
+                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/journeys`} />
               ))}
             </div>
           )}

@@ -43,7 +43,7 @@ export default async function BrandPackagePage({
       <PackageDetailBody
         pkg={pkg}
         related={related}
-        hrefBase={`${base}/packages`}
+        hrefBase={`${base}/journeys`}
         hotels={stays.hotels}
         experiences={stays.experiences}
         destination={destination}

@@ -125,13 +125,13 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
                   title="Starting points, not set menus"
                   text="Open one for the full day-by-day plan — then let a specialist reshape it around you."
                 />
-                <Link href={`${base}/packages`} className="btn-outline shrink-0 !bg-white">
+                <Link href={`${base}/journeys`} className="btn-outline shrink-0 !bg-white">
                   All journeys
                 </Link>
               </div>
               <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {packages.map((pkg, i) => (
-                  <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/packages`} />
+                  <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/journeys`} />
                 ))}
               </div>
             </div>
@@ -256,7 +256,7 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
 
           <div className="mt-8 flex flex-wrap gap-4">
             {brand.sellsPackages && (
-              <Link href={isStaycations ? `${base}/hotels` : `${base}/packages`} className="btn-primary !px-6 !py-3">
+              <Link href={isStaycations ? `${base}/hotels` : `${base}/journeys`} className="btn-primary !px-6 !py-3">
                 {brand.cta}
               </Link>
             )}
@@ -353,13 +353,13 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
                 title="Starting points, not set menus"
                 text="Open one for the full plan — then let a specialist reshape it around you."
               />
-              <Link href={`${base}/packages`} className="btn-outline shrink-0 !bg-white">
+              <Link href={`${base}/journeys`} className="btn-outline shrink-0 !bg-white">
                 All journeys
               </Link>
             </div>
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((pkg, i) => (
-                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/packages`} />
+                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/journeys`} />
               ))}
             </div>
           </div>

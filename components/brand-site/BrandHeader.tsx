@@ -44,7 +44,7 @@ export default function BrandHeader({
   const rel = (base && pathname.startsWith(base) ? pathname.slice(base.length) : pathname) || '/';
   const isHeroPage =
     rel === '/' ||
-    /^\/packages\/[^/]+$/.test(rel) ||
+    /^\/journeys\/[^/]+$/.test(rel) ||
     /^\/destinations\/[^/]+$/.test(rel) ||
     /^\/hotels\/[^/]+$/.test(rel);
 
@@ -76,7 +76,7 @@ export default function BrandHeader({
     } ${rel.startsWith(href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
 
   const links = [
-    ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/packages', label: 'Journeys' }]),
+    ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/journeys', label: 'Journeys' }]),
     ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
     { href: '/enquire', label: 'Contact' },
   ];

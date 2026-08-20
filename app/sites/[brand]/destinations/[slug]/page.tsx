@@ -45,7 +45,7 @@ export default async function BrandDestinationPage({
         plan: `${base}/enquire`,
         inspire: `${base}/inspiration`,
         destBase: `${base}/destinations`,
-        pkgBase: `${base}/packages`,
+        pkgBase: `${base}/journeys`,
       }}
     />
   );
