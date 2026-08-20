@@ -21,6 +21,9 @@ import { HOLIDAYS_JOURNEYS } from '../lib/journeys/holidays';
 import { STAYCATIONS_JOURNEYS } from '../lib/journeys/staycations';
 import { CRUISES_JOURNEYS } from '../lib/journeys/cruises';
 import { GOLF_JOURNEYS } from '../lib/journeys/golf';
+import { HOLIDAYS_JOURNEYS_2 } from '../lib/journeys/holidays2';
+import { CRUISES_JOURNEYS_2 } from '../lib/journeys/cruises2';
+import { GOLF_JOURNEYS_2 } from '../lib/journeys/golf2';
 import type { JourneySeed } from '../lib/journeys/types';
 
 config({ path: '.env.local' });
@@ -46,6 +49,9 @@ const ALL: JourneySeed[] = [
   ...STAYCATIONS_JOURNEYS,
   ...CRUISES_JOURNEYS,
   ...GOLF_JOURNEYS,
+  ...HOLIDAYS_JOURNEYS_2,
+  ...CRUISES_JOURNEYS_2,
+  ...GOLF_JOURNEYS_2,
 ];
 
 async function destinationIds(): Promise<Map<string, number>> {

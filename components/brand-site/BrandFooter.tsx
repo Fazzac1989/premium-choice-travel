@@ -7,12 +7,14 @@ export default function BrandFooter({
   logoWhite,
   base = '',
   isHolidays = false,
+  isStaycations = false,
 }: {
   name: string;
   description: string;
   logoWhite: string | null;
   base?: string;
   isHolidays?: boolean;
+  isStaycations?: boolean;
 }) {
   const masterUrl = 'https://premiumchoicetravel.com';
   const links = [
@@ -20,7 +22,9 @@ export default function BrandFooter({
       { href: `${base}/destinations`, label: 'Destinations' },
       { href: `${base}/inspiration`, label: 'AI Inspiration' },
     ] : []),
-    { href: `${base}/packages`, label: 'Journeys' },
+    ...(isStaycations
+      ? [{ href: `${base}/hotels`, label: 'Hotels' }]
+      : [{ href: `${base}/packages`, label: 'Journeys' }]),
     { href: `${base}/enquire`, label: 'Plan my trip' },
   ];
   return (

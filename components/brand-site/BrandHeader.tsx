@@ -22,6 +22,7 @@ export default function BrandHeader({
   logo,
   logoWhite,
   isHolidays = false,
+  isStaycations = false,
   destinationGroups = [],
 }: {
   base: string;
@@ -29,6 +30,7 @@ export default function BrandHeader({
   logo: string | null;
   logoWhite: string | null;
   isHolidays?: boolean;
+  isStaycations?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
 }) {
   const pathname = usePathname();
@@ -40,7 +42,11 @@ export default function BrandHeader({
 
   // Path relative to this brand site (base is '' on the brand's own domain).
   const rel = (base && pathname.startsWith(base) ? pathname.slice(base.length) : pathname) || '/';
-  const isHeroPage = rel === '/' || /^\/packages\/[^/]+$/.test(rel) || /^\/destinations\/[^/]+$/.test(rel);
+  const isHeroPage =
+    rel === '/' ||
+    /^\/packages\/[^/]+$/.test(rel) ||
+    /^\/destinations\/[^/]+$/.test(rel) ||
+    /^\/hotels\/[^/]+$/.test(rel);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -70,7 +76,7 @@ export default function BrandHeader({
     } ${rel.startsWith(href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
 
   const links = [
-    { href: '/packages', label: 'Journeys' },
+    ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/packages', label: 'Journeys' }]),
     ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
     { href: '/enquire', label: 'Contact' },
   ];

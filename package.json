@@ -10,7 +10,8 @@
     "seed": "tsx scripts/seed.ts",
     "audit": "tsx scripts/audit.ts",
     "seed:journeys": "tsx scripts/seed-journeys.ts",
-    "journey:images": "tsx scripts/fetch-journey-images.ts"
+    "journey:images": "tsx scripts/fetch-journey-images.ts",
+    "seed:hotels": "tsx scripts/seed-uae-hotels.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.117.1",

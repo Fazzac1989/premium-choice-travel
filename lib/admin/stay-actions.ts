@@ -41,6 +41,11 @@ export async function saveHotel(_prev: StayActionState, formData: FormData): Pro
     getting_there: String(formData.get('getting_there') ?? '').trim() || null,
     transfer_duration: String(formData.get('transfer_duration') ?? '').trim() || null,
     gallery: parseJson<string[]>(formData.get('gallery'), []),
+    stars: formData.get('stars') ? Number(formData.get('stars')) : null,
+    emirate: String(formData.get('emirate') ?? '').trim() || null,
+    best_for: parseJson<string[]>(formData.get('best_for'), []),
+    featured: formData.get('featured') === 'on',
+    status: formData.get('status') === 'draft' ? 'draft' : 'published',
   };
 
   let { error } = await (id ? db.from('hotels').update(row).eq('id', id) : db.from('hotels').insert(row));

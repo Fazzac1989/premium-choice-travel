@@ -32,6 +32,7 @@ export default function HotelForm({
   const [mealPlans, setMealPlans] = useState<string[]>(hotel?.mealPlans ?? []);
   const [roomTypes, setRoomTypes] = useState<GuideSection[]>(hotel?.roomTypes ?? []);
   const [restaurants, setRestaurants] = useState<GuideSection[]>(hotel?.restaurants ?? []);
+  const [bestFor, setBestFor] = useState<string[]>(hotel?.bestFor ?? []);
 
   const clean = (xs: string[]) => xs.map((x) => x.trim()).filter(Boolean);
   const cleanSections = (xs: GuideSection[]) => xs.filter((s) => s.heading.trim() || s.body.trim());
@@ -46,6 +47,7 @@ export default function HotelForm({
       <input type="hidden" name="meal_plans" value={JSON.stringify(clean(mealPlans))} />
       <input type="hidden" name="room_types" value={JSON.stringify(cleanSections(roomTypes))} />
       <input type="hidden" name="restaurants" value={JSON.stringify(cleanSections(restaurants))} />
+      <input type="hidden" name="best_for" value={JSON.stringify(clean(bestFor))} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -69,11 +71,50 @@ export default function HotelForm({
           <label className="field-label">Style</label>
           <input name="style" defaultValue={hotel?.style} className="field" placeholder="e.g. Family resort · Adults-only · Villa" />
         </div>
+        <div>
+          <label className="field-label">Star rating</label>
+          <select name="stars" className="field" defaultValue={hotel?.stars ?? ''}>
+            <option value="">— unrated / unknown —</option>
+            {[5, 4, 3].map((s) => (
+              <option key={s} value={s}>{s} star</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="field-label">Emirate (Staycations directory)</label>
+          <select name="emirate" className="field" defaultValue={hotel?.emirate ?? ''}>
+            <option value="">— not a UAE staycation hotel —</option>
+            {['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'].map((e) => (
+              <option key={e} value={e}>{e}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="field-label">Status</label>
+          <select name="status" className="field" defaultValue={hotel?.status ?? 'published'}>
+            <option value="published">Published</option>
+            <option value="draft">Draft (hidden from websites)</option>
+          </select>
+        </div>
+        <div className="flex items-end pb-2">
+          <label className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <input type="checkbox" name="featured" defaultChecked={hotel?.featured} className="h-4 w-4 accent-teal" />
+            Specialist pick (featured)
+          </label>
+        </div>
         <div className="sm:col-span-2">
           <label className="field-label">One-line summary (shown on journey cards)</label>
           <textarea name="description" rows={2} defaultValue={hotel?.description} className="field" placeholder="One or two editorial sentences — no rates or availability claims." />
         </div>
       </div>
+
+      <ListEditor
+        label="Best for"
+        hint="Filter tags — family, couples, beach, desert, wellness…"
+        items={bestFor}
+        onChange={setBestFor}
+        placeholder="e.g. family"
+      />
 
       <div className="space-y-5 rounded-xl bg-sand/60 p-4">
         <ListEditor

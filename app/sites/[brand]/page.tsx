@@ -7,7 +7,7 @@ import DifferenceBand from '@/components/DifferenceBand';
 import HeroSlideshow from '@/components/HeroSlideshow';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getDestinations, getPackagesByBrand } from '@/lib/data';
+import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,10 +25,13 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
   if (!brand || brand.externalUrl) notFound();
   const base = brandBase(brand);
   const isHolidays = brand.slug === 'holidays';
+  const isStaycations = brand.slug === 'staycations';
 
-  const allBrandPackages = brand.sellsPackages ? await getPackagesByBrand(brand.key) : [];
+  // Staycations sells hotels, not packages.
+  const allBrandPackages = brand.sellsPackages && !isStaycations ? await getPackagesByBrand(brand.key) : [];
   // Featured journeys lead, exactly like the master homepage.
   const packages = [...allBrandPackages].sort((a, b) => Number(b.featured) - Number(a.featured)).slice(0, 6);
+  const hotels = isStaycations ? (await getStaycationHotels()).slice(0, 6) : [];
   const holidayDestinations = isHolidays
     ? (await getDestinations()).filter((d) => d.region !== 'Cruise Seas')
     : [];
@@ -253,7 +256,7 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
 
           <div className="mt-8 flex flex-wrap gap-4">
             {brand.sellsPackages && (
-              <Link href={`${base}/packages`} className="btn-primary !px-6 !py-3">
+              <Link href={isStaycations ? `${base}/hotels` : `${base}/packages`} className="btn-primary !px-6 !py-3">
                 {brand.cta}
               </Link>
             )}
@@ -287,6 +290,58 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
           </ul>
         </div>
       </section>
+
+      {/* Featured hotels — Staycations sells hotels, not packages */}
+      {hotels.length > 0 && (
+        <section className="bg-sand py-16 sm:py-20">
+          <div className="container-site">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading
+                eyebrow="Hotels we rate"
+                title="The UAE, hand-picked"
+                text="Filter by emirate, star rating and meal plan — then tell us your dates."
+              />
+              <Link href={`${base}/hotels`} className="btn-outline shrink-0 !bg-white">
+                All hotels
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {hotels.map((h) => (
+                <Link
+                  key={h.id}
+                  href={`${base}/hotels/${hotelSlug(h.name)}`}
+                  className="card group overflow-hidden transition-shadow hover:shadow-xl hover:shadow-ink/10"
+                >
+                  <div className="relative aspect-[16/10] bg-ink">
+                    {h.image || h.gallery[0] ? (
+                      <Image
+                        src={h.image || h.gallery[0]}
+                        alt={h.name}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-gradient-to-br from-ink to-teal-deep/60 p-6">
+                        <p className="text-center font-serif text-2xl leading-snug text-white/90">{h.name}</p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-serif text-xl leading-snug text-ink group-hover:text-teal-deep">{h.name}</h3>
+                      {h.stars ? <span className="text-[13px] tracking-[0.1em] text-teal-deep">{'★'.repeat(h.stars)}</span> : null}
+                    </div>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-teal-deep">
+                      {[h.emirate, h.area].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Featured journeys */}
       {packages.length > 0 && (

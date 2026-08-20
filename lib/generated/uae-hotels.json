@@ -1,0 +1,1541 @@
+{
+    "hotels":  [
+                   {
+                       "name":  "Atlantis, The Palm",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah",
+                       "stars":  5,
+                       "style":  "family beach mega-resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "unlimited Aquaventure Waterpark access",
+                                           "The Lost Chambers Aquarium",
+                                           "private beach",
+                                           "20+ restaurants and bars",
+                                           "kids club",
+                                           "Dolphin Bay"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "luxury"
+                                   ],
+                       "note":  "The default big-occasion family staycation - waterpark and aquarium access baked into the stay keeps kids busy all weekend."
+                   },
+                   {
+                       "name":  "Atlantis The Royal",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah",
+                       "stars":  5,
+                       "style":  "ultra-luxury statement resort",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast"
+                                     ],
+                       "keyFeatures":  [
+                                           "Cloud 22 rooftop pool",
+                                           "celebrity-chef restaurants",
+                                           "private beach",
+                                           "Aquaventure access",
+                                           "sky pool suites"
+                                       ],
+                       "bestFor":  [
+                                       "luxury",
+                                       "couples",
+                                       "beach"
+                                   ],
+                       "note":  "Booked for milestone celebrations and show-off weekends; residents go for the restaurants and the rooftop pool scene."
+                   },
+                   {
+                       "name":  "Burj Al Arab Jumeirah",
+                       "emirate":  "Dubai",
+                       "area":  "Umm Suqeim",
+                       "stars":  5,
+                       "style":  "all-suite luxury icon",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "all-duplex suites",
+                                           "personal butler service",
+                                           "infinity-pool terrace",
+                                           "access to sister Jumeirah resorts",
+                                           "private beach"
+                                       ],
+                       "bestFor":  [
+                                       "luxury",
+                                       "couples"
+                                   ],
+                       "note":  "A once-in-a-while bucket-list stay for residents - anniversaries and big birthdays rather than a routine weekend."
+                   },
+                   {
+                       "name":  "Jumeirah Beach Hotel",
+                       "emirate":  "Dubai",
+                       "area":  "Umm Suqeim",
+                       "stars":  5,
+                       "style":  "classic family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "unlimited Wild Wadi Waterpark access",
+                                           "private beach facing Burj Al Arab",
+                                           "kids club",
+                                           "multiple pools",
+                                           "tennis and padel courts"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach"
+                                   ],
+                       "note":  "A long-running family favourite - the included Wild Wadi access makes the maths work for parents."
+                   },
+                   {
+                       "name":  "Jumeirah Al Naseem",
+                       "emirate":  "Dubai",
+                       "area":  "Madinat Jumeirah, Umm Suqeim",
+                       "stars":  5,
+                       "style":  "contemporary beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "turtle rehabilitation lagoon",
+                                           "private beach",
+                                           "access to Souk Madinat and resort waterways",
+                                           "Wild Wadi access",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "couples",
+                                       "beach",
+                                       "luxury"
+                                   ],
+                       "note":  "The most modern of the Madinat resorts; residents like the beach-club feel plus the whole Madinat estate on foot or by abra."
+                   },
+                   {
+                       "name":  "Jumeirah Al Qasr",
+                       "emirate":  "Dubai",
+                       "area":  "Madinat Jumeirah, Umm Suqeim",
+                       "stars":  5,
+                       "style":  "palatial beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "2km private beach",
+                                           "abra rides on resort waterways",
+                                           "50+ restaurants across Madinat Jumeirah",
+                                           "Wild Wadi access",
+                                           "Talise spa"
+                                       ],
+                       "bestFor":  [
+                                       "luxury",
+                                       "family",
+                                       "couples",
+                                       "beach"
+                                   ],
+                       "note":  "Old-Arabia grandeur with the full Madinat dining village attached - a reliable special-weekend pick."
+                   },
+                   {
+                       "name":  "Address Beach Resort",
+                       "emirate":  "Dubai",
+                       "area":  "Jumeirah Beach Residence (JBR)",
+                       "stars":  5,
+                       "style":  "high-rise beach glamour",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "record-setting rooftop infinity pool on the 77th floor",
+                                           "private beach on JBR",
+                                           "family pool deck",
+                                           "spa",
+                                           "walkable to The Walk and Bluewaters"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "beach",
+                                       "luxury",
+                                       "city"
+                                   ],
+                       "note":  "The rooftop infinity pool is the draw - one of the most photographed staycation bookings in Dubai."
+                   },
+                   {
+                       "name":  "Rixos The Palm Dubai Hotel \u0026 Suites",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah, East Crescent",
+                       "stars":  5,
+                       "style":  "all-inclusive beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "long private beach",
+                                           "all-inclusive packages",
+                                           "Rixy kids club",
+                                           "multiple restaurants",
+                                           "watersports"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "Residents book it when they want a switch-off, everything-included weekend without leaving the Palm."
+                   },
+                   {
+                       "name":  "FIVE Palm Jumeirah",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah",
+                       "stars":  5,
+                       "style":  "party-centric beach hotel",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "The Penthouse and beach club nightlife",
+                                           "private beach",
+                                           "multiple pools",
+                                           "high-energy dining venues",
+                                           "spa"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "beach",
+                                       "adventure"
+                                   ],
+                       "note":  "The go-to for a loud, social weekend - pool parties and nightlife on site rather than a quiet escape."
+                   },
+                   {
+                       "name":  "Fairmont The Palm",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah",
+                       "stars":  5,
+                       "style":  "family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "Fairmont Falcons kids club",
+                                           "several pools",
+                                           "10 dining venues",
+                                           "Marina skyline views"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach"
+                                   ],
+                       "note":  "A steady family favourite with frequent resident rates and dining-credit staycation deals."
+                   },
+                   {
+                       "name":  "Anantara The Palm Dubai Resort",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah, East Crescent",
+                       "stars":  5,
+                       "style":  "lagoon resort, Thai styling",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "overwater villas",
+                                           "lagoon-access rooms",
+                                           "private beach",
+                                           "Thai-inspired spa",
+                                           "temperature-controlled lagoons"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "family",
+                                       "beach",
+                                       "wellness"
+                                   ],
+                       "note":  "The closest thing to a Maldives overwater stay without flying - popular for anniversaries and babymoons."
+                   },
+                   {
+                       "name":  "Sofitel Dubai The Palm",
+                       "emirate":  "Dubai",
+                       "area":  "Palm Jumeirah, East Crescent",
+                       "stars":  5,
+                       "style":  "Polynesian-themed family resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "lagoon pools",
+                                           "kids club",
+                                           "multiple restaurants",
+                                           "apartment-style family rooms"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach"
+                                   ],
+                       "note":  "Large family rooms and a relaxed pace make it a repeat booking for families with young kids."
+                   },
+                   {
+                       "name":  "One\u0026Only Royal Mirage",
+                       "emirate":  "Dubai",
+                       "area":  "Al Sufouh, Jumeirah Beach",
+                       "stars":  5,
+                       "style":  "elegant Arabian beach classic",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "1km private beach",
+                                           "65 acres of gardens",
+                                           "renowned restaurants",
+                                           "hammam and spa",
+                                           "three distinct residences"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "luxury",
+                                       "beach"
+                                   ],
+                       "note":  "Understated old-school luxury; residents pick it for grown-up, low-key weekends over flashier newcomers."
+                   },
+                   {
+                       "name":  "Le Méridien Mina Seyahi Beach Resort \u0026 Waterpark",
+                       "emirate":  "Dubai",
+                       "area":  "Al Sufouh, Dubai Marina",
+                       "stars":  5,
+                       "style":  "family waterpark beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "on-site waterpark",
+                                           "long private beach",
+                                           "kids club",
+                                           "watersports centre",
+                                           "multiple pools"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach"
+                                   ],
+                       "note":  "The included waterpark and big beach make it one of the strongest pure-family staycations near the Marina."
+                   },
+                   {
+                       "name":  "The Ritz-Carlton, Dubai",
+                       "emirate":  "Dubai",
+                       "area":  "Jumeirah Beach Residence (JBR)",
+                       "stars":  5,
+                       "style":  "low-rise beachfront luxury",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "Mediterranean-style gardens",
+                                           "six pools",
+                                           "kids club",
+                                           "spa"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "family",
+                                       "luxury",
+                                       "beach"
+                                   ],
+                       "note":  "A quiet, low-rise pocket amid high-rise JBR - regulars value the garden feel and service consistency."
+                   },
+                   {
+                       "name":  "Banyan Tree Dubai",
+                       "emirate":  "Dubai",
+                       "area":  "Bluewaters Island",
+                       "stars":  5,
+                       "style":  "resort-style island retreat",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "500m private beach",
+                                           "adults-only and family pools",
+                                           "spa",
+                                           "views of Ain Dubai",
+                                           "walkable to Bluewaters and JBR"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "beach",
+                                       "luxury",
+                                       "wellness"
+                                   ],
+                       "note":  "The former Caesars Palace reborn - residents like the sanctuary feel minutes from the Marina."
+                   },
+                   {
+                       "name":  "Address Downtown",
+                       "emirate":  "Dubai",
+                       "area":  "Downtown Dubai",
+                       "stars":  5,
+                       "style":  "city icon, fountain views",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast"
+                                     ],
+                       "keyFeatures":  [
+                                           "Burj Khalifa and Dubai Fountain views",
+                                           "infinity pool",
+                                           "direct Dubai Mall access",
+                                           "spa",
+                                           "several dining venues"
+                                       ],
+                       "bestFor":  [
+                                       "city",
+                                       "couples",
+                                       "luxury"
+                                   ],
+                       "note":  "The classic Downtown city-break - fountain-view rooms are the point, especially around NYE and event weekends."
+                   },
+                   {
+                       "name":  "JA The Resort",
+                       "emirate":  "Dubai",
+                       "area":  "Jebel Ali",
+                       "stars":  5,
+                       "style":  "sprawling family activity resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "800m private beach",
+                                           "9-hole golf course",
+                                           "watersports and marina",
+                                           "kids club and sports academies",
+                                           "20+ dining venues across three hotels"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value",
+                                       "golf",
+                                       "adventure"
+                                   ],
+                       "note":  "A self-contained weekend of activities away from the city crush - repeatedly cited as one of Dubai\u0027s best-value family staycations."
+                   },
+                   {
+                       "name":  "Bab Al Shams, A Rare Finds Desert Resort",
+                       "emirate":  "Dubai",
+                       "area":  "Al Qudra desert, Dubai",
+                       "stars":  5,
+                       "style":  "desert fort retreat",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "infinity pool over the dunes",
+                                           "Al Hadheerah desert dining experience",
+                                           "equestrian and archery activities",
+                                           "spa",
+                                           "fort-style low-rise architecture"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "desert",
+                                       "family",
+                                       "luxury"
+                                   ],
+                       "note":  "Dubai\u0027s classic desert escape, fully refurbished in 2023 - close enough for a one-night reset."
+                   },
+                   {
+                       "name":  "Al Maha, a Luxury Collection Desert Resort \u0026 Spa",
+                       "emirate":  "Dubai",
+                       "area":  "Dubai Desert Conservation Reserve",
+                       "stars":  5,
+                       "style":  "exclusive desert villa retreat",
+                       "mealPlans":  [
+                                         "Full board"
+                                     ],
+                       "keyFeatures":  [
+                                           "all-villa with private pools",
+                                           "inside a conservation reserve with free-roaming oryx",
+                                           "included desert activities",
+                                           "no children under 10",
+                                           "full-board stays"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "desert",
+                                       "luxury",
+                                       "wellness"
+                                   ],
+                       "note":  "The special-occasion desert stay - private pool villas and wildlife at sunrise justify the splurge for residents."
+                   },
+                   {
+                       "name":  "Lapita, Dubai Parks and Resorts, Autograph Collection",
+                       "emirate":  "Dubai",
+                       "area":  "Dubai Parks and Resorts, Jebel Ali",
+                       "stars":  5,
+                       "style":  "Polynesian theme-park hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "walking distance to Motiongate and Legoland",
+                                           "lazy river and pools",
+                                           "kids club",
+                                           "theme-park package deals",
+                                           "family rooms"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value"
+                                   ],
+                       "note":  "The practical base for a theme-park weekend - park-inclusive packages are its whole appeal for families."
+                   },
+                   {
+                       "name":  "Rove La Mer Beach",
+                       "emirate":  "Dubai",
+                       "area":  "La Mer / J1 Beach, Jumeirah",
+                       "stars":  3,
+                       "style":  "casual beachfront value stay",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast"
+                                     ],
+                       "keyFeatures":  [
+                                           "direct beach access",
+                                           "outdoor pool",
+                                           "casual all-day diner",
+                                           "pet-friendly",
+                                           "walkable beachfront district"
+                                       ],
+                       "bestFor":  [
+                                       "value",
+                                       "beach",
+                                       "couples",
+                                       "family"
+                                   ],
+                       "note":  "Rare budget-friendly beachfront in Jumeirah - young residents book it for cheap-and-cheerful beach weekends."
+                   },
+                   {
+                       "name":  "Centara Mirage Beach Resort Dubai",
+                       "emirate":  "Dubai",
+                       "area":  "Dubai Islands (Deira Islands)",
+                       "stars":  4,
+                       "style":  "family waterpark value resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "on-site waterpark with lazy river",
+                                           "private beach",
+                                           "kids club and kids suites",
+                                           "cliff jumping and zipline features",
+                                           "Thai-influenced dining"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "Consistently among the best value family staycations - a compact waterpark holiday at a mid-market price."
+                   },
+                   {
+                       "name":  "Riu Dubai",
+                       "emirate":  "Dubai",
+                       "area":  "Dubai Islands (Deira Islands)",
+                       "stars":  4,
+                       "style":  "all-inclusive beach resort",
+                       "mealPlans":  [
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "24-hour all-inclusive concept",
+                                           "private beach",
+                                           "four pools including swim-up bar",
+                                           "kids waterpark splash zone",
+                                           "multiple buffet and theme restaurants"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "Dubai\u0027s straightforward all-in option - one price covers food and drinks, which makes budgeting a staycation easy."
+                   },
+                   {
+                       "name":  "JA Hatta Fort Hotel",
+                       "emirate":  "Dubai",
+                       "area":  "Hatta mountains",
+                       "stars":  4,
+                       "style":  "mountain adventure retreat",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "Hajar mountain setting",
+                                           "chalet-style rooms",
+                                           "close to Hatta kayaking and mountain-bike trails",
+                                           "outdoor pools",
+                                           "archery and mini golf"
+                                       ],
+                       "bestFor":  [
+                                       "adventure",
+                                       "family",
+                                       "couples",
+                                       "desert"
+                                   ],
+                       "note":  "The cooler-climate weekend - residents pair it with Hatta Dam kayaking and hiking in winter."
+                   },
+                   {
+                       "name":  "Emirates Palace Mandarin Oriental, Abu Dhabi",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Corniche West, Abu Dhabi",
+                       "stars":  5,
+                       "style":  "palatial landmark resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "1.3km private beach",
+                                           "85 hectares of gardens",
+                                           "two large pools with slides",
+                                           "signature Palace Cappuccino and afternoon tea",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "luxury",
+                                       "family",
+                                       "beach",
+                                       "city"
+                                   ],
+                       "note":  "The capital\u0027s trophy stay - residents book it for landmark occasions and the famously large grounds."
+                   },
+                   {
+                       "name":  "The St. Regis Saadiyat Island Resort, Abu Dhabi",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Saadiyat Island",
+                       "stars":  5,
+                       "style":  "Mediterranean-style beach luxury",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "Saadiyat Beach frontage",
+                                           "adults-only and family pools",
+                                           "kids club",
+                                           "butler service",
+                                           "next to Saadiyat Beach Golf Club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "couples",
+                                       "beach",
+                                       "luxury",
+                                       "golf"
+                                   ],
+                       "note":  "White-sand Saadiyat beach with a genuinely good kids club - a regular for family weekends from Dubai and Abu Dhabi alike."
+                   },
+                   {
+                       "name":  "Rixos Premium Saadiyat Island",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Saadiyat Island",
+                       "stars":  5,
+                       "style":  "all-inclusive family resort",
+                       "mealPlans":  [
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "all-inclusive concept",
+                                           "Saadiyat beachfront",
+                                           "Rixy kids club",
+                                           "multiple restaurants included",
+                                           "entertainment programme"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value",
+                                       "luxury"
+                                   ],
+                       "note":  "The UAE\u0027s best-known premium all-inclusive - families book it to stop thinking about bills for a weekend."
+                   },
+                   {
+                       "name":  "Jumeirah Saadiyat Island Resort",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Saadiyat Island",
+                       "stars":  5,
+                       "style":  "contemporary beachfront resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "long stretch of Saadiyat beach",
+                                           "three pools",
+                                           "overwater-style cabanas",
+                                           "turtle-nesting beach environment",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "couples",
+                                       "beach",
+                                       "luxury"
+                                   ],
+                       "note":  "Modern, airy and right on one of the country\u0027s best natural beaches - dolphins and turtles are a genuine possibility."
+                   },
+                   {
+                       "name":  "Park Hyatt Abu Dhabi Hotel and Villas",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Saadiyat Island",
+                       "stars":  5,
+                       "style":  "serene beach and golf resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "9km Saadiyat Beach access",
+                                           "beside Saadiyat Beach Golf Club",
+                                           "landscaped gardens and pools",
+                                           "spa",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "wellness",
+                                       "golf",
+                                       "beach",
+                                       "family"
+                                   ],
+                       "note":  "The quiet-luxury choice on Saadiyat - picked by residents who want calm rather than a scene."
+                   },
+                   {
+                       "name":  "Saadiyat Rotana Resort \u0026 Villas",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Saadiyat Island",
+                       "stars":  5,
+                       "style":  "relaxed family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "beachfront villas with pools",
+                                           "kids club",
+                                           "multiple restaurants",
+                                           "family pool complex"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "Saadiyat sand at a friendlier price point than its five-star neighbours - a solid repeat family booking."
+                   },
+                   {
+                       "name":  "W Abu Dhabi - Yas Island",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Yas Island",
+                       "stars":  5,
+                       "style":  "design-led circuit hotel",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast"
+                                     ],
+                       "keyFeatures":  [
+                                           "built over the F1 Yas Marina Circuit",
+                                           "rooftop pool deck",
+                                           "walking distance to Yas Marina",
+                                           "destination restaurants",
+                                           "Grand Prix views"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "city",
+                                       "adventure",
+                                       "luxury"
+                                   ],
+                       "note":  "The Grand Prix hotel - booked out for race weekend and popular year-round for theme-park-plus-nightlife breaks."
+                   },
+                   {
+                       "name":  "Hilton Abu Dhabi Yas Island",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Yas Bay, Yas Island",
+                       "stars":  5,
+                       "style":  "modern waterfront resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "Yas Bay waterfront and beach access",
+                                           "rooftop infinity pools",
+                                           "walkable to Yas Bay promenade nightlife",
+                                           "theme-park packages",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "city",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "A well-priced Yas base with the promenade\u0027s restaurants on the doorstep and parks a shuttle away."
+                   },
+                   {
+                       "name":  "The WB Abu Dhabi, Curio Collection by Hilton",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Yas Island",
+                       "stars":  5,
+                       "style":  "Warner Bros. themed hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "world\u0027s first Warner Bros. hotel",
+                                           "themed character experiences",
+                                           "rooftop pool",
+                                           "packages including Yas theme-park access",
+                                           "next to Warner Bros. World"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value"
+                                   ],
+                       "note":  "Kids-first by design - park-inclusive packages make it the easiest theme-park weekend in the country."
+                   },
+                   {
+                       "name":  "Crowne Plaza Abu Dhabi Yas Island",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Yas Plaza, Yas Island",
+                       "stars":  4,
+                       "style":  "practical theme-park base",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "links golf course views",
+                                           "shared Yas Plaza pools and beach shuttle",
+                                           "theme-park ticket packages",
+                                           "several restaurants",
+                                           "good weekday rates"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "golf"
+                                   ],
+                       "note":  "One of the Yas Plaza value cluster - residents use it as a cheap sleep between theme-park days."
+                   },
+                   {
+                       "name":  "Fairmont Bab Al Bahr",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Khor Al Maqta, Abu Dhabi",
+                       "stars":  5,
+                       "style":  "city resort, mosque views",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "views of Sheikh Zayed Grand Mosque",
+                                           "private beach on the creek",
+                                           "infinity pool",
+                                           "well-known steakhouse dining",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "city",
+                                       "family",
+                                       "couples"
+                                   ],
+                       "note":  "The mosque-view photo from the pool is the signature; handy midpoint location for Dubai residents visiting the capital."
+                   },
+                   {
+                       "name":  "Shangri-La Qaryat Al Beri, Abu Dhabi",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Qaryat Al Beri, Khor Al Maqta",
+                       "stars":  5,
+                       "style":  "Arabian waterway resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "1km private beach on the creek",
+                                           "abra rides along resort canals",
+                                           "souk next door",
+                                           "Grand Mosque views",
+                                           "four pools"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "family",
+                                       "city",
+                                       "luxury"
+                                   ],
+                       "note":  "Canal abras, a souk and mosque views give it more sense of place than most city resorts - a steady favourite."
+                   },
+                   {
+                       "name":  "Conrad Abu Dhabi Etihad Towers",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Corniche West, Abu Dhabi",
+                       "stars":  5,
+                       "style":  "high-rise beach and city",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "Observation Deck at 300",
+                                           "extensive restaurant lineup",
+                                           "opposite Emirates Palace",
+                                           "spa"
+                                       ],
+                       "bestFor":  [
+                                       "city",
+                                       "couples",
+                                       "beach",
+                                       "luxury"
+                                   ],
+                       "note":  "City sophistication with a real beach attached - popular with couples doing a capital weekend."
+                   },
+                   {
+                       "name":  "Qasr Al Sarab Desert Resort by Anantara",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Liwa Desert, Empty Quarter",
+                       "stars":  5,
+                       "style":  "remote desert fortress resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "Full board"
+                                     ],
+                       "keyFeatures":  [
+                                           "Empty Quarter dune scenery",
+                                           "pool villas",
+                                           "camel treks and dune drives",
+                                           "archery and falconry",
+                                           "destination dining on the dunes"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "desert",
+                                       "luxury",
+                                       "adventure"
+                                   ],
+                       "note":  "The UAE\u0027s most dramatic desert stay - a 90-minute drive past Liwa that residents treat as a proper escape, not a stopover."
+                   },
+                   {
+                       "name":  "Al Wathba, a Luxury Collection Desert Resort \u0026 Spa",
+                       "emirate":  "Abu Dhabi",
+                       "area":  "Al Wathba desert, Abu Dhabi",
+                       "stars":  5,
+                       "style":  "boutique desert spa retreat",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "village-style desert architecture",
+                                           "large spa with hammam",
+                                           "long outdoor pool",
+                                           "camel-track views",
+                                           "adults-oriented calm"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "wellness",
+                                       "desert",
+                                       "luxury"
+                                   ],
+                       "note":  "A desert reset only 40 minutes from the city - the spa circuit is the reason most residents go."
+                   },
+                   {
+                       "name":  "Waldorf Astoria Ras Al Khaimah",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Hamra Village",
+                       "stars":  5,
+                       "style":  "grand beach and golf",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "beside Al Hamra Golf Club",
+                                           "castle-like architecture",
+                                           "well-regarded steakhouse and lounge dining",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "luxury",
+                                       "family",
+                                       "golf",
+                                       "beach",
+                                       "couples"
+                                   ],
+                       "note":  "RAK\u0027s flagship classic - close enough to Dubai for one night, grand enough to feel like a real holiday."
+                   },
+                   {
+                       "name":  "The Ritz-Carlton Ras Al Khaimah, Al Wadi Desert",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Wadi Desert nature reserve",
+                       "stars":  5,
+                       "style":  "desert pool-villa retreat",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "all-villa with private pools",
+                                           "oryx and gazelle in the reserve",
+                                           "falconry and horse riding",
+                                           "spa in the dunes",
+                                           "adult-friendly quiet"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "desert",
+                                       "luxury",
+                                       "wellness"
+                                   ],
+                       "note":  "Private-pool desert villas an hour from Dubai - a firm anniversary and proposal favourite."
+                   },
+                   {
+                       "name":  "Rixos Bab Al Bahr",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Marjan Island",
+                       "stars":  5,
+                       "style":  "all-inclusive party-family resort",
+                       "mealPlans":  [
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "ultra all-inclusive concept",
+                                           "private beach",
+                                           "entertainment and pool parties",
+                                           "kids club",
+                                           "many included restaurants"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "The weekend residents book to eat, drink and switch off - RAK\u0027s benchmark all-inclusive."
+                   },
+                   {
+                       "name":  "Mövenpick Resort Al Marjan Island",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Marjan Island",
+                       "stars":  5,
+                       "style":  "family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "kids club and splash park",
+                                           "swim-up rooms",
+                                           "multiple pools",
+                                           "all-inclusive options"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "A newer Marjan family option that wins repeat bookings on its splash park and kids-stay-free deals."
+                   },
+                   {
+                       "name":  "Hampton by Hilton Marjan Island",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Marjan Island",
+                       "stars":  3,
+                       "style":  "budget beach mega-hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "large private beach",
+                                           "multiple outdoor pools",
+                                           "kids club and water play area",
+                                           "one of the region\u0027s biggest Hamptons",
+                                           "very accessible rates"
+                                       ],
+                       "bestFor":  [
+                                       "value",
+                                       "family",
+                                       "beach"
+                                   ],
+                       "note":  "Probably the best-known cheap beach staycation in the UAE - basic rooms, big pools, tiny prices."
+                   },
+                   {
+                       "name":  "DoubleTree by Hilton Resort \u0026 Spa Marjan Island",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Al Marjan Island",
+                       "stars":  5,
+                       "style":  "big-footprint beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "650m private beach",
+                                           "several pools",
+                                           "10+ restaurants and bars",
+                                           "kids club",
+                                           "frequent all-inclusive deals"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "A workhorse resort that regularly tops value-staycation lists - big, busy and reliably discounted."
+                   },
+                   {
+                       "name":  "The Cove Rotana Resort",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Ras Al Khaimah lagoon coast",
+                       "stars":  5,
+                       "style":  "village-style lagoon resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "Nubian-village hillside layout",
+                                           "600m beach on a lagoon",
+                                           "villas with private pools",
+                                           "two infinity pools",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "couples",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "The terraced-village look photographs like Santorini - a long-standing resident favourite for short breaks."
+                   },
+                   {
+                       "name":  "Anantara Mina Al Arab Ras Al Khaimah Resort",
+                       "emirate":  "Ras Al Khaimah",
+                       "area":  "Mina Al Arab",
+                       "stars":  5,
+                       "style":  "overwater eco-luxury resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "overwater villas on a protected lagoon",
+                                           "mangrove and wetland setting",
+                                           "Anantara spa",
+                                           "beachfront pool",
+                                           "destination dining"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "luxury",
+                                       "wellness",
+                                       "beach"
+                                   ],
+                       "note":  "Opened 2024 and instantly the Maldives-substitute of the north - overwater villas without the flight."
+                   },
+                   {
+                       "name":  "InterContinental Fujairah Resort",
+                       "emirate":  "Fujairah",
+                       "area":  "Al Aqah beach",
+                       "stars":  5,
+                       "style":  "modern east-coast resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "beachfront on the Gulf of Oman",
+                                           "Hajar mountain backdrop",
+                                           "infinity pool",
+                                           "snorkelling and diving nearby",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "couples",
+                                       "adventure"
+                                   ],
+                       "note":  "The east coast\u0027s polished all-rounder - clear-water swimming and diving that the Gulf side can\u0027t offer."
+                   },
+                   {
+                       "name":  "Address Beach Resort Fujairah",
+                       "emirate":  "Fujairah",
+                       "area":  "Al Aqah beach",
+                       "stars":  5,
+                       "style":  "sleek beachfront luxury",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "direct beach on the Indian Ocean coast",
+                                           "infinity pools",
+                                           "spa",
+                                           "mountain-facing rooms",
+                                           "upscale dining"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "luxury",
+                                       "beach",
+                                       "family"
+                                   ],
+                       "note":  "Brought Dubai-level polish to Al Aqah - the current top-end pick for an east-coast weekend."
+                   },
+                   {
+                       "name":  "Le Méridien Al Aqah Beach Resort",
+                       "emirate":  "Fujairah",
+                       "area":  "Al Aqah beach",
+                       "stars":  5,
+                       "style":  "established family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "long private beach",
+                                           "large family pool",
+                                           "kids club and teens club",
+                                           "all rooms sea-facing",
+                                           "diving centre nearby"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "The east coast\u0027s long-serving family stalwart - generations of UAE families have done this exact weekend."
+                   },
+                   {
+                       "name":  "Fairmont Fujairah Beach Resort",
+                       "emirate":  "Fujairah",
+                       "area":  "Dibba, Al Sharq",
+                       "stars":  5,
+                       "style":  "marina-side mountain resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "beach and marina setting below the Hajar mountains",
+                                           "outdoor pools",
+                                           "kids club",
+                                           "diving and watersports access",
+                                           "near Dibba rock snorkelling"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "adventure",
+                                       "value"
+                                   ],
+                       "note":  "Tucked up by Dibba with easy snorkelling trips - quieter than the Al Aqah strip."
+                   },
+                   {
+                       "name":  "Sandy Beach Hotel \u0026 Resort",
+                       "emirate":  "Fujairah",
+                       "area":  "Al Aqah, opposite Snoopy Island",
+                       "stars":  3,
+                       "style":  "no-frills diving beach classic",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "house-reef snorkelling at Snoopy Island",
+                                           "on-site dive centre",
+                                           "beachfront chalets",
+                                           "simple family-run feel",
+                                           "direct beach access"
+                                       ],
+                       "bestFor":  [
+                                       "adventure",
+                                       "value",
+                                       "beach",
+                                       "family"
+                                   ],
+                       "note":  "Dated but loved - residents keep coming back for the best easy snorkelling in the country."
+                   },
+                   {
+                       "name":  "The Chedi Al Bait, Sharjah",
+                       "emirate":  "Sharjah",
+                       "area":  "Heart of Sharjah heritage district",
+                       "stars":  5,
+                       "style":  "heritage boutique hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "restored heritage houses",
+                                           "GHM/Chedi service standards",
+                                           "courtyard architecture",
+                                           "spa and hammam",
+                                           "walkable to souks and museums"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "city",
+                                       "luxury",
+                                       "wellness"
+                                   ],
+                       "note":  "A genuinely different staycation - old-Sharjah courtyards and quiet luxury instead of a beach scene."
+                   },
+                   {
+                       "name":  "Sheraton Sharjah Beach Resort \u0026 Spa",
+                       "emirate":  "Sharjah",
+                       "area":  "Al Heerah / Al Muntazah beachfront",
+                       "stars":  5,
+                       "style":  "family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "two pools",
+                                           "supervised kids club",
+                                           "Shine Spa",
+                                           "six dining venues"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "Sharjah\u0027s main full-service beach resort - alcohol-free, which many family bookers actively prefer."
+                   },
+                   {
+                       "name":  "Coral Beach Resort Sharjah",
+                       "emirate":  "Sharjah",
+                       "area":  "Al Muntazah beachfront",
+                       "stars":  4,
+                       "style":  "affordable family beach resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "Full board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "outdoor pools",
+                                           "kids playground",
+                                           "gardens",
+                                           "family-friendly pricing"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "A dependable budget beach weekend minutes from Dubai\u0027s northern suburbs."
+                   },
+                   {
+                       "name":  "Mysk Kingfisher Retreat",
+                       "emirate":  "Sharjah",
+                       "area":  "Kalba, east coast Sharjah",
+                       "stars":  5,
+                       "style":  "eco luxury tented lodge",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "luxury tents with private plunge pools",
+                                           "mangrove and turtle conservation area",
+                                           "secluded beach",
+                                           "adults-oriented quiet",
+                                           "part of Sharjah Collection"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "wellness",
+                                       "beach",
+                                       "adventure"
+                                   ],
+                       "note":  "Barefoot-luxury glamping on an empty Kalba beach - one of the UAE\u0027s most distinctive nights away."
+                   },
+                   {
+                       "name":  "Fairmont Ajman",
+                       "emirate":  "Ajman",
+                       "area":  "Ajman Corniche",
+                       "stars":  5,
+                       "style":  "upscale family beach hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "long private beach",
+                                           "outdoor pool with beach views",
+                                           "kids club",
+                                           "several restaurants",
+                                           "short drive from Dubai"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "Five-star beach comfort at Ajman prices, 30-40 minutes from most of Dubai - an easy sell for families."
+                   },
+                   {
+                       "name":  "The Ajman Saray, a Luxury Collection Resort",
+                       "emirate":  "Ajman",
+                       "area":  "Ajman Corniche",
+                       "stars":  5,
+                       "style":  "polished beachfront resort",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "sea-view rooms and suites",
+                                           "spa",
+                                           "multiple dining venues",
+                                           "kids club"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "family",
+                                       "beach",
+                                       "luxury"
+                                   ],
+                       "note":  "The Marriott Luxury Collection option in Ajman - residents use it for a quietly premium beach weekend without Dubai crowds."
+                   },
+                   {
+                       "name":  "Ajman Hotel by Blazon Hotels",
+                       "emirate":  "Ajman",
+                       "area":  "Ajman Corniche",
+                       "stars":  5,
+                       "style":  "classic garden beach hotel",
+                       "mealPlans":  [
+                                         "Bed \u0026 breakfast",
+                                         "Half board",
+                                         "All-inclusive"
+                                     ],
+                       "keyFeatures":  [
+                                           "private beach",
+                                           "landscaped gardens",
+                                           "several restaurants",
+                                           "outdoor pools",
+                                           "former Kempinski property"
+                                       ],
+                       "bestFor":  [
+                                       "family",
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "The old Kempinski grande dame of Ajman - keeps a loyal following for its gardens and unhurried pace."
+                   },
+                   {
+                       "name":  "Vida Beach Resort Umm Al Quwain",
+                       "emirate":  "Umm Al Quwain",
+                       "area":  "Umm Al Quwain beachfront",
+                       "stars":  4,
+                       "style":  "stylish laid-back beach resort",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast",
+                                         "Half board"
+                                     ],
+                       "keyFeatures":  [
+                                           "infinity pool",
+                                           "private beach and chalets",
+                                           "pet-friendly",
+                                           "watersports",
+                                           "kids pool"
+                                       ],
+                       "bestFor":  [
+                                       "couples",
+                                       "family",
+                                       "beach",
+                                       "value"
+                                   ],
+                       "note":  "The first big lifestyle-brand resort in UAQ - a quiet, design-led alternative to the RAK crowd."
+                   },
+                   {
+                       "name":  "Barracuda Beach Resort",
+                       "emirate":  "Umm Al Quwain",
+                       "area":  "Khor Al Beidah, Umm Al Quwain",
+                       "stars":  3,
+                       "style":  "simple lagoon-side resort",
+                       "mealPlans":  [
+                                         "Room only",
+                                         "Bed \u0026 breakfast"
+                                     ],
+                       "keyFeatures":  [
+                                           "lagoon-facing chalets and villas",
+                                           "outdoor pool",
+                                           "long-standing resident following",
+                                           "quiet beach setting"
+                                       ],
+                       "bestFor":  [
+                                       "value",
+                                       "beach"
+                                   ],
+                       "note":  "A UAE institution best known for its adjacent retail store - the chalets serve cheap, unfussy weekends by the water."
+                   }
+               ]
+}

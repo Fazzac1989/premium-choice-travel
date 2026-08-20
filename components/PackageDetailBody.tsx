@@ -184,10 +184,10 @@ export default function PackageDetailBody({
             <section className="mt-12">
               <h2 className="font-serif text-2xl text-ink">The golf</h2>
               <div className="mt-4 flex flex-wrap gap-x-10 gap-y-3 rounded-2xl bg-sand p-5 text-sm">
-                {details.rounds && (
+                {(details.rounds || details.roundsNote) && (
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Rounds</p>
-                    <p className="mt-0.5 font-semibold text-ink">{details.rounds}</p>
+                    <p className="mt-0.5 font-semibold text-ink">{details.rounds || details.roundsNote}</p>
                   </div>
                 )}
                 {details.handicap && (

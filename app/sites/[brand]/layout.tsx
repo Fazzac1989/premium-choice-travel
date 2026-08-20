@@ -52,6 +52,7 @@ export default async function BrandSiteLayout({
         logo={brand.logo}
         logoWhite={brand.logoWhite}
         isHolidays={isHolidays}
+        isStaycations={brand.slug === 'staycations'}
         destinationGroups={destinationGroups}
       />
       {children}
@@ -61,6 +62,7 @@ export default async function BrandSiteLayout({
         logoWhite={brand.logoWhite}
         base={base}
         isHolidays={isHolidays}
+        isStaycations={brand.slug === 'staycations'}
       />
     </>
   );

@@ -3,8 +3,11 @@ import { HOLIDAYS_JOURNEYS } from '../lib/journeys/holidays';
 import { STAYCATIONS_JOURNEYS } from '../lib/journeys/staycations';
 import { CRUISES_JOURNEYS } from '../lib/journeys/cruises';
 import { GOLF_JOURNEYS } from '../lib/journeys/golf';
+import { HOLIDAYS_JOURNEYS_2 } from '../lib/journeys/holidays2';
+import { CRUISES_JOURNEYS_2 } from '../lib/journeys/cruises2';
+import { GOLF_JOURNEYS_2 } from '../lib/journeys/golf2';
 
-const all = [...HOLIDAYS_JOURNEYS, ...STAYCATIONS_JOURNEYS, ...CRUISES_JOURNEYS, ...GOLF_JOURNEYS];
+const all = [...HOLIDAYS_JOURNEYS, ...STAYCATIONS_JOURNEYS, ...CRUISES_JOURNEYS, ...GOLF_JOURNEYS, ...HOLIDAYS_JOURNEYS_2, ...CRUISES_JOURNEYS_2, ...GOLF_JOURNEYS_2];
 const banned = [
   'unforgettable', 'breathtaking', 'nestled', 'world-class', 'seamless',
   'discover the magic', 'something for everyone', 'memories to last a lifetime', 'hidden gem', 'bucket list',

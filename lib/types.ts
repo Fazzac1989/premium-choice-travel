@@ -76,6 +76,15 @@ export type Hotel = {
   transferDuration: string;
   /** Gallery image URLs. */
   gallery: string[];
+  /** Official star rating (5, 4, 3) — null when unverified. */
+  stars?: number | null;
+  /** UAE emirate for the Staycations directory. */
+  emirate?: string;
+  /** Filter tags, e.g. family, couples, beach, desert. */
+  bestFor?: string[];
+  featured?: boolean;
+  /** 'draft' hotels are hidden from the websites. */
+  status?: 'draft' | 'published';
 };
 
 export type Experience = {

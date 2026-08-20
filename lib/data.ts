@@ -203,6 +203,11 @@ export function mapHotel(row: any) {
     gettingThere: row.getting_there ?? '',
     transferDuration: row.transfer_duration ?? '',
     gallery: row.gallery ?? [],
+    stars: row.stars ?? null,
+    emirate: row.emirate ?? '',
+    bestFor: row.best_for ?? [],
+    featured: row.featured ?? false,
+    status: row.status ?? 'published',
   };
 }
 
@@ -225,6 +230,14 @@ export async function getHotels() {
   const db = createAdminClient();
   const { data } = await db.from('hotels').select('*').order('sort_order');
   return (data ?? []).map(mapHotel);
+}
+
+/** Published UAE hotels for the Staycations directory (draft hotels hidden). */
+export async function getStaycationHotels() {
+  const hotels = await getHotels();
+  return hotels
+    .filter((h) => h.status !== 'draft' && h.emirate)
+    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.stars ?? 0) - (a.stars ?? 0) || a.name.localeCompare(b.name));
 }
 
 /** Resolve a hotel by its name-derived slug, plus the journeys that feature it. */

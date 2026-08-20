@@ -11,13 +11,16 @@ import { HOLIDAYS_JOURNEYS } from '../lib/journeys/holidays';
 import { STAYCATIONS_JOURNEYS } from '../lib/journeys/staycations';
 import { CRUISES_JOURNEYS } from '../lib/journeys/cruises';
 import { GOLF_JOURNEYS } from '../lib/journeys/golf';
+import { HOLIDAYS_JOURNEYS_2 } from '../lib/journeys/holidays2';
+import { CRUISES_JOURNEYS_2 } from '../lib/journeys/cruises2';
+import { GOLF_JOURNEYS_2 } from '../lib/journeys/golf2';
 
 type Img = { url: string; alt: string; source: string; license: string };
 
 const OUT_PATH = 'lib/generated/journey-images.json';
 const TARGET = 8;
 
-const all = [...HOLIDAYS_JOURNEYS, ...STAYCATIONS_JOURNEYS, ...CRUISES_JOURNEYS, ...GOLF_JOURNEYS];
+const all = [...HOLIDAYS_JOURNEYS, ...STAYCATIONS_JOURNEYS, ...CRUISES_JOURNEYS, ...GOLF_JOURNEYS, ...HOLIDAYS_JOURNEYS_2, ...CRUISES_JOURNEYS_2, ...GOLF_JOURNEYS_2];
 
 async function searchUnsplash(query: string, count: number): Promise<Img[]> {
   const res = await fetch(
