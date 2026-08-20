@@ -52,7 +52,8 @@ export async function updateStTerm(
   kind: TaxonomyKind,
   id: number,
   name: string,
-  region: string | null
+  region: string | null,
+  description?: string | null
 ): Promise<StTaxonomyResult> {
   await requireAdmin();
   if (!isPcstConfigured()) return { ok: false, error: 'School Trips database is not configured.' };
@@ -62,6 +63,8 @@ export async function updateStTerm(
 
   const row: Record<string, unknown> = { name: clean, slug: slugify(clean) };
   if (kind === 'country') row.region = region;
+  // The write-up at the top of the subject's public page.
+  if (kind === 'subject' && description !== undefined) row.description = description?.trim() || null;
 
   const { error } = await pcstClient().from(TABLE[kind]).update(row).eq('id', id);
   if (error) return { ok: false, error: error.message };

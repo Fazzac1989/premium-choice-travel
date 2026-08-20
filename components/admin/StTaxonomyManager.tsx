@@ -9,6 +9,8 @@ export type TaxonomyRow = {
   name: string;
   slug: string;
   region?: string | null;
+  /** Subjects only: the write-up at the top of the public subject page. */
+  description?: string | null;
   tripCount: number;
 };
 
@@ -32,6 +34,7 @@ export default function StTaxonomyManager({
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState('');
   const [editRegion, setEditRegion] = useState('');
+  const [editDescription, setEditDescription] = useState('');
 
   async function onAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -50,6 +53,7 @@ export default function StTaxonomyManager({
     setEditingId(row.id);
     setEditName(row.name);
     setEditRegion(row.region ?? '');
+    setEditDescription(row.description ?? '');
     setError(null);
   }
 
@@ -57,7 +61,13 @@ export default function StTaxonomyManager({
     if (!editName.trim()) return;
     setBusy(true);
     setError(null);
-    const res = await updateStTerm(kind, row.id, editName, editRegion.trim() || null);
+    const res = await updateStTerm(
+      kind,
+      row.id,
+      editName,
+      editRegion.trim() || null,
+      isCountry ? undefined : editDescription
+    );
     setBusy(false);
     if (!res.ok) return setError(res.error);
     setEditingId(null);
@@ -138,6 +148,18 @@ export default function StTaxonomyManager({
                       <option key={r}>{r}</option>
                     ))}
                   </select>
+                </label>
+              )}
+              {!isCountry && (
+                <label className="w-full">
+                  <span className="field-label">Page write-up (shown at the top of the public subject page)</span>
+                  <textarea
+                    rows={3}
+                    className="field"
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    placeholder="A short paragraph on why students should travel for this subject…"
+                  />
                 </label>
               )}
               <button onClick={() => onSaveEdit(row)} disabled={busy} className="btn-primary !py-2.5">

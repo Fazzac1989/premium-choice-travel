@@ -14,15 +14,21 @@ export default async function StSubjectsPage() {
     );
   }
 
-  const { data } = await pcstClient()
+  const db = pcstClient();
+  let { data, error } = await db
     .from('subjects')
-    .select('id, name, slug, trips(count)')
+    .select('id, name, slug, description, trips(count)')
     .order('name');
+  // Until the subject_description migration has been run, fall back without it.
+  if (error?.message.includes('description')) {
+    ({ data } = await db.from('subjects').select('id, name, slug, trips(count)').order('name'));
+  }
 
   const rows: TaxonomyRow[] = (data ?? []).map((s: any) => ({
     id: s.id,
     name: s.name,
     slug: s.slug,
+    description: s.description ?? null,
     tripCount: s.trips?.[0]?.count ?? 0,
   }));
 
