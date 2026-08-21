@@ -29,13 +29,30 @@ const pcst = createClient(process.env.PCST_SUPABASE_URL!, process.env.PCST_SUPAB
 
 const MANIFEST_PATH = 'lib/generated/st-shutterstock-manifest.json';
 type Picked = { key: string; imageId: string; path: string; description: string };
-type Stored = Picked & { url: string; sourceUrl: string };
+type Stored = Picked & { url: string; sourceUrl: string; width?: number; height?: number; bytes?: number };
 type Manifest = { picked: Record<string, Picked>; done: Record<string, Stored>; applied: Record<string, boolean>; failures: string[] };
 const base: Manifest = { picked: {}, done: {}, applied: {}, failures: [] };
 const manifest: Manifest = existsSync(MANIFEST_PATH)
   ? { ...base, ...JSON.parse(readFileSync(MANIFEST_PATH, 'utf8')) }
   : base;
-const save = () => { mkdirSync('lib/generated', { recursive: true }); writeFileSync(MANIFEST_PATH, JSON.stringify(manifest, null, 1)); };
+// OneDrive sync can transiently lock the file — write atomically, with retries.
+const save = () => {
+  mkdirSync('lib/generated', { recursive: true });
+  const body = JSON.stringify(manifest, null, 1);
+  for (let i = 0; i < 5; i++) {
+    try {
+      const tmp = MANIFEST_PATH + '.tmp';
+      writeFileSync(tmp, body);
+      require('node:fs').renameSync(tmp, MANIFEST_PATH);
+      return;
+    } catch (e) {
+      if (i === 4) { console.error('manifest save failed:', (e as Error).message); return; }
+      const wait = 300 * (i + 1);
+      const end = Date.now() + wait;
+      while (Date.now() < end) { /* brief sync wait */ }
+    }
+  }
+};
 
 const usedIds = new Set([
   ...Object.values(manifest.picked).map((m) => m.imageId),
@@ -44,11 +61,30 @@ const usedIds = new Set([
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /* -------- rate-limit-aware fetch -------- */
+// Leave headroom in every hourly window so interactive admin searches
+// (which share this app's 100/hour quota) always get through.
+const QUOTA_FLOOR = 12;
+
 async function ssFetch(url: string, init?: RequestInit): Promise<Response> {
   for (let i = 0; i < 30; i++) {
-    const res = await fetch(url, { ...init, headers: { Authorization: `Bearer ${SS}`, 'Content-Type': 'application/json', ...(init?.headers ?? {}) } });
-    if (res.status !== 429) return res;
+    let res: Response;
+    try {
+      res = await fetch(url, { ...init, headers: { Authorization: `Bearer ${SS}`, 'Content-Type': 'application/json', ...(init?.headers ?? {}) } });
+    } catch (e: any) {
+      console.log(`  (network error ${e.cause?.code ?? e.message} — retrying in 10s)`);
+      await sleep(10_000);
+      continue;
+    }
+    const remaining = Number(res.headers.get('ratelimit-remaining') ?? Infinity);
     const reset = Number(res.headers.get('ratelimit-reset') ?? 0);
+    if (res.status !== 429) {
+      if (remaining <= QUOTA_FLOOR && reset > Date.now()) {
+        const waitMs = Math.min(70 * 60_000, reset - Date.now() + 5000);
+        console.log(`  (leaving ${remaining} quota for admin searches — sleeping ${Math.round(waitMs / 60000)} min)`);
+        await sleep(waitMs);
+      }
+      return res;
+    }
     const waitMs = Math.max(60_000, Math.min(70 * 60_000, reset - Date.now() + 5000));
     console.log(`  (hourly quota spent — sleeping ${Math.round(waitMs / 60000)} min until reset)`);
     await sleep(waitMs);
@@ -103,7 +139,12 @@ const BRIGHT_MIN = 95; // 0-255 luminance — rejects night shots and heavy shad
 
 async function pick(key: string, query: string, people: boolean, pathPrefix: string, sort = 'relevance') {
   if (manifest.picked[key] || manifest.done[key]) return;
-  const list = await candidates(query, people, sort);
+  let list: Awaited<ReturnType<typeof candidates>>;
+  try {
+    list = await candidates(query, people, sort);
+  } catch (e: any) {
+    manifest.failures.push(`${key}: ${e.message}`); save(); return;
+  }
   let hit: (typeof list)[number] | null = null;
   let brightest: { c: (typeof list)[number]; y: number } | null = null;
   for (const c of list) {
@@ -144,7 +185,12 @@ async function licenseBatch(batch: Picked[]) {
       });
       if (error) { manifest.failures.push(`${b.key}: storage ${error.message}`); save(); continue; }
       const url = pcst.storage.from('trip-images').getPublicUrl(b.path).data.publicUrl;
-      manifest.done[b.key] = { ...b, url, sourceUrl: `https://www.shutterstock.com/image-photo/${b.imageId}` };
+      const meta = await sharp(optimised).metadata();
+      manifest.done[b.key] = {
+        ...b, url,
+        sourceUrl: `https://www.shutterstock.com/image-photo/${b.imageId}`,
+        width: meta.width, height: meta.height, bytes: optimised.length,
+      };
       delete manifest.picked[b.key];
       save();
       console.log(`  ✓ stored ${b.key}`);
@@ -191,10 +237,12 @@ async function main() {
   for (const t of trips ?? []) {
     const country = countryName.get(t.country_id) ?? '';
     const subject = subjectName.get(t.subject_id) ?? '';
-    const city = firstCity(t.city) || country;
+    const cityRaw = firstCity(t.city) || country;
+    const city = cityRaw;
+    const place = cityRaw.toLowerCase() === country.toLowerCase() ? cityRaw : `${cityRaw} ${country}`;
     const theme = themeFor(subject);
-    await pick(`trip:${t.id}:hero`, `${city} ${country} landmark daytime`, false, `shutterstock/trips/${t.id}/hero`, 'popular');
-    await pick(`trip:${t.id}:gallery:0`, `${city} ${country} skyline sunny blue sky`, false, `shutterstock/trips/${t.id}/g0`);
+    await pick(`trip:${t.id}:hero`, `${place} landmark daytime`, false, `shutterstock/trips/${t.id}/hero`, 'popular');
+    await pick(`trip:${t.id}:gallery:0`, `${place} skyline sunny blue sky`, false, `shutterstock/trips/${t.id}/g0`);
     await pick(`trip:${t.id}:gallery:1`, `happy school students group educational trip ${theme}`, true, `shutterstock/trips/${t.id}/g1`);
     await pick(`trip:${t.id}:gallery:2`, `${country} ${theme} daylight`, false, `shutterstock/trips/${t.id}/g2`);
     await pick(`trip:${t.id}:gallery:3`, `${city} street life culture vibrant sunny`, false, `shutterstock/trips/${t.id}/g3`);
@@ -203,8 +251,9 @@ async function main() {
   for (const d of days ?? []) {
     const trip = (trips ?? []).find((t: any) => t.id === d.trip_id);
     const country = countryName.get(trip?.country_id) ?? '';
-    const city = firstCity(trip?.city) || country;
-    await pick(`day:${d.id}`, `${city} ${country} ${String(d.title ?? '').slice(0, 50)} sunny daylight`, false, `shutterstock/days/${d.id}`);
+    const cityD = firstCity(trip?.city) || country;
+    const placeD = cityD.toLowerCase() === country.toLowerCase() ? cityD : `${cityD} ${country}`;
+    await pick(`day:${d.id}`, `${placeD} ${String(d.title ?? '').slice(0, 50)} sunny daylight`, false, `shutterstock/days/${d.id}`);
     await drainIfReady();
   }
   for (const ci of countryImages ?? []) {
@@ -240,13 +289,27 @@ async function main() {
     if (manifest.applied[k]) continue;
     const hero = manifest.done[`trip:${t.id}:hero`];
     const gallery = [0, 1, 2, 3].map((i) => manifest.done[`trip:${t.id}:gallery:${i}`]).filter(Boolean) as Stored[];
-    const patch: any = {};
-    if (hero) { patch.hero_image = hero.url; patch.hero_alt = hero.description; }
-    if (gallery.length) patch.gallery = gallery.map((g) => g.url);
-    if (!Object.keys(patch).length) continue;
-    const { error } = await pcst.from('trips').update(patch).eq('id', t.id);
-    if (error) manifest.failures.push(`${k}: ${error.message}`);
-    else { manifest.applied[k] = true; applied++; }
+    if (!hero || gallery.length < 4) continue; // apply once complete, atomically
+
+    const legacy = await pcst.from('trips').update({ hero_image: hero.url, hero_alt: hero.description, gallery: gallery.map((g) => g.url) }).eq('id', t.id);
+    if (legacy.error) { manifest.failures.push(`${k}: ${legacy.error.message}`); save(); continue; }
+
+    // The public pages render curated trip_images — replace those rows too
+    // (old rows deleted per the brief; old storage files retained for quotes).
+    const rights = (e: Stored, role: string, sortOrder: number) => ({
+      trip_id: t.id, role, url: e.url, alt_text: e.description,
+      caption: null, width: e.width ?? null, height: e.height ?? null, bytes: e.bytes ?? null,
+      source: 'Shutterstock', source_url: e.sourceUrl, photographer: null,
+      licence: 'Shutterstock Standard License', attribution_required: false,
+      downloaded_at: new Date().toISOString(), sort_order: sortOrder, approved: true,
+    });
+    await pcst.from('trip_images').delete().eq('trip_id', t.id).in('role', ['hero', 'gallery']);
+    const { error } = await pcst.from('trip_images').insert([
+      rights(hero, 'hero', 0),
+      ...gallery.map((g, i) => rights(g, 'gallery', i)),
+    ]);
+    if (error) manifest.failures.push(`${k}: trip_images ${error.message}`);
+    else { manifest.applied[k] = true; applied++; console.log(`  ✓ applied trip ${t.id}`); }
     save();
   }
   for (const d of days ?? []) {
