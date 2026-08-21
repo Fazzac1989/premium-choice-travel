@@ -18,7 +18,7 @@ function Screenshot({ label, children }: { label: string; children: React.ReactN
         <span className="h-2.5 w-2.5 rounded-full bg-teal/40" />
         <span className="h-2.5 w-2.5 rounded-full bg-teal" />
         <span className="ml-3 truncate rounded-md bg-white px-3 py-1 text-[10px] text-ink-soft">
-          premiumchoicetravel.com/inspiration
+          premiumchoiceholidays.com/inspiration
         </span>
       </div>
       <div className="p-5 sm:p-6">{children}</div>
@@ -69,9 +69,9 @@ export default function AiInspirationPage() {
                 make one of them real.
               </p>
               <div className="mt-7 flex flex-wrap gap-4">
-                <Link href="/inspiration" className="btn-primary !px-8 !py-4">
+                <a href="https://premiumchoiceholidays.com/inspiration" target="_blank" rel="noopener" className="btn-primary !px-8 !py-4">
                   ✨ Try it now — it’s free
-                </Link>
+                </a>
                 <a href="#how" className="btn-outline !bg-white !px-8 !py-4">How it works</a>
               </div>
             </div>
@@ -246,9 +246,9 @@ export default function AiInspirationPage() {
                 Sixty seconds from now, you’ll have three trips to argue about.
               </h2>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Link href="/inspiration" className="btn-primary !px-9 !py-4 !text-base">
+                <a href="https://premiumchoiceholidays.com/inspiration" target="_blank" rel="noopener" className="btn-primary !px-9 !py-4 !text-base">
                   ✨ Give me some inspiration
-                </Link>
+                </a>
                 <Link href="/plan" className="btn !border !border-white/40 !px-9 !py-4 !text-base text-white hover:!border-teal hover:text-teal">
                   I already know — plan my trip
                 </Link>

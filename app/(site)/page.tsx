@@ -49,15 +49,17 @@ export default async function HomePage() {
                 Explore destinations <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </p>
             </Link>
-            <Link
-              href="/inspiration"
+            <a
+              href="https://premiumchoiceholidays.com/inspiration"
+              target="_blank"
+              rel="noopener"
               className="group rounded-xl border border-teal/60 bg-teal/20 px-4 py-3 backdrop-blur transition-colors hover:bg-teal"
             >
               <p className="text-xs text-white/80">No idea where to start?</p>
               <p className="mt-0.5 font-serif text-lg text-white">
                 ✨ Inspire me
               </p>
-            </Link>
+            </a>
           </div>
           <Link href="/about" className="mt-6 inline-block text-sm font-semibold text-white/70 underline-offset-4 hover:text-teal hover:underline">
             Our story →
@@ -79,7 +81,13 @@ export default async function HomePage() {
           </div>
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-6">
             {topDestinations.map((d) => (
-              <Link key={d.slug} href={`/destinations/${d.slug}`} className="group relative block aspect-[3/4] overflow-hidden rounded-2xl">
+              <a
+                key={d.slug}
+                href={`https://premiumchoiceholidays.com/destinations/${d.slug}`}
+                target="_blank"
+                rel="noopener"
+                className="group relative block aspect-[3/4] overflow-hidden rounded-2xl"
+              >
                 <Image
                   src={d.heroImage}
                   alt={d.name}
@@ -91,7 +99,7 @@ export default async function HomePage() {
                 <div className="absolute inset-x-0 bottom-0 p-4">
                   <h3 className="font-serif text-xl text-white">{d.name}</h3>
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -187,7 +195,7 @@ export default async function HomePage() {
               genuinely different ideas — then a human specialist prices the one you love.
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
-              <Link href="/inspiration" className="btn-primary !px-7 !py-3.5">✨ Give me some inspiration</Link>
+              <a href="https://premiumchoiceholidays.com/inspiration" target="_blank" rel="noopener" className="btn-primary !px-7 !py-3.5">✨ Give me some inspiration</a>
               <Link href="/ai-inspiration" className="btn-outline !bg-white !px-7 !py-3.5">How it works</Link>
             </div>
           </div>
