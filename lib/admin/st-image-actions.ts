@@ -6,6 +6,8 @@ import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured } from '@/lib/pcst';
 import { revalidatePcst } from '@/lib/pcst-revalidate';
 import { searchCommonsBroadening, queriesForTrip, type Candidate } from '@/lib/images/commons';
+import { searchShutterstock, licenseShutterstock, isShutterstockCandidate, shutterstockId, ShutterstockBusyError } from '@/lib/images/shutterstock';
+import sharp from 'sharp';
 
 /**
  * Photography curation for School Trips.
@@ -59,11 +61,28 @@ export async function shortlistForStTrip(tripId: number): Promise<
   const plans = queriesForTrip(meta);
   const shortlists: Shortlist[] = [];
   for (const p of plans) {
-    const { candidates, usedQuery } = await searchCommonsBroadening(p.query, {
-      minWidth: p.role === 'hero' ? 2400 : 1600,
-      landscapeOnly: p.landscapeOnly,
-      limit: 18,
-    });
+    // Shutterstock first; Commons only when a search genuinely finds nothing.
+    let candidates: Candidate[] = [];
+    let usedQuery = p.query;
+    try {
+      candidates = await searchShutterstock(p.query, {
+        minWidth: p.role === 'hero' ? 2400 : 1600,
+        landscapeOnly: p.landscapeOnly,
+        limit: 18,
+      });
+    } catch (e) {
+      if (e instanceof ShutterstockBusyError) return { ok: false, error: e.message };
+      throw e;
+    }
+    if (!candidates.length) {
+      const commons = await searchCommonsBroadening(p.query, {
+        minWidth: p.role === 'hero' ? 2400 : 1600,
+        landscapeOnly: p.landscapeOnly,
+        limit: 18,
+      });
+      candidates = commons.candidates;
+      usedQuery = commons.usedQuery;
+    }
     shortlists.push({
       role: p.role,
       label: p.label,
@@ -88,6 +107,14 @@ export async function searchStImages(
   await requireAdmin();
   if (!query.trim()) return { ok: false, error: 'Enter something to search for.' };
 
+  try {
+    const stock = await searchShutterstock(query, { minWidth: 1600, landscapeOnly, limit: 24 });
+    if (stock.length) return { ok: true, candidates: stock.slice(0, 12) };
+  } catch (e) {
+    // Quota spent — say so rather than silently serving Commons.
+    if (e instanceof ShutterstockBusyError) return { ok: false, error: e.message };
+    throw e;
+  }
   const { candidates } = await searchCommonsBroadening(query, {
     minWidth: 1600,
     landscapeOnly,
@@ -153,14 +180,21 @@ export async function approveStImage(input: {
   if (!trip) return { ok: false, error: 'Trip not found.' };
 
   // Widths kept modest: Supabase storage rejected the 4000px originals.
+  const fromShutterstock = isShutterstockCandidate(input.candidate);
   const targetWidth = input.role === 'hero' ? 2600 : 1800;
   let bytes: Buffer;
   try {
-    const res = await fetch(scaledUrl(input.candidate.title, targetWidth), {
-      headers: { 'User-Agent': 'PremiumChoiceTravel/1.0 (info@premiumchoicetravel.com)' },
-    });
-    if (!res.ok) return { ok: false, error: `Could not download that image (${res.status}).` };
-    bytes = Buffer.from(await res.arrayBuffer());
+    if (fromShutterstock) {
+      // Licenses on the account's plan, then a web-sized copy is stored.
+      const raw = await licenseShutterstock(shutterstockId(input.candidate));
+      bytes = await sharp(raw).resize({ width: targetWidth, withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer();
+    } else {
+      const res = await fetch(scaledUrl(input.candidate.title, targetWidth), {
+        headers: { 'User-Agent': 'PremiumChoiceTravel/1.0 (info@premiumchoicetravel.com)' },
+      });
+      if (!res.ok) return { ok: false, error: `Could not download that image (${res.status}).` };
+      bytes = Buffer.from(await res.arrayBuffer());
+    }
   } catch (e: any) {
     return { ok: false, error: `Download failed: ${e.message}` };
   }
@@ -196,11 +230,13 @@ export async function approveStImage(input: {
       width: input.candidate.width,
       height: input.candidate.height,
       bytes: bytes.length,
-      source: 'Wikimedia Commons',
+      source: fromShutterstock ? 'Shutterstock' : 'Wikimedia Commons',
       source_url: input.candidate.sourceUrl,
       photographer: input.candidate.photographer,
       licence: input.candidate.licence,
-      attribution_required: !/^(cc0|public domain|pdm)/i.test(input.candidate.licence ?? ''),
+      attribution_required: fromShutterstock
+        ? false
+        : !/^(cc0|public domain|pdm)/i.test(input.candidate.licence ?? ''),
       downloaded_at: new Date().toISOString(),
       sort_order: input.sortOrder,
       approved: true,

@@ -6,6 +6,8 @@ import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured } from '@/lib/pcst';
 import { revalidatePcst } from '@/lib/pcst-revalidate';
 import { searchCommons, type Candidate } from '@/lib/images/commons';
+import { searchShutterstock, licenseShutterstock, isShutterstockCandidate, shutterstockId, ShutterstockBusyError } from '@/lib/images/shutterstock';
+import sharp from 'sharp';
 
 /**
  * Building a country's public page: its editorial content and its photography.
@@ -151,6 +153,14 @@ function variants(query: string, countryName: string): string[] {
 }
 
 async function findCandidates(query: string, minWidth: number, countryName: string) {
+  // Shutterstock first; when its quota is spent or it finds nothing, fall
+  // back to the Commons broadening ladder so generation still completes.
+  try {
+    const stock = await searchShutterstock(query, { minWidth, limit: 18 });
+    if (stock.length) return { candidates: stock, usedQuery: query };
+  } catch (e) {
+    if (!(e instanceof ShutterstockBusyError)) throw e;
+  }
   for (const q of variants(query, countryName)) {
     for (const w of [minWidth, Math.round(minWidth * 0.8), 1800]) {
       const found = await searchCommons(q, { minWidth: w, limit: 18 });
@@ -318,10 +328,20 @@ export async function generateStCountryPage(countryId: number): Promise<CountryP
     used.push(chosen.candidate.title.replace(/\.(jpg|jpeg|png)$/i, '').slice(0, 70));
 
     try {
-      const res = await fetch(scaled(chosen.candidate.title, role.role === 'hero' ? 2600 : 1800), { headers: UA });
-      if (!res.ok) throw new Error(`download ${res.status}`);
-      const buf = Buffer.from(await res.arrayBuffer());
-      const ext = chosen.candidate.mime === 'image/png' ? 'png' : 'jpg';
+      const fromShutterstock = isShutterstockCandidate(chosen.candidate);
+      let buf: Buffer;
+      if (fromShutterstock) {
+        const raw = await licenseShutterstock(shutterstockId(chosen.candidate));
+        buf = await sharp(raw)
+          .resize({ width: role.role === 'hero' ? 2600 : 1800, withoutEnlargement: true })
+          .jpeg({ quality: 82 })
+          .toBuffer();
+      } else {
+        const res = await fetch(scaled(chosen.candidate.title, role.role === 'hero' ? 2600 : 1800), { headers: UA });
+        if (!res.ok) throw new Error(`download ${res.status}`);
+        buf = Buffer.from(await res.arrayBuffer());
+      }
+      const ext = fromShutterstock ? 'jpg' : chosen.candidate.mime === 'image/png' ? 'png' : 'jpg';
       const path = `countries/${country.slug}/${role.role}-${Date.now()}-${order}.${ext}`;
 
       const { error: upErr } = await db.storage.from(BUCKET).upload(path, buf, {
@@ -340,11 +360,13 @@ export async function generateStCountryPage(countryId: number): Promise<CountryP
         width: chosen.candidate.width,
         height: chosen.candidate.height,
         bytes: buf.length,
-        source: 'Wikimedia Commons',
+        source: fromShutterstock ? 'Shutterstock' : 'Wikimedia Commons',
         source_url: chosen.candidate.sourceUrl,
         photographer: chosen.candidate.photographer,
         licence: chosen.candidate.licence,
-        attribution_required: !/^(cc0|public domain|pdm)/i.test(chosen.candidate.licence ?? ''),
+        attribution_required: fromShutterstock
+          ? false
+          : !/^(cc0|public domain|pdm)/i.test(chosen.candidate.licence ?? ''),
         downloaded_at: new Date().toISOString(),
         sort_order: order++,
         approved: true,

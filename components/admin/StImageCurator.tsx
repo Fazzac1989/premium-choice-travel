@@ -215,7 +215,7 @@ export default function StImageCurator({
       <section className="mt-12 border-t border-line pt-8">
         <form onSubmit={runSearch} className="flex flex-wrap items-end gap-3">
           <label className="min-w-[260px] flex-1">
-            <span className="field-label">Search Commons yourself</span>
+            <span className="field-label">Search Shutterstock yourself</span>
             <input
               className="field"
               value={query}
