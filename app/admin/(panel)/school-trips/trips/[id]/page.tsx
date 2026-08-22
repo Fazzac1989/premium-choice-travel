@@ -5,6 +5,9 @@ import StTripForm from '@/components/admin/StTripForm';
 import StStructureBanner from '@/components/admin/StStructureBanner';
 
 export const dynamic = 'force-dynamic';
+// The rebuild-summaries action on this page runs a Claude extraction per
+// itinerary day; the default function timeout kills it mid-pass.
+export const maxDuration = 120;
 
 export default async function EditStTripPage({ params }: { params: { id: string } }) {
   const id = Number(params.id);

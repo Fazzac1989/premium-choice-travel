@@ -28,11 +28,17 @@ export default function StStructureBanner({
   async function run() {
     setBusy(true);
     setError(null);
-    const res = await structureStTrip(tripId);
-    setBusy(false);
-    if (!res.ok) return setError(res.error);
-    if (res.failed) return setError(`${res.failed} day${res.failed === 1 ? '' : 's'} failed — try again.`);
-    router.refresh();
+    try {
+      const res = await structureStTrip(tripId);
+      if (!res.ok) return setError(res.error);
+      if (res.failed) return setError(`${res.failed} day${res.failed === 1 ? '' : 's'} failed — try again.`);
+      router.refresh();
+    } catch {
+      // A killed or timed-out server action rejects with no useful message.
+      setError('The rebuild did not complete — the request timed out or was interrupted. Try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (

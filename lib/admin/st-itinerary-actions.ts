@@ -104,30 +104,33 @@ export async function structureStTrip(
   const days = ((trip.itinerary_days as any[]) ?? []).sort((a, b) => a.sort_order - b.sort_order);
   if (!days.length) return { ok: false, error: 'This trip has no itinerary days yet.' };
 
-  let done = 0;
-  let failed = 0;
-  for (let i = 0; i < days.length; i++) {
-    const day = days[i];
-    if (!force && day.structured_at) continue;
-    if (!day.description?.trim()) continue;
-    try {
-      const structured = await extractDay({
-        dayNumber: i + 1,
-        totalDays: days.length,
-        label: day.label,
-        title: day.title,
-        description: day.description,
-        tripTitle: trip.title,
-        subject: (trip.subjects as any)?.name ?? null,
-        country: (trip.countries as any)?.name ?? null,
-      });
-      const { error } = await db.from('itinerary_days').update(toRow(structured)).eq('id', day.id);
-      if (error) throw new Error(error.message);
-      done++;
-    } catch {
-      failed++;
-    }
-  }
+  // The days are independent, so analyse them concurrently — sequentially this
+  // pass takes over a minute and outlives the function timeout.
+  const results = await Promise.all(
+    days.map(async (day, i) => {
+      if (!force && day.structured_at) return 'skipped';
+      if (!day.description?.trim()) return 'skipped';
+      try {
+        const structured = await extractDay({
+          dayNumber: i + 1,
+          totalDays: days.length,
+          label: day.label,
+          title: day.title,
+          description: day.description,
+          tripTitle: trip.title,
+          subject: (trip.subjects as any)?.name ?? null,
+          country: (trip.countries as any)?.name ?? null,
+        });
+        const { error } = await db.from('itinerary_days').update(toRow(structured)).eq('id', day.id);
+        if (error) throw new Error(error.message);
+        return 'done';
+      } catch {
+        return 'failed';
+      }
+    })
+  );
+  const done = results.filter((r) => r === 'done').length;
+  const failed = results.filter((r) => r === 'failed').length;
 
   await rollUpTrip(tripId);
   revalidatePath(`/admin/school-trips/trips/${tripId}`);
