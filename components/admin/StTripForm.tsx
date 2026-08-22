@@ -34,7 +34,12 @@ export default function StTripForm({
   const [heroImage, setHeroImage] = useState<string>(trip?.heroImage ?? '');
   const [gallery, setGallery] = useState<string[]>(trip?.gallery ?? []);
   const [itinerary, setItinerary] = useState<ItineraryDay[]>(
-    (trip?.itinerary ?? []).map((d) => ({ label: d.label, title: d.title, description: d.description }))
+    (trip?.itinerary ?? []).map((d) => ({
+      label: d.label,
+      title: d.title,
+      description: d.description,
+      imageUrl: d.imageUrl ?? '',
+    }))
   );
 
   // Drop anything that is not a string rather than trusting the shape: these

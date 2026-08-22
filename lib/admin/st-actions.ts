@@ -60,8 +60,10 @@ export async function saveStTrip(_prev: StActionState, formData: FormData): Prom
     tripId = data.id;
   }
 
-  // Replace itinerary days, preserving each day's existing image by position.
-  const itinerary = parseJson<{ label: string; title: string; description: string }[]>(
+  // Replace itinerary days. The editor now carries each day's image, so a
+  // value from the form wins; days saved before the field existed fall back
+  // to whatever image the same position already had.
+  const itinerary = parseJson<{ label: string; title: string; description: string; imageUrl?: string | null }[]>(
     formData.get('itinerary'),
     []
   ).filter((d) => d.label.trim() || d.title.trim() || d.description.trim());
@@ -80,7 +82,7 @@ export async function saveStTrip(_prev: StActionState, formData: FormData): Prom
         label: d.label,
         title: d.title,
         description: d.description,
-        image_url: existingDays?.[i]?.image_url ?? null,
+        image_url: d.imageUrl !== undefined ? d.imageUrl?.trim() || null : existingDays?.[i]?.image_url ?? null,
         image_alt: existingDays?.[i]?.image_alt ?? null,
       }))
     );

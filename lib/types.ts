@@ -45,6 +45,8 @@ export type ItineraryDay = {
   label: string;
   title: string;
   description: string;
+  /** Photograph shown beside this day on the public trip page (optional). */
+  imageUrl?: string | null;
   /** Linked hotel ids for this stage (optional). */
   hotelIds?: number[];
   /** Linked experience ids for this stage (optional). */

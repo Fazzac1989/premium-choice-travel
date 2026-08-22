@@ -1,6 +1,7 @@
 'use client';
 
 import type { ItineraryDay } from '@/lib/types';
+import { ImageField } from '@/components/admin/ImageField';
 
 export type LinkOption = { id: number; label: string };
 
@@ -97,6 +98,13 @@ export default function ItineraryEditor({
               placeholder="What happens on this day…"
               onChange={(e) => update(i, { description: e.target.value })}
             />
+            <div className="mt-3">
+              <ImageField
+                label="Day image"
+                value={day.imageUrl ?? ''}
+                onChange={(url) => update(i, { imageUrl: url })}
+              />
+            </div>
             {(hotelOptions.length > 0 || experienceOptions.length > 0) && (
               <div className="mt-3 space-y-2.5 rounded-lg border border-line bg-white p-3">
                 <LinkPicker
