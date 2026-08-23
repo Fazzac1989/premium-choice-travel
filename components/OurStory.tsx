@@ -74,7 +74,7 @@ export default function OurStory({
           </div>
           <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-sand">
             <Image
-              src="/images/paul-farrell.jpg"
+              src="/images/paul-farrell-golf.jpg"
               alt="Paul Farrell, founder of Premium Choice Travel"
               fill
               className="object-cover object-top"
