@@ -16,6 +16,8 @@ export async function sendEmail({
   replyTo?: string;
 }): Promise<{ ok: boolean; skipped?: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
+  // "a@x.com, b@y.com" → both get a copy.
+  const recipients = to.split(',').map((t) => t.trim()).filter(Boolean);
   const from = process.env.RESEND_FROM || 'Premium Choice Travel <onboarding@resend.dev>';
   if (!apiKey) return { ok: true, skipped: true };
 
@@ -23,7 +25,7 @@ export async function sendEmail({
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({ from, to: [to], subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      body: JSON.stringify({ from, to: recipients, subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
     });
     if (!res.ok) {
       const body = await res.text();
