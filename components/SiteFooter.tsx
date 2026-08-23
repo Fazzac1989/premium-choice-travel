@@ -31,7 +31,7 @@ export default function SiteFooter() {
             <li><Link href="/brands/holidays" className="text-white/80 hover:text-teal">Holidays</Link></li>
             <li><Link href="/brands/staycations" className="text-white/80 hover:text-teal">Staycations</Link></li>
             <li><Link href="/brands/cruise" className="text-white/80 hover:text-teal">Cruises</Link></li>
-            <li><Link href="/destinations" className="text-white/80 hover:text-teal">Destinations</Link></li>
+            <li><a href="https://premiumchoiceholidays.com/destinations" target="_blank" rel="noopener" className="text-white/80 hover:text-teal">Destinations</a></li>
             <li><Link href="/journeys" className="text-white/80 hover:text-teal">Journeys</Link></li>
           </ul>
         </div>
