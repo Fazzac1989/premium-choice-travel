@@ -73,10 +73,10 @@ export default function AboutPage() {
             </div>
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-sand">
               <Image
-                src="/images/hero/hero-2.jpg"
-                alt=""
+                src="/images/paul-farrell.jpg"
+                alt="Paul Farrell, founder of Premium Choice Travel"
                 fill
-                className="object-cover"
+                className="object-cover object-top"
                 sizes="(max-width: 1024px) 100vw, 40vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />

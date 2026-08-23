@@ -144,8 +144,8 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
         {/* Founder */}
         <section id="founder" className="py-16 sm:py-20">
           <div className="container-site grid items-center gap-12 lg:grid-cols-2">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-sand lg:order-2">
-              <Image src="/images/hero/hero-2.jpg" alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+            <div className="relative aspect-square overflow-hidden rounded-3xl bg-sand lg:order-2">
+              <Image src="/images/paul-farrell.jpg" alt="Paul Farrell, founder of Premium Choice Travel" fill className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
               <div className="absolute bottom-0 p-6">
                 <p className="font-serif text-2xl text-white">Paul Farrell</p>
