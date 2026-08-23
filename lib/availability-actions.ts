@@ -22,6 +22,7 @@ export async function submitAvailabilityCheck(payload: {
   name: string;
   email: string;
   phone: string;
+  channel: string;
   notes: string;
 }): Promise<AvailabilityResult> {
   const name = payload.name.trim();
@@ -38,6 +39,7 @@ export async function submitAvailabilityCheck(payload: {
     `Check-in: ${payload.checkIn} · Nights: ${nights}`,
     `Party: ${adults} adult${adults === 1 ? '' : 's'}${payload.childrenAges.trim() ? `, children aged ${payload.childrenAges.trim()}` : ''}`,
     `Preferred meal plan: ${payload.mealPlan || 'no preference'}`,
+    `Reply by: ${payload.channel || 'any'}${payload.phone.trim() ? ` · ${payload.phone.trim()}` : ''}`,
     payload.notes.trim() ? `Notes: ${payload.notes.trim()}` : null,
     '',
     'Next step: check availability and rates, then reply with priced options — same day where possible.',

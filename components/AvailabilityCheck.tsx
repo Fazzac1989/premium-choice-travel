@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { submitAvailabilityCheck } from '@/lib/availability-actions';
 
 const MEAL_PLANS = ['No preference', 'Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
+const CHANNELS = ['WhatsApp', 'Email', 'Phone'];
 
 /**
  * Dates/party/meal-plan availability check for a staycation hotel.
@@ -30,6 +31,7 @@ export default function AvailabilityCheck({
     name: '',
     email: '',
     phone: '',
+    channel: 'WhatsApp',
     notes: '',
   });
 
@@ -142,6 +144,30 @@ export default function AvailabilityCheck({
         placeholder="Phone / WhatsApp"
         className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40"
       />
+      <div>
+        <label className="text-[11px] font-bold uppercase tracking-wider text-white/60">
+          How should we reply?
+        </label>
+        <div className="mt-1.5 flex gap-2">
+          {CHANNELS.map((ch) => (
+            <button
+              key={ch}
+              type="button"
+              onClick={() => set('channel', ch)}
+              className={`flex-1 rounded-lg border px-3 py-2 text-sm font-semibold transition-colors ${
+                form.channel === ch
+                  ? 'border-teal bg-teal text-white'
+                  : 'border-white/20 bg-white/10 text-white/80 hover:border-teal'
+              }`}
+            >
+              {ch}
+            </button>
+          ))}
+        </div>
+        {form.channel !== 'Email' && !form.phone.trim() && (
+          <p className="mt-1.5 text-xs text-white/60">Add a number above so we can reach you that way.</p>
+        )}
+      </div>
       <textarea
         value={form.notes}
         onChange={(e) => set('notes', e.target.value)}
