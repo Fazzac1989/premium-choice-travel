@@ -8,7 +8,7 @@ import { BRANDS } from '@/lib/brands';
 
 const NAV = [
   { href: '/about', label: 'About' },
-  { href: '/destinations', label: 'Destinations' },
+  { href: 'https://premiumchoiceholidays.com/destinations', label: 'Destinations', external: true },
   { href: '/ai-inspiration', label: 'AI Inspiration' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -85,17 +85,20 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
             </button>
           </div>
 
-          {NAV.slice(1).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-sm font-semibold transition-colors ${
-                isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'
-              } ${pathname.startsWith(item.href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.slice(1).map((item) => {
+            const cls = `text-sm font-semibold transition-colors ${
+              isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'
+            } ${!item.external && pathname.startsWith(item.href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
+            return item.external ? (
+              <a key={item.href} href={item.href} target="_blank" rel="noopener" className={cls}>
+                {item.label}
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} className={cls}>
+                {item.label}
+              </Link>
+            );
+          })}
           <a href="tel:+97144206965" className={`text-sm font-semibold ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
             +971 4 420 6965
           </a>
@@ -184,11 +187,17 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
               </Link>
             )
           )}
-          {NAV.slice(1).map((item) => (
-            <Link key={item.href} href={item.href} className="block py-3 text-base font-semibold text-ink">
-              {item.label}
-            </Link>
-          ))}
+          {NAV.slice(1).map((item) =>
+            item.external ? (
+              <a key={item.href} href={item.href} target="_blank" rel="noopener" className="block py-3 text-base font-semibold text-ink">
+                {item.label}
+              </a>
+            ) : (
+              <Link key={item.href} href={item.href} className="block py-3 text-base font-semibold text-ink">
+                {item.label}
+              </Link>
+            )
+          )}
           <Link href="/plan" className="btn-primary mt-3 w-full">
             Plan My Trip
           </Link>

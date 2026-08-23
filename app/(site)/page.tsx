@@ -40,15 +40,17 @@ export default async function HomePage() {
 
           {/* Dual path */}
           <div className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
-            <Link
-              href="/destinations"
+            <a
+              href="https://premiumchoiceholidays.com/destinations"
+              target="_blank"
+              rel="noopener"
               className="group rounded-xl border border-white/25 bg-ink/40 px-4 py-3 backdrop-blur transition-colors hover:border-teal"
             >
               <p className="text-xs text-white/70">Know where you want to go?</p>
               <p className="mt-0.5 font-serif text-lg text-white group-hover:text-teal">
                 Explore destinations <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </p>
-            </Link>
+            </a>
             <a
               href="https://premiumchoiceholidays.com/inspiration"
               target="_blank"
@@ -75,9 +77,9 @@ export default async function HomePage() {
               eyebrow="Where to go now"
               title="The places our specialists are booking"
             />
-            <Link href="/destinations" className="btn-outline shrink-0">
+            <a href="https://premiumchoiceholidays.com/destinations" target="_blank" rel="noopener" className="btn-outline shrink-0">
               All 65 destinations
-            </Link>
+            </a>
           </div>
           <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-6">
             {topDestinations.map((d) => (
