@@ -240,7 +240,8 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
         <Image src={brand.heroImage} alt={brand.name} fill priority className="object-cover" sizes="100vw" />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/70" />
         <div className="container-site relative pb-16 pt-28 text-white">
-          {brand.logoCard && (
+          {/* Staycations leads with the photograph — the logo is already in the header. */}
+          {brand.logoCard && !isStaycations && (
             <Image
               src={brand.logoCard}
               alt={brand.name}

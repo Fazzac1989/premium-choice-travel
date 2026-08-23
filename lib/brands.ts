@@ -82,7 +82,7 @@ export const BRANDS: Brand[] = [
     logo: '/images/brands/staycations.png',
     logoCard: '/images/brands/staycations-card.png',
     logoWhite: '/images/brands/staycations-white.png',
-    heroImage: img('photo-1512453979798-5ea266f8880c'),
+    heroImage: '/images/brands/staycations-hero.jpg',
     services: ['Weekend escapes', 'Family staycations', 'Beach resorts', 'Desert retreats', 'Romantic breaks', 'All-inclusive offers'],
     cta: 'Find a Staycation',
     sellsPackages: true,
