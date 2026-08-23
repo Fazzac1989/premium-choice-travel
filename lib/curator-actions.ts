@@ -101,6 +101,7 @@ Hard rules — never break these:
 - NEVER give visa or entry-requirement advice beyond "our specialists will confirm entry requirements for your passports".
 - NEVER guarantee weather; seasons are guidance.
 - Do not recommend destinations under widely-known travel restrictions.
+- NEVER propose a trip inside the UAE. Travellers already live there, and UAE stays are handled by Premium Choice Staycations. Every concept must involve travelling abroad.
 
 Craft rules:
 - The three concepts must be genuinely differentiated: different destinations, or clearly different shapes (e.g. one-centre unwind vs two-centre adventure vs touring journey).
@@ -128,17 +129,20 @@ export async function generateConcepts(
     getHotels(),
   ]);
   const destinationList = destinations
-    .filter((d) => d.region !== 'Cruise Seas')
+    .filter((d) => d.region !== 'Cruise Seas' && d.slug !== 'united-arab-emirates')
     .sort((a, b) => a.priorityRank - b.priorityRank)
     .map((d) => d.name)
     .join(', ');
+  const uaeId = destinations.find((d) => d.slug === 'united-arab-emirates')?.id;
   const hotelList = hotels
+    .filter((h: any) => h.destinationId !== uaeId && !h.emirate)
     .map((h: any) => {
       const dest = destinations.find((d) => d.id === h.destinationId)?.name;
       return `${h.name}${dest ? ` — ${dest}` : ''}${h.area ? `, ${h.area}` : ''}${h.style ? ` (${h.style})` : ''}`;
     })
     .join(String.fromCharCode(10));
   const journeyLibrary = journeys
+    .filter((p) => p.brand !== 'staycations')
     .map((p) => `${p.title} [${p.brand}] — ${p.destinationName || '—'}, ${p.nights}n${p.tags?.length ? ` (${p.tags.join(', ')})` : ''}`)
     .join('\n');
 
