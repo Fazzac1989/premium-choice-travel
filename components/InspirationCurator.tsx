@@ -234,7 +234,22 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
             </p>
             <div className="mt-6 space-y-5">
               {concepts.map((c) => (
-                <div key={c.title} className="rounded-2xl border border-line p-6 transition-shadow hover:shadow-lg">
+                <div key={c.title} className="overflow-hidden rounded-2xl border border-line transition-shadow hover:shadow-lg">
+                  {c.images && c.images.length > 0 && (
+                    <div className="grid grid-cols-3 gap-0.5">
+                      {c.images.map((img) => (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          key={img.url}
+                          src={img.url}
+                          alt={img.alt}
+                          loading="lazy"
+                          className="h-32 w-full object-cover sm:h-36"
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <div className="p-6">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <h3 className="font-serif text-xl text-ink">{c.title}</h3>
                     <span className="text-xs font-bold uppercase tracking-wider text-teal-deep">{c.nights} nights · {c.destinations}</span>
@@ -252,6 +267,25 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
                     <span><strong>Best time:</strong> {c.bestSeason}</span>
                     {c.budgetBand && <span><strong>Budget:</strong> {c.budgetBand}</span>}
                   </div>
+                  {c.hotels?.length > 0 && (
+                    <div className="mt-4 rounded-xl bg-sand p-4">
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-ink-soft">
+                        Where you might stay
+                      </p>
+                      <ul className="mt-2 space-y-2">
+                        {c.hotels.map((h) => (
+                          <li key={h.name} className="text-sm text-ink">
+                            <span className="font-semibold">{h.name}</span>
+                            <span className="text-ink-soft"> · {h.where}</span>
+                            <span className="block text-xs text-ink-soft">{h.why}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mt-2 text-[11px] text-ink-soft">
+                        Suggestions to react to — your specialist confirms availability, rooms and price.
+                      </p>
+                    </div>
+                  )}
                   {c.startingJourney && (
                     <p className="mt-2 text-xs text-ink-soft">
                       Adapted from our designed journey <strong className="text-teal-deep">{c.startingJourney}</strong>
@@ -260,6 +294,7 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
                   <button type="button" onClick={() => setSelected(c)} className="btn-primary mt-5 !px-6 !py-2.5">
                     I like this — send to an expert
                   </button>
+                  </div>
                 </div>
               ))}
             </div>

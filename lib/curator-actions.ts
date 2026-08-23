@@ -3,7 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { emailShell, sendEmail } from '@/lib/email';
-import { getDestinations, getPublishedPackages } from '@/lib/data';
+import { getDestinations, getHotels, getPublishedPackages } from '@/lib/data';
 
 /* ------------------------------------------------------------------ */
 /* Types                                                               */
@@ -34,9 +34,13 @@ export type TripConcept = {
   rhythm: string;
   experiences: string[];
   accommodationStyle: string;
+  /** Suggested properties — ideas only, never a booking or a rate. */
+  hotels: { name: string; where: string; why: string }[];
   bestSeason: string;
   budgetBand: string;
   startingJourney: string;
+  /** Filled in after generation from our own destination photography. */
+  images?: { url: string; alt: string }[];
 };
 
 export type ConceptsResult =
@@ -60,11 +64,26 @@ const CONCEPTS_SCHEMA = {
           rhythm: { type: 'string', description: 'One sentence on trip pace/shape, e.g. "Two-centre: four active days, then five slow beach days"' },
           experiences: { type: 'array', items: { type: 'string' }, description: 'Four to six signature experiences on this trip' },
           accommodationStyle: { type: 'string', description: 'Suggested accommodation style matching their preference' },
+          hotels: {
+            type: 'array',
+            description:
+              'Two or three real, currently-operating hotels or resorts that suit this traveller on this route. Prefer properties from the Premium Choice hotel list when one fits. Never invent a property name, never mention price, availability or any commercial relationship.',
+            items: {
+              type: 'object',
+              properties: {
+                name: { type: 'string', description: 'The property’s real, current name' },
+                where: { type: 'string', description: 'Which stop or area it is in, e.g. "Kyoto, Higashiyama"' },
+                why: { type: 'string', description: 'One short line on why it suits this traveller' },
+              },
+              required: ['name', 'where', 'why'],
+              additionalProperties: false,
+            },
+          },
           bestSeason: { type: 'string', description: 'When this trip is at its best, phrased as guidance' },
           budgetBand: { type: 'string', description: 'Qualitative fit against their stated budget, e.g. "Comfortably within your range" or "At the upper end of your range". Never a number. Empty string if no budget given.' },
           startingJourney: { type: 'string', description: 'EXACT title of the Premium Choice journey from the library this concept adapts, when one fits. Empty string if the concept is fully bespoke.' },
         },
-        required: ['title', 'destinations', 'route', 'nights', 'whyItFits', 'rhythm', 'experiences', 'accommodationStyle', 'bestSeason', 'budgetBand', 'startingJourney'],
+        required: ['title', 'destinations', 'route', 'nights', 'whyItFits', 'rhythm', 'experiences', 'accommodationStyle', 'hotels', 'bestSeason', 'budgetBand', 'startingJourney'],
         additionalProperties: false,
       },
     },
@@ -77,6 +96,7 @@ const SYSTEM = `You are the AI Holiday Curator for Premium Choice Travel, a Duba
 
 Hard rules — never break these:
 - NEVER state or imply that flights, rooms, rates or availability are confirmed. These are inspiration concepts only.
+- Hotels you name must be real, currently operating and correctly located. If you are not certain a property exists under that name today, leave it out — two solid suggestions beat three with an invented one. Never imply we have a contract, an allocation or a special rate with any property.
 - NEVER quote prices, fares or numeric costs. The budgetBand field is qualitative only.
 - NEVER give visa or entry-requirement advice beyond "our specialists will confirm entry requirements for your passports".
 - NEVER guarantee weather; seasons are guidance.
@@ -102,12 +122,22 @@ export async function generateConcepts(
     return { ok: false, error: 'The inspiration service is not configured yet — please use Plan My Trip instead.' };
   }
 
-  const [destinations, journeys] = await Promise.all([getDestinations(), getPublishedPackages()]);
+  const [destinations, journeys, hotels] = await Promise.all([
+    getDestinations(),
+    getPublishedPackages(),
+    getHotels(),
+  ]);
   const destinationList = destinations
     .filter((d) => d.region !== 'Cruise Seas')
     .sort((a, b) => a.priorityRank - b.priorityRank)
     .map((d) => d.name)
     .join(', ');
+  const hotelList = hotels
+    .map((h: any) => {
+      const dest = destinations.find((d) => d.id === h.destinationId)?.name;
+      return `${h.name}${dest ? ` — ${dest}` : ''}${h.area ? `, ${h.area}` : ''}${h.style ? ` (${h.style})` : ''}`;
+    })
+    .join(String.fromCharCode(10));
   const journeyLibrary = journeys
     .map((p) => `${p.title} [${p.brand}] — ${p.destinationName || '—'}, ${p.nights}n${p.tags?.length ? ` (${p.tags.join(', ')})` : ''}`)
     .join('\n');
@@ -125,6 +155,9 @@ export async function generateConcepts(
         {
           role: 'user',
           content: `Destinations Premium Choice Travel actively sells (prefer these, strongest first): ${destinationList}.
+
+Hotels Premium Choice knows and recommends (prefer these when one genuinely fits; otherwise name another real, current property):
+${hotelList || '(none listed yet)'}
 
 Premium Choice journey library (existing designed journeys — where one fits the brief, use it as a concept's starting point, put its EXACT title in startingJourney, and adapt pace/duration to the traveller; personalise rather than invent availability):
 ${journeyLibrary || '(no journeys published yet)'}
@@ -155,7 +188,25 @@ Create the three concepts.`,
     if (!text || text.type !== 'text') return { ok: false, error: 'No ideas came back — please try again.' };
     const parsed = JSON.parse(text.text) as { concepts: TripConcept[] };
     if (!parsed.concepts?.length) return { ok: false, error: 'No ideas came back — please try again.' };
-    return { ok: true, concepts: parsed.concepts.slice(0, 3) };
+    // Illustrate each concept with our own licensed destination photography.
+    const withImages = parsed.concepts.slice(0, 3).map((c) => {
+      const named = c.destinations.split(/[,/&]|and/).map((n) => n.trim().toLowerCase()).filter(Boolean);
+      const gallery: { url: string; alt: string }[] = [];
+      const seen = new Set<string>();
+      for (const name of named) {
+        const dest = destinations.find(
+          (d) => d.name.toLowerCase() === name || d.name.toLowerCase().includes(name) || name.includes(d.name.toLowerCase())
+        );
+        for (const img of dest?.gallery ?? []) {
+          if (gallery.length >= 3 || seen.has(img.url)) continue;
+          seen.add(img.url);
+          gallery.push({ url: img.url, alt: img.alt || dest!.name });
+        }
+        if (gallery.length >= 3) break;
+      }
+      return { ...c, images: gallery };
+    });
+    return { ok: true, concepts: withImages };
   } catch (e: any) {
     console.error('[curator]', e?.message);
     return { ok: false, error: 'The inspiration service is busy — give it another try in a moment.' };
@@ -194,7 +245,8 @@ export async function submitInspirationLead(payload: {
     answers.destinationHint ? `Was browsing: ${answers.destinationHint}` : null,
     '',
     selected
-      ? `RECOMMENDED STARTING ITINERARY\n${selected.title} — ${selected.destinations} (${selected.nights} nights)${selected.startingJourney ? `\nBased on PCT journey: ${selected.startingJourney}` : ''}\nRoute: ${selected.route}\nWhy it fits: ${selected.whyItFits}\nExperiences: ${selected.experiences.join('; ')}\nStay: ${selected.accommodationStyle} · Season: ${selected.bestSeason}`
+      ? `RECOMMENDED STARTING ITINERARY\n${selected.title} — ${selected.destinations} (${selected.nights} nights)${selected.startingJourney ? `\nBased on PCT journey: ${selected.startingJourney}` : ''}\nRoute: ${selected.route}\nWhy it fits: ${selected.whyItFits}\nExperiences: ${selected.experiences.join('; ')}\nStay: ${selected.accommodationStyle} · Season: ${selected.bestSeason}${selected.hotels?.length ? `
+Hotels shown: ${selected.hotels.map((h) => `${h.name} (${h.where})`).join('; ')}` : ''}`
       : 'No concept selected — customer asked to speak to an expert directly.',
     '',
     `OTHER CONCEPTS SHOWN: ${concepts.filter((c) => c.title !== selected?.title).map((c) => c.title).join(' | ') || '—'}`,
