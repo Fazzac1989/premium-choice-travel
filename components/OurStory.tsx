@@ -3,9 +3,76 @@ import Link from 'next/link';
 import SectionHeading from '@/components/SectionHeading';
 import BrandGrid from '@/components/BrandGrid';
 
+type Variant = {
+  /** What travelling from the UAE means for this brand's customer. */
+  uaeIntro: string;
+  uaeDetail: string;
+  rightChoice: string[];
+  /** The message a customer might send us. */
+  message: string;
+  remembers: string;
+  closing: { plain: string; emphasis: string };
+};
+
+const DEFAULT_VARIANT: Variant = {
+  uaeIntro: 'We know that travelling from the UAE is different.',
+  uaeDetail:
+    'Your weekend starts differently. Your school holidays are different. Your flight options are different. Your family may be spread between several countries. You might be looking for a quick escape from Dubai, a summer holiday back in Europe, a once-in-a-lifetime journey, a golf break with friends, or somewhere completely new for the family to discover.',
+  rightChoice: [
+    'The right flight times.',
+    'The right room for your family.',
+    'The right neighbourhood.',
+    'The right resort.',
+    'The right experiences.',
+    'And people you can actually speak to when you need help.',
+  ],
+  message: '“We’re thinking about Japan next Easter — where would you recommend?”',
+  remembers:
+    'Someone who remembers that you prefer smaller hotels, that the children need connecting rooms, that you would rather fly overnight, or that you want somewhere with a great golf course nearby.',
+  closing: { plain: 'The best holidays aren’t booked.', emphasis: 'They’re carefully chosen.' },
+};
+
+const VARIANTS: Record<string, Partial<Variant>> = {
+  staycations: {
+    uaeIntro: 'We know that a weekend away in the UAE is its own thing.',
+    uaeDetail:
+      'The clock starts on a Thursday evening. The drive matters as much as the destination. School holidays land differently here, the summer asks for indoor pools and shaded beaches, and the cooler months are gone before you have booked them. Sometimes you want the children exhausted by lunchtime; sometimes you want a quiet room, a spa and nobody asking you anything for two days.',
+    rightChoice: [
+      'The right emirate for the weekend you want.',
+      'The right room for a family of four.',
+      'The right beach, pool or desert.',
+      'The right board basis.',
+      'The right weekend to go — and the right one to avoid.',
+      'And people you can actually speak to when you need help.',
+    ],
+    message: '“We fancy a weekend in Ras Al Khaimah with the kids — where’s good?”',
+    remembers:
+      'Someone who remembers that you want a kids’ club, that you would rather be on the beach than in the city, that late checkout matters more to you than the view, or that last time the connecting rooms were on the wrong side of the resort.',
+    closing: { plain: 'The best weekends aren’t booked.', emphasis: 'They’re carefully chosen.' },
+  },
+  golf: {
+    uaeIntro: 'We know that a golf trip runs to its own rhythm.',
+    uaeDetail:
+      'Tee times matter more than check-in times. The group has a spread of handicaps and one very fixed idea about which courses are non-negotiable. Someone needs their clubs to arrive, someone else does not play at all, and the flight home has to be after the last round rather than during it. From the UAE it is winter golf on your doorstep and long summer evenings in Scotland or Portugal when Dubai gets hot.',
+    rightChoice: [
+      'The right courses for your group.',
+      'The right tee times, in the right order.',
+      'The right hotel — on the course or near the town.',
+      'The right buggy, caddie and club-carriage arrangements.',
+      'The right time of year to play.',
+      'And people you can actually speak to when you need help.',
+    ],
+    message: '“We’re thinking about the Algarve in October — which courses should we play?”',
+    remembers:
+      'Someone who remembers that your group plays off the back tees, that one of you would rather be at the spa, that you like to eat where the locals do, or that last year the first tee time was far too early.',
+    closing: { plain: 'The best golf trips aren’t booked.', emphasis: 'They’re carefully chosen.' },
+  },
+};
+
 /**
  * The Farrell family story — one source of truth, shown on the master site
- * and on every brand website so the words never drift apart.
+ * and on every brand website so the words never drift apart. The family
+ * history stays identical; the customer-facing examples speak to the brand.
  */
 export default function OurStory({
   /** Set on a brand website, e.g. "Premium Choice Golf Holidays". */
@@ -13,11 +80,15 @@ export default function OurStory({
   contactHref,
   /** The master site closes with the six-brand grid; brand sites don't. */
   showBrandGrid = false,
+  /** Brand key — swaps the customer-facing examples for that brand's. */
+  variant,
 }: {
   brandName?: string;
   contactHref: string;
   showBrandGrid?: boolean;
+  variant?: string;
 }) {
+  const copy: Variant = { ...DEFAULT_VARIANT, ...(variant ? VARIANTS[variant] ?? {} : {}) };
   return (
     <>
       <section className="border-b border-line bg-sand">
@@ -106,12 +177,7 @@ export default function OurStory({
               We understand expat life because we have lived it ourselves.
             </p>
             <p>
-              We know that travelling from the UAE is different. Your weekend starts
-              differently. Your school holidays are different. Your flight options are
-              different. Your family may be spread between several countries. You might
-              be looking for a quick escape from Dubai, a summer holiday back in Europe,
-              a once-in-a-lifetime journey, a golf break with friends, or somewhere
-              completely new for the family to discover.
+              <span className="text-white">{copy.uaeIntro}</span> {copy.uaeDetail}
             </p>
             <p className="text-white">That local understanding matters.</p>
             <p>
@@ -143,14 +209,7 @@ export default function OurStory({
           </div>
           <div>
             <ul className="space-y-3">
-              {[
-                'The right flight times.',
-                'The right room for your family.',
-                'The right neighbourhood.',
-                'The right resort.',
-                'The right experiences.',
-                'And people you can actually speak to when you need help.',
-              ].map((line) => (
+              {copy.rightChoice.map((line) => (
                 <li
                   key={line}
                   className="flex items-start gap-3 rounded-xl bg-sand px-5 py-4 text-[15px] font-semibold text-ink"
@@ -187,19 +246,15 @@ export default function OurStory({
             </p>
             <p>Someone you can message and say:</p>
             <p className="font-serif text-xl italic leading-relaxed text-ink">
-              “We’re thinking about Japan next Easter — where would you recommend?”
+              {copy.message}
             </p>
-            <p>
-              Someone who remembers that you prefer smaller hotels, that the children
-              need connecting rooms, that you would rather fly overnight, or that you
-              want somewhere with a great golf course nearby.
-            </p>
+            <p>{copy.remembers}</p>
             <p>Someone who is there before, during and after your holiday.</p>
             <p>Because after a lifetime in travel, one thing has never changed:</p>
           </div>
           <p className="mx-auto mt-8 max-w-xl font-serif text-3xl leading-snug text-ink sm:text-4xl">
-            The best holidays aren’t booked.{' '}
-            <em className="not-italic text-teal-deep">They’re carefully chosen.</em>
+            {copy.closing.plain}{' '}
+            <em className="not-italic text-teal-deep">{copy.closing.emphasis}</em>
           </p>
           <p className="mt-8 font-semibold text-ink">Premium Choice Travel</p>
           <p className="mt-1 text-sm italic text-ink-soft">

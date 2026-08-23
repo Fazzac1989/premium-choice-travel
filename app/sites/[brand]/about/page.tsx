@@ -21,7 +21,7 @@ export default function BrandAboutPage({ params }: { params: { brand: string } }
 
   return (
     <main>
-      <OurStory brandName={brand.name} contactHref={`${base}/enquire`} />
+      <OurStory brandName={brand.name} contactHref={`${base}/enquire`} variant={brand.key} />
     </main>
   );
 }
