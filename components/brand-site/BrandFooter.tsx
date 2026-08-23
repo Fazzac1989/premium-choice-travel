@@ -25,6 +25,7 @@ export default function BrandFooter({
     ...(isStaycations
       ? [{ href: `${base}/hotels`, label: 'Hotels' }]
       : [{ href: `${base}/journeys`, label: 'Journeys' }]),
+    { href: `${base}/about`, label: 'Our story' },
     { href: `${base}/enquire`, label: 'Plan my trip' },
   ];
   return (

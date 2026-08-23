@@ -78,6 +78,7 @@ export default function BrandHeader({
   const links = [
     ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/journeys', label: 'Journeys' }]),
     ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
+    { href: '/about', label: 'Our story' },
     { href: '/enquire', label: 'Contact' },
   ];
 
@@ -129,7 +130,7 @@ export default function BrandHeader({
                 {l.label}
               </Link>
             ))}
-            <a href="tel:+97144206965" className={`text-sm font-semibold ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
+            <a href="tel:+97144206965" className={`hidden text-sm font-semibold xl:block ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
               +971 4 420 6965
             </a>
             <Link href={`${base}/enquire`} className="btn-primary !px-5 !py-2.5">

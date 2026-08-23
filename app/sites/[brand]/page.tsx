@@ -77,9 +77,9 @@ export default async function BrandHomePage({ params }: { params: { brand: strin
                 <p className="mt-0.5 font-serif text-lg text-white">✨ Inspire me</p>
               </Link>
             </div>
-            <a href="#founder" className="mt-6 inline-block text-sm font-semibold text-white/70 underline-offset-4 hover:text-teal hover:underline">
+            <Link href={`${base}/about`} className="mt-6 inline-block text-sm font-semibold text-white/70 underline-offset-4 hover:text-teal hover:underline">
               Our story →
-            </a>
+            </Link>
           </div>
         </section>
 
