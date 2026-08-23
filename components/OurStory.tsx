@@ -103,8 +103,7 @@ export default function OurStory({
               approach our customers.
             </p>
             <p className="font-serif text-xl leading-relaxed text-white">
-              We understand the lives of British expatriates because we have lived them
-              ourselves.
+              We understand expat life because we have lived it ourselves.
             </p>
             <p>
               We know that travelling from the UAE is different. Your weekend starts
