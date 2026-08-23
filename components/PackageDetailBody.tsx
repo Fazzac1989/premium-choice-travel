@@ -22,6 +22,7 @@ export default function PackageDetailBody({
   destination = null,
   destinationHref,
   hotelBase,
+  externalCards = false,
 }: {
   pkg: Package;
   related: Package[];
@@ -32,6 +33,7 @@ export default function PackageDetailBody({
   destinationHref?: string;
   /** When set (master site), hotel names/cards link to their own pages. */
   hotelBase?: string;
+  externalCards?: boolean;
 }) {
   const hotelById = new Map(hotels.map((h) => [h.id, h]));
   const experienceById = new Map(experiences.map((x) => [x.id, x]));
@@ -406,7 +408,7 @@ export default function PackageDetailBody({
             <h2 className="font-serif text-3xl text-ink">You may also like</h2>
             <div className="mt-8 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
-                <PackageCard key={p.slug} pkg={p} hrefBase={hrefBase} />
+                <PackageCard key={p.slug} pkg={p} hrefBase={hrefBase} external={externalCards} />
               ))}
             </div>
           </div>

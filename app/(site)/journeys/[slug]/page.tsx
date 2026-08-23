@@ -88,6 +88,7 @@ export default async function JourneyPage({ params }: { params: { slug: string }
         pkg={pkg}
         related={related}
         hrefBase="/journeys"
+        externalCards
         hotels={stays.hotels}
         experiences={stays.experiences}
         destination={destination}
