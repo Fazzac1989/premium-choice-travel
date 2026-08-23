@@ -14,11 +14,10 @@ export { checkTrips, planPages, padToSpread } from './plan';
 
 const TRIP_SELECT = `
   id, slug, title, status, city, duration_days, duration_nights, overview, includes,
-  journey, trip_highlights, subject_id, country_id, hero_image,
+  journey, trip_highlights, subject_id, country_id, hero_image, gallery,
   subjects(name), countries(name),
   itinerary_days(sort_order, label, title, description, display_title, summary,
-                 primary_location, highlights, learning_focus, notices),
-  trip_images(role, url, width, height, sort_order)
+                 primary_location, highlights, learning_focus, notices)
 `;
 
 export async function loadTripRecords(tripIds: number[]): Promise<TripRecord[]> {
@@ -50,15 +49,13 @@ export async function loadTripRecords(tripIds: number[]): Promise<TripRecord[]> 
         notices: (d.notices ?? []) as string[],
       }));
 
-    const images = ((row.trip_images ?? []) as any[]).sort(
-      (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0)
-    );
-    const hero = images.find((i) => i.role === 'hero');
-    const gallery = images.filter((i) => i.role === 'gallery');
-
-    // A spread runs an image across half a page or wider, so anything taller
-    // than it is wide will be cropped unrecognisably.
-    const isLandscape = (i: any) => !i.width || !i.height || i.width / i.height >= 1.2;
+    // The trip's own photography, in the order the admin arranged it.
+    const hero: string | null = row.hero_image ?? null;
+    const gallery: string[] = Array.isArray(row.gallery)
+      ? (row.gallery as any[])
+          .map((g) => (typeof g === 'string' ? g : g?.url))
+          .filter((u: unknown): u is string => typeof u === 'string')
+      : [];
 
     byId.set(row.id, {
       id: row.id,
@@ -81,9 +78,11 @@ export async function loadTripRecords(tripIds: number[]): Promise<TripRecord[]> 
         toDay: j.to_day,
       })),
       days,
-      heroImage: hero?.url ?? row.hero_image ?? null,
-      galleryImages: gallery.map((i) => i.url),
-      landscapeImages: [hero, ...gallery].filter(Boolean).filter(isLandscape).map((i: any) => i.url),
+      heroImage: hero,
+      galleryImages: gallery,
+      // Dimensions are no longer stored alongside the URL, so a spread takes
+      // whatever the trip has; the layout crops to fit.
+      landscapeImages: [hero, ...gallery].filter((u): u is string => Boolean(u)),
     });
   }
 

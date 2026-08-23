@@ -47,11 +47,10 @@ const wanted = (argOf('trips', '') || DEFAULT_SLUGS.join(',')).split(',').map((s
 
 const TRIP_SELECT = `
   id, slug, title, status, city, duration_days, duration_nights, overview, includes,
-  journey, trip_highlights, subject_id, country_id, hero_image,
+  journey, trip_highlights, subject_id, country_id, hero_image, gallery,
   subjects(name), countries(name),
   itinerary_days(sort_order, label, title, description, display_title, summary,
-                 primary_location, highlights, learning_focus, notices),
-  trip_images(role, url, width, height, sort_order)
+                 primary_location, highlights, learning_focus, notices)
 `;
 
 /** Same mapping as lib/brochure/build.ts, which cannot be imported here (server-only). */
@@ -76,10 +75,10 @@ function toRecord(row) {
       notices: d.notices ?? [],
     }));
 
-  const images = (row.trip_images ?? []).sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
-  const hero = images.find((i) => i.role === 'hero');
-  const gallery = images.filter((i) => i.role === 'gallery');
-  const isLandscape = (i) => !i.width || !i.height || i.width / i.height >= 1.2;
+  const hero = row.hero_image ?? null;
+  const gallery = (Array.isArray(row.gallery) ? row.gallery : [])
+    .map((g) => (typeof g === 'string' ? g : g?.url))
+    .filter(Boolean);
 
   return {
     id: row.id,
@@ -98,9 +97,9 @@ function toRecord(row) {
     tripHighlights: row.trip_highlights ?? [],
     journey: (row.journey ?? []).map((j) => ({ location: j.location, fromDay: j.from_day, toDay: j.to_day })),
     days,
-    heroImage: hero?.url ?? row.hero_image ?? null,
-    galleryImages: gallery.map((i) => i.url),
-    landscapeImages: [hero, ...gallery].filter(Boolean).filter(isLandscape).map((i) => i.url),
+    heroImage: hero,
+    galleryImages: gallery,
+    landscapeImages: [hero, ...gallery].filter(Boolean),
   };
 }
 

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
 import StTaxonomyManager, { type TaxonomyRow } from '@/components/admin/StTaxonomyManager';
 import StCountryFacts, { type FactsRow } from '@/components/admin/StCountryFacts';
-import StCountryPages, { type CountryPageRow } from '@/components/admin/StCountryPages';
+import StDestinationPages, { type DestinationRow } from '@/components/admin/StDestinationPages';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,31 +51,32 @@ export default async function StCountriesPage() {
     updatedAt: c.facts_updated_at ?? null,
   }));
 
-  // Editorial content and images live in their own places; read the status of
-  // both so the page builder can show what is still incomplete.
-  const [{ data: contentRows }, { data: imageRows }] = await Promise.all([
-    db.from('countries').select('id, intro, content_updated_at'),
-    db.from('country_images').select('country_id, role'),
-  ]);
+  // Content and photography both live on the country row now, so one read
+  // covers what the page builder needs to show as incomplete.
+  const { data: contentRows } = await db
+    .from('countries')
+    .select('id, intro, content_updated_at, hero_image, hero_alt, gallery');
   const contentBy = new Map((contentRows ?? []).map((c: any) => [c.id, c]));
-  const imagesBy = new Map<number, { hero: number; gallery: number }>();
-  for (const img of imageRows ?? []) {
-    const e = imagesBy.get(img.country_id) ?? { hero: 0, gallery: 0 };
-    if (img.role === 'hero') e.hero++;
-    else e.gallery++;
-    imagesBy.set(img.country_id, e);
-  }
 
-  const pageRows: CountryPageRow[] = data.map((c) => ({
-    id: c.id,
-    name: c.name,
-    slug: c.slug,
-    tripCount: c.trips?.[0]?.count ?? 0,
-    hasContent: Boolean(contentBy.get(c.id)?.intro),
-    heroCount: imagesBy.get(c.id)?.hero ?? 0,
-    galleryCount: imagesBy.get(c.id)?.gallery ?? 0,
-    contentUpdatedAt: contentBy.get(c.id)?.content_updated_at ?? null,
-  }));
+  const galleryUrls = (value: unknown): string[] =>
+    Array.isArray(value)
+      ? value.map((g: any) => (typeof g === 'string' ? g : g?.url)).filter((u: unknown): u is string => typeof u === 'string')
+      : [];
+
+  const pageRows: DestinationRow[] = data.map((c) => {
+    const extra = contentBy.get(c.id);
+    return {
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      tripCount: c.trips?.[0]?.count ?? 0,
+      hasContent: Boolean(extra?.intro),
+      heroImage: extra?.hero_image ?? null,
+      heroAlt: extra?.hero_alt ?? null,
+      gallery: galleryUrls(extra?.gallery),
+      contentUpdatedAt: extra?.content_updated_at ?? null,
+    };
+  });
 
   return (
     <>
@@ -101,7 +102,7 @@ export default async function StCountriesPage() {
       ) : (
         <>
           <StCountryFacts rows={factsRows} configured={Boolean(process.env.ANTHROPIC_API_KEY)} />
-          <StCountryPages rows={pageRows} siteUrl={PCST_SITE_URL} />
+          <StDestinationPages kind="country" rows={pageRows} siteUrl={PCST_SITE_URL} />
         </>
       )}
     </>
