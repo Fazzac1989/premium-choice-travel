@@ -69,6 +69,21 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Our Brands */}
+      <section className="bg-sand py-16 sm:py-20">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow="Our brands"
+            title="One name. Six ways to travel."
+            text="Whatever takes you away, there is a Premium Choice specialist ready to make it happen."
+            center
+          />
+          <div className="mt-12">
+            <BrandGrid />
+          </div>
+        </div>
+      </section>
+
       {/* Where to go now */}
       <section className="py-16 sm:py-20">
         <div className="container-site">
@@ -107,24 +122,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Our Brands */}
-      <section className="bg-sand py-16 sm:py-20">
-        <div className="container-site">
-          <SectionHeading
-            eyebrow="Our brands"
-            title="One name. Six ways to travel."
-            text="Whatever takes you away, there is a Premium Choice specialist ready to make it happen."
-            center
-          />
-          <div className="mt-12">
-            <BrandGrid />
-          </div>
-        </div>
-      </section>
-
       {/* Journeys we're excited about */}
       {featuredJourneys.length > 0 && (
-        <section className="py-16 sm:py-20">
+        <section className="bg-sand py-16 sm:py-20">
           <div className="container-site">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeading
@@ -132,7 +132,7 @@ export default async function HomePage() {
                 title="Starting points, not set menus"
                 text="Open one for the full day-by-day plan — then let a specialist reshape it around you."
               />
-              <Link href="/journeys" className="btn-outline shrink-0">
+              <Link href="/journeys" className="btn-outline shrink-0 !bg-white">
                 All journeys
               </Link>
             </div>
