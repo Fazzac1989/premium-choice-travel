@@ -20,6 +20,98 @@ const parseJson = <T,>(value: FormDataEntryValue | null, fallback: T): T => {
   }
 };
 
+/** Everything the AI extraction writes onto a day, cleared when its source changes. */
+const STRUCTURED_COLUMNS = {
+  display_title: null,
+  summary: null,
+  primary_location: null,
+  highlights: [],
+  learning_focus: [],
+  experience_types: [],
+  locations: [],
+  meals: [],
+  transport: [],
+  notices: [],
+  review_flags: [],
+  structured_at: null,
+  structured_model: null,
+};
+
+type IncomingDay = { label: string; title: string; description: string; imageUrl?: string | null };
+
+/**
+ * Write the itinerary without destroying the day summaries.
+ *
+ * These rows used to be deleted and re-inserted on every save, which silently
+ * threw away the AI-extracted layer — display title, summary, location,
+ * highlights — so saving a trip after building its summaries dropped the public
+ * page back to the plain day list. Rows are now updated in place.
+ *
+ * Days are matched to existing rows by their description, so reordering the
+ * itinerary carries each summary with its day rather than leaving them behind
+ * at the old positions. A day whose description was edited has its structured
+ * layer cleared, because that summary describes text that no longer exists —
+ * the trip page renders that one day plainly and the banner asks for a rebuild.
+ */
+async function saveItineraryDays(
+  db: ReturnType<typeof pcstClient>,
+  tripId: number,
+  itinerary: IncomingDay[]
+): Promise<string | null> {
+  const { data: existing } = await db
+    .from('itinerary_days')
+    .select('id, sort_order, description, image_url, image_alt')
+    .eq('trip_id', tripId)
+    .order('sort_order');
+
+  const rows = existing ?? [];
+  const unclaimed = new Set(rows.map((r: any) => r.id));
+  const key = (s: string | null | undefined) => (s ?? '').trim();
+
+  const byDescription = new Map<string, any>();
+  for (const r of rows) {
+    const k = key(r.description);
+    if (k && !byDescription.has(k)) byDescription.set(k, r);
+  }
+
+  for (let i = 0; i < itinerary.length; i++) {
+    const day = itinerary[i];
+    const viaDescription = byDescription.get(key(day.description));
+    const match =
+      viaDescription && unclaimed.has(viaDescription.id)
+        ? viaDescription
+        : rows.find((r: any) => r.sort_order === i && unclaimed.has(r.id)) ?? null;
+
+    const patch: Record<string, unknown> = {
+      trip_id: tripId,
+      sort_order: i,
+      label: day.label,
+      title: day.title,
+      description: day.description,
+      // The form carries the image now; older saves fall back to what was there.
+      image_url: day.imageUrl !== undefined ? day.imageUrl?.trim() || null : match?.image_url ?? null,
+      image_alt: match?.image_alt ?? null,
+    };
+
+    if (match) {
+      unclaimed.delete(match.id);
+      if (key(match.description) !== key(day.description)) Object.assign(patch, STRUCTURED_COLUMNS);
+      const { error } = await db.from('itinerary_days').update(patch).eq('id', match.id);
+      if (error) return error.message;
+    } else {
+      const { error } = await db.from('itinerary_days').insert(patch);
+      if (error) return error.message;
+    }
+  }
+
+  // Days the editor removed.
+  if (unclaimed.size > 0) {
+    const { error } = await db.from('itinerary_days').delete().in('id', Array.from(unclaimed));
+    if (error) return error.message;
+  }
+  return null;
+}
+
 /* ────────────────────────────── trips ────────────────────────────── */
 
 export async function saveStTrip(_prev: StActionState, formData: FormData): Promise<StActionState> {
@@ -60,34 +152,13 @@ export async function saveStTrip(_prev: StActionState, formData: FormData): Prom
     tripId = data.id;
   }
 
-  // Replace itinerary days. The editor now carries each day's image, so a
-  // value from the form wins; days saved before the field existed fall back
-  // to whatever image the same position already had.
   const itinerary = parseJson<{ label: string; title: string; description: string; imageUrl?: string | null }[]>(
     formData.get('itinerary'),
     []
   ).filter((d) => d.label.trim() || d.title.trim() || d.description.trim());
 
-  const { data: existingDays } = await db
-    .from('itinerary_days')
-    .select('sort_order, image_url, image_alt')
-    .eq('trip_id', tripId!)
-    .order('sort_order');
-  await db.from('itinerary_days').delete().eq('trip_id', tripId!);
-  if (itinerary.length > 0) {
-    const { error: dayError } = await db.from('itinerary_days').insert(
-      itinerary.map((d, i) => ({
-        trip_id: tripId,
-        sort_order: i,
-        label: d.label,
-        title: d.title,
-        description: d.description,
-        image_url: d.imageUrl !== undefined ? d.imageUrl?.trim() || null : existingDays?.[i]?.image_url ?? null,
-        image_alt: existingDays?.[i]?.image_alt ?? null,
-      }))
-    );
-    if (dayError) return { ok: false, message: `Trip saved, but itinerary failed: ${dayError.message}` };
-  }
+  const dayError = await saveItineraryDays(db, tripId!, itinerary);
+  if (dayError) return { ok: false, message: `Trip saved, but itinerary failed: ${dayError}` };
 
   revalidatePath('/admin/school-trips');
   // The trip lives in the School Trips database but is rendered by that site's
