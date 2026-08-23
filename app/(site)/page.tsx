@@ -138,7 +138,7 @@ export default async function HomePage() {
             </div>
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredJourneys.map((pkg, i) => (
-                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} />
+                <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} external />
               ))}
             </div>
           </div>

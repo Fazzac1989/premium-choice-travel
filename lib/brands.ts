@@ -156,3 +156,10 @@ export const PACKAGE_BRANDS: { key: BrandKey; label: string }[] = [
 
 export const brandLabel = (key: string) =>
   PACKAGE_BRANDS.find((b) => b.key === key)?.label ?? 'Holidays';
+
+/** A brand's own website, e.g. https://premiumchoiceholidays.com — null when it has no domain. */
+export const brandSiteUrl = (key: string) => {
+  const brand = BRANDS.find((x) => x.key === key);
+  if (brand?.externalUrl) return brand.externalUrl;
+  return brand?.domains[0] ? `https://${brand.domains[0]}` : null;
+};

@@ -2,19 +2,24 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Package } from '@/lib/types';
 import { durationLabel, formatPrice } from '@/lib/types';
-import { brandLabel } from '@/lib/brands';
+import { brandLabel, brandSiteUrl } from '@/lib/brands';
 
 export default function PackageCard({
   pkg,
   priority = false,
   hrefBase = '/journeys',
+  /** Master site: open the journey on the brand's own website, in a new tab. */
+  external = false,
 }: {
   pkg: Package;
   priority?: boolean;
   hrefBase?: string;
+  external?: boolean;
 }) {
-  return (
-    <Link href={`${hrefBase}/${pkg.slug}`} className="group card flex flex-col transition-shadow hover:shadow-xl hover:shadow-ink/10">
+  const site = external ? brandSiteUrl(pkg.brand) : null;
+  const cls = 'group card flex flex-col transition-shadow hover:shadow-xl hover:shadow-ink/10';
+  const inner = (
+    <>
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={pkg.heroImage}
@@ -49,6 +54,18 @@ export default function PackageCard({
           )}
         </div>
       </div>
+    </>
+  );
+
+  // A journey belongs to a brand: on the master site the card opens that
+  // brand's own website; inside a brand site it stays put.
+  return site ? (
+    <a href={`${site}/journeys/${pkg.slug}`} target="_blank" rel="noopener" className={cls}>
+      {inner}
+    </a>
+  ) : (
+    <Link href={`${hrefBase}/${pkg.slug}`} className={cls}>
+      {inner}
     </Link>
   );
 }

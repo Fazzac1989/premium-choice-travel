@@ -188,7 +188,7 @@ export default async function HotelPage({ params }: { params: { slug: string } }
               <SectionTitle eyebrow="Featured in" title="Journeys that stay here" />
               <div className="mt-7 grid gap-7 sm:grid-cols-2">
                 {journeys.map((p) => (
-                  <PackageCard key={p.slug} pkg={p} />
+                  <PackageCard key={p.slug} pkg={p} external />
                 ))}
               </div>
             </div>
