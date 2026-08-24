@@ -10,11 +10,6 @@ export async function GET() {
     anthropic: Boolean(process.env.ANTHROPIC_API_KEY),
     resend: Boolean(process.env.RESEND_API_KEY),
     places: Boolean(process.env.GOOGLE_PLACES_API_KEY),
-    // Shape only, never the value — enough to spot a paste that lost characters.
-    placesKeyShape: (() => {
-      const k = process.env.GOOGLE_PLACES_API_KEY ?? '';
-      return { length: k.length, prefixOk: k.startsWith('AIza'), trimmedSame: k === k.trim() };
-    })(),
     version: process.env.VERCEL_GIT_COMMIT_SHA ? process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7) : 'dev',
   });
 }
