@@ -135,6 +135,20 @@ function strip(s: string) {
     .trim();
 }
 
+/**
+ * The area is a neighbourhood label — "Palm Jumeirah", "Umm Suqeim" — not a
+ * sentence. Models like to keep going ("…, on West Beach side of the trunk"),
+ * which then gets chopped mid-word by the length cap, so cut at the first
+ * clause and drop any dangling preposition.
+ */
+function tidyArea(s: string) {
+  let t = strip(s).split(/[,—(]/)[0].trim();
+  for (let i = 0; i < 4; i++) {
+    t = t.replace(/\s+(the|of|on|in|at|near|next|to|and|an?|off|just|past|side|towards?)$/i, '').trim();
+  }
+  return t.slice(0, 60);
+}
+
 /** Trim to sane shapes and drop anything that smells like a price. */
 function clean(p: Profile) {
   const noPrice = (s: string) => !/(aed|usd|\$|£|€)\s?\d|\d+\s?(aed|usd|dirham)|per night/i.test(s);
@@ -159,7 +173,7 @@ function clean(p: Profile) {
     mealPlans: strings(p.mealPlans, 5).filter((m) => BOARDS.includes(m)),
     bestFor: strings(p.bestFor, 4),
     style: typeof p.style === 'string' ? strip(p.style).slice(0, 60) : '',
-    area: typeof p.area === 'string' ? strip(p.area).slice(0, 60) : '',
+    area: typeof p.area === 'string' ? tidyArea(p.area) : '',
     gettingThere: typeof p.gettingThere === 'string' && noPrice(p.gettingThere) ? strip(p.gettingThere) : '',
     transferDuration: typeof p.transferDuration === 'string' ? strip(p.transferDuration).slice(0, 80) : '',
     officialSite: typeof p.officialSite === 'string' ? p.officialSite.trim() : '',
