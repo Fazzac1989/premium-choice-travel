@@ -1422,7 +1422,7 @@ export const STAYCATIONS_JOURNEYS: JourneySeed[] = [
     nights: 3,
     days: 4,
     overview: [
-      'Pack the car on a Thursday and you can have mountains, wadis and the Indian Ocean before Sunday. This route strings together the UAE\'s two best non-city landscapes — Hatta\'s highland dam country and Fujairah\'s Al Aqah coast — with the drives themselves doing real work: switchbacks, date-farm villages, and the moment the Gulf of Oman appears between two ridgelines.',
+      'Pack the car on a Friday and you can have mountains, wadis and the Indian Ocean before Monday. This route strings together the UAE\'s two best non-city landscapes — Hatta\'s highland dam country and Fujairah\'s Al Aqah coast — with the drives themselves doing real work: switchbacks, date-farm villages, and the moment the Gulf of Oman appears between two ridgelines.',
       'The rhythm is one night in the mountains, two by the sea. Hatta contributes kayaks on the dam and an evening of highland cool; the East Coast answers with snorkelling, beach hours and seafood. Total driving is modest — no leg exceeds two hours — which makes this the rare road trip where the journey is a feature and never a chore.',
     ],
     highlights: [

@@ -12,7 +12,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     days: 5,
     overview: [
       "Golf in Dubai between November and March is about as comfortable as the game gets: mid-twenties temperatures, tournament-grade conditioning and courses you have watched on television every January. This short break strings together three of them — the Majlis at Emirates Golf Club, Dubai Creek with the city skyline behind the ninth, and the Earth course at Jumeirah Golf Estates — without you ever needing an airport.",
-      "Because it is a drive-to product for UAE residents, the four nights work as a staycation with clubs: check in on a Thursday, play Friday, Saturday and Sunday with a free evening each night for Dubai's restaurants, and be back at your desk on Monday. We hold the hotel and arrange tee-time requests; nothing is confirmed until each club comes back to us, and we tell you exactly where things stand before you commit.",
+      "Because it is a drive-to product for UAE residents, the four nights work as a staycation with clubs: check in on a Friday evening, play Saturday, Sunday and Monday with a free evening each night for Dubai's restaurants, and be back at your desk on Tuesday. One day of leave covers it. We hold the hotel and arrange tee-time requests; nothing is confirmed until each club comes back to us, and we tell you exactly where things stand before you commit.",
     ],
     highlights: [
       'The Majlis at Emirates Golf Club — host course of the Hero Dubai Desert Classic',
