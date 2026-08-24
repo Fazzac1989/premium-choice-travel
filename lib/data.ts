@@ -3,7 +3,6 @@ import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { sampleDestinations, samplePackages } from '@/lib/sample-data';
 import { catalogueBySlug } from '@/lib/destination-catalogue';
 import type { Destination, Package } from '@/lib/types';
-import { driveMinutesFromText } from '@/lib/weekend';
 
 /**
  * Public-site data access. Reads via the service-role client (server only).
@@ -210,9 +209,6 @@ export function mapHotel(row: any) {
     featured: row.featured ?? false,
     status: row.status ?? 'published',
     priceGuide: row.price_guide ?? '',
-    // An admin-set value wins; otherwise read it out of the written directions,
-    // so the filter works without waiting on the column to exist.
-    driveMinutes: row.drive_minutes ?? driveMinutesFromText(row.transfer_duration ?? ''),
     placeId: row.place_id ?? '',
     photos: row.photos ?? [],
   };

@@ -6,14 +6,14 @@ import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import type { Hotel } from '@/lib/types';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
-import { DRIVE_BANDS, driveLabel, findWeekend, weekendOptions } from '@/lib/weekend';
+import { findWeekend, weekendOptions } from '@/lib/weekend';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'UAE hotels',
   description:
-    'The UAE hotels our specialists actually book — filter by drive time from Dubai, star rating, emirate and meal plan, then ask us for a personalised staycation quote.',
+    'The UAE hotels our specialists actually book — filter by emirate, star rating and meal plan, then ask us for a personalised staycation quote.',
 };
 
 const EMIRATES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'];
@@ -26,7 +26,6 @@ function Stars({ n }: { n: number | null | undefined }) {
 
 function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }) {
   const photo = isPlacesConfigured() && h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
-  const drive = driveLabel(h.driveMinutes);
   return (
     <Link
       href={`${base}/hotels/${hotelSlug(h.name)}${dates}`}
@@ -49,11 +48,6 @@ function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }
         {h.featured && (
           <span className="absolute left-3 top-3 rounded-full bg-teal px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
             Specialist pick
-          </span>
-        )}
-        {drive && (
-          <span className="absolute bottom-3 right-3 rounded-full bg-ink/75 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
-            {drive} from Dubai
           </span>
         )}
       </div>
@@ -84,7 +78,7 @@ function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }
   );
 }
 
-type Filters = { when?: string; drive?: string; emirate?: string; stars?: string; meal?: string };
+type Filters = { when?: string; emirate?: string; stars?: string; meal?: string };
 
 export default async function StaycationHotelsPage({
   params,
@@ -100,30 +94,20 @@ export default async function StaycationHotelsPage({
   const all = await getStaycationHotels();
   const current: Filters = {
     when: searchParams.when ?? '',
-    drive: searchParams.drive ?? '',
     emirate: searchParams.emirate ?? '',
     stars: searchParams.stars ?? '',
     meal: searchParams.meal ?? '',
   };
 
   const weekend = findWeekend(current.when || undefined);
-  const driveMax = current.drive ? Number(current.drive) : 0;
-  // Drive times only exist once migration 011 has run; until then the band
-  // filter has nothing to work with, so it stays hidden rather than empty.
-  const haveDriveTimes = all.some((h) => h.driveMinutes);
 
   const filtered = all.filter(
     (h) =>
       (!current.emirate || h.emirate === current.emirate) &&
       (!current.stars || String(h.stars ?? '') === current.stars) &&
-      (!current.meal || h.mealPlans.some((m: string) => m.toLowerCase() === current.meal!.toLowerCase())) &&
-      (!driveMax || (h.driveMinutes ?? Infinity) <= driveMax)
+      (!current.meal || h.mealPlans.some((m: string) => m.toLowerCase() === current.meal!.toLowerCase()))
   );
 
-  // Nearest first when someone has said how far they will drive.
-  const ordered = driveMax
-    ? [...filtered].sort((a, b) => (a.driveMinutes ?? 9999) - (b.driveMinutes ?? 9999))
-    : filtered;
 
   /** Build a URL with one filter changed and the rest kept. */
   const href = (patch: Filters) => {
@@ -140,7 +124,6 @@ export default async function StaycationHotelsPage({
   const emirates = EMIRATES.filter((e) => all.some((h) => h.emirate === e));
   const starOptions = ['5', '4', '3'].filter((s) => all.some((h) => String(h.stars ?? '') === s));
   const mealOptions = MEAL_PLANS.filter((m) => all.some((h) => h.mealPlans.some((x: string) => x.toLowerCase() === m.toLowerCase())));
-  const driveBands = DRIVE_BANDS.filter((b) => all.some((h) => (h.driveMinutes ?? 0) > 0 && h.driveMinutes! <= b.max));
 
   const chip = (active: boolean, extra = '') =>
     `rounded-full px-4 py-2 text-sm font-semibold transition-colors ${active ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'} ${extra}`;
@@ -157,7 +140,7 @@ export default async function StaycationHotelsPage({
           </h1>
           <p className="mt-4 max-w-xl text-ink-soft">
             {all.length} hotels across the seven emirates, all of them ones we would put a
-            family in. Say when you’re thinking and how far you’ll drive — we do the rest.
+            family in. Say when you’re thinking and we’ll do the rest.
           </p>
 
           {/* When — the way the decision actually starts */}
@@ -194,21 +177,6 @@ export default async function StaycationHotelsPage({
             )}
           </div>
 
-          {/* How far you'll drive */}
-          {haveDriveTimes && (
-            <div className="mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">How far from Dubai</p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                <Link href={href({ drive: '' })} className={chip(!current.drive)}>Any distance</Link>
-                {driveBands.map((b) => (
-                  <Link key={b.key} href={href({ drive: b.key })} className={chip(current.drive === b.key)}>
-                    {b.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="mt-6 border-t border-line pt-5">
             {/* Emirate */}
             <div className="flex flex-wrap gap-2">
@@ -237,7 +205,7 @@ export default async function StaycationHotelsPage({
 
       <section className="py-12 sm:py-14">
         <div className="container-site">
-          {ordered.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="rounded-2xl border border-line p-12 text-center">
               <p className="font-serif text-2xl text-ink">Nothing matches that combination — yet.</p>
               <p className="mt-3 text-ink-soft">Tell us what you have in mind and we’ll find it.</p>
@@ -246,11 +214,10 @@ export default async function StaycationHotelsPage({
           ) : (
             <>
               <p className="text-xs text-ink-soft">
-                {ordered.length} hotel{ordered.length === 1 ? '' : 's'}
-                {driveMax ? ` within ${driveLabel(driveMax)} of Dubai, nearest first` : ''}
+                {filtered.length} hotel{filtered.length === 1 ? '' : 's'}
               </p>
               <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {ordered.map((h) => (
+                {filtered.map((h) => (
                   <HotelCard key={h.id} h={h} base={base} dates={dateQuery} />
                 ))}
               </div>

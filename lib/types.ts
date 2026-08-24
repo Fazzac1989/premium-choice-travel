@@ -95,8 +95,6 @@ export type Hotel = {
   status?: 'draft' | 'published';
   /** Admin-entered guide price text — always shown as guidance, never a quote. */
   priceGuide?: string;
-  /** Approximate drive time from Dubai, in minutes. */
-  driveMinutes?: number | null;
   /** Google place id — stable, so it is safe to keep. */
   placeId?: string;
   /** Real photography of the property, fetched live via /api/place-photo. */

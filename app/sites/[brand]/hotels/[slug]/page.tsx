@@ -7,7 +7,6 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
-import { driveLabel } from '@/lib/weekend';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -64,9 +63,6 @@ export default async function StaycationHotelPage({
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
-    ...(hotel.driveMinutes
-      ? ([['From Dubai', `${driveLabel(hotel.driveMinutes)} drive`]] as [string, string][])
-      : []),
     ...(hotel.emirate ? [['Emirate', hotel.emirate] as [string, string]] : []),
     ...(hotel.area ? [['Area', hotel.area] as [string, string]] : []),
     ...(hotel.style ? [['Style', hotel.style] as [string, string]] : []),
@@ -179,16 +175,11 @@ export default async function StaycationHotelPage({
             </div>
           )}
 
-          {(hotel.gettingThere || hotel.transferDuration) && (
+          {hotel.gettingThere && (
             <div className="mt-12">
               <SectionTitle eyebrow="The journey in" title="Getting there" />
               <div className="mt-5 rounded-2xl bg-sand p-6">
-                {hotel.gettingThere && (
-                  <p className="text-[15px] leading-relaxed text-ink-soft">{hotel.gettingThere}</p>
-                )}
-                {hotel.transferDuration && (
-                  <p className="mt-2 text-sm font-semibold text-teal-deep">Drive time: {hotel.transferDuration}</p>
-                )}
+                <p className="text-[15px] leading-relaxed text-ink-soft">{hotel.gettingThere}</p>
               </div>
             </div>
           )}
