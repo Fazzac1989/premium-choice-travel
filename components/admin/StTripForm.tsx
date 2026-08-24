@@ -121,7 +121,14 @@ export default function StTripForm({
             <label className="field-label">Hero alt text</label>
             <input name="hero_alt" defaultValue={trip?.heroAlt} className="field" placeholder="Describe the hero image for accessibility" />
           </div>
-          <GalleryField label="Gallery images" images={gallery} onChange={setGallery} />
+          {/* The trip page no longer shows a gallery. These photographs still
+              feed the brochure, the trip PDF and the homepage features, so the
+              field stays — the label just no longer promises a gallery. */}
+          <GalleryField
+            label="Additional photographs — used in brochures and the trip PDF, not shown on the trip page"
+            images={gallery}
+            onChange={setGallery}
+          />
         </div>
       </section>
 
