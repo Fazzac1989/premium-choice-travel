@@ -208,6 +208,7 @@ export function mapHotel(row: any) {
     bestFor: row.best_for ?? [],
     featured: row.featured ?? false,
     status: row.status ?? 'published',
+    priceBand: row.price_band ?? null,
     priceGuide: row.price_guide ?? '',
     placeId: row.place_id ?? '',
     photos: row.photos ?? [],

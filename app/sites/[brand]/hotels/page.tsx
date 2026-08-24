@@ -7,6 +7,7 @@ import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import type { Hotel } from '@/lib/types';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import { findWeekend, weekendOptions } from '@/lib/weekend';
+import { PRICE_BANDS, PRICE_BASIS, priceBand } from '@/lib/price-bands';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,6 +26,7 @@ function Stars({ n }: { n: number | null | undefined }) {
 }
 
 function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }) {
+  const band = priceBand(h.priceBand);
   const photo = isPlacesConfigured() && h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
   return (
     <Link
@@ -70,6 +72,12 @@ function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }
             )}
           </div>
         )}
+        {band && (
+          <p className="mt-3 text-sm font-semibold text-ink">
+            {band.label}
+            <span className="font-normal text-ink-soft"> a night, roughly</span>
+          </p>
+        )}
         <p className="mt-auto pt-4 text-sm font-bold text-teal-deep">
           Ask about this hotel <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
         </p>
@@ -78,7 +86,7 @@ function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }
   );
 }
 
-type Filters = { when?: string; emirate?: string; stars?: string; meal?: string };
+type Filters = { when?: string; budget?: string; emirate?: string; stars?: string; meal?: string };
 
 export default async function StaycationHotelsPage({
   params,
@@ -94,6 +102,7 @@ export default async function StaycationHotelsPage({
   const all = await getStaycationHotels();
   const current: Filters = {
     when: searchParams.when ?? '',
+    budget: searchParams.budget ?? '',
     emirate: searchParams.emirate ?? '',
     stars: searchParams.stars ?? '',
     meal: searchParams.meal ?? '',
@@ -103,6 +112,7 @@ export default async function StaycationHotelsPage({
 
   const filtered = all.filter(
     (h) =>
+      (!current.budget || String(h.priceBand ?? '') === current.budget) &&
       (!current.emirate || h.emirate === current.emirate) &&
       (!current.stars || String(h.stars ?? '') === current.stars) &&
       (!current.meal || h.mealPlans.some((m: string) => m.toLowerCase() === current.meal!.toLowerCase()))
@@ -123,6 +133,9 @@ export default async function StaycationHotelsPage({
 
   const emirates = EMIRATES.filter((e) => all.some((h) => h.emirate === e));
   const starOptions = ['5', '4', '3'].filter((s) => all.some((h) => String(h.stars ?? '') === s));
+  // Bands only appear once someone has set them, so the row stays hidden
+  // rather than offering filters that match nothing.
+  const bandOptions = PRICE_BANDS.filter((b) => all.some((h) => h.priceBand === b.band));
   const mealOptions = MEAL_PLANS.filter((m) => all.some((h) => h.mealPlans.some((x: string) => x.toLowerCase() === m.toLowerCase())));
 
   const chip = (active: boolean, extra = '') =>
@@ -176,6 +189,26 @@ export default async function StaycationHotelsPage({
               </p>
             )}
           </div>
+
+          {/* Roughly what you want to spend */}
+          {bandOptions.length > 0 && (
+            <div className="mt-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">Roughly a night</p>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                <Link href={href({ budget: '' })} className={chip(!current.budget)}>Any budget</Link>
+                {bandOptions.map((b) => (
+                  <Link
+                    key={b.band}
+                    href={href({ budget: String(b.band) })}
+                    className={chip(current.budget === String(b.band))}
+                  >
+                    {b.label}
+                  </Link>
+                ))}
+              </div>
+              <p className="mt-2.5 max-w-lg text-xs text-ink-soft">{PRICE_BASIS}</p>
+            </div>
+          )}
 
           <div className="mt-6 border-t border-line pt-5">
             {/* Emirate */}

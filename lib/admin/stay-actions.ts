@@ -46,6 +46,7 @@ export async function saveHotel(_prev: StayActionState, formData: FormData): Pro
     best_for: parseJson<string[]>(formData.get('best_for'), []),
     featured: formData.get('featured') === 'on',
     status: formData.get('status') === 'draft' ? 'draft' : 'published',
+    price_band: formData.get('price_band') ? Number(formData.get('price_band')) : null,
     price_guide: String(formData.get('price_guide') ?? '').trim() || null,
   };
 

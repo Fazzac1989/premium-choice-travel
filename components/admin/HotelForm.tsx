@@ -7,6 +7,7 @@ import { GalleryField, ImageField } from '@/components/admin/ImageField';
 import ListEditor from '@/components/admin/ListEditor';
 import SectionsEditor from '@/components/admin/SectionsEditor';
 import type { Destination, GuideSection, Hotel } from '@/lib/types';
+import { PRICE_BANDS, PRICE_BASIS } from '@/lib/price-bands';
 
 function SaveButton() {
   const { pending } = useFormStatus();
@@ -105,6 +106,16 @@ export default function HotelForm({
         <div className="sm:col-span-2">
           <label className="field-label">One-line summary (shown on journey cards)</label>
           <textarea name="description" rows={2} defaultValue={hotel?.description} className="field" placeholder="One or two editorial sentences — no rates or availability claims." />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="field-label">Price band (filterable on the website)</label>
+          <select name="price_band" defaultValue={hotel?.priceBand ?? ''} className="field">
+            <option value="">Not set — hidden from the site</option>
+            {PRICE_BANDS.map((b) => (
+              <option key={b.band} value={b.band}>{b.label}</option>
+            ))}
+          </select>
+          <p className="mt-1 text-xs text-ink-soft">{PRICE_BASIS}</p>
         </div>
         <div className="sm:col-span-2">
           <label className="field-label">Guide price (optional — always shown as guidance, never a quote)</label>

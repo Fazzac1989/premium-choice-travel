@@ -8,6 +8,7 @@ import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
+import { PRICE_BASIS, priceBand } from '@/lib/price-bands';
 
 export const dynamic = 'force-dynamic';
 
@@ -61,8 +62,11 @@ export default async function StaycationHotelPage({
   const hasOwnPhotography = galleryImages.length > 0;
   const credits = Array.from(new Set(placePhotos.map((p: { credit: string }) => p.credit).filter(Boolean)));
 
+  const band = priceBand(hotel.priceBand);
+
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
+    ...(band ? [['Roughly', `${band.label} a night`] as [string, string]] : []),
     ...(hotel.emirate ? [['Emirate', hotel.emirate] as [string, string]] : []),
     ...(hotel.area ? [['Area', hotel.area] as [string, string]] : []),
     ...(hotel.style ? [['Style', hotel.style] as [string, string]] : []),
@@ -206,12 +210,12 @@ export default async function StaycationHotelPage({
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <div className="rounded-2xl bg-ink p-7 text-white">
             <h3 className="font-serif text-xl">Check dates at {hotel.name}</h3>
-            {hotel.priceGuide && (
-              <p className="mt-2 rounded-lg bg-white/10 px-3 py-2 text-sm text-white/85">
-                <span className="font-semibold text-teal">Guide: </span>
-                {hotel.priceGuide}
-                <span className="block text-[11px] text-white/50">Guidance only — your price is confirmed when we quote.</span>
-              </p>
+            {(band || hotel.priceGuide) && (
+              <div className="mt-2 rounded-lg bg-white/10 px-3 py-2 text-sm text-white/85">
+                {band && <p className="font-semibold text-teal">{band.long}</p>}
+                {hotel.priceGuide && <p className={band ? 'mt-1' : ''}>{hotel.priceGuide}</p>}
+                <p className="mt-1 text-[11px] leading-relaxed text-white/50">{PRICE_BASIS}</p>
+              </div>
             )}
             <div className="mt-4">
               <AvailabilityCheck

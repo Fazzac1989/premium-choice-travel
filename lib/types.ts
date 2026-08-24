@@ -93,6 +93,8 @@ export type Hotel = {
   featured?: boolean;
   /** 'draft' hotels are hidden from the websites. */
   status?: 'draft' | 'published';
+  /** Rough price band, 1 (cheapest) to 4 — see lib/price-bands.ts. */
+  priceBand?: number | null;
   /** Admin-entered guide price text — always shown as guidance, never a quote. */
   priceGuide?: string;
   /** Google place id — stable, so it is safe to keep. */
