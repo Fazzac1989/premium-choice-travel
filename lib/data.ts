@@ -209,6 +209,8 @@ export function mapHotel(row: any) {
     featured: row.featured ?? false,
     status: row.status ?? 'published',
     priceGuide: row.price_guide ?? '',
+    placeId: row.place_id ?? '',
+    photos: row.photos ?? [],
   };
 }
 

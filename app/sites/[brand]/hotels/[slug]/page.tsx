@@ -6,6 +6,8 @@ import AvailabilityCheck from '@/components/AvailabilityCheck';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
+import { placePhotoSrc } from '@/lib/images/google-places';
+import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,7 +41,20 @@ export default async function StaycationHotelPage({
   const hotel = (await getStaycationHotels()).find((h) => hotelSlug(h.name) === params.slug);
   if (!hotel) notFound();
 
-  const heroImage = hotel.image || hotel.gallery[0] || brand.heroImage;
+  // Real photography of the property, then anything curated by hand, then a
+  // scenic fallback that the page labels honestly as scenery.
+  const placePhotos = (hotel.photos ?? []).map((p: PlacePhotoRef) => ({
+    url: placePhotoSrc(p.name, 1600),
+    alt: hotel.name,
+    credit: p.attribution,
+  }));
+  const galleryImages = [
+    ...placePhotos,
+    ...hotel.gallery.map((url: string) => ({ url, alt: hotel.name, credit: '' })),
+  ];
+  const heroImage = galleryImages[0]?.url || hotel.image || brand.heroImage;
+  const hasOwnPhotography = galleryImages.length > 0;
+  const credits = Array.from(new Set(placePhotos.map((p: { credit: string }) => p.credit).filter(Boolean)));
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
@@ -64,7 +79,7 @@ export default async function StaycationHotelPage({
             {[hotel.emirate, hotel.area, hotel.style].filter(Boolean).join(' · ')}
           </p>
           <h1 className="mt-2 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{hotel.name}</h1>
-          {!hotel.image && !hotel.gallery.length && (
+          {!hasOwnPhotography && (
             <p className="mt-2 text-xs text-white/60">Scenic photography shown — hotel imagery coming soon.</p>
           )}
         </div>
@@ -131,11 +146,24 @@ export default async function StaycationHotelPage({
           {hotel.restaurants.length > 0 && (
             <div className="mt-12">
               <SectionTitle eyebrow="Eat & drink" title="Restaurants & bars" />
-              <div className="mt-6 space-y-6">
-                {hotel.restaurants.map((r: { heading: string; body: string }, i: number) => (
-                  <div key={i} className="border-l-2 border-teal pl-6">
-                    <h3 className="font-serif text-xl text-ink">{r.heading}</h3>
-                    <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{r.body}</p>
+              <div className="mt-6 grid gap-6 sm:grid-cols-2">
+                {hotel.restaurants.map((r: VenueSection, i: number) => (
+                  <div key={i} className="overflow-hidden rounded-2xl border border-line">
+                    {r.photo && (
+                      <div className="relative aspect-[16/10] bg-sand">
+                        <Image
+                          src={placePhotoSrc(r.photo, 800)}
+                          alt={r.heading}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <h3 className="font-serif text-xl text-ink">{r.heading}</h3>
+                      <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{r.body}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -156,15 +184,21 @@ export default async function StaycationHotelPage({
             </div>
           )}
 
-          {hotel.gallery.length > 0 && (
+          {galleryImages.length > 0 && (
             <div className="mt-12">
               <SectionTitle eyebrow="Gallery" title={`${hotel.name}, in pictures`} />
               <div className="mt-7">
                 <GalleryLightbox
-                  images={hotel.gallery.map((url: string) => ({ url, alt: hotel.name }))}
+                  images={galleryImages.map(({ url, alt }) => ({ url, alt }))}
                   title={hotel.name}
                 />
               </div>
+              {credits.length > 0 && (
+                <p className="mt-3 text-xs text-ink-soft">
+                  Photography via Google — {credits.slice(0, 6).join(', ')}
+                  {credits.length > 6 ? ' and others' : ''}.
+                </p>
+              )}
             </div>
           )}
         </div>

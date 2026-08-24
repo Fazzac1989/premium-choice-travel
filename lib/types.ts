@@ -1,5 +1,11 @@
 export type GuideSection = { heading: string; body: string };
 
+/** A hotel photo from the Google Places API — always shown with attribution. */
+export type PlacePhotoRef = { name: string; width: number; height: number; attribution: string };
+
+/** A restaurant or bar, optionally with its own real photograph. */
+export type VenueSection = GuideSection & { placeId?: string; photo?: string; attribution?: string };
+
 export type GalleryImage = { url: string; alt: string };
 
 /** 1-12 month numbers per suitability band. */
@@ -69,7 +75,7 @@ export type Hotel = {
   /** Room categories with a short description each. */
   roomTypes: GuideSection[];
   /** Restaurants & bars with a short description each. */
-  restaurants: GuideSection[];
+  restaurants: VenueSection[];
   /** Available board bases, e.g. "Bed & Breakfast", "All-Inclusive". */
   mealPlans: string[];
   /** How to get there, in prose. */
@@ -89,6 +95,10 @@ export type Hotel = {
   status?: 'draft' | 'published';
   /** Admin-entered guide price text — always shown as guidance, never a quote. */
   priceGuide?: string;
+  /** Google place id — stable, so it is safe to keep. */
+  placeId?: string;
+  /** Real photography of the property, fetched live via /api/place-photo. */
+  photos?: PlacePhotoRef[];
 };
 
 export type Experience = {

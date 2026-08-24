@@ -5,6 +5,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import type { Hotel } from '@/lib/types';
+import { placePhotoSrc } from '@/lib/images/google-places';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,15 +24,16 @@ function Stars({ n }: { n: number | null | undefined }) {
 }
 
 function HotelCard({ h, base }: { h: Hotel; base: string }) {
+  const photo = h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
   return (
     <Link
       href={`${base}/hotels/${hotelSlug(h.name)}`}
       className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-xl hover:shadow-ink/10"
     >
       <div className="relative aspect-[16/10] bg-ink">
-        {h.image || h.gallery[0] ? (
+        {photo ? (
           <Image
-            src={h.image || h.gallery[0]}
+            src={photo}
             alt={h.name}
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
