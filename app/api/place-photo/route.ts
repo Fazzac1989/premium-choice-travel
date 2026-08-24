@@ -41,6 +41,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (e: any) {
     console.error('[place-photo]', e?.message);
-    return NextResponse.json({ error: 'Photo unavailable' }, { status: 502 });
+    return NextResponse.json({ error: 'Photo unavailable', reason: String(e?.message ?? '').slice(0, 200) }, { status: 502 });
   }
 }

@@ -107,7 +107,12 @@ export async function getPhotoUri(photoName: string, maxWidthPx = 1600): Promise
     `${PLACES}/${photoName}/media?maxWidthPx=${maxWidthPx}&skipHttpRedirect=true&key=${key()}`,
     { cache: 'no-store' },
   );
-  if (!res.ok) return null;
+  if (!res.ok) {
+    // Surface Google's own reason — a blocked key and an expired handle look
+    // identical from the outside otherwise.
+    const detail = await res.text();
+    throw new Error(`Places media ${res.status}: ${detail.slice(0, 200)}`);
+  }
   return (await res.json()).photoUri ?? null;
 }
 
