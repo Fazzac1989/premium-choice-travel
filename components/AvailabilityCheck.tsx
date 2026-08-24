@@ -14,17 +14,22 @@ export default function AvailabilityCheck({
   hotelName,
   emirate = '',
   mealPlans = [],
+  defaultCheckIn = '',
+  defaultNights = 2,
 }: {
   hotelName: string;
   emirate?: string;
   mealPlans?: string[];
+  /** Pre-filled from the weekend chosen on the hotels page. */
+  defaultCheckIn?: string;
+  defaultNights?: number;
 }) {
   const [pending, startTransition] = useTransition();
   const [done, setDone] = useState('');
   const [error, setError] = useState('');
   const [form, setForm] = useState({
-    checkIn: '',
-    nights: 2,
+    checkIn: defaultCheckIn,
+    nights: defaultNights,
     adults: 2,
     childrenAges: '',
     mealPlan: 'No preference',

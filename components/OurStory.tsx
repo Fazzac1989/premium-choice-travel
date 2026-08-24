@@ -36,7 +36,7 @@ const VARIANTS: Record<string, Partial<Variant>> = {
   staycations: {
     uaeIntro: 'We know that a weekend away in the UAE is its own thing.',
     uaeDetail:
-      'The clock starts on a Thursday evening. The drive matters as much as the destination. School holidays land differently here, the summer asks for indoor pools and shaded beaches, and the cooler months are gone before you have booked them. Sometimes you want the children exhausted by lunchtime; sometimes you want a quiet room, a spa and nobody asking you anything for two days.',
+      'The clock starts on a Friday. The drive matters as much as the destination. School holidays land differently here, the summer asks for indoor pools and shaded beaches, and the cooler months are gone before you have booked them. Sometimes you want the children exhausted by lunchtime; sometimes you want a quiet room, a spa and nobody asking you anything for two days.',
     rightChoice: [
       'The right emirate for the weekend you want.',
       'The right room for a family of four.',

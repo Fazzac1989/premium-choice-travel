@@ -7,6 +7,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
+import { driveLabel } from '@/lib/weekend';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -31,8 +32,10 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
 
 export default async function StaycationHotelPage({
   params,
+  searchParams,
 }: {
   params: { brand: string; slug: string };
+  searchParams: { from?: string; nights?: string };
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.slug !== 'staycations') notFound();
@@ -61,6 +64,9 @@ export default async function StaycationHotelPage({
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
+    ...(hotel.driveMinutes
+      ? ([['From Dubai', `${driveLabel(hotel.driveMinutes)} drive`]] as [string, string][])
+      : []),
     ...(hotel.emirate ? [['Emirate', hotel.emirate] as [string, string]] : []),
     ...(hotel.area ? [['Area', hotel.area] as [string, string]] : []),
     ...(hotel.style ? [['Style', hotel.style] as [string, string]] : []),
@@ -217,7 +223,13 @@ export default async function StaycationHotelPage({
               </p>
             )}
             <div className="mt-4">
-              <AvailabilityCheck hotelName={hotel.name} emirate={hotel.emirate ?? ''} mealPlans={hotel.mealPlans} />
+              <AvailabilityCheck
+                hotelName={hotel.name}
+                emirate={hotel.emirate ?? ''}
+                mealPlans={hotel.mealPlans}
+                defaultCheckIn={searchParams.from ?? ''}
+                defaultNights={Number(searchParams.nights) || 2}
+              />
             </div>
             <p className="mt-4 text-center text-xs text-white/60">
               or call <a className="font-semibold text-teal" href="tel:+97144206965">+971 4 420 6965</a>
