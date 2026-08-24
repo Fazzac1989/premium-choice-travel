@@ -64,7 +64,24 @@ async function photosFor(hotel: any) {
     const photos = await getPlacePhotos(hotel.place_id);
     return { placeId: hotel.place_id, photos, name: hotel.name };
   }
-  const match = await findPlace(hotel.name, `${hotel.area ? `${hotel.area}, ` : ''}${hotel.emirate}, United Arab Emirates`);
+  const bias = `${hotel.area ? `${hotel.area}, ` : ''}${hotel.emirate}, United Arab Emirates`;
+  // Directory names carry brand suffixes — "Bab Al Shams, A Rare Finds Desert
+  // Resort" — that Google's text search reads too literally and misses on.
+  // Falling back to the name before the first comma finds them.
+  // A narrow area bias can also miss — "Al Qudra desert" is not how Google
+  // files it — so the last attempt drops back to just the emirate.
+  const short = hotel.name.split(',')[0].trim();
+  const wide = `${hotel.emirate}, United Arab Emirates`;
+  const attempts: [string, string][] = [
+    [hotel.name, bias],
+    ...(short !== hotel.name ? ([[short, bias]] as [string, string][]) : []),
+    [short, wide],
+  ];
+  let match = null;
+  for (const [q, b] of attempts) {
+    match = await findPlace(q, b);
+    if (match) break;
+  }
   if (!match) return null;
   return { placeId: match.placeId, photos: match.photos, name: match.displayName };
 }
@@ -137,8 +154,10 @@ async function main() {
             photos,
             photos_refreshed_at: new Date().toISOString(),
             restaurants,
-            // The first photo doubles as the card and hero image.
-            image: photos[0] ? `/api/place-photo?name=${encodeURIComponent(photos[0].name)}&w=1600` : h.image,
+            // 'image' is left alone for a hand-picked photograph. The pages read
+            // the card and hero straight from 'photos', so if the Places key
+            // ever goes missing they fall back to scenery rather than to a
+            // proxy URL that can no longer be served.
           })
           .eq('id', h.id);
         if (upErr) throw new Error(upErr.message);

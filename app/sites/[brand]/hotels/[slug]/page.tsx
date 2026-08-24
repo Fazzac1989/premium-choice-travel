@@ -6,7 +6,7 @@ import AvailabilityCheck from '@/components/AvailabilityCheck';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { placePhotoSrc } from '@/lib/images/google-places';
+import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -43,7 +43,10 @@ export default async function StaycationHotelPage({
 
   // Real photography of the property, then anything curated by hand, then a
   // scenic fallback that the page labels honestly as scenery.
-  const placePhotos = (hotel.photos ?? []).map((p: PlacePhotoRef) => ({
+  // Without the Places key the proxy cannot serve anything, so fall back to
+  // scenery rather than filling the page with broken images.
+  const photosUsable = isPlacesConfigured();
+  const placePhotos = (photosUsable ? hotel.photos ?? [] : []).map((p: PlacePhotoRef) => ({
     url: placePhotoSrc(p.name, 1600),
     alt: hotel.name,
     credit: p.attribution,
@@ -149,7 +152,7 @@ export default async function StaycationHotelPage({
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
                 {hotel.restaurants.map((r: VenueSection, i: number) => (
                   <div key={i} className="overflow-hidden rounded-2xl border border-line">
-                    {r.photo && (
+                    {photosUsable && r.photo && (
                       <div className="relative aspect-[16/10] bg-sand">
                         <Image
                           src={placePhotoSrc(r.photo, 800)}

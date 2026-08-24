@@ -5,7 +5,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import type { Hotel } from '@/lib/types';
-import { placePhotoSrc } from '@/lib/images/google-places';
+import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,7 @@ function Stars({ n }: { n: number | null | undefined }) {
 }
 
 function HotelCard({ h, base }: { h: Hotel; base: string }) {
-  const photo = h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
+  const photo = isPlacesConfigured() && h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
   return (
     <Link
       href={`${base}/hotels/${hotelSlug(h.name)}`}
