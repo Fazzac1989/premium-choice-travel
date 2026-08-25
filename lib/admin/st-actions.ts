@@ -74,14 +74,38 @@ async function saveItineraryDays(
     if (k && !byDescription.has(k)) byDescription.set(k, r);
   }
 
-  for (let i = 0; i < itinerary.length; i++) {
-    const day = itinerary[i];
+  // Pair every incoming day with an existing row before writing anything, so
+  // the plan is settled and no write depends on a half-applied ordering.
+  const planned = itinerary.map((day, i) => {
     const viaDescription = byDescription.get(key(day.description));
     const match =
       viaDescription && unclaimed.has(viaDescription.id)
         ? viaDescription
         : rows.find((r: any) => r.sort_order === i && unclaimed.has(r.id)) ?? null;
+    if (match) unclaimed.delete(match.id);
+    return { day, i, match };
+  });
 
+  // Days the editor removed — cleared first so their slots are free.
+  if (unclaimed.size > 0) {
+    const { error } = await db.from('itinerary_days').delete().in('id', Array.from(unclaimed));
+    if (error) return error.message;
+  }
+
+  // itinerary_days is unique on (trip_id, sort_order), so two rows cannot share
+  // a slot even in passing. Moving each day straight to its new position fails
+  // the moment one lands on a slot its neighbour has not vacated yet — which is
+  // any reorder, any deleted day, and any two days that share a description.
+  // Park every surviving row below the existing range first; the final order can
+  // then be written in any sequence without colliding.
+  const park = Math.min(0, ...rows.map((r: any) => r.sort_order ?? 0)) - 1;
+  for (const { i, match } of planned) {
+    if (!match) continue;
+    const { error } = await db.from('itinerary_days').update({ sort_order: park - i }).eq('id', match.id);
+    if (error) return error.message;
+  }
+
+  for (const { day, i, match } of planned) {
     const patch: Record<string, unknown> = {
       trip_id: tripId,
       sort_order: i,
@@ -94,7 +118,6 @@ async function saveItineraryDays(
     };
 
     if (match) {
-      unclaimed.delete(match.id);
       if (key(match.description) !== key(day.description)) Object.assign(patch, STRUCTURED_COLUMNS);
       const { error } = await db.from('itinerary_days').update(patch).eq('id', match.id);
       if (error) return error.message;
@@ -104,11 +127,6 @@ async function saveItineraryDays(
     }
   }
 
-  // Days the editor removed.
-  if (unclaimed.size > 0) {
-    const { error } = await db.from('itinerary_days').delete().in('id', Array.from(unclaimed));
-    if (error) return error.message;
-  }
   return null;
 }
 
