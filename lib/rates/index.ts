@@ -1,5 +1,6 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { liteapi } from './liteapi';
 import { hotelbeds } from './hotelbeds';
 import { stub } from './stub';
 import type { DisplayRate, RateProvider, RateQuote } from './types';
@@ -14,7 +15,7 @@ import type { DisplayRate, RateProvider, RateQuote } from './types';
  */
 
 // A real supplier always wins; the sample only runs when nothing else is set.
-const PROVIDERS: RateProvider[] = [hotelbeds, stub];
+const PROVIDERS: RateProvider[] = [liteapi, hotelbeds, stub];
 
 /** How long a quote is treated as good enough to show. */
 const CACHE_HOURS = 12;
