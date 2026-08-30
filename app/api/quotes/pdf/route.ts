@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { createElement } from 'react';
 import { renderToBuffer } from '@react-pdf/renderer';
 import { getQuoteByToken } from '@/lib/quotes';
+import { getPayments } from '@/lib/payments';
 import QuoteDoc from '@/lib/pdf/quote-doc';
 
 export const runtime = 'nodejs';
@@ -13,8 +14,9 @@ export async function GET(request: NextRequest) {
   if (!quote) return NextResponse.json({ ok: false, error: 'Quote not found' }, { status: 404 });
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
+  const payments = await getPayments(quote.id);
   try {
-    const buffer = await renderToBuffer(createElement(QuoteDoc, { quote, siteUrl }) as any);
+    const buffer = await renderToBuffer(createElement(QuoteDoc, { quote, siteUrl, payments }) as any);
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/pdf',

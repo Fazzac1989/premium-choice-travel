@@ -1,5 +1,8 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import type { Payment } from '@/lib/payments-shared';
+
+export type { Payment };
 
 /**
  * The payment plan attached to a quote.
@@ -7,17 +10,6 @@ import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
  * A record of what was agreed and what has arrived — not a payment processor.
  * Nothing here can take money, and nothing that could take money is stored.
  */
-
-export type Payment = {
-  id: number;
-  label: string;
-  amount: number;
-  dueDate: string;
-  paidAt: string;
-  method: string;
-  reference: string;
-  notes: string;
-};
 
 export function mapPayment(row: any): Payment {
   return {

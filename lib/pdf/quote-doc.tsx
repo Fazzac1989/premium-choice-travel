@@ -7,6 +7,7 @@ import {
   travellerCount,
   type Quote,
 } from '@/lib/quote-math';
+import type { Payment } from '@/lib/payments-shared';
 
 const INK = '#16242E';
 const INK_SOFT = '#425964';
@@ -58,7 +59,22 @@ const s = StyleSheet.create({
   },
   galleryRow: { flexDirection: 'row', gap: 8, marginTop: 20 },
   galleryImg: { flex: 1, height: 120, objectFit: 'cover', borderRadius: 3 },
+  payRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingVertical: 9, borderBottomWidth: 0.5, borderBottomColor: '#E6E6E6' },
+  payLabel: { fontSize: 11, color: INK },
+  payWhen: { fontSize: 9, color: INK_SOFT, marginTop: 2 },
+  payPaid: { fontSize: 9, color: TEAL, marginTop: 2 },
+  payAmt: { fontSize: 11, color: INK },
+  payNote: { fontSize: 8.5, color: INK_SOFT, marginTop: 12, lineHeight: 1.5 },
 });
+
+function longDate(d: string) {
+  return new Date(d + 'T00:00:00Z').toLocaleDateString('en-GB', {
+    timeZone: 'UTC',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
 
 function Footer({ quote }: { quote: Quote }) {
   return (
@@ -69,11 +85,23 @@ function Footer({ quote }: { quote: Quote }) {
   );
 }
 
-export default function QuoteDoc({ quote, siteUrl }: { quote: Quote; siteUrl: string }) {
+export default function QuoteDoc({
+  quote,
+  siteUrl,
+  payments = [],
+}: {
+  quote: Quote;
+  siteUrl: string;
+  /** The agreed instalments. The PDF is what gets forwarded to a partner, so
+   *  it has to answer "how much now?" without them opening the link again. */
+  payments?: Payment[];
+}) {
   const total = quoteTotal(quote.lines);
   const pp = perPerson(quote);
   const travellers = travellerCount(quote);
   const gallery = quote.images.slice(0, 3);
+  const paidSoFar = payments.filter((p) => p.paidAt).reduce((sum, p) => sum + p.amount, 0);
+  const outstanding = payments.reduce((sum, p) => sum + p.amount, 0) - paidSoFar;
 
   return (
     <Document title={`${quote.title} — ${quote.ref}`} author="Premium Choice Travel">
@@ -210,6 +238,40 @@ export default function QuoteDoc({ quote, siteUrl }: { quote: Quote; siteUrl: st
             <View style={s.pps}>
               <Text style={s.ppsAmount}>{formatMoney(quote.currency, pp)}</Text>
               <Text style={s.ppsLabel}>Per person</Text>
+            </View>
+          )}
+
+          {payments.length > 0 && (
+            <View style={{ marginTop: 28 }}>
+              <Text style={s.eyebrow}>The plan</Text>
+              <Text style={s.h2}>How you pay</Text>
+              {payments.map((p) => (
+                <View style={s.payRow} key={p.id}>
+                  <View>
+                    <Text style={s.payLabel}>{p.label}</Text>
+                    {p.paidAt ? (
+                      <Text style={s.payPaid}>Received, thank you</Text>
+                    ) : (
+                      <Text style={s.payWhen}>
+                        {p.dueDate ? `Due ${longDate(p.dueDate)}` : 'Due on confirmation'}
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={s.payAmt}>{formatMoney(quote.currency, p.amount)}</Text>
+                </View>
+              ))}
+              {outstanding > 0 && paidSoFar > 0 && (
+                <View style={s.totalRow}>
+                  <Text style={s.totalLabel}>Still to pay</Text>
+                  <Text style={[s.priceAmt, s.totalLabel]}>
+                    {formatMoney(quote.currency, outstanding)}
+                  </Text>
+                </View>
+              )}
+              <Text style={s.payNote}>
+                We will send payment details when you are ready to go ahead. No payment is taken
+                from this document.
+              </Text>
             </View>
           )}
         </View>
