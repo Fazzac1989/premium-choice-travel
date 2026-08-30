@@ -9,6 +9,8 @@ import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 import { PRICE_BASIS, priceBand } from '@/lib/price-bands';
+import LivePrice from '@/components/LivePrice';
+import { ratesEnabled } from '@/lib/rates';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,6 +65,9 @@ export default async function StaycationHotelPage({
   const credits = Array.from(new Set(placePhotos.map((p: { credit: string }) => p.credit).filter(Boolean)));
 
   const band = priceBand(hotel.priceBand);
+  // An indicative price is offered only when a supplier is connected and this
+  // hotel is mapped to it; otherwise the page is exactly as it is today.
+  const canQuote = ratesEnabled() && Boolean(hotel.supplierCode) && Boolean(searchParams.from);
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
@@ -215,6 +220,15 @@ export default async function StaycationHotelPage({
                 {band && <p className="font-semibold text-teal">{band.long}</p>}
                 {hotel.priceGuide && <p className={band ? 'mt-1' : ''}>{hotel.priceGuide}</p>}
                 <p className="mt-1 text-[11px] leading-relaxed text-white/50">{PRICE_BASIS}</p>
+              </div>
+            )}
+            {canQuote && (
+              <div className="mt-3">
+                <LivePrice
+                  hotelId={hotel.id}
+                  checkIn={searchParams.from ?? ''}
+                  nights={Number(searchParams.nights) || 2}
+                />
               </div>
             )}
             <div className="mt-4">

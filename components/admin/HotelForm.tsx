@@ -108,6 +108,14 @@ export default function HotelForm({
           <textarea name="description" rows={2} defaultValue={hotel?.description} className="field" placeholder="One or two editorial sentences — no rates or availability claims." />
         </div>
         <div className="sm:col-span-2">
+          <label className="field-label">Supplier hotel code (for live pricing)</label>
+          <input name="supplier_code" defaultValue={hotel?.supplierCode ?? ''} className="field" placeholder="The bed bank's code for this hotel — leave blank and it is priced by hand" />
+          <p className="mt-1 text-xs text-ink-soft">
+            With a code, the hotel page can show an indicative price on request. Without one it
+            shows nothing and the enquiry goes to a specialist, which is the default.
+          </p>
+        </div>
+        <div className="sm:col-span-2">
           <label className="field-label">Price band (filterable on the website)</label>
           <select name="price_band" defaultValue={hotel?.priceBand ?? ''} className="field">
             <option value="">Not set — hidden from the site</option>

@@ -93,6 +93,8 @@ export type Hotel = {
   featured?: boolean;
   /** 'draft' hotels are hidden from the websites. */
   status?: 'draft' | 'published';
+  /** The hotel's id in the bed bank's catalogue — null means no live pricing. */
+  supplierCode?: string | null;
   /** Rough price band, 1 (cheapest) to 4 — see lib/price-bands.ts. */
   priceBand?: number | null;
   /** Admin-entered guide price text — always shown as guidance, never a quote. */
