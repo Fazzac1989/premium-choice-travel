@@ -231,8 +231,8 @@ export default async function StaycationHotelPage({
             <div className="mt-4">
               {canBook ? (
                 <BookingFlow
-                  hotelId={hotel.id}
                   hotelName={hotel.name}
+                  bookHref={`${base}/hotels/${params.slug}/book`}
                   defaultCheckIn={searchParams.from ?? ''}
                   defaultNights={Number(searchParams.nights) || 2}
                 />
