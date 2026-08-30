@@ -28,6 +28,23 @@ export function ratesEnabled() {
   return activeProvider() !== null;
 }
 
+/** The cookie a preview visitor carries. */
+export const RATES_PREVIEW_COOKIE = 'pct-rates-preview';
+
+/**
+ * Whether this visitor may see live prices.
+ *
+ * Two switches, because "live on the real domain" and "visible to every
+ * customer" are different things. While the key is a sandbox one the prices
+ * are realistic but not bookable, so a booking request against them is one we
+ * might not be able to honour. RATES_PUBLIC=1 opens it to everyone; until
+ * then, only someone holding the preview cookie sees it.
+ */
+export function ratesVisible(hasPreviewCookie: boolean) {
+  if (!ratesEnabled()) return false;
+  return process.env.RATES_PUBLIC === '1' || hasPreviewCookie;
+}
+
 function toDisplay(quote: RateQuote, cached: boolean): DisplayRate {
   return {
     status: 'quoted',

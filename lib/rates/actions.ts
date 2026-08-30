@@ -1,11 +1,22 @@
 'use server';
 
-import { findCachedOffer, getOffers, getRate } from '@/lib/rates';
+import { RATES_PREVIEW_COOKIE, findCachedOffer, getOffers, getRate, ratesVisible } from '@/lib/rates';
+import { cookies } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { toPublicOffer, type DisplayRate, type PublicRoomOffer } from '@/lib/rates/types';
 import { emailRows, emailShell, sendEmail } from '@/lib/email';
+
 import { emailBrand } from '@/lib/email-brand';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
+
+/**
+ * A server action is reachable by anyone who knows its id, so the same gate
+ * that hides the flow on the page has to guard the actions themselves —
+ * otherwise the sandbox prices are one crafted request away from being public.
+ */
+function ratesAllowed() {
+  return ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+}
 
 /**
  * Price one hotel for one set of dates, on request.
@@ -56,6 +67,7 @@ export async function roomOffers(params: {
   adults: number;
   children?: number;
 }): Promise<{ ok: boolean; offers: PublicRoomOffer[]; message?: string }> {
+  if (!ratesAllowed()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
   if (!isSupabaseConfigured()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(params.checkIn)) return { ok: false, offers: [], message: 'Pick a check-in date.' };
 
@@ -115,6 +127,7 @@ export async function submitBookingRequest(payload: {
   const email = payload.email.trim();
   if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
+  if (!ratesAllowed()) return { ok: false, message: 'Something went wrong — please call us.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Something went wrong — please call us.' };
 
   const nights = Math.max(1, Math.min(30, Number(payload.nights) || 1));

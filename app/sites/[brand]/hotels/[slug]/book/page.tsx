@@ -3,7 +3,8 @@ import BookingPage from '@/components/BookingPage';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { ratesEnabled } from '@/lib/rates';
+import { RATES_PREVIEW_COOKIE, ratesVisible } from '@/lib/rates';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,7 +35,8 @@ export default async function HotelBookingPage({
   const hotelHref = `${base}/hotels/${params.slug}`;
   // Nothing to book without a supplier or a date — send them back to the hotel
   // rather than showing an empty page.
-  if (!ratesEnabled() || !hotel.supplierCode || !/^\d{4}-\d{2}-\d{2}$/.test(searchParams.from ?? '')) {
+  const visible = ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+  if (!visible || !hotel.supplierCode || !/^\d{4}-\d{2}-\d{2}$/.test(searchParams.from ?? '')) {
     redirect(hotelHref);
   }
 

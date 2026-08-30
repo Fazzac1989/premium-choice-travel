@@ -10,7 +10,8 @@ import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 import { PRICE_BASIS, priceBand } from '@/lib/price-bands';
 import BookingFlow from '@/components/BookingFlow';
-import { ratesEnabled } from '@/lib/rates';
+import { RATES_PREVIEW_COOKIE, ratesVisible } from '@/lib/rates';
+import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,7 +70,8 @@ export default async function StaycationHotelPage({
   // hotel is mapped to it; otherwise the page is exactly as it is today.
   // With a supplier connected and this hotel mapped, the panel becomes a
   // dates → rooms → request flow. Otherwise it stays the enquiry form.
-  const canBook = ratesEnabled() && Boolean(hotel.supplierCode);
+  const canBook =
+    ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1') && Boolean(hotel.supplierCode);
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
