@@ -227,8 +227,19 @@ export function mapExperience(row: any) {
   };
 }
 
+/**
+ * Accents are folded rather than dropped, so Le Méridien is "le-meridien" and
+ * not "le-mridien" — three hotels were carrying a misspelt URL, and the
+ * sitemap was handing those to Google.
+ */
 export const hotelSlug = (name: string) =>
-  name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/[\s_-]+/g, '-');
+  name
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s_-]+/g, '-');
 
 export async function getHotels() {
   if (!isSupabaseConfigured()) return [];
