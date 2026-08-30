@@ -1,4 +1,4 @@
-import type { RateProvider, RateQuery, RateQuote } from './types';
+import type { RateProvider, RateQuery, RateQuote, RoomOffer } from './types';
 
 /**
  * LiteAPI (Nuitée Connect) — a self-service hotel rate feed.
@@ -84,3 +84,83 @@ export const liteapi: RateProvider = {
     };
   },
 };
+
+/**
+ * Room-level offers for one hotel and one set of dates.
+ *
+ * Separate from quote() because it is a heavier call — a full rate search
+ * rather than the cheapest-only endpoint — and is only made once a customer
+ * has chosen dates and asked to see rooms.
+ */
+export async function liteapiOffers(query: RateQuery): Promise<RoomOffer[]> {
+  const key = process.env.LITEAPI_KEY;
+  if (!key) return [];
+
+  const res = await fetch(`${BASE}/hotels/rates`, {
+    method: 'POST',
+    headers: { 'X-API-Key': key, 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      hotelIds: [query.supplierCode],
+      occupancies: [
+        { adults: query.adults, children: Array.from({ length: query.children }, () => 8) },
+      ],
+      checkin: query.checkIn,
+      checkout: addDays(query.checkIn, query.nights),
+      currency: 'AED',
+      guestNationality: 'AE',
+      maxRatesPerHotel: 12,
+      timeout: 10,
+    }),
+    cache: 'no-store',
+  });
+
+  if (!res.ok) throw new Error(`LiteAPI ${res.status}: ${(await res.text()).slice(0, 200)}`);
+
+  const json: any = await res.json();
+  const roomTypes = json?.data?.[0]?.roomTypes ?? [];
+  const offers: RoomOffer[] = [];
+
+  for (const rt of roomTypes) {
+    const rate = rt?.rates?.[0];
+    if (!rate || !rt.offerId) continue;
+
+    // suggestedSellingPrice is the customer figure; retailRate.total is cost.
+    const sell = Number(rate.retailRate?.suggestedSellingPrice?.[0]?.amount);
+    const net = Number(rate.retailRate?.total?.[0]?.amount);
+    const total = Number.isFinite(sell) && sell > 0 ? sell : net;
+    if (!Number.isFinite(total) || total <= 0) continue;
+
+    const tag = rate.cancellationPolicies?.refundableTag;
+    offers.push({
+      offerId: String(rt.offerId),
+      roomName: String(rate.name ?? rt.name ?? 'Room'),
+      board: String(rate.boardName ?? rate.boardType ?? ''),
+      refundable: tag === 'RFN' ? true : tag === 'NRFN' ? false : null,
+      cancelBy: rate.cancellationPolicies?.cancelPolicyInfos?.[0]?.cancelTime ?? null,
+      total: Math.round(total * 100) / 100,
+      net: Number.isFinite(net) ? Math.round(net * 100) / 100 : null,
+      currency: 'AED',
+      // Anything the supplier flags as collected at the hotel has to be said
+      // out loud, or the price on the page is not the price they pay.
+      extraFees: (rate.retailRate?.taxesAndFees ?? [])
+        .filter((f: any) => f && f.included === false && Number(f.amount) > 0)
+        .map((f: any) => ({
+          description: String(f.description ?? 'fee').replace(/_/g, ' '),
+          amount: Math.round(Number(f.amount) * 100) / 100,
+          currency: String(f.currency ?? 'AED'),
+        })),
+    });
+  }
+
+  // Cheapest first, and drop duplicate room+board+price rows the supplier
+  // often returns for the same physical room.
+  const seen = new Set<string>();
+  return offers
+    .sort((a, b) => a.total - b.total)
+    .filter((o) => {
+      const k = `${o.roomName}|${o.board}|${o.refundable}|${o.total}`;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+}

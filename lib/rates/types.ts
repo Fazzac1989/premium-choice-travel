@@ -53,3 +53,34 @@ export type DisplayRate = {
   /** True when the figure is invented by the sample provider, not a supplier. */
   sample?: boolean;
 };
+
+/**
+ * One bookable room option.
+ *
+ * `total` is what the customer is shown — LiteAPI's suggestedSellingPrice,
+ * not its confusingly named retailRate.total, which is our net cost. `net`
+ * never leaves the server: it goes to the specialist with the request and is
+ * stripped from anything sent to a browser.
+ */
+export type RoomOffer = {
+  offerId: string;
+  roomName: string;
+  board: string;
+  /** null when the supplier did not say. */
+  refundable: boolean | null;
+  /** Free cancellation deadline, as the supplier gave it. */
+  cancelBy: string | null;
+  total: number;
+  net: number | null;
+  currency: string;
+  /** Charges the supplier says are collected at the hotel, not in the price. */
+  extraFees: { description: string; amount: number; currency: string }[];
+};
+
+/** The same offer with our cost removed, safe to send to the page. */
+export type PublicRoomOffer = Omit<RoomOffer, 'net'>;
+
+export function toPublicOffer(o: RoomOffer): PublicRoomOffer {
+  const { net, ...rest } = o;
+  return rest;
+}

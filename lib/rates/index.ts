@@ -1,9 +1,9 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
-import { liteapi } from './liteapi';
+import { liteapi, liteapiOffers } from './liteapi';
 import { hotelbeds } from './hotelbeds';
 import { stub } from './stub';
-import type { DisplayRate, RateProvider, RateQuote } from './types';
+import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
 
 /**
  * The one way the site asks what a hotel costs.
@@ -132,4 +132,104 @@ export async function getRate(params: {
   );
 
   return quote ? toDisplay(quote, false) : { status: 'unavailable' };
+}
+
+/** Offers move faster than a headline price, so they are held only briefly. */
+const OFFER_MINUTES = 30;
+
+/**
+ * Room options for a hotel and dates, cached server-side.
+ *
+ * The cache is not only for the supplier's benefit. The page sends back an
+ * offer id when someone asks to book, and the price attached to it is read
+ * from here rather than from the browser — so a customer cannot submit a
+ * request at a price we never showed.
+ */
+export async function getOffers(params: {
+  hotelId: number;
+  supplierCode: string | null;
+  checkIn: string;
+  nights: number;
+  adults: number;
+  children?: number;
+}): Promise<RoomOffer[]> {
+  if (!activeProvider() || !params.supplierCode || !isSupabaseConfigured()) return [];
+  const children = params.children ?? 0;
+  const db = createAdminClient();
+
+  const where = {
+    hotel_id: params.hotelId,
+    check_in: params.checkIn,
+    nights: params.nights,
+    adults: params.adults,
+    children,
+  };
+
+  const { data: hit } = await db
+    .from('rate_cache')
+    .select('offers, offers_fetched_at')
+    .match(where)
+    .maybeSingle();
+
+  if (
+    hit?.offers &&
+    hit.offers_fetched_at &&
+    Date.now() - new Date(hit.offers_fetched_at).getTime() < OFFER_MINUTES * 60_000
+  ) {
+    return hit.offers as RoomOffer[];
+  }
+
+  let offers: RoomOffer[] = [];
+  try {
+    offers = await liteapiOffers({
+      hotelId: params.hotelId,
+      supplierCode: params.supplierCode,
+      checkIn: params.checkIn,
+      nights: params.nights,
+      adults: params.adults,
+      children,
+    });
+  } catch (e: any) {
+    console.error('[offers]', e?.message);
+    return (hit?.offers as RoomOffer[]) ?? [];
+  }
+
+  await db.from('rate_cache').upsert(
+    {
+      ...where,
+      offers,
+      offers_fetched_at: new Date().toISOString(),
+      provider: 'liteapi',
+      currency: 'AED',
+    },
+    { onConflict: 'hotel_id,check_in,nights,adults,children' },
+  );
+
+  return offers;
+}
+
+/** Look one offer back up from the cache — never trust a price from a browser. */
+export async function findCachedOffer(params: {
+  hotelId: number;
+  checkIn: string;
+  nights: number;
+  adults: number;
+  children?: number;
+  offerId: string;
+}): Promise<RoomOffer | null> {
+  if (!isSupabaseConfigured()) return null;
+  const db = createAdminClient();
+  const { data } = await db
+    .from('rate_cache')
+    .select('offers')
+    .match({
+      hotel_id: params.hotelId,
+      check_in: params.checkIn,
+      nights: params.nights,
+      adults: params.adults,
+      children: params.children ?? 0,
+    })
+    .maybeSingle();
+  const offers = (data?.offers ?? []) as RoomOffer[];
+  return offers.find((o) => o.offerId === params.offerId) ?? null;
 }

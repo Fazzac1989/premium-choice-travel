@@ -9,7 +9,7 @@ import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 import { PRICE_BASIS, priceBand } from '@/lib/price-bands';
-import LivePrice from '@/components/LivePrice';
+import BookingFlow from '@/components/BookingFlow';
 import { ratesEnabled } from '@/lib/rates';
 
 export const dynamic = 'force-dynamic';
@@ -67,7 +67,9 @@ export default async function StaycationHotelPage({
   const band = priceBand(hotel.priceBand);
   // An indicative price is offered only when a supplier is connected and this
   // hotel is mapped to it; otherwise the page is exactly as it is today.
-  const canQuote = ratesEnabled() && Boolean(hotel.supplierCode) && Boolean(searchParams.from);
+  // With a supplier connected and this hotel mapped, the panel becomes a
+  // dates → rooms → request flow. Otherwise it stays the enquiry form.
+  const canBook = ratesEnabled() && Boolean(hotel.supplierCode);
 
   const facts: [string, string][] = [
     ...(hotel.stars ? [['Rating', `${'★'.repeat(hotel.stars)}`] as [string, string]] : []),
@@ -214,31 +216,35 @@ export default async function StaycationHotelPage({
 
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <div className="rounded-2xl bg-ink p-7 text-white">
-            <h3 className="font-serif text-xl">Check dates at {hotel.name}</h3>
-            {(band || hotel.priceGuide) && (
+            <h3 className="font-serif text-xl">
+              {canBook ? `Book ${hotel.name}` : `Check dates at ${hotel.name}`}
+            </h3>
+            {/* The band is guidance for a hotel we price by hand. Once real
+                room prices are on the panel it only muddies them. */}
+            {!canBook && (band || hotel.priceGuide) && (
               <div className="mt-2 rounded-lg bg-white/10 px-3 py-2 text-sm text-white/85">
                 {band && <p className="font-semibold text-teal">{band.long}</p>}
                 {hotel.priceGuide && <p className={band ? 'mt-1' : ''}>{hotel.priceGuide}</p>}
                 <p className="mt-1 text-[11px] leading-relaxed text-white/50">{PRICE_BASIS}</p>
               </div>
             )}
-            {canQuote && (
-              <div className="mt-3">
-                <LivePrice
-                  hotelId={hotel.id}
-                  checkIn={searchParams.from ?? ''}
-                  nights={Number(searchParams.nights) || 2}
-                />
-              </div>
-            )}
             <div className="mt-4">
-              <AvailabilityCheck
-                hotelName={hotel.name}
-                emirate={hotel.emirate ?? ''}
-                mealPlans={hotel.mealPlans}
-                defaultCheckIn={searchParams.from ?? ''}
-                defaultNights={Number(searchParams.nights) || 2}
-              />
+              {canBook ? (
+                <BookingFlow
+                  hotelId={hotel.id}
+                  hotelName={hotel.name}
+                  defaultCheckIn={searchParams.from ?? ''}
+                  defaultNights={Number(searchParams.nights) || 2}
+                />
+              ) : (
+                <AvailabilityCheck
+                  hotelName={hotel.name}
+                  emirate={hotel.emirate ?? ''}
+                  mealPlans={hotel.mealPlans}
+                  defaultCheckIn={searchParams.from ?? ''}
+                  defaultNights={Number(searchParams.nights) || 2}
+                />
+              )}
             </div>
             <p className="mt-4 text-center text-xs text-white/60">
               or call <a className="font-semibold text-teal" href="tel:+97144206965">+971 4 420 6965</a>
