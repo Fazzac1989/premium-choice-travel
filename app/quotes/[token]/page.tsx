@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { getQuoteByToken, formatMoney, lineTotal, perPerson, quoteTotal, travellerCount } from '@/lib/quotes';
+import { getPayments, summarise } from '@/lib/payments';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +15,16 @@ export default async function QuotePage({ params }: { params: { token: string } 
   if (!quote || quote.status === 'draft') notFound();
 
   const total = quoteTotal(quote.lines);
+  const payments = await getPayments(quote.id);
+  const schedule = summarise(payments, total);
+  const today = new Date().toISOString().slice(0, 10);
+  const longDate = (d: string) =>
+    new Date(`${d}T00:00:00Z`).toLocaleDateString('en-GB', {
+      timeZone: 'UTC',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
   const pp = perPerson(quote);
   const travellers = travellerCount(quote);
   const pdfUrl = `/api/quotes/pdf?token=${quote.publicToken}`;
@@ -175,6 +186,51 @@ export default async function QuotePage({ params }: { params: { token: string } 
                 </div>
               ))}
             </div>
+            {payments.length > 0 && (
+              <div className="border-t-2 border-ink px-6 py-5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">
+                  How you pay
+                </p>
+                <div className="mt-3 space-y-2.5">
+                  {payments.map((p) => {
+                    const settled = Boolean(p.paidAt);
+                    const late = !settled && p.dueDate && p.dueDate < today;
+                    return (
+                      <div key={p.id} className="flex items-start justify-between gap-4 text-sm">
+                        <div className="min-w-0">
+                          <p className={settled ? 'text-ink-soft line-through' : 'font-semibold text-ink'}>
+                            {p.label}
+                          </p>
+                          <p className={`text-xs ${late ? 'font-semibold text-red-600' : 'text-ink-soft'}`}>
+                            {settled
+                              ? 'Received, thank you'
+                              : p.dueDate
+                                ? `${late ? 'Was due ' : 'Due '}${longDate(p.dueDate)}`
+                                : 'Due on confirmation'}
+                          </p>
+                        </div>
+                        <span
+                          className={`shrink-0 font-semibold ${settled ? 'text-ink-soft' : 'text-ink'}`}
+                        >
+                          {formatMoney(quote.currency, p.amount)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                {schedule.outstanding > 0 && schedule.paid > 0 && (
+                  <p className="mt-3 border-t border-line pt-3 text-sm">
+                    <span className="text-ink-soft">Still to pay </span>
+                    <strong className="text-ink">{formatMoney(quote.currency, schedule.outstanding)}</strong>
+                  </p>
+                )}
+                <p className="mt-3 text-xs leading-relaxed text-ink-soft">
+                  We will send payment details when you are ready to go ahead. Nothing is taken
+                  from this page.
+                </p>
+              </div>
+            )}
+
             <div className="space-y-3 border-t-2 border-ink p-6">
               <a href={pdfUrl} className="btn-primary w-full">Download as PDF</a>
               <a
