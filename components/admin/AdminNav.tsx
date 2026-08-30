@@ -14,6 +14,7 @@ const GROUP_ITEMS: NavItem[] = [
   { href: '/admin/hotels', label: 'Hotels' },
   { href: '/admin/experiences', label: 'Experiences' },
   { href: '/admin/quotes', label: 'Quotes' },
+  { href: '/admin/requests', label: 'Booking requests' },
   { href: '/admin/enquiries', label: 'Enquiries' },
 ];
 

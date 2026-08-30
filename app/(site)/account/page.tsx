@@ -14,6 +14,10 @@ export const metadata = {
 
 const STATUS: Record<string, { label: string; tone: string }> = {
   new: { label: 'With a specialist', tone: 'bg-teal/10 text-teal-deep' },
+  sent: { label: 'Ready to view', tone: 'bg-teal text-white' },
+  accepted: { label: 'Accepted', tone: 'bg-ink text-white' },
+  declined: { label: 'Declined', tone: 'bg-sand text-ink-soft' },
+  expired: { label: 'Expired', tone: 'bg-sand text-ink-soft' },
   quoted: { label: 'Quote sent', tone: 'bg-teal text-white' },
   confirmed: { label: 'Confirmed', tone: 'bg-teal text-white' },
   closed: { label: 'Closed', tone: 'bg-sand text-ink-soft' },
@@ -42,8 +46,8 @@ export default async function AccountPage() {
   if (!account) redirect('/account/sign-in');
   if (account.role === 'admin') redirect('/admin');
 
-  const { enquiries, bookings } = await getAccountActivity(account);
-  const nothingYet = enquiries.length === 0 && bookings.length === 0;
+  const { enquiries, bookings, quotes } = await getAccountActivity(account);
+  const nothingYet = enquiries.length === 0 && bookings.length === 0 && quotes.length === 0;
   const firstName = (account.fullName || '').trim().split(/\s+/)[0];
 
   return (
@@ -79,6 +83,61 @@ export default async function AccountPage() {
                 <Link href="/plan" className="btn-primary mt-6 inline-block">
                   Plan a trip
                 </Link>
+              </div>
+            )}
+
+            {quotes.length > 0 && (
+              <div>
+                <p className="eyebrow">Quotes</p>
+                <h2 className="mt-1 font-serif text-2xl text-ink">What we have priced for you</h2>
+                <div className="mt-5 space-y-3">
+                  {quotes.map((q: any) => {
+                    const total = Number(q.total) || 0;
+                    const expires = q.validity ? new Date(q.validity) : null;
+                    const lapsed = expires ? expires.getTime() < Date.now() : false;
+                    return (
+                      <div key={q.id} className="rounded-2xl border border-line p-5">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="min-w-0">
+                            <p className="font-serif text-lg text-ink">{q.title}</p>
+                            <p className="mt-1 text-sm text-ink-soft">
+                              {q.ref}
+                              {q.travelDates ? ` · ${q.travelDates}` : ''}
+                            </p>
+                            {expires && (
+                              <p className={`mt-1 text-sm ${lapsed ? 'text-ink-soft' : 'text-teal-deep'}`}>
+                                {lapsed ? 'Expired on ' : 'Valid until '}
+                                {when(q.validity)}
+                              </p>
+                            )}
+                          </div>
+                          <div className="shrink-0 text-right">
+                            <Status status={q.status} />
+                            {total > 0 && (
+                              <p className="mt-2 font-serif text-lg text-teal-deep">
+                                {q.currency} {total.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-3 flex flex-wrap gap-3 border-t border-line pt-3">
+                          <Link
+                            href={`/quotes/${q.publicToken}`}
+                            className="text-sm font-bold text-teal-deep hover:underline"
+                          >
+                            View the full quote →
+                          </Link>
+                          <a
+                            href={`/api/quotes/pdf?token=${q.publicToken}`}
+                            className="text-sm font-semibold text-ink-soft hover:text-teal-deep"
+                          >
+                            Download PDF
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
@@ -171,8 +230,8 @@ export default async function AccountPage() {
               </p>
             </div>
             <p className="mt-6 text-xs leading-relaxed text-ink-soft">
-              Quotes, payments and travel documents are coming to this page next. For now, anything
-              you have asked us appears above.
+              Payments and travel documents are coming to this page next. Anything you ask us —
+              and every quote we send back — appears above.
             </p>
           </aside>
         </div>

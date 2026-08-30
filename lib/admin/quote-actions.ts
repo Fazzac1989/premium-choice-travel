@@ -162,3 +162,105 @@ export async function sendQuoteToClient(_prev: QuoteActionState, formData: FormD
     ? { ok: true, message: 'No RESEND_API_KEY set — marked as sent. Copy the link and share it manually.' }
     : { ok: true, message: `Sent to ${quote.clientEmail}.` };
 }
+
+/**
+ * Start a quote from a booking request.
+ *
+ * The customer already told us the hotel, the dates, the room and the party.
+ * Retyping that is how details get lost, so the draft opens pre-filled — with
+ * their price as the first line, and our cost in the notes where only staff
+ * can see it.
+ */
+export async function createQuoteFromBookingRequest(formData: FormData) {
+  await requireAdmin();
+  const db = createAdminClient();
+  const requestId = Number(formData.get('request_id'));
+  if (!requestId) redirect('/admin/requests');
+
+  const { data: req } = await db.from('booking_requests').select('*').eq('id', requestId).maybeSingle();
+  if (!req) redirect('/admin/requests');
+
+  const nights = Number(req.nights) || 1;
+  const stay = `${req.check_in} · ${nights} night${nights === 1 ? '' : 's'}`;
+  const margin = req.net_amount ? Math.round(Number(req.amount) - Number(req.net_amount)) : null;
+
+  const { data: quote, error } = await db
+    .from('quotes')
+    .insert({
+      ref: await nextQuoteRef(),
+      title: `${req.hotel_name} — ${stay}`,
+      status: 'draft',
+      terms: DEFAULT_TERMS,
+      currency: req.currency ?? 'AED',
+      client_name: req.name,
+      client_email: req.email,
+      client_phone: req.phone,
+      customer_id: req.customer_id,
+      booking_request_id: req.id,
+      travel_dates: stay,
+      adults: req.adults ?? 2,
+      children: req.children ?? 0,
+      notes: [
+        req.room_name ? `Room requested: ${req.room_name}${req.board ? ` · ${req.board}` : ''}` : null,
+        req.refundable === true
+          ? `Refundable${req.cancel_by ? ` until ${req.cancel_by}` : ''}`
+          : req.refundable === false
+            ? 'Non-refundable rate'
+            : null,
+        req.extra_fees ? `Payable at the hotel: ${req.extra_fees}` : null,
+        req.net_amount ? `Supplier cost at request time: ${req.currency} ${req.net_amount} (margin ${req.currency} ${margin})` : null,
+        req.notes ? `Customer notes: ${req.notes}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    })
+    .select('id')
+    .single();
+
+  if (error || !quote) {
+    console.error('[quote-from-request]', error?.message);
+    redirect(`/admin/requests/${requestId}`);
+  }
+
+  // The quote builder works in cost plus markup, so the line carries our real
+  // cost and the markup that reproduces the price the customer was shown —
+  // the economics stay visible and editable instead of being flattened into
+  // one number nobody can take apart later.
+  const sell = Number(req.amount) || 0;
+  const cost = Number(req.net_amount) || sell;
+  const markupPct = cost > 0 ? Math.round(((sell - cost) / cost) * 10000) / 100 : 0;
+
+  const { error: lineError } = await db.from('quote_lines').insert({
+    quote_id: quote.id,
+    sort_order: 0,
+    description: [`${req.hotel_name}${req.room_name ? ` — ${req.room_name}` : ''}`, stay, req.board]
+      .filter(Boolean)
+      .join(' · '),
+    qty: 1,
+    unit_cost: cost,
+    markup_pct: markupPct,
+  });
+  if (lineError) console.error('[quote-from-request] line', lineError.message);
+
+  await db.from('booking_requests').update({ status: 'quoted' }).eq('id', requestId);
+  revalidatePath('/admin/requests');
+  redirect(`/admin/quotes/${quote.id}`);
+}
+
+/** Move a booking request along, and keep whatever the specialist noted. */
+export async function updateBookingRequest(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get('id'));
+  if (!id) return;
+  const status = String(formData.get('status') ?? 'new');
+  const db = createAdminClient();
+  await db
+    .from('booking_requests')
+    .update({
+      status: ['new', 'quoted', 'confirmed', 'closed'].includes(status) ? status : 'new',
+      admin_notes: String(formData.get('admin_notes') ?? '').trim() || null,
+    })
+    .eq('id', id);
+  revalidatePath('/admin/requests');
+  revalidatePath(`/admin/requests/${id}`);
+}

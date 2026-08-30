@@ -1,6 +1,7 @@
 import 'server-only';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { mapQuote, quoteTotal } from '@/lib/quotes';
 
 /**
  * Who is signed in, and what they are allowed to be.
@@ -59,7 +60,7 @@ export async function getAccountActivity(account: Account) {
   const db = createAdminClient();
   const email = account.email.toLowerCase();
 
-  const [enquiries, bookings] = await Promise.all([
+  const [enquiries, bookings, quotes] = await Promise.all([
     db
       .from('enquiries')
       .select('*')
@@ -70,11 +71,24 @@ export async function getAccountActivity(account: Account) {
       .select('*')
       .or(`customer_id.eq.${account.id},email.ilike.${email}`)
       .order('created_at', { ascending: false }),
+    // A draft is ours until we send it — a customer should never meet one.
+    db
+      .from('quotes')
+      // Lines live in their own table and carry the cost and markup the total
+      // is derived from, so they have to come with the quote.
+      .select('*, quote_lines(*)')
+      .neq('status', 'draft')
+      .or(`customer_id.eq.${account.id},client_email.ilike.${email}`)
+      .order('created_at', { ascending: false }),
   ]);
 
   return {
     enquiries: enquiries.data ?? [],
     bookings: bookings.data ?? [],
+    quotes: (quotes.data ?? []).map((row: any) => {
+      const q = mapQuote(row);
+      return { ...q, total: quoteTotal(q.lines) };
+    }),
   };
 }
 
@@ -85,5 +99,6 @@ export async function claimActivity(account: Account) {
   await Promise.all([
     db.from('enquiries').update({ customer_id: account.id }).is('customer_id', null).ilike('email', email),
     db.from('booking_requests').update({ customer_id: account.id }).is('customer_id', null).ilike('email', email),
+    db.from('quotes').update({ customer_id: account.id }).is('customer_id', null).ilike('client_email', email),
   ]);
 }
