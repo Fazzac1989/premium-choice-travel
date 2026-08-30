@@ -30,12 +30,24 @@ export async function listQuotes(): Promise<Quote[]> {
   return (data ?? []).map(mapQuoteRow);
 }
 
+/**
+ * The next quote reference for this year.
+ *
+ * Counting the year's quotes and adding one looks right until a quote is
+ * deleted: three rows numbered 0001, 0002 and 0004 produce 0004 again, and the
+ * insert fails on the unique index. The highest existing number is what
+ * matters, not how many there are.
+ */
 export async function nextQuoteRef(): Promise<string> {
   const db = createAdminClient();
   const year = new Date().getFullYear();
-  const { count } = await db
+  const { data } = await db
     .from('quotes')
-    .select('id', { count: 'exact', head: true })
-    .like('ref', `PCT-${year}-%`);
-  return `PCT-${year}-${String((count ?? 0) + 1).padStart(4, '0')}`;
+    .select('ref')
+    .like('ref', `PCT-${year}-%`)
+    .order('ref', { ascending: false })
+    .limit(1);
+
+  const highest = Number(data?.[0]?.ref?.split('-').pop()) || 0;
+  return `PCT-${year}-${String(highest + 1).padStart(4, '0')}`;
 }
