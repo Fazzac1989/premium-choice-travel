@@ -43,6 +43,9 @@ export default function BookingPage({
   nights,
   adults,
   children,
+  account,
+  travellers,
+  signInHref,
 }: {
   hotelId: number;
   hotelName: string;
@@ -53,6 +56,11 @@ export default function BookingPage({
   nights: number;
   adults: number;
   children: number;
+  /** Set when they are signed in — their details fill the form. */
+  account: { email: string; fullName: string; phone: string } | null;
+  /** Saved travellers, so names are chosen rather than retyped. */
+  travellers: { id: number; fullName: string; label: string }[];
+  signInHref: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [loading, setLoading] = useState(true);
@@ -63,7 +71,14 @@ export default function BookingPage({
   const [extras, setExtras] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [done, setDone] = useState('');
-  const [guest, setGuest] = useState({ name: '', email: '', phone: '', channel: 'WhatsApp', notes: '' });
+  const [guest, setGuest] = useState({
+    name: account?.fullName ?? '',
+    email: account?.email ?? '',
+    phone: account?.phone ?? '',
+    channel: 'WhatsApp',
+    notes: '',
+  });
+  const [chosenTravellers, setChosenTravellers] = useState<number[]>([]);
 
   useEffect(() => {
     let live = true;
@@ -98,7 +113,14 @@ export default function BookingPage({
       return;
     }
     startTransition(async () => {
-      const notes = [extras.length ? `Requests: ${extras.join(', ')}` : '', guest.notes.trim()]
+      // Names go into the brief as well as the ids, so a specialist reading
+      // the email sees who is travelling without opening the account.
+      const named = travellers.filter((t) => chosenTravellers.includes(t.id));
+      const notes = [
+        named.length ? `Travelling: ${named.map((t) => t.fullName).join(', ')}` : '',
+        extras.length ? `Requests: ${extras.join(', ')}` : '',
+        guest.notes.trim(),
+      ]
         .filter(Boolean)
         .join('\n');
       const res = await submitBookingRequest({
@@ -113,6 +135,7 @@ export default function BookingPage({
         phone: guest.phone,
         channel: guest.channel,
         notes,
+        travellerIds: chosenTravellers,
       });
       if (res.ok) setDone(res.message);
       else setError(res.message);
@@ -269,6 +292,59 @@ export default function BookingPage({
                   Requests, not guarantees — the hotel confirms these on arrival.
                 </p>
               </div>
+
+              {/* Signed in: choose from saved travellers. Signed out: an offer,
+                  never a gate — sending someone to their inbox at the moment
+                  they want to book loses the booking. */}
+              {account ? (
+                travellers.length > 0 && (
+                  <div className="mt-5">
+                    <label className={`${label} !text-white/60`}>Who is travelling?</label>
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {travellers.map((t) => {
+                        const on = chosenTravellers.includes(t.id);
+                        return (
+                          <button
+                            key={t.id}
+                            type="button"
+                            onClick={() =>
+                              setChosenTravellers((c) =>
+                                on ? c.filter((v) => v !== t.id) : [...c, t.id],
+                              )
+                            }
+                            className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                              on
+                                ? 'border-teal bg-teal text-white'
+                                : 'border-white/20 bg-white/10 text-white/80 hover:border-teal'
+                            }`}
+                          >
+                            {t.label || t.fullName}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="mt-2 text-[11px] leading-relaxed text-white/50">
+                      We use the passport spellings you have saved.{' '}
+                      <Link href="/account/travellers" className="font-semibold text-teal hover:underline">
+                        Manage travellers
+                      </Link>
+                    </p>
+                  </div>
+                )
+              ) : (
+                <div className="mt-5 rounded-lg bg-white/10 p-3">
+                  <p className="text-sm text-white/85">
+                    <Link href={signInHref} className="font-semibold text-teal hover:underline">
+                      Sign in
+                    </Link>{' '}
+                    and we will fill this in — and use the passport spellings you have saved.
+                  </p>
+                  <p className="mt-1 text-[11px] leading-relaxed text-white/50">
+                    Not required. Carry on below and everything will be waiting in your account
+                    the first time you do sign in.
+                  </p>
+                </div>
+              )}
 
               <div className="mt-5 space-y-3">
                 <div className="grid grid-cols-2 gap-3">

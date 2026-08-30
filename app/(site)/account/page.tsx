@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import AccountDetails from '@/components/AccountDetails';
+import AccountNav from '@/components/AccountNav';
 import { signOutAccount } from '@/lib/account-actions';
 import { getAccount, getAccountActivity } from '@/lib/account';
 
@@ -62,6 +63,7 @@ export default async function AccountPage() {
                 {firstName ? `Hello, ${firstName}` : 'Hello'}
               </h1>
               <p className="mt-2 text-sm text-ink-soft">{account.email}</p>
+              <AccountNav current="overview" />
             </div>
             <form action={signOutAccount}>
               <button type="submit" className="text-sm font-semibold text-teal-deep hover:underline">

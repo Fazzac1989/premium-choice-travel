@@ -123,6 +123,7 @@ export async function submitBookingRequest(payload: {
   phone: string;
   channel: string;
   notes: string;
+  travellerIds?: number[];
 }): Promise<BookingRequestResult> {
   const name = payload.name.trim();
   const email = payload.email.trim();
@@ -158,6 +159,20 @@ export async function submitBookingRequest(payload: {
     };
   }
 
+  // Travellers are re-read against the signed-in account rather than trusted
+  // from the browser, so a crafted request cannot attach — or reveal —
+  // someone else's traveller by guessing an id.
+  const account = await getAccount();
+  let ownTravellerIds: number[] = [];
+  if (account && payload.travellerIds?.length) {
+    const { data: mine } = await db
+      .from('travellers')
+      .select('id')
+      .eq('customer_id', account.id)
+      .in('id', payload.travellerIds.slice(0, 12));
+    ownTravellerIds = (mine ?? []).map((t: any) => t.id);
+  }
+
   const fees = offer.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
   const { error } = await db.from('booking_requests').insert({
     hotel_id: hotel.id,
@@ -183,9 +198,12 @@ export async function submitBookingRequest(payload: {
     channel: payload.channel || null,
     notes: payload.notes.trim() || null,
     status: 'new',
+    // Only ids belonging to this account are stored — a crafted request must
+    // not attach someone else's traveller to a booking.
+    traveller_ids: ownTravellerIds,
     // Ties the request to their account when they are signed in; otherwise it
     // is claimed by email the first time they sign in.
-    customer_id: (await getAccount())?.id ?? null,
+    customer_id: account?.id ?? null,
   });
   if (error) {
     console.error('[booking-request]', error.message);

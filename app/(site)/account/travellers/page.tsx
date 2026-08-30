@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import SiteHeader from '@/components/SiteHeader';
 import TravellerList from '@/components/TravellerList';
+import AccountNav from '@/components/AccountNav';
 import { getAccount } from '@/lib/account';
 import { getTravellers } from '@/lib/travellers';
 
@@ -25,9 +26,6 @@ export default async function TravellersPage() {
       <main className="pt-[72px]">
         <section className="border-b border-line bg-sand">
           <div className="container-site max-w-3xl py-12 sm:py-14">
-            <Link href="/account" className="text-xs font-semibold text-ink-soft hover:text-teal-deep">
-              ← Your account
-            </Link>
             <p className="eyebrow mt-4">Your travellers</p>
             <h1 className="mt-2 font-serif text-4xl leading-tight text-ink">Who is travelling</h1>
             <p className="mt-3 max-w-xl text-ink-soft">
@@ -35,6 +33,7 @@ export default async function TravellersPage() {
               spelled the way their passport spells them, which is what stops a booking having to
               be reissued.
             </p>
+            <AccountNav current="travellers" />
           </div>
         </section>
 

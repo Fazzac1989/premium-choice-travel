@@ -5,6 +5,8 @@ import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { RATES_PREVIEW_COOKIE, ratesVisible } from '@/lib/rates';
 import { cookies } from 'next/headers';
+import { getAccount } from '@/lib/account';
+import { getTravellers } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +42,19 @@ export default async function HotelBookingPage({
     redirect(hotelHref);
   }
 
+  const nights = Math.max(1, Math.min(30, Number(searchParams.nights) || 2));
+  const adults = Math.max(1, Math.min(12, Number(searchParams.adults) || 2));
+  const children = Math.max(0, Math.min(8, Number(searchParams.children) || 0));
+
+  // Signed in, we already know who they are and who they travel with, so
+  // nobody retypes a name they have given us before. Signed out, the page
+  // offers a sign-in rather than demanding one — asking someone to leave for
+  // their inbox at the moment they want to book loses the booking.
+  const account = await getAccount();
+  const travellers = account ? await getTravellers(account.id) : [];
+
+  const here = `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}`;
+
   return (
     <BookingPage
       hotelId={hotel.id}
@@ -48,9 +63,12 @@ export default async function HotelBookingPage({
       logo={brand.logo}
       hotelHref={hotelHref}
       checkIn={searchParams.from!}
-      nights={Math.max(1, Math.min(30, Number(searchParams.nights) || 2))}
-      adults={Math.max(1, Math.min(12, Number(searchParams.adults) || 2))}
-      children={Math.max(0, Math.min(8, Number(searchParams.children) || 0))}
+      nights={nights}
+      adults={adults}
+      children={children}
+      account={account ? { email: account.email, fullName: account.fullName, phone: account.phone } : null}
+      travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
+      signInHref={`/account/sign-in?next=${encodeURIComponent(here)}`}
     />
   );
 }
