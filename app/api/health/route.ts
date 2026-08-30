@@ -10,6 +10,9 @@ export async function GET() {
     anthropic: Boolean(process.env.ANTHROPIC_API_KEY),
     resend: Boolean(process.env.RESEND_API_KEY),
     places: Boolean(process.env.GOOGLE_PLACES_API_KEY),
+    liteapi: Boolean(process.env.LITEAPI_KEY),
+    ratesPreviewKey: Boolean(process.env.RATES_PREVIEW_KEY),
+    ratesPublic: process.env.RATES_PUBLIC === '1',
     version: process.env.VERCEL_GIT_COMMIT_SHA ? process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7) : 'dev',
   });
 }
