@@ -3,7 +3,9 @@
 import { findCachedOffer, getOffers, getRate } from '@/lib/rates';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { toPublicOffer, type DisplayRate, type PublicRoomOffer } from '@/lib/rates/types';
-import { emailShell, sendEmail } from '@/lib/email';
+import { emailRows, emailShell, sendEmail } from '@/lib/email';
+import { emailBrand } from '@/lib/email-brand';
+import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 /**
  * Price one hotel for one set of dates, on request.
@@ -195,14 +197,19 @@ export async function submitBookingRequest(payload: {
     .filter((l) => l !== null)
     .join('\n');
 
+  // Every hotel in this directory belongs to Staycations.
+  const brand = emailBrand('staycations');
+
   const notifyTo = process.env.ENQUIRY_NOTIFY_EMAIL;
   if (notifyTo) {
     await sendEmail({
       to: notifyTo,
       replyTo: email,
-      subject: `Booking request — ${hotel.name} · ${name}`,
+      subject: `[${brand.tag}] Booking request — ${hotel.name} · ${name}`,
       html: emailShell({
-        title: 'Booking request',
+        brand,
+        eyebrow: `Booking request · ${brand.tag}`,
+        title: `${hotel.name} — ${name}`,
         bodyHtml: `<pre style="font-size:12px;line-height:1.6;white-space:pre-wrap;font-family:inherit">${brief
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')}</pre>`,
@@ -210,8 +217,35 @@ export async function submitBookingRequest(payload: {
     });
   }
 
+  await sendCustomerConfirmation({
+    to: email,
+    name,
+    brandKey: 'staycations',
+    heading: 'We have your booking request',
+    intro: `Thank you for choosing ${hotel.name}. A specialist is confirming the room and the final price with the hotel now, and will come back to you — usually the same working day.`,
+    rows: [
+      ['Hotel', hotel.name],
+      ['Dates', `${payload.checkIn} · ${nights} night${nights === 1 ? '' : 's'}`],
+      ['Guests', `${adults} adult${adults === 1 ? '' : 's'}${children ? `, ${children} child${children === 1 ? '' : 'ren'}` : ''}`],
+      ['Room', `${offer.roomName}${offer.board ? ` · ${offer.board}` : ''}`],
+      ['Price shown', `${offer.currency} ${offer.total.toLocaleString()}`],
+      [
+        'Cancellation',
+        offer.refundable === true
+          ? `Free cancellation${offer.cancelBy ? ` until ${offer.cancelBy.slice(0, 10)}` : ''}`
+          : offer.refundable === false
+            ? 'Non-refundable rate'
+            : null,
+      ],
+      ['Paid at the hotel', fees || null],
+    ],
+    caveat:
+      '<strong>This is a request, not a booking.</strong> No payment has been taken and no room is held yet. Prices can move until we confirm them with the hotel — if this one has, we will tell you before anything is booked.',
+  });
+
   return {
     ok: true,
-    message: 'Request received. A specialist confirms the room and the final price with the hotel and comes back to you — usually the same working day.',
+    message:
+      'Request received. A specialist confirms the room and the final price with the hotel and comes back to you — usually the same working day. We have emailed you a copy.',
   };
 }

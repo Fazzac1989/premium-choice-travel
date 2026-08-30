@@ -23,7 +23,7 @@ export default function BrandEnquirePage({ params }: { params: { brand: string }
           </p>
         </div>
         <div className="card mx-auto max-w-2xl p-8">
-          <EnquiryForm packageTitle={`${brand.name} enquiry`} />
+          <EnquiryForm brand={brand.key} packageTitle={`${brand.name} enquiry`} />
         </div>
       </div>
     </main>

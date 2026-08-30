@@ -16,10 +16,13 @@ export default function EnquiryForm({
   packageId,
   packageTitle,
   compact = false,
+  brand,
 }: {
   packageId?: number;
   packageTitle?: string;
   compact?: boolean;
+  /** Which of the six sites this form is on — names the brand on both emails. */
+  brand?: string;
 }) {
   const [state, formAction] = useFormState<EnquiryState, FormData>(submitEnquiry, null);
 
@@ -34,6 +37,7 @@ export default function EnquiryForm({
 
   return (
     <form action={formAction} className="space-y-4">
+      {brand && <input type="hidden" name="brand" value={brand} />}
       {packageId !== undefined && <input type="hidden" name="package_id" value={packageId} />}
       {packageTitle && <input type="hidden" name="package_title" value={packageTitle} />}
 

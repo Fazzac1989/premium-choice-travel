@@ -397,7 +397,7 @@ export default function PackageDetailBody({
             <p className="mb-5 mt-1.5 text-sm text-ink-soft">
               Send an enquiry and a specialist will tailor dates, rooms and price to you.
             </p>
-            <EnquiryForm packageId={pkg.id} packageTitle={pkg.title} compact />
+            <EnquiryForm brand={pkg.brand} packageId={pkg.id} packageTitle={pkg.title} compact />
           </div>
         </aside>
       </main>

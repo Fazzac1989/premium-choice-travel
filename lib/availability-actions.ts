@@ -2,6 +2,8 @@
 
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { emailShell, sendEmail } from '@/lib/email';
+import { emailBrand } from '@/lib/email-brand';
+import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 /**
  * Staycation availability check — a structured "price this for me" request.
@@ -66,14 +68,18 @@ export async function submitAvailabilityCheck(payload: {
     }
   }
 
+  const brand = emailBrand('staycations');
+
   const notifyTo = process.env.ENQUIRY_NOTIFY_EMAIL;
   if (notifyTo) {
     await sendEmail({
       to: notifyTo,
       replyTo: email,
-      subject: `Availability check — ${payload.hotelName} · ${name}`,
+      subject: `[${brand.tag}] Availability check — ${payload.hotelName} · ${name}`,
       html: emailShell({
-        title: 'Staycation availability check',
+        brand,
+        eyebrow: `Availability check · ${brand.tag}`,
+        title: `${payload.hotelName} — ${name}`,
         bodyHtml: `<pre style="font-size:12px;line-height:1.6;white-space:pre-wrap;font-family:inherit">${brief
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')}</pre>`,
@@ -81,8 +87,26 @@ export async function submitAvailabilityCheck(payload: {
     });
   }
 
+  await sendCustomerConfirmation({
+    to: email,
+    name,
+    brandKey: 'staycations',
+    heading: 'We are checking those dates',
+    intro: `Thank you for asking about ${payload.hotelName}. A specialist is checking availability and rates now, and will come back to you with priced options — usually the same working day.`,
+    rows: [
+      ['Hotel', payload.hotelName],
+      ['Check-in', `${payload.checkIn} · ${nights} night${nights === 1 ? '' : 's'}`],
+      ['Guests', `${adults} adult${adults === 1 ? '' : 's'}${payload.childrenAges.trim() ? `, children aged ${payload.childrenAges.trim()}` : ''}`],
+      ['Meal plan', payload.mealPlan && payload.mealPlan !== 'No preference' ? payload.mealPlan : null],
+      ['We will reply by', payload.channel || null],
+    ],
+    caveat:
+      'Nothing is booked or held at this stage — we are looking at what is available for your dates and will send you the options.',
+  });
+
   return {
     ok: true,
-    message: 'Got it — a specialist is checking availability and will reply with priced options, typically the same working day.',
+    message:
+      'Got it — a specialist is checking availability and will reply with priced options, typically the same working day. We have emailed you a copy.',
   };
 }
