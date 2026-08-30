@@ -27,9 +27,16 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(`${master}${pathname}`);
     }
     // Shared endpoints pass straight through on any domain.
+    //
+    // /account and /auth are shared deliberately rather than redirected to the
+    // master site: a Supabase session is a cookie, and cookies do not cross
+    // domains. Sending someone to premiumchoicetravel.com to sign in would
+    // leave them signed out on the brand site they were actually booking from.
     const passthrough =
       pathname.startsWith('/api') ||
       pathname.startsWith('/quotes') ||
+      pathname.startsWith('/account') ||
+      pathname.startsWith('/auth') ||
       pathname.startsWith('/sites') ||
       pathname.startsWith('/images') ||
       pathname === '/robots.txt' ||

@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
@@ -23,7 +24,15 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Sign-in is not available right now.' };
 
-  const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.premiumchoicetravel.com';
+  // Come back to the site they signed in from, not to the master one. A
+  // Supabase session is a cookie and cookies do not cross domains, so landing
+  // someone on premiumchoicetravel.com after they asked to sign in from
+  // Staycations would leave them signed out where they actually were.
+  const host = headers().get('host') ?? '';
+  const site = host
+    ? `${host.startsWith('localhost') ? 'http' : 'https'}://${host}`
+    : process.env.NEXT_PUBLIC_SITE_URL || 'https://www.premiumchoicetravel.com';
+
   const supabase = createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email,
@@ -34,7 +43,15 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
   });
 
   if (error) {
-    console.error('[account] sign-in link', error.message);
+    console.error('[account] sign-in link', error.status, error.message);
+    // The mailer limits how many links can go out in an hour. Saying "try
+    // again" to someone who has already tried twice is the wrong advice.
+    if (error.status === 429) {
+      return {
+        ok: false,
+        message: 'Too many sign-in links have been requested just now. Wait a few minutes and try again, or call us on +971 4 420 6965.',
+      };
+    }
     return { ok: false, message: 'We could not send that link — please try again, or call us.' };
   }
 
