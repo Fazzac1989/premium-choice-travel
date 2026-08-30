@@ -3,6 +3,7 @@
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { emailShell, sendEmail } from '@/lib/email';
 import { emailBrand } from '@/lib/email-brand';
+import { getAccount } from '@/lib/account';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 export type EnquiryState = { ok: boolean; message: string } | null;
@@ -34,6 +35,7 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
       travellers: travellers || null,
       message: message || null,
       status: 'new',
+      customer_id: (await getAccount())?.id ?? null,
     });
     if (error) {
       console.error('[enquiry]', error.message);

@@ -2,10 +2,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { signOut } from '@/lib/admin/actions';
 import AdminNav from '@/components/admin/AdminNav';
+import { redirect } from 'next/navigation';
+import { getAccount } from '@/lib/account';
 
 export const metadata = { title: 'Admin — Premium Choice Travel' };
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+// Middleware only proves someone is signed in. Since customers share this
+// Supabase project, the panel itself has to check they are staff.
+export const dynamic = 'force-dynamic';
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const account = await getAccount();
+  if (!account) redirect('/admin/login');
+  if (account.role !== 'admin') redirect('/account');
+
   return (
     <div className="flex min-h-screen bg-sand">
       <aside className="fixed inset-y-0 left-0 z-40 flex w-60 flex-col bg-ink text-white">

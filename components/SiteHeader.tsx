@@ -99,6 +99,12 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
               </Link>
             );
           })}
+          <Link
+            href="/account"
+            className={`text-sm font-semibold ${isSolid ? 'text-ink-soft hover:text-teal-deep' : 'text-white/80 hover:text-teal'}`}
+          >
+            My account
+          </Link>
           <a href="tel:+97144206965" className={`text-sm font-semibold ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
             +971 4 420 6965
           </a>
@@ -198,6 +204,9 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
               </Link>
             )
           )}
+          <Link href="/account" className="block py-3 text-base font-semibold text-ink">
+            My account
+          </Link>
           <Link href="/plan" className="btn-primary mt-3 w-full">
             Plan My Trip
           </Link>

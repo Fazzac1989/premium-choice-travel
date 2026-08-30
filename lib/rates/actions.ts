@@ -7,6 +7,7 @@ import { toPublicOffer, type DisplayRate, type PublicRoomOffer } from '@/lib/rat
 import { emailRows, emailShell, sendEmail } from '@/lib/email';
 
 import { emailBrand } from '@/lib/email-brand';
+import { getAccount } from '@/lib/account';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 /**
@@ -182,6 +183,9 @@ export async function submitBookingRequest(payload: {
     channel: payload.channel || null,
     notes: payload.notes.trim() || null,
     status: 'new',
+    // Ties the request to their account when they are signed in; otherwise it
+    // is claimed by email the first time they sign in.
+    customer_id: (await getAccount())?.id ?? null,
   });
   if (error) {
     console.error('[booking-request]', error.message);
