@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
+import { getTravellers, passportWarning } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,10 @@ export default async function AdminRequestPage({ params }: { params: { id: strin
     .select('id, ref, title, status')
     .eq('booking_request_id', r.id)
     .order('created_at', { ascending: false });
+
+  // Their saved travellers, so whoever books this has the passport spellings
+  // without emailing to ask for them.
+  const travellers = r.customer_id ? await getTravellers(r.customer_id) : [];
 
   const margin = r.net_amount ? Math.round(Number(r.amount) - Number(r.net_amount)) : null;
   const money = (n: any) => `${r.currency} ${Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
@@ -160,6 +165,38 @@ export default async function AdminRequestPage({ params }: { params: { id: strin
               Opens a draft already filled in with the hotel, dates, party and their price.
             </p>
           </div>
+
+          {travellers.length > 0 && (
+            <div className="rounded-2xl border border-line bg-white p-6">
+              <h3 className="font-serif text-lg text-ink">Their travellers</h3>
+              <p className="mt-1 text-xs text-ink-soft">
+                Saved by the customer. Names are as printed in the passport.
+              </p>
+              <ul className="mt-3 space-y-3">
+                {travellers.map((t) => {
+                  const alert = passportWarning(t.passportExpiry);
+                  return (
+                    <li key={t.id} className="border-t border-line pt-3 first:border-0 first:pt-0">
+                      <p className="text-sm font-semibold text-ink">{t.fullName}</p>
+                      <p className="text-xs text-ink-soft">
+                        {[t.label, t.nationality, t.dateOfBirth ? `b. ${t.dateOfBirth}` : null]
+                          .filter(Boolean)
+                          .join(' · ')}
+                      </p>
+                      {t.passportNumber && (
+                        <p className="mt-0.5 font-mono text-xs text-ink">
+                          {t.passportNumber}
+                          {t.passportExpiry ? ` · exp ${t.passportExpiry}` : ''}
+                        </p>
+                      )}
+                      {t.notes && <p className="mt-0.5 text-xs text-ink-soft">{t.notes}</p>}
+                      {alert && <p className="mt-1 text-xs font-semibold text-amber-700">{alert}</p>}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
 
           {r.offer_id && (
             <div className="rounded-2xl border border-line bg-white p-6">

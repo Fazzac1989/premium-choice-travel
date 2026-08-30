@@ -217,6 +217,16 @@ export default async function AccountPage() {
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <AccountDetails fullName={account.fullName} phone={account.phone} email={account.email} />
+            <Link
+              href="/account/travellers"
+              className="mt-6 block rounded-2xl border border-line p-6 transition-colors hover:border-teal"
+            >
+              <p className="eyebrow">Your travellers</p>
+              <h3 className="mt-1 font-serif text-xl text-ink">Who is travelling</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+                Save passport spellings once and we use them on every booking. Manage them here →
+              </p>
+            </Link>
             <div className="mt-6 rounded-2xl bg-ink p-7 text-white">
               <h3 className="font-serif text-xl">Need us?</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/70">
