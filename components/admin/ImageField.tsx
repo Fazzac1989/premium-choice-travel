@@ -53,7 +53,7 @@ export function ImageField({
               onClick={() => inputRef.current?.click()}
               className="btn-outline !px-4 !py-2 text-xs disabled:opacity-50"
             >
-              {busy ? 'Uploadingâ€¦' : value ? 'Replace image' : 'Upload image'}
+              {busy ? 'Uploading…' : value ? 'Replace image' : 'Upload image'}
             </button>
             <button
               type="button"
@@ -70,7 +70,7 @@ export function ImageField({
           </div>
           <input
             className="field !py-2 text-xs"
-            placeholder="â€¦or paste an image URL"
+            placeholder="…or paste an image URL"
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />
@@ -164,7 +164,7 @@ export function GalleryField({
           onClick={() => inputRef.current?.click()}
           className="flex h-24 w-36 items-center justify-center rounded-xl border-2 border-dashed border-line text-xs font-semibold text-ink-soft transition-colors hover:border-teal hover:text-teal-deep disabled:opacity-50"
         >
-          {busy ? 'Uploadingâ€¦' : '+ Add images'}
+          {busy ? 'Uploading…' : '+ Add images'}
         </button>
         <button
           type="button"
