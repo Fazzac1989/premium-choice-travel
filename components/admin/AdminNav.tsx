@@ -31,6 +31,7 @@ const ST_ITEMS: NavItem[] = [
   { href: '/admin/school-trips/brochures', label: 'Brochure Studio' },
   { href: '/admin/school-trips/analytics', label: 'Analytics' },
   { href: '/admin/school-trips/media', label: 'Media' },
+  { href: '/admin/school-trips/website', label: 'Website content' },
   { href: '/admin/school-trips/terms', label: 'Booking terms' },
 ];
 
