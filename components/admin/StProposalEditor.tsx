@@ -12,6 +12,7 @@ import {
   saveStProposalDay,
   saveStProposalDayItems,
   saveStProposalFlights,
+  sendStProposalEmail,
   setStProposalStatus,
   updateStProposalCommercials,
   updateStProposalContent,
@@ -70,6 +71,13 @@ type Proposal = {
   updatedAt: string | null;
 };
 
+type ProposalEvent = {
+  id: number;
+  event: string;
+  metadata: Record<string, unknown>;
+  createdAt: string;
+};
+
 const TABS = ['Document', 'Itinerary', 'Flights', 'Price', 'Share'] as const;
 type Tab = (typeof TABS)[number];
 
@@ -79,6 +87,7 @@ export default function StProposalEditor({
   flights,
   images,
   termsSets,
+  events,
   siteUrl,
 }: {
   proposal: Proposal;
@@ -86,6 +95,7 @@ export default function StProposalEditor({
   flights: Flight[];
   images: { id: number; alt: string; url: string }[];
   termsSets: { id: number; name: string; version: number; isDefault: boolean }[];
+  events: ProposalEvent[];
   siteUrl: string;
 }) {
   const router = useRouter();
@@ -171,7 +181,9 @@ export default function StProposalEditor({
         {tab === 'Price' && (
           <PriceTab proposal={proposal} termsSets={termsSets} run={run} busy={busy} />
         )}
-        {tab === 'Share' && <ShareTab proposal={proposal} siteUrl={siteUrl} run={run} busy={busy} />}
+        {tab === 'Share' && (
+          <ShareTab proposal={proposal} events={events} siteUrl={siteUrl} run={run} busy={busy} />
+        )}
       </div>
     </>
   );
@@ -922,11 +934,13 @@ function PriceTab({
 
 function ShareTab({
   proposal,
+  events,
   siteUrl,
   run,
   busy,
 }: {
   proposal: Proposal;
+  events: ProposalEvent[];
   siteUrl: string;
   run: (k: string, f: () => Promise<any>, s?: string) => Promise<any>;
   busy: string | null;
@@ -1012,6 +1026,8 @@ function ShareTab({
         </div>
       </section>
 
+      <SendCard proposal={proposal} run={run} busy={busy} />
+
       <section className="card p-6">
         <h2 className="font-serif text-xl text-ink">Where it stands</h2>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -1036,6 +1052,162 @@ function ShareTab({
             : 'No PDF built yet — one is made the first time it is asked for.'}
         </p>
       </section>
+
+      <Timeline events={events} />
     </div>
   );
+}
+
+/* ─────────────────────────────── sending it ─────────────────────────────── */
+
+function SendCard({
+  proposal,
+  run,
+  busy,
+}: {
+  proposal: Proposal;
+  run: (k: string, f: () => Promise<any>, s?: string) => Promise<any>;
+  busy: string | null;
+}) {
+  const [to, setTo] = useState('');
+  const [message, setMessage] = useState('');
+  const [days, setDays] = useState('60');
+  const [skipped, setSkipped] = useState(false);
+
+  return (
+    <section className="card p-6">
+      <h2 className="font-serif text-xl text-ink">Send it to the school</h2>
+      <p className="mt-1 text-sm text-ink-soft">
+        Issues a fresh link and emails it. Any link already in circulation stops working.
+      </p>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="field-label">To</label>
+          <input
+            type="email"
+            className="field"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            placeholder="trips@school.ae"
+          />
+        </div>
+        <div>
+          <label className="field-label">Link expires in (days)</label>
+          <input
+            type="number"
+            className="field"
+            value={days}
+            onChange={(e) => setDays(e.target.value)}
+            placeholder="Blank for never"
+          />
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <label className="field-label">Message</label>
+        <textarea
+          className="field min-h-[100px]"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Leave blank to use the standard wording."
+        />
+      </div>
+
+      {skipped && (
+        <p className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-ink">
+          The link was issued and the proposal is marked sent, but no email went out — this
+          deployment has no mail key configured. Copy the link above and send it yourself.
+        </p>
+      )}
+
+      <button
+        className="btn-primary mt-5 !py-2.5"
+        disabled={busy !== null || !to.includes('@')}
+        onClick={async () => {
+          setSkipped(false);
+          const res = await run(
+            'send',
+            () =>
+              sendStProposalEmail(proposal.id, {
+                to,
+                message,
+                expiresInDays: days.trim() ? Number(days) : null,
+              }),
+            'Sent.',
+          );
+          if (res?.skipped) setSkipped(true);
+        }}
+      >
+        {busy === 'send' ? 'Sending…' : 'Send the proposal'}
+      </button>
+    </section>
+  );
+}
+
+/* ──────────────────────────────── timeline ──────────────────────────────── */
+
+const EVENT_LABELS: Record<string, string> = {
+  created: 'Created',
+  sent: 'Sent to the school',
+  viewed: 'Opened by the school',
+  pdf_downloaded: 'PDF downloaded',
+  accepted: 'Accepted',
+};
+
+function Timeline({ events }: { events: ProposalEvent[] }) {
+  if (events.length === 0) {
+    return (
+      <section className="card p-6">
+        <h2 className="font-serif text-xl text-ink">Activity</h2>
+        <p className="mt-2 text-sm text-ink-soft">Nothing has happened yet.</p>
+      </section>
+    );
+  }
+
+  const views = events.filter((e) => e.event === 'viewed');
+  // Every open is recorded, which makes an honest count but a long list. The
+  // opens are summarised and the rest shown in full.
+  const rest = events.filter((e) => e.event !== 'viewed').slice(0, 30);
+
+  return (
+    <section className="card p-6">
+      <h2 className="font-serif text-xl text-ink">Activity</h2>
+
+      {views.length > 0 && (
+        <p className="mt-3 rounded-xl bg-teal/10 px-4 py-3 text-sm text-teal-deep">
+          Opened <b>{views.length}</b> {views.length === 1 ? 'time' : 'times'} — first on{' '}
+          {when(views[views.length - 1].createdAt)}, most recently {when(views[0].createdAt)}.
+        </p>
+      )}
+
+      <ol className="mt-4 space-y-3">
+        {rest.map((e) => (
+          <li key={e.id} className="flex flex-wrap items-baseline justify-between gap-2 text-sm">
+            <span className="text-ink">
+              {EVENT_LABELS[e.event] ?? e.event}
+              {typeof e.metadata.to === 'string' && (
+                <span className="text-ink-soft"> · {e.metadata.to}</span>
+              )}
+              {e.metadata.skipped === true && (
+                <span className="text-amber-700"> · not emailed, no mail key</span>
+              )}
+              {e.metadata.throttled === true && <span className="text-ink-soft"> · from cache</span>}
+            </span>
+            <span className="text-xs text-ink-soft">{when(e.createdAt)}</span>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function when(iso: string) {
+  if (!iso) return 'an unknown time';
+  return new Date(iso).toLocaleString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }

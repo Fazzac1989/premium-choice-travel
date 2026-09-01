@@ -17,12 +17,23 @@ export default async function StProposalPage({ params }: { params: { id: string 
   const { data: row } = await db.from('brochures').select('*').eq('id', id).maybeSingle();
   if (!row || row.kind !== 'proposal') notFound();
 
-  const [{ data: dayRows }, { data: flightRows }, { data: imageRows }, { data: termsRows }] =
-    await Promise.all([
+  const [
+    { data: dayRows },
+    { data: flightRows },
+    { data: imageRows },
+    { data: termsRows },
+    { data: eventRows },
+  ] = await Promise.all([
       db.from('brochure_days').select('*').eq('brochure_id', id).order('sort_order'),
       db.from('brochure_flights').select('*').eq('brochure_id', id).order('sort_order'),
       db.from('brochure_images').select('*').order('id'),
       db.from('brochure_terms_sets').select('id, name, version, is_default').order('name'),
+      db
+        .from('proposal_events')
+        .select('*')
+        .eq('brochure_id', id)
+        .order('created_at', { ascending: false })
+        .limit(200),
     ]);
 
   // Timetable rows for every day in one query rather than one per day.
@@ -120,6 +131,12 @@ export default async function StProposalPage({ params }: { params: { id: string 
           name: (t.name ?? '') as string,
           version: (t.version ?? 1) as number,
           isDefault: Boolean(t.is_default),
+        }))}
+        events={(eventRows ?? []).map((e) => ({
+          id: e.id as number,
+          event: (e.event ?? '') as string,
+          metadata: (e.metadata ?? {}) as Record<string, unknown>,
+          createdAt: (e.created_at ?? '') as string,
         }))}
         siteUrl={PCST_SITE_URL}
       />

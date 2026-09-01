@@ -24,6 +24,15 @@ export type EmailBrand = {
   blurb: string;
 };
 
+/** "https://example.com/" -> "example.com", for display in an email footer. */
+function hostOf(url: string): string {
+  try {
+    return new URL(url).host;
+  } catch {
+    return url;
+  }
+}
+
 export const EMAIL_BRANDS: Record<string, EmailBrand> = {
   travel: {
     key: 'travel',
@@ -59,6 +68,16 @@ export const EMAIL_BRANDS: Record<string, EmailBrand> = {
     tag: 'Golf',
     site: 'premiumchoicegolfholidays.com',
     blurb: 'Golf trips arranged around your group, your handicaps and your tee times.',
+  },
+  schooltrips: {
+    key: 'schooltrips',
+    name: 'Premium Choice School Trips',
+    tag: 'School Trips',
+    // Read from the environment rather than named here: School Trips still
+    // lives on its Vercel address, and a branded domain that does not resolve
+    // is worse in a customer's inbox than a plain one that does.
+    site: hostOf(process.env.PCST_SITE_URL ?? 'https://pcst-platform.vercel.app'),
+    blurb: 'Educational travel designed, priced and supported from Dubai.',
   },
   corporate: {
     key: 'corporate',

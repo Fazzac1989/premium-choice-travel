@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
 import { slugify, validateTravelDates } from '@/lib/brochure/proposal-rules';
+import { emailBrand } from '@/lib/email-brand';
+import { emailRows, emailShell, sendEmail } from '@/lib/email';
 import {
   EMPTY_CONTENT,
   type ProposalCommercials,
@@ -549,4 +551,106 @@ export async function archiveStProposal(id: number): Promise<ProposalResult> {
 
   refresh(id);
   return { ok: true };
+}
+
+/* ────────────────────────── sending it to a school ────────────────────────── */
+
+/**
+ * Email the school its link.
+ *
+ * The link is issued here rather than reused, so "send" always produces a
+ * working address even if the previous one was revoked or has expired. That
+ * does invalidate any link already in circulation, which is said plainly in
+ * the interface.
+ */
+export async function sendStProposalEmail(
+  id: number,
+  input: { to: string; message?: string; expiresInDays?: number | null },
+): Promise<ProposalResult & { url?: string; skipped?: boolean }> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+
+  const to = input.to.trim();
+  if (!to || !to.includes('@')) return { ok: false, error: 'Give a valid email address.' };
+
+  const db = pcstClient();
+  const { data: row } = await db
+    .from('brochures')
+    .select('id, title, prepared_for, price_per_student, currency, travel_start, travel_end, student_count')
+    .eq('id', id)
+    .maybeSingle();
+  if (!row) return { ok: false, error: 'Proposal not found.' };
+
+  const issued = await issueStProposalLink(id, input.expiresInDays ?? null);
+  if (!issued.ok || !issued.url) return issued;
+
+  const brand = emailBrand('schooltrips');
+  const money =
+    row.price_per_student != null
+      ? `${row.currency ?? 'AED'} ${Number(row.price_per_student).toLocaleString()}`
+      : null;
+
+  const bodyHtml = `
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#425964">
+      ${input.message?.trim()
+        ? escapeHtml(input.message.trim()).replace(/\n/g, '<br/>')
+        : `Your proposal is ready to read. It covers the itinerary day by day, what is included, the price and our booking conditions.`}
+    </p>
+    ${emailRows([
+      ['Trip', row.title],
+      ['Prepared for', row.prepared_for],
+      ['Dates', formatDateRange(row.travel_start, row.travel_end)],
+      ['Group', row.student_count ? `${row.student_count} students` : null],
+      ['Price per student', money],
+    ])}
+    <p style="margin:20px 0 0;font-size:13px;line-height:1.65;color:#8a969c">
+      This link is personal to your school. Please do not share it more widely than you need to.
+    </p>`;
+
+  const sent = await sendEmail({
+    to,
+    subject: `Your proposal — ${row.title}`,
+    html: emailShell({
+      title: 'Your proposal is ready',
+      eyebrow: `Proposal · ${brand.tag}`,
+      bodyHtml,
+      cta: { label: 'Read the proposal', url: issued.url },
+      brand,
+    }),
+  });
+
+  if (!sent.ok) return { ok: false, error: sent.error ?? 'The email could not be sent.' };
+
+  await db.from('proposal_events').insert({
+    brochure_id: id,
+    event: 'sent',
+    metadata: { to, skipped: Boolean(sent.skipped) },
+  });
+
+  refresh(id);
+  // `skipped` means there is no mail key configured: the link is real and the
+  // proposal is marked sent, but nothing left the building. Saying so is the
+  // difference between a working send and a silent one.
+  return { ok: true, url: issued.url, skipped: sent.skipped };
+}
+
+function formatDateRange(start: string | null, end: string | null): string | null {
+  if (!start) return null;
+  const f = (s: string) =>
+    new Date(`${s}T00:00:00Z`).toLocaleDateString('en-GB', {
+      timeZone: 'UTC',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  return end ? `${f(start)} to ${f(end)}` : f(start);
+}
+
+/** The message is typed by staff, but it still goes into an HTML email. */
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
