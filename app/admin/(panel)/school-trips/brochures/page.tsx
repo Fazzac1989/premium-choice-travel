@@ -20,6 +20,9 @@ export default async function StBrochuresPage() {
     .from('brochures')
     .select('*')
     .neq('status', 'archived')
+    // Proposals share this table but are a different model, with their own
+    // studio at /admin/school-trips/proposals.
+    .neq('kind', 'proposal')
     .order('updated_at', { ascending: false });
 
   if (error) {
