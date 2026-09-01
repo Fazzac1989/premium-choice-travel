@@ -209,6 +209,8 @@ function DocumentTab({
     eyebrow: c.eyebrow,
     subtitle: c.subtitle,
     intro: c.intro.join('\n\n'),
+    overviewHeading: c.overviewHeading,
+    overviewEmphasis: c.overviewEmphasis,
     pctParents: c.pctParents,
     pctChildren: c.pctChildren,
     pctTeachers: c.pctTeachers,
@@ -230,6 +232,8 @@ function DocumentTab({
           subtitle: form.subtitle,
           // Blank lines separate paragraphs, which is how the copy is written.
           intro: form.intro.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean),
+          overviewHeading: form.overviewHeading,
+          overviewEmphasis: form.overviewEmphasis,
           pctParents: form.pctParents,
           pctChildren: form.pctChildren,
           pctTeachers: form.pctTeachers,
@@ -300,6 +304,26 @@ function DocumentTab({
 
       <section className="card p-6">
         <h2 className="font-serif text-xl text-ink">The programme</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="field-label">Overview headline</label>
+            <input
+              className="field"
+              value={form.overviewHeading}
+              onChange={(e) => set('overviewHeading', e.target.value)}
+              placeholder="A programme built around learning, challenge and"
+            />
+          </div>
+          <div>
+            <label className="field-label">Headline, italic part</label>
+            <input
+              className="field"
+              value={form.overviewEmphasis}
+              onChange={(e) => set('overviewEmphasis', e.target.value)}
+              placeholder="teamwork"
+            />
+          </div>
+        </div>
         <div className="mt-4">
           <label className="field-label">Introduction</label>
           <textarea

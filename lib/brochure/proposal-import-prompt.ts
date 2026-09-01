@@ -14,6 +14,7 @@ Guidance:
 - title / titleEmphasis: split the trip's name so the second part reads in italics. "Finland Winter" + "Activity Adventure". If the name does not split naturally, put it all in title and leave titleEmphasis empty.
 - eyebrow: the short classification line above the title, e.g. "Outdoor education · Finland". Build it only from what the document says.
 - subtitle: one or two sentences introducing the trip, drawn from the document's own opening.
+- overviewHeading / overviewEmphasis: the headline over the introduction, split so the second part reads in italics. Take it from the document's own wording; leave both empty if it has none.
 - intro: the introductory prose as two or three clean paragraphs. Keep the facts; drop internal notes, sales boilerplate and pricing tables.
 - pctParents / pctChildren / pctTeachers: what the trip offers each of those three audiences, if the document addresses them. Empty if it does not.
 - days: one entry per day, in order. summary is the prose paragraph; items is the timetable, one row per stated time or phase. timeLabel is free text — "09:00" and "Late morning" are both fine, copied as written. Use <b> in item text only where the document emphasises a venue or a flight.
@@ -45,6 +46,8 @@ export const SCHEMA = {
     'subtitle',
     'preparedFor',
     'intro',
+    'overviewHeading',
+    'overviewEmphasis',
     'pctParents',
     'pctChildren',
     'pctTeachers',
@@ -66,6 +69,8 @@ export const SCHEMA = {
     subtitle: { type: 'string' },
     preparedFor: { type: 'string', description: 'The school, if the document names one.' },
     intro: { type: 'array', items: { type: 'string' } },
+    overviewHeading: { type: 'string' },
+    overviewEmphasis: { type: 'string' },
     pctParents: { type: 'string' },
     pctChildren: { type: 'string' },
     pctTeachers: { type: 'string' },

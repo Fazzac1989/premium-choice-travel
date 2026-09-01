@@ -32,6 +32,8 @@ type Parsed = {
   subtitle?: string;
   preparedFor?: string;
   intro?: string[];
+  overviewHeading?: string;
+  overviewEmphasis?: string;
   pctParents?: string;
   pctChildren?: string;
   pctTeachers?: string;
@@ -124,6 +126,8 @@ export async function importStProposal(formData: FormData): Promise<ImportResult
     eyebrow: draft.eyebrow ?? '',
     subtitle: draft.subtitle ?? '',
     intro: (draft.intro ?? []).filter(Boolean),
+    overviewHeading: draft.overviewHeading ?? '',
+    overviewEmphasis: draft.overviewEmphasis ?? '',
     pctParents: draft.pctParents ?? '',
     pctChildren: draft.pctChildren ?? '',
     pctTeachers: draft.pctTeachers ?? '',
