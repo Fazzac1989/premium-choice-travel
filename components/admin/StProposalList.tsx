@@ -54,7 +54,10 @@ export default function StProposalList({ proposals }: { proposals: Row[] }) {
 
   return (
     <>
-      <div className="mt-6 flex justify-end">
+      <div className="mt-6 flex flex-wrap justify-end gap-3">
+        <Link href="/admin/school-trips/proposals/import" className="btn-outline !bg-white !py-2.5">
+          Import a document
+        </Link>
         <button className="btn-primary !py-2.5" onClick={() => setCreating((v) => !v)}>
           {creating ? 'Cancel' : 'New proposal'}
         </button>

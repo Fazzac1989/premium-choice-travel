@@ -72,3 +72,31 @@ export function validateTravelDates(
   if (end < start) return 'The return date is before the departure date.';
   return null;
 }
+
+/**
+ * An ISO date, or nothing.
+ *
+ * Used on imported documents: a date that is not plainly YYYY-MM-DD is a
+ * guess, and a guessed travel date is one a school would be held to.
+ */
+export function safeDate(v: string | null | undefined): string | null {
+  if (!v || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
+  const d = new Date(`${v}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return null;
+  // Round-trip it: Date rolls 2026-02-30 forward to 2 March rather than
+  // rejecting it, and a date that silently moved is worse than no date.
+  return d.toISOString().slice(0, 10) === v ? v : null;
+}
+
+/**
+ * Timetable text allows <b> and nothing else.
+ *
+ * The copy comes from a document someone else wrote and is rendered with
+ * dangerouslySetInnerHTML, so every other tag is stripped before it is stored.
+ */
+export function sanitiseItemText(html: string): string {
+  return html
+    .replace(/<(?!\/?b\b)[^>]*>/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}

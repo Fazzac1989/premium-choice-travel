@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { slugify, stripCombiningMarks, validateTravelDates } from '@/lib/brochure/proposal-rules';
+import {
+  safeDate,
+  sanitiseItemText,
+  slugify,
+  stripCombiningMarks,
+  validateTravelDates,
+} from '@/lib/brochure/proposal-rules';
 
 describe('slugify', () => {
   it('folds accents rather than dropping the letters', () => {
@@ -83,5 +89,68 @@ describe('validateTravelDates', () => {
   it('compares correctly across a year boundary', () => {
     expect(validateTravelDates('2026-12-28', '2027-01-04')).toBeNull();
     expect(validateTravelDates('2027-01-04', '2026-12-28')).not.toBeNull();
+  });
+});
+
+describe('safeDate', () => {
+  it('accepts a plain ISO date', () => {
+    expect(safeDate('2026-01-18')).toBe('2026-01-18');
+  });
+
+  it('refuses anything that is not plainly YYYY-MM-DD', () => {
+    // An imported document might say any of these. A guessed travel date is
+    // one a school would be held to, so none of them is accepted.
+    for (const v of [
+      '18/01/2026',
+      'January 18, 2026',
+      '2026-1-8',
+      '18 Jan 2026',
+      'next January',
+      'TBC',
+      '2026-01-18T00:00:00Z',
+    ]) {
+      expect(safeDate(v), v).toBeNull();
+    }
+  });
+
+  it('refuses a well-shaped date that is not a real day', () => {
+    // Date rolls 30 February forward to 2 March rather than rejecting it. A
+    // travel date that silently moved is worse than one that came back empty.
+    expect(safeDate('2026-02-30')).toBeNull();
+    expect(safeDate('2026-13-01')).toBeNull();
+    expect(safeDate('2026-04-31')).toBeNull();
+    expect(safeDate('2026-02-29')).toBeNull(); // 2026 is not a leap year
+    expect(safeDate('2028-02-29')).toBe('2028-02-29'); // 2028 is
+  });
+
+  it('refuses nothing at all', () => {
+    expect(safeDate(null)).toBeNull();
+    expect(safeDate(undefined)).toBeNull();
+    expect(safeDate('')).toBeNull();
+  });
+});
+
+describe('sanitiseItemText', () => {
+  it('keeps the one tag the design uses', () => {
+    expect(sanitiseItemText('Dinner at <b>Kappeli</b>')).toBe('Dinner at <b>Kappeli</b>');
+  });
+
+  it('strips a script tag, which is the point of it', () => {
+    // Timetable text is rendered with dangerouslySetInnerHTML.
+    expect(sanitiseItemText('Lunch <script>alert(1)</script>')).toBe('Lunch alert(1)');
+    expect(sanitiseItemText('<img src=x onerror=alert(1)>Ski')).toBe('Ski');
+  });
+
+  it('strips other formatting rather than trusting a stranger\u2019s document', () => {
+    expect(sanitiseItemText('<p>Board the <i>coach</i></p>')).toBe('Board the coach');
+    expect(sanitiseItemText('<a href="http://x">Museum</a>')).toBe('Museum');
+  });
+
+  it('collapses the whitespace a document conversion leaves behind', () => {
+    expect(sanitiseItemText('  Ski   school\n\n  at   Oivanki  ')).toBe('Ski school at Oivanki');
+  });
+
+  it('leaves plain text alone', () => {
+    expect(sanitiseItemText('Husky safari')).toBe('Husky safari');
   });
 });
