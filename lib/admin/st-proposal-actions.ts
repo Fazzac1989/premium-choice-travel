@@ -4,6 +4,7 @@ import { randomBytes } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
+import { slugify, validateTravelDates } from '@/lib/brochure/proposal-rules';
 import {
   EMPTY_CONTENT,
   type ProposalCommercials,
@@ -27,26 +28,6 @@ import {
 export type ProposalResult = { ok: true; id?: number } | { ok: false; error: string };
 
 const NOT_CONFIGURED = { ok: false, error: 'School Trips database is not configured.' } as const;
-
-/**
- * Combining marks are stripped by code point rather than by a character-range
- * regex. Raw high characters in this source have been mangled by an encoding
- * round-trip twice already, so this file stays pure ASCII.
- */
-const stripCombiningMarks = (s: string) =>
-  Array.from(s)
-    .filter((ch) => {
-      const c = ch.codePointAt(0) ?? 0;
-      return c < 0x0300 || c > 0x036f;
-    })
-    .join('');
-
-const slugify = (s: string) =>
-  stripCombiningMarks(s.normalize('NFD'))
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
 
 function refresh(id?: number) {
   revalidatePath('/admin/school-trips/proposals');
@@ -257,13 +238,11 @@ export async function updateStProposalCommercials(
   if (c.heroEffect !== undefined) update.hero_effect = c.heroEffect;
   if (c.termsSetId !== undefined) update.terms_set_id = c.termsSetId;
 
-  if (
-    update.travel_start &&
-    update.travel_end &&
-    String(update.travel_end) < String(update.travel_start)
-  ) {
-    return { ok: false, error: 'The return date is before the departure date.' };
-  }
+  const dateError = validateTravelDates(
+    update.travel_start as string | null,
+    update.travel_end as string | null,
+  );
+  if (dateError) return { ok: false, error: dateError };
 
   const { error } = await db.from('brochures').update(update).eq('id', id);
   if (error) return { ok: false, error: error.message };
