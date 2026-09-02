@@ -64,8 +64,15 @@ export async function readSource(formData: FormData): Promise<{ text: string } |
 
   const file = formData.get('file');
   if (!source && file instanceof File && file.size > 0) {
-    if (file.size > 8 * 1024 * 1024) {
-      return { error: 'That file is over 8MB — try removing embedded images first.' };
+    // A serverless request body is capped at about 4.5MB, and the platform
+    // rejects it before this code runs — so the real limit is lower than
+    // anything we could enforce here. This is the message for a file that got
+    // through but is still too big to be worth reading.
+    if (file.size > 4 * 1024 * 1024) {
+      return {
+        error:
+          'That file is over 4MB, which is more than an upload can carry. Save it as .docx — those are read in your browser at any size — or paste the text instead.',
+      };
     }
     try {
       source = (await extractText(file)).trim();
