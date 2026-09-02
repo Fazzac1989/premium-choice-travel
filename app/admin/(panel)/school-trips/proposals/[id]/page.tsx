@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
 import { EMPTY_CONTENT, type ProposalContent } from '@/lib/brochure/proposal-schema';
+import { signPreviewToken } from '@/lib/brochure/preview-token';
 import StProposalEditor from '@/components/admin/StProposalEditor';
 
 export const dynamic = 'force-dynamic';
@@ -112,6 +113,12 @@ export default async function StProposalPage({ params }: { params: { id: string 
     updatedAt: (row.updated_at ?? null) as string | null,
   };
 
+  // The School Trips app guards /proposals/<id>, and this admin is on another
+  // domain, so its session cookie never arrives there. A signed, expiring token
+  // travels with the link instead — without it the preview bounced to the login
+  // screen and back to this menu.
+  const previewToken = await signPreviewToken(id, process.env.PCST_SUPABASE_SERVICE_ROLE_KEY ?? '');
+
   return (
     <>
       <Link
@@ -138,6 +145,7 @@ export default async function StProposalPage({ params }: { params: { id: string 
           metadata: (e.metadata ?? {}) as Record<string, unknown>,
           createdAt: (e.created_at ?? '') as string,
         }))}
+        previewToken={previewToken}
         siteUrl={PCST_SITE_URL}
       />
     </>

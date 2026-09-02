@@ -5,6 +5,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { PACKAGE_BRANDS } from '@/lib/brands';
 
 type NavItem = { href: string; label: string; exact?: boolean };
+/** A heading has no href: it labels the group of links beneath it. */
+type NavEntry = NavItem | { heading: string };
+const isHeading = (e: NavEntry): e is { heading: string } => 'heading' in e;
 
 const GROUP_ITEMS: NavItem[] = [
   { href: '/admin', label: 'Dashboard', exact: true },
@@ -18,22 +21,26 @@ const GROUP_ITEMS: NavItem[] = [
   { href: '/admin/enquiries', label: 'Enquiries' },
 ];
 
-const ST_ITEMS: NavItem[] = [
+const ST_ITEMS: NavEntry[] = [
+  // What the public sees, and what it is built from.
+  { heading: 'Website' },
   { href: '/admin/school-trips', label: 'Trips', exact: true },
   { href: '/admin/school-trips/import', label: 'AI Importer' },
   { href: '/admin/school-trips/subjects', label: 'Subjects' },
   { href: '/admin/school-trips/countries', label: 'Countries' },
   { href: '/admin/school-trips/cities', label: 'Cities' },
-  { href: '/admin/school-trips/quotes', label: 'Quotes' },
-  { href: '/admin/school-trips/requests', label: 'Appointments' },
-  { href: '/admin/school-trips/teachers', label: 'Teachers' },
-  { href: '/admin/school-trips/planning', label: 'Trip planning' },
-  { href: '/admin/school-trips/brochures', label: 'Brochure Studio' },
-  { href: '/admin/school-trips/proposals', label: 'Proposals' },
-  { href: '/admin/school-trips/analytics', label: 'Analytics' },
-  { href: '/admin/school-trips/media', label: 'Media' },
   { href: '/admin/school-trips/website', label: 'Website content' },
+  { href: '/admin/school-trips/media', label: 'Media' },
+
+  // What goes to a school, and what comes back.
+  { heading: 'Commercial' },
+  { href: '/admin/school-trips/proposals', label: 'Proposals' },
+  { href: '/admin/school-trips/brochures', label: 'Brochure Studio' },
+  { href: '/admin/school-trips/teachers', label: 'Teachers' },
+  { href: '/admin/school-trips/requests', label: 'Appointments' },
+  { href: '/admin/school-trips/planning', label: 'Trip planning' },
   { href: '/admin/school-trips/terms', label: 'Booking terms' },
+  { href: '/admin/school-trips/analytics', label: 'Analytics' },
 ];
 
 const brandItems = (key: string): NavItem[] => [
@@ -58,7 +65,7 @@ export default function AdminNav() {
       ? brandMatch[1]
       : 'group';
 
-  const items =
+  const items: NavEntry[] =
     workspace === 'school-trips'
       ? ST_ITEMS
       : workspace === 'group'
@@ -94,7 +101,20 @@ export default function AdminNav() {
       </div>
 
       <nav className="flex-1 space-y-1 p-4">
-        {items.map((item) => {
+        {items.map((entry, i) => {
+          if (isHeading(entry)) {
+            return (
+              <p
+                key={entry.heading}
+                className={`px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 ${
+                  i === 0 ? 'pt-1' : 'pt-5'
+                }`}
+              >
+                {entry.heading}
+              </p>
+            );
+          }
+          const item = entry;
           const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
           return (
             <Link

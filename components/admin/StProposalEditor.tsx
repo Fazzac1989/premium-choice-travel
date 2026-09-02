@@ -88,6 +88,7 @@ export default function StProposalEditor({
   images,
   termsSets,
   events,
+  previewToken,
   siteUrl,
 }: {
   proposal: Proposal;
@@ -96,6 +97,7 @@ export default function StProposalEditor({
   images: { id: number; alt: string; url: string }[];
   termsSets: { id: number; name: string; version: number; isDefault: boolean }[];
   events: ProposalEvent[];
+  previewToken: string;
   siteUrl: string;
 }) {
   const router = useRouter();
@@ -116,7 +118,7 @@ export default function StProposalEditor({
     return res;
   }
 
-  const previewUrl = `${siteUrl}/proposals/${proposal.id}`;
+  const previewUrl = `${siteUrl}/proposals/${proposal.id}?preview=${encodeURIComponent(previewToken)}`;
 
   return (
     <>
