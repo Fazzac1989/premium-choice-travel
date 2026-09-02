@@ -65,7 +65,10 @@ type Parsed = {
   notes: string[];
 };
 
-export async function importStProposal(formData: FormData): Promise<ImportResult> {
+export async function importStProposal(
+  _previous: ImportResult | null,
+  formData: FormData,
+): Promise<ImportResult> {
   await requireAdmin();
   if (!isPcstConfigured()) return { ok: false, error: 'School Trips database is not configured.' };
   if (!process.env.ANTHROPIC_API_KEY) {

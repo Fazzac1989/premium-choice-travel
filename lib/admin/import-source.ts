@@ -90,8 +90,29 @@ export async function extractText(file: File): Promise<string> {
   if (name.endsWith('.doc')) {
     throw new Error('Old .doc files are not supported — open it in Word and use File → Save As → .docx.');
   }
+  if (name.endsWith('.pdf')) {
+    // Proposals arrive as PDFs at least as often as Word files.
+    const { PDFParse } = await import('pdf-parse');
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    try {
+      const { text } = await parser.getText();
+      if (!text.trim()) {
+        throw new Error(
+          'That PDF has no selectable text — it is probably a scan. Send the Word version, or paste the text.',
+        );
+      }
+      return text;
+    } finally {
+      await parser.destroy().catch(() => {});
+    }
+  }
   if (name.endsWith('.txt') || name.endsWith('.md') || name.endsWith('.rtf')) {
     return buffer.toString('utf8');
   }
-  throw new Error(`Unsupported file type ".${name.split('.').pop()}" — upload a .docx, .txt or .md.`);
+  if (name.endsWith('.pages')) {
+    throw new Error('Apple Pages files are not supported — export it as .docx or .pdf first.');
+  }
+  throw new Error(
+    `Cannot read a ".${name.split('.').pop()}" file — upload a .docx, .pdf, .txt or .md, or paste the text instead.`,
+  );
 }
