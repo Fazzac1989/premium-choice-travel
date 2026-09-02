@@ -654,3 +654,34 @@ function escapeHtml(s: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+/**
+ * Delete a proposal outright.
+ *
+ * Archiving is the safer habit and stays the default in the editor, but a
+ * proposal written by mistake should not have to be kept forever. The days,
+ * timetable rows, flights and events all carry `on delete cascade`, so the
+ * row taking them with it is the schema working as intended rather than an
+ * accident.
+ */
+export async function deleteStProposal(id: number): Promise<ProposalResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+
+  const { data: row } = await db
+    .from('brochures')
+    .select('id, kind, status')
+    .eq('id', id)
+    .maybeSingle();
+  if (!row) return { ok: false, error: 'Proposal not found.' };
+  // Guard the kind: this action is reachable only from the proposal list, and
+  // a mistyped id should not be able to take a brochure with it.
+  if (row.kind !== 'proposal') return { ok: false, error: 'That is not a proposal.' };
+
+  const { error } = await db.from('brochures').delete().eq('id', id);
+  if (error) return { ok: false, error: error.message };
+
+  refresh();
+  return { ok: true };
+}

@@ -7,6 +7,7 @@ import {
   createStBrochure,
   duplicateStBrochure,
   archiveStBrochure,
+  deleteStBrochure,
   type CreateInput,
 } from '@/lib/admin/st-brochure-actions';
 import type { Brochure, BrochureKind, DetailLevel } from '@/lib/brochure/schema';
@@ -184,6 +185,20 @@ export default function StBrochureList({
                   className="text-ink-soft hover:text-danger disabled:opacity-50"
                 >
                   Archive
+                </button>
+                <button
+                  disabled={busy !== null}
+                  onClick={() => {
+                    // Two questions, because this one does not come back: the
+                    // pages, the trip selection and the published address all
+                    // go with it.
+                    if (!window.confirm(`Delete "${b.title}" for good? Its pages go too, and any published link stops working. This cannot be undone.`)) return;
+                    if (!window.confirm('Really delete it? Archive keeps it out of the way without destroying it.')) return;
+                    act(`del-${b.id}`, () => deleteStBrochure(b.id));
+                  }}
+                  className="font-semibold text-danger hover:underline disabled:opacity-50"
+                >
+                  Delete
                 </button>
               </div>
             </div>

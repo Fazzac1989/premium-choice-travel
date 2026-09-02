@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { createStProposal } from '@/lib/admin/st-proposal-actions';
+import { createStProposal, deleteStProposal } from '@/lib/admin/st-proposal-actions';
 
 type Row = {
   id: number;
@@ -120,11 +120,11 @@ export default function StProposalList({ proposals }: { proposals: Row[] }) {
       ) : (
         <div className="mt-6 space-y-3">
           {proposals.map((p) => (
-            <Link
+            <div
               key={p.id}
-              href={`/admin/school-trips/proposals/${p.id}`}
               className="card flex flex-wrap items-center justify-between gap-4 p-5 transition hover:shadow-md"
             >
+              <Link href={`/admin/school-trips/proposals/${p.id}`} className="flex flex-1 flex-wrap items-center justify-between gap-4">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span
@@ -158,7 +158,27 @@ export default function StProposalList({ proposals }: { proposals: Row[] }) {
                   {p.viewCount ? ` · ${p.viewCount} views` : ''}
                 </p>
               </div>
-            </Link>
+              </Link>
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  // Two questions, because this one does not come back.
+                  if (!window.confirm(`Delete "${p.title}" for good? Its itinerary, flights and history go too, and any link you have sent stops working. This cannot be undone.`)) return;
+                  if (!window.confirm('Really delete it? Archiving from inside the proposal keeps it without destroying it.')) return;
+                  setBusy(true);
+                  setError(null);
+                  const res = await deleteStProposal(p.id);
+                  setBusy(false);
+                  if (!res.ok) return setError(res.error);
+                  router.refresh();
+                }}
+                className="shrink-0 text-sm font-semibold text-danger hover:underline disabled:opacity-50"
+              >
+                Delete
+              </button>
+            </div>
           ))}
         </div>
       )}
