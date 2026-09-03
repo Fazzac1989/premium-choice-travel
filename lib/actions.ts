@@ -1,12 +1,16 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { describeRejection, guardPayloadFromForm, guardSubmission, remoteIpFrom } from '@/lib/spam-guard';
 import { emailShell, sendEmail } from '@/lib/email';
 import { emailBrand } from '@/lib/email-brand';
 import { getAccount } from '@/lib/account';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 export type EnquiryState = { ok: boolean; message: string } | null;
+
+const THANKS = 'Thank you — we’ll come back to you as quickly as we can, typically within one working day. We have emailed you a copy.';
 
 export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Promise<EnquiryState> {
   const name = String(formData.get('name') ?? '').trim();
@@ -22,6 +26,18 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
 
   if (!name || !email) return { ok: false, message: 'Please tell us your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
+
+  // Bots first, before anything is stored or sent. A silent rejection is
+  // answered with the ordinary thank-you, so the bot learns nothing.
+  const verdict = await guardSubmission({
+    ...(guardPayloadFromForm(formData)),
+    fields: [name, travelDates, travellers, message],
+    remoteIp: remoteIpFrom(headers().get('x-forwarded-for')),
+  });
+  if (!verdict.ok) {
+    console.warn(describeRejection(verdict, 'enquiry', email));
+    return verdict.silent ? { ok: true, message: THANKS } : { ok: false, message: verdict.message };
+  }
 
   if (isSupabaseConfigured()) {
     const db = createAdminClient();
@@ -80,5 +96,5 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
     caveat: 'Nothing is booked or held at this stage. We will come back to you with ideas and prices first.',
   });
 
-  return { ok: true, message: 'Thank you — we’ll come back to you as quickly as we can, typically within one working day. We have emailed you a copy.' };
+  return { ok: true, message: THANKS };
 }

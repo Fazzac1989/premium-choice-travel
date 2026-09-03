@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { submitAvailabilityCheck } from '@/lib/availability-actions';
+import GuardFields, { type GuardValues } from '@/components/GuardFields';
 
 const MEAL_PLANS = ['No preference', 'Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
 const CHANNELS = ['WhatsApp', 'Email', 'Phone'];
@@ -27,6 +28,7 @@ export default function AvailabilityCheck({
   const [pending, startTransition] = useTransition();
   const [done, setDone] = useState('');
   const [error, setError] = useState('');
+  const [guard, setGuard] = useState<GuardValues>({ honeypot: '', stamp: '', turnstile: '', ready: false });
   const [form, setForm] = useState({
     checkIn: defaultCheckIn,
     nights: defaultNights,
@@ -61,7 +63,7 @@ export default function AvailabilityCheck({
         e.preventDefault();
         setError('');
         startTransition(async () => {
-          const res = await submitAvailabilityCheck({ ...form, hotelName, emirate });
+          const res = await submitAvailabilityCheck({ ...form, hotelName, emirate, guard });
           if (res.ok) setDone(res.message);
           else setError(res.message);
         });
@@ -180,8 +182,9 @@ export default function AvailabilityCheck({
         placeholder="Anything else — occasion, room preference, late checkout…"
         className="w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40"
       />
+      <GuardFields onChange={setGuard} />
       {error && <p className="text-sm text-red-300">{error}</p>}
-      <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
+      <button type="submit" disabled={pending || !guard.ready} className="btn-primary w-full disabled:opacity-60">
         {pending ? 'Sending…' : 'Check availability & price'}
       </button>
       <p className="text-center text-xs leading-relaxed text-white/60">

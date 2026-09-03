@@ -7,6 +7,7 @@ import {
   type CuratorAnswers,
   type TripConcept,
 } from '@/lib/curator-actions';
+import GuardFields, { type GuardValues } from '@/components/GuardFields';
 
 const TRIP_TYPES = ['Beach', 'Family', 'Adventure', 'Culture', 'Safari', 'Ski', 'Golf', 'Cruise', 'City', 'Wellness', 'Surprise me'];
 const DEPARTURES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Other'];
@@ -51,6 +52,7 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
 
   const [contact, setContact] = useState({ name: '', email: '', phone: '', channel: 'WhatsApp' });
   const [done, setDone] = useState<string | null>(null);
+  const [guard, setGuard] = useState<GuardValues>({ honeypot: '', stamp: '', turnstile: '', ready: false });
 
   const STEPS = ['Trip', 'When', 'Who', 'Budget', 'Style', 'Ideas'];
 
@@ -80,6 +82,7 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
       const res = await submitInspirationLead({
         answers, concepts: concepts ?? [], selected,
         name: contact.name, email: contact.email, phone: contact.phone, channel: contact.channel,
+        guard,
       });
       if (res.ok) setDone(res.message);
       else setError(res.message);
@@ -337,12 +340,13 @@ export default function InspirationCurator({ destinationHint = '' }: { destinati
                 </div>
               </div>
             </div>
+            <GuardFields onChange={setGuard} />
             {error && <p className="mt-3 text-sm text-danger">{error}</p>}
             <div className="mt-6 flex items-center justify-between">
               <button type="button" onClick={() => setSelected(null)} className="text-sm font-semibold text-ink-soft hover:text-ink">
                 ← Back to the ideas
               </button>
-              <button type="button" onClick={submit} disabled={pending} className="btn-primary !px-8 disabled:opacity-50">
+              <button type="button" onClick={submit} disabled={pending || !guard.ready} className="btn-primary !px-8 disabled:opacity-50">
                 {pending ? 'Sending…' : 'Send to a travel expert'}
               </button>
             </div>

@@ -3,15 +3,16 @@
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { submitEnquiry, type EnquiryState } from '@/lib/actions';
+import GuardFields, { type GuardValues } from '@/components/GuardFields';
 
 const TRIP_TYPES = ['Holiday', 'Staycation', 'Cruise', 'School Trip', 'Golf Holiday', 'Corporate Travel', 'Not sure yet'];
 const WHEN_MODES = ['I have specific dates', 'Approximate dates', 'Still deciding'];
 const PRIORITIES = ['Relaxation', 'Adventure', 'Culture', 'Family', 'Luxury', 'Golf', 'Value', 'Food', 'Something else'];
 
-function SubmitButton() {
+function SubmitButton({ ready }: { ready: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending} className="btn-primary w-full !py-4 disabled:opacity-60">
+    <button type="submit" disabled={pending || !ready} className="btn-primary w-full !py-4 disabled:opacity-60">
       {pending ? 'Sending…' : 'Send my trip brief'}
     </button>
   );
@@ -33,6 +34,7 @@ function Chip({ active, children, onClick }: { active: boolean; children: React.
 
 export default function PlanWizard() {
   const [state, formAction] = useFormState<EnquiryState, FormData>(submitEnquiry, null);
+  const [guard, setGuard] = useState<GuardValues>({ honeypot: '', stamp: '', turnstile: '', ready: false });
 
   const [step, setStep] = useState(0);
   const [tripType, setTripType] = useState('');
@@ -206,9 +208,10 @@ export default function PlanWizard() {
                 <textarea name="message" rows={5} className="field" defaultValue={summary} />
               </div>
             </div>
-            {state && !state.ok && <p className="mt-3 text-sm text-danger">{state.message}</p>}
+            <GuardFields onChange={setGuard} />
+      {state && !state.ok && <p className="mt-3 text-sm text-danger">{state.message}</p>}
             <div className="mt-6">
-              <SubmitButton />
+              <SubmitButton ready={guard.ready} />
             </div>
           </form>
         )}

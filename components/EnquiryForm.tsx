@@ -2,11 +2,13 @@
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { submitEnquiry, type EnquiryState } from '@/lib/actions';
+import GuardFields, { type GuardValues } from '@/components/GuardFields';
+import { useState } from 'react';
 
-function SubmitButton() {
+function SubmitButton({ ready }: { ready: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
+    <button type="submit" disabled={pending || !ready} className="btn-primary w-full disabled:opacity-60">
       {pending ? 'Sending…' : 'Send enquiry'}
     </button>
   );
@@ -25,6 +27,7 @@ export default function EnquiryForm({
   brand?: string;
 }) {
   const [state, formAction] = useFormState<EnquiryState, FormData>(submitEnquiry, null);
+  const [guard, setGuard] = useState<GuardValues>({ honeypot: '', stamp: '', turnstile: '', ready: false });
 
   if (state?.ok) {
     return (
@@ -67,8 +70,9 @@ export default function EnquiryForm({
         <label className="field-label" htmlFor="enq-message">Tell us about your trip</label>
         <textarea id="enq-message" name="message" rows={4} className="field" placeholder="Where would you like to go? Any special occasions?" />
       </div>
+      <GuardFields onChange={setGuard} />
       {state && !state.ok && <p className="text-sm text-danger">{state.message}</p>}
-      <SubmitButton />
+      <SubmitButton ready={guard.ready} />
       <p className="text-center text-xs text-ink-soft">
         Or call us on <a className="font-semibold text-teal-deep" href="tel:+97144206965">+971 4 420 6965</a>
       </p>

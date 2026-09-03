@@ -1,6 +1,8 @@
 'use server';
 
+import { headers } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { describeRejection, guardSubmission, remoteIpFrom, type GuardPayload } from '@/lib/spam-guard';
 import { emailShell, sendEmail } from '@/lib/email';
 import { emailBrand } from '@/lib/email-brand';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
@@ -12,6 +14,8 @@ import { sendCustomerConfirmation } from '@/lib/email-customer';
  * availability call plugs into.
  */
 export type AvailabilityResult = { ok: boolean; message: string };
+
+const THANKS = 'Got it — a specialist is checking availability and will reply with priced options, typically the same working day. We have emailed you a copy.';
 
 export async function submitAvailabilityCheck(payload: {
   hotelName: string;
@@ -26,11 +30,24 @@ export async function submitAvailabilityCheck(payload: {
   phone: string;
   channel: string;
   notes: string;
+  guard?: GuardPayload;
 }): Promise<AvailabilityResult> {
   const name = payload.name.trim();
   const email = payload.email.trim();
   if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
+
+  // Bots first, before anything is stored or sent. A silent rejection is
+  // answered with the ordinary thank-you, so the bot learns nothing.
+  const verdict = await guardSubmission({
+    ...(payload.guard ?? {}),
+    fields: [name, payload.childrenAges, payload.notes, payload.phone],
+    remoteIp: remoteIpFrom(headers().get('x-forwarded-for')),
+  });
+  if (!verdict.ok) {
+    console.warn(describeRejection(verdict, 'availability', email));
+    return verdict.silent ? { ok: true, message: THANKS } : { ok: false, message: verdict.message };
+  }
   if (!payload.checkIn) return { ok: false, message: 'Pick a check-in date.' };
   const nights = Math.max(1, Math.min(30, Number(payload.nights) || 1));
   const adults = Math.max(1, Math.min(12, Number(payload.adults) || 2));
@@ -104,9 +121,5 @@ export async function submitAvailabilityCheck(payload: {
       'Nothing is booked or held at this stage — we are looking at what is available for your dates and will send you the options.',
   });
 
-  return {
-    ok: true,
-    message:
-      'Got it — a specialist is checking availability and will reply with priced options, typically the same working day. We have emailed you a copy.',
-  };
+  return { ok: true, message: THANKS };
 }

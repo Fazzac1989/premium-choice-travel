@@ -1,7 +1,9 @@
 'use server';
 
 import Anthropic from '@anthropic-ai/sdk';
+import { headers } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { describeRejection, guardSubmission, remoteIpFrom, type GuardPayload } from '@/lib/spam-guard';
 import { emailShell, sendEmail } from '@/lib/email';
 import { getDestinations, getHotels, getPublishedPackages } from '@/lib/data';
 
@@ -223,6 +225,8 @@ Create the three concepts.`,
 
 export type LeadResult = { ok: boolean; message: string };
 
+const THANKS = 'A specialist will come back — typically within one working day — with real availability and pricing.';
+
 export async function submitInspirationLead(payload: {
   answers: CuratorAnswers;
   concepts: TripConcept[];
@@ -231,12 +235,25 @@ export async function submitInspirationLead(payload: {
   email: string;
   phone: string;
   channel: string;
+  guard?: GuardPayload;
 }): Promise<LeadResult> {
   const { answers, concepts, selected } = payload;
   const name = payload.name.trim();
   const email = payload.email.trim();
   if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
+
+  // Bots first, before anything is stored or sent. A silent rejection is
+  // answered with the ordinary thank-you, so the bot learns nothing.
+  const verdict = await guardSubmission({
+    ...(payload.guard ?? {}),
+    fields: [name, payload.phone, answers.notes],
+    remoteIp: remoteIpFrom(headers().get('x-forwarded-for')),
+  });
+  if (!verdict.ok) {
+    console.warn(describeRejection(verdict, 'inspiration', email));
+    return verdict.silent ? { ok: true, message: THANKS } : { ok: false, message: verdict.message };
+  }
 
   const brief = [
     `AI INSPIRATION LEAD${selected ? ` — chose “${selected.title}”` : ''}`,
@@ -321,5 +338,5 @@ Hotels shown: ${selected.hotels.map((h) => `${h.name} (${h.where})`).join('; ')}
     });
   }
 
-  return { ok: true, message: 'A specialist will come back — typically within one working day — with real availability and pricing.' };
+  return { ok: true, message: THANKS };
 }
