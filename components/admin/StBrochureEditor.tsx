@@ -299,6 +299,12 @@ function PageEditor({
 }) {
   const [c, setC] = useState<PageContent>(page.content ?? {});
   const set = (k: keyof PageContent, v: any) => setC((prev) => ({ ...prev, [k]: v }));
+  // Kept as typed and split into a list only on save: parsing every keystroke
+  // threw away the return or the space that had just been pressed.
+  const [inclText, setInclText] = useState((c.inclusions ?? []).join('\n'));
+  const [exclText, setExclText] = useState((c.exclusions ?? []).join('\n'));
+  const lines = (t: string) => t.split('\n').map((x) => x.trim()).filter(Boolean);
+  const save = () => onSave({ ...c, inclusions: lines(inclText), exclusions: lines(exclText) });
 
   return (
     <div className="grid gap-4 border-t border-line bg-sand p-5">
@@ -330,23 +336,23 @@ function PageEditor({
             <textarea
               rows={5}
               className="field"
-              value={(c.inclusions ?? []).join('\n')}
+              value={inclText}
               placeholder="Pre-filled from the trip when the copy is written"
-              onChange={(e) => set('inclusions', e.target.value.split('\n').map((x) => x.trim()).filter(Boolean))}
+              onChange={(e) => setInclText(e.target.value)}
             />
           </label>
           <label>
-            <span className="field-label">Not included — one per line</span>
+            <span className="field-label">Items to budget for — one per line</span>
             <textarea
               rows={5}
               className="field"
-              value={(c.exclusions ?? []).join('\n')}
+              value={exclText}
               placeholder="e.g. Visa fees, personal spending, optional activities"
-              onChange={(e) => set('exclusions', e.target.value.split('\n').map((x) => x.trim()).filter(Boolean))}
+              onChange={(e) => setExclText(e.target.value)}
             />
           </label>
           <p className="text-xs text-ink-soft sm:col-span-2">
-            Both print beneath the day-by-day itinerary. Rewriting the copy refreshes the included list from the trip and keeps what you typed under not included.
+            Both print beneath the day-by-day itinerary. Rewriting the copy refreshes the included list from the trip and keeps what you typed under items to budget for.
           </p>
         </div>
       )}
@@ -402,7 +408,7 @@ function PageEditor({
       )}
 
       <div className="flex flex-wrap items-center gap-3">
-        <button className="btn-primary !py-2.5" disabled={busy} onClick={() => onSave(c)}>
+        <button className="btn-primary !py-2.5" disabled={busy} onClick={save}>
           Save copy
         </button>
         <button className="btn-outline !bg-white !py-2.5" disabled={busy} onClick={onApprove}>
