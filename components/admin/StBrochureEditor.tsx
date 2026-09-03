@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
   composeStBrochure,
-  moveStBrochurePage,
   publishStBrochure,
   recomposeStTrip,
   setStBrochurePassword,
@@ -18,6 +17,19 @@ import {
   type PageContent,
 } from '@/lib/brochure/schema';
 import type { TripWarning } from '@/lib/brochure/build';
+import StBrochureContents from '@/components/admin/StBrochureContents';
+
+/** What each row of copy is, in the reader's terms rather than the template's. */
+const COPY_LABELS: Record<string, string> = {
+  tripHero: 'Introduction — headline and proposition',
+  tripOverview: 'Overview',
+  tripHighlights: 'Highlights',
+  tripItinerary: 'Journey',
+  tripGallery: 'Photographs',
+  cover: 'Cover text',
+  contact: 'Closing page',
+  callToAction: 'Closing page',
+};
 
 const COPY_STYLE: Record<string, string> = {
   ai: 'bg-ink/10 text-ink-soft',
@@ -29,12 +41,14 @@ export default function StBrochureEditor({
   brochure,
   pages,
   tripTitles,
+  trips,
   warnings,
   siteUrl,
 }: {
   brochure: Brochure;
   pages: BrochurePage[];
   tripTitles: Record<string, string>;
+  trips: { id: number; title: string; days: number }[];
   warnings: TripWarning[];
   siteUrl: string;
 }) {
@@ -48,6 +62,17 @@ export default function StBrochureEditor({
 
   const url = `${siteUrl}/brochures/${brochure.slug}`;
   const composed = pages.some((p) => p.content?.headline);
+
+  // The rows the deck actually reads: a trip's copy, the cover text and the
+  // closing page. Contents, dividers, the safety and technology pages have
+  // rows too, but the deck draws those itself, so they are not offered here.
+  const copyRows = pages.filter(
+    (p) => p.tripId || p.pageType === 'cover' || p.pageType === 'contact' || p.pageType === 'callToAction',
+  );
+  const copyLabel = (p: BrochurePage) => {
+    const what = COPY_LABELS[p.pageType] ?? PAGE_LABELS[p.pageType];
+    return p.tripId ? `${tripTitles[p.tripId] ?? 'Trip'} — ${what}` : what;
+  };
 
   async function run(key: string, fn: () => Promise<any>, success?: string) {
     setBusy(key);
@@ -167,81 +192,63 @@ export default function StBrochureEditor({
       </div>
 
       {tab === 'pages' ? (
-        <div className="mt-6 grid gap-2">
-          {pages.map((page, i) => (
-            <div key={page.id} className={`card ${page.hidden ? 'opacity-50' : ''}`}>
-              <div className="flex flex-wrap items-center gap-4 p-4">
-                <span className="w-8 text-right text-xs tabular-nums text-ink-soft">{i + 1}</span>
+        <div className="mt-6 grid gap-8">
+          <StBrochureContents brochure={brochure} pages={pages} trips={trips} run={run} busy={busy} />
 
-                <div className="min-w-[160px] flex-1">
-                  <p className="text-sm font-semibold text-ink">
-                    {page.content?.headline || PAGE_LABELS[page.pageType]}
-                    {page.tripId && tripTitles[page.tripId] && (
-                      <span className="ml-2 font-normal text-ink-soft">{tripTitles[page.tripId]}</span>
+          <section>
+            <h2 className="font-serif text-xl text-ink">The copy, page by page</h2>
+            <p className="mt-1 text-sm text-ink-soft">
+              Each trip&apos;s pages are written from these. Reorder or hide trips above; edit their
+              words here.
+            </p>
+            <div className="mt-4 grid gap-2">
+              {copyRows.map((page) => (
+                <div key={page.id} className={`card ${page.hidden ? 'opacity-50' : ''}`}>
+                  <div className="flex flex-wrap items-center gap-4 p-4">
+                    <div className="min-w-[160px] flex-1">
+                      <p className="text-sm font-semibold text-ink">{copyLabel(page)}</p>
+                      <p className="mt-0.5 text-xs text-ink-soft">
+                        {page.content?.headline ||
+                          (page.content?.proposition ? `${page.content.proposition.slice(0, 80)}…` : 'No copy yet')}
+                        {page.hidden ? ' · hidden' : ''}
+                      </p>
+                    </div>
+
+                    {page.tripId && (
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${COPY_STYLE[page.copyStatus]}`}>
+                        {page.copyStatus}
+                      </span>
                     )}
-                  </p>
-                  <p className="mt-0.5 text-xs text-ink-soft">
-                    {PAGE_LABELS[page.pageType]} · layout {page.layoutVariant}
-                    {page.content?.proposition ? ` · ${page.content.proposition.slice(0, 60)}…` : ''}
-                  </p>
+
+                    <button
+                      onClick={() => setOpen(open === page.id ? null : page.id)}
+                      className="text-xs font-semibold text-teal-deep hover:underline"
+                    >
+                      {open === page.id ? 'Close' : 'Edit'}
+                    </button>
+                  </div>
+
+                  {open === page.id && (
+                    <PageEditor
+                      page={page}
+                      busy={busy !== null}
+                      onSave={(content) =>
+                        run(`save-${page.id}`, () => updateStBrochurePage(page.id, { content }), 'Saved.')
+                      }
+                      onApprove={() =>
+                        run(`ok-${page.id}`, () => updateStBrochurePage(page.id, { copyStatus: 'approved' }), 'Approved.')
+                      }
+                      onRecompose={
+                        page.tripId
+                          ? () => run(`re-${page.id}`, () => recomposeStTrip(brochure.id, page.tripId!), 'Rewritten.')
+                          : undefined
+                      }
+                    />
+                  )}
                 </div>
-
-                {page.tripId && (
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${COPY_STYLE[page.copyStatus]}`}>
-                    {page.copyStatus}
-                  </span>
-                )}
-
-                <div className="flex items-center gap-3 text-xs font-semibold">
-                  <button
-                    onClick={() => setOpen(open === page.id ? null : page.id)}
-                    className="text-teal-deep hover:underline"
-                  >
-                    {open === page.id ? 'Close' : 'Edit'}
-                  </button>
-                  <button
-                    disabled={busy !== null || i === 0}
-                    onClick={() => run(`up-${page.id}`, () => moveStBrochurePage(page.id, -1))}
-                    className="text-ink-soft hover:text-teal-deep disabled:opacity-30"
-                  >
-                    ↑
-                  </button>
-                  <button
-                    disabled={busy !== null || i === pages.length - 1}
-                    onClick={() => run(`dn-${page.id}`, () => moveStBrochurePage(page.id, 1))}
-                    className="text-ink-soft hover:text-teal-deep disabled:opacity-30"
-                  >
-                    ↓
-                  </button>
-                  <button
-                    disabled={busy !== null}
-                    onClick={() => run(`hide-${page.id}`, () => updateStBrochurePage(page.id, { hidden: !page.hidden }))}
-                    className="text-ink-soft hover:text-teal-deep disabled:opacity-50"
-                  >
-                    {page.hidden ? 'Show' : 'Hide'}
-                  </button>
-                </div>
-              </div>
-
-              {open === page.id && (
-                <PageEditor
-                  page={page}
-                  busy={busy !== null}
-                  onSave={(content) =>
-                    run(`save-${page.id}`, () => updateStBrochurePage(page.id, { content }), 'Saved.')
-                  }
-                  onApprove={() =>
-                    run(`ok-${page.id}`, () => updateStBrochurePage(page.id, { copyStatus: 'approved' }), 'Approved.')
-                  }
-                  onRecompose={
-                    page.tripId
-                      ? () => run(`re-${page.id}`, () => recomposeStTrip(brochure.id, page.tripId!), 'Rewritten.')
-                      : undefined
-                  }
-                />
-              )}
+              ))}
             </div>
-          ))}
+          </section>
         </div>
       ) : (
         <Settings brochure={brochure} busy={busy !== null} run={run} />

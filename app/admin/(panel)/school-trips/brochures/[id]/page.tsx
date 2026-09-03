@@ -42,6 +42,7 @@ export default async function StBrochurePage({ params }: { params: { id: string 
         brochure={brochure}
         pages={pages}
         tripTitles={tripTitles}
+        trips={trips.map((t) => ({ id: t.id, title: t.title, days: (t.days ?? []).length }))}
         warnings={warnings}
         siteUrl={PCST_SITE_URL}
       />

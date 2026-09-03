@@ -507,3 +507,97 @@ export async function previewToken(): Promise<string> {
   await requireAdmin();
   return randomBytes(16).toString('hex');
 }
+
+/* ────────────────────────── the running order ────────────────────────── */
+
+/** Merge into the design rather than replace it, so one toggle cannot wipe the rest. */
+export async function updateStBrochureDesign(
+  id: number,
+  patch: Record<string, unknown>,
+): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: row } = await db.from('brochures').select('design').eq('id', id).maybeSingle();
+  if (!row) return { ok: false, error: 'Brochure not found.' };
+  const { error } = await db
+    .from('brochures')
+    .update({ design: { ...(row.design ?? {}), ...patch }, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) return { ok: false, error: error.message };
+  refresh(id);
+  await revalidatePcst(null);
+  return { ok: true, id };
+}
+
+/**
+ * Move a trip up or down the brochure, every one of its rows together.
+ *
+ * The deck orders trips by where their first row appears, and a trip is
+ * several rows of copy. Moving one row at a time could leave a trip's
+ * highlights above another trip's introduction; moving the block cannot.
+ * Rows before the first trip (the cover and front matter) and after the last
+ * (the closing) keep their places; dividers between trips are dropped to the
+ * front of the run, since the deck draws its own groupings from the trips.
+ */
+export async function moveStBrochureTrip(
+  brochureId: number,
+  tripId: number,
+  direction: -1 | 1,
+): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: rows } = await db
+    .from('brochure_pages')
+    .select('id, trip_id, sort_order')
+    .eq('brochure_id', brochureId)
+    .order('sort_order');
+  const pages = rows ?? [];
+
+  const order: number[] = [];
+  for (const r of pages) if (r.trip_id && !order.includes(r.trip_id)) order.push(r.trip_id);
+  const at = order.indexOf(tripId);
+  const to = at + direction;
+  if (at < 0) return { ok: false, error: 'That trip is not in this brochure.' };
+  if (to < 0 || to >= order.length) return { ok: true, id: brochureId };
+  [order[at], order[to]] = [order[to], order[at]];
+
+  const firstTrip = pages.findIndex((r) => r.trip_id);
+  const lastTrip = pages.length - 1 - [...pages].reverse().findIndex((r) => r.trip_id);
+  const front = pages.slice(0, firstTrip);
+  const back = pages.slice(lastTrip + 1);
+  const middle = pages.slice(firstTrip, lastTrip + 1);
+  const loose = middle.filter((r) => !r.trip_id);
+  const blocks = order.flatMap((id) => middle.filter((r) => r.trip_id === id));
+  const next = [...front, ...loose, ...blocks, ...back];
+
+  for (let i = 0; i < next.length; i++) {
+    if (next[i].sort_order !== i) await db.from('brochure_pages').update({ sort_order: i }).eq('id', next[i].id);
+  }
+  await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);
+  refresh(brochureId);
+  await revalidatePcst(null);
+  return { ok: true, id: brochureId };
+}
+
+/** Take a trip out of the brochure, or put it back, without losing its copy. */
+export async function setStBrochureTripHidden(
+  brochureId: number,
+  tripId: number,
+  hidden: boolean,
+): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { error } = await db
+    .from('brochure_pages')
+    .update({ hidden })
+    .eq('brochure_id', brochureId)
+    .eq('trip_id', tripId);
+  if (error) return { ok: false, error: error.message };
+  await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);
+  refresh(brochureId);
+  await revalidatePcst(null);
+  return { ok: true, id: brochureId };
+}
