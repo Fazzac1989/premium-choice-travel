@@ -239,6 +239,9 @@ export default function StBrochureEditor({
 
                   {open === page.id && page.pageType === 'tripWhy' && (
                     <StWhyEditor
+                      // Keyed on the content so a rewrite from the server replaces the
+                      // fields on screen — the editor was keeping the old, empty ones.
+                      key={`why-${page.id}-${JSON.stringify(page.content)}`}
                       page={page}
                       country={trips.find((t) => t.id === page.tripId)?.country ?? 'this country'}
                       busy={busy !== null}
@@ -249,6 +252,7 @@ export default function StBrochureEditor({
                   )}
                   {open === page.id && page.pageType !== 'tripWhy' && (
                     <PageEditor
+                      key={`copy-${page.id}-${JSON.stringify(page.content)}`}
                       page={page}
                       busy={busy !== null}
                       onSave={(content) =>

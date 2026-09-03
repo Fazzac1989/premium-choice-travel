@@ -730,12 +730,19 @@ async function writeTripCopy(
   if (!whyId) return 'The "Why" page could not be created.';
   // The price range is typed by a person; a rewrite keeps it.
   const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
-  const priceRange = (current?.content as PageContent | null)?.priceRange;
   const { error: e2 } = await db
     .from('brochure_pages')
-    .update({ content: { ...why, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' })
+    .update({ content: { ...why, ...keepTyped(current?.content as PageContent | null) }, copy_status: 'ai' })
     .eq('id', whyId);
   return e2 ? e2.message : null;
+}
+
+/** What a person typed on the Why page — the prices — survives a rewrite. */
+function keepTyped(current: PageContent | null | undefined): Partial<PageContent> {
+  const kept: Partial<PageContent> = {};
+  if (current?.priceRange) kept.priceRange = current.priceRange;
+  if (current?.priceBands?.length) kept.priceBands = current.priceBands;
+  return kept;
 }
 
 /** The trip's "Why" row, made after its last row when it has none. */
@@ -798,8 +805,7 @@ export async function addStWhyPages(brochureId: number): Promise<BrochureResult>
       continue;
     }
     const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
-    const priceRange = (current?.content as PageContent | null)?.priceRange;
-    await db.from('brochure_pages').update({ content: { ...why.content, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' }).eq('id', whyId);
+    await db.from('brochure_pages').update({ content: { ...why.content, ...keepTyped(current?.content as PageContent | null) }, copy_status: 'ai' }).eq('id', whyId);
     made++;
   }
   await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);
@@ -824,10 +830,9 @@ export async function recomposeStWhy(brochureId: number, tripId: number): Promis
   const whyId = await ensureWhyRow(db, brochureId, tripId);
   if (!whyId) return { ok: false, error: 'The "Why" page could not be created.' };
   const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
-  const priceRange = (current?.content as PageContent | null)?.priceRange;
   const { error } = await db
     .from('brochure_pages')
-    .update({ content: { ...why.content, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' })
+    .update({ content: { ...why.content, ...keepTyped(current?.content as PageContent | null) }, copy_status: 'ai' })
     .eq('id', whyId);
   if (error) return { ok: false, error: error.message };
   await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);

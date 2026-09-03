@@ -34,6 +34,12 @@ export default function StWhyEditor({
     next[i] = { ...(next[i] ?? { title: '', detail: '' }), ...patch };
     set('educationalValues', next);
   };
+  const bands = c.priceBands ?? [];
+  const setBand = (i: number, patch: Partial<{ dates: string; price: string }>) => {
+    const next = [...(bands.length ? bands : [{ dates: '', price: '' }])];
+    next[i] = { ...(next[i] ?? { dates: '', price: '' }), ...patch };
+    set('priceBands', next);
+  };
   const empty = !c.whyCountry && !c.pctView && values.length === 0;
 
   return (
@@ -61,9 +67,50 @@ export default function StWhyEditor({
           <input className="field" value={c.ageGroup ?? ''} placeholder="e.g. Years 9–11 (ages 13–16)" onChange={(e) => set('ageGroup', e.target.value)} />
         </label>
         <label>
-          <span className="field-label">Price range</span>
-          <input className="field" value={c.priceRange ?? ''} placeholder="e.g. AED 6,500–7,900 per student" onChange={(e) => set('priceRange', e.target.value)} />
+          <span className="field-label">Price note (optional)</span>
+          <input className="field" value={c.priceRange ?? ''} placeholder="e.g. per student, based on 20 travelling" onChange={(e) => set('priceRange', e.target.value)} />
         </label>
+      </div>
+
+      <div>
+        <span className="field-label">Prices by date</span>
+        <p className="mb-2 text-xs text-ink-soft">
+          Free text on both sides: &ldquo;Feb half term 2027&rdquo; and &ldquo;AED 7,450 per student&rdquo; are
+          both fine. Typed by you, never by the AI, and kept when the page is rewritten.
+        </p>
+        <div className="grid gap-2">
+          {(bands.length ? bands : [{ dates: '', price: '' }]).map((band, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                className="field w-1/2"
+                placeholder="Dates, e.g. 14–19 February 2027"
+                value={band.dates}
+                onChange={(e) => setBand(i, { dates: e.target.value })}
+              />
+              <input
+                className="field flex-1"
+                placeholder="Price, e.g. AED 7,450 per student"
+                value={band.price}
+                onChange={(e) => setBand(i, { price: e.target.value })}
+              />
+              <button
+                type="button"
+                className="rounded-lg border border-line px-3 text-xs font-semibold text-ink-soft hover:text-danger"
+                title="Remove this row"
+                onClick={() => set('priceBands', bands.filter((_, j) => j !== i))}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="mt-2 text-xs font-semibold text-teal-deep hover:underline"
+          onClick={() => set('priceBands', [...(bands.length ? bands : [{ dates: '', price: '' }]), { dates: '', price: '' }])}
+        >
+          + Add another date range
+        </button>
       </div>
 
       <div>
@@ -97,6 +144,7 @@ export default function StWhyEditor({
             onSave({
               ...c,
               educationalValues: values.filter((v) => v && (v.title?.trim() || v.detail?.trim())).map((v) => ({ title: v.title.trim(), detail: v.detail.trim() })),
+              priceBands: bands.filter((b) => b.dates?.trim() || b.price?.trim()).map((b) => ({ dates: b.dates.trim(), price: b.price.trim() })),
             })
           }
         >

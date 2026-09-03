@@ -6,6 +6,9 @@ import { loadTripRecords, checkTrips } from '@/lib/brochure/build';
 import StBrochureEditor from '@/components/admin/StBrochureEditor';
 
 export const dynamic = 'force-dynamic';
+// Composing writes two pages per trip with Claude, about ten seconds each; a
+// five-trip brochure does not fit the default limit.
+export const maxDuration = 300;
 
 export default async function StBrochurePage({ params }: { params: { id: string } }) {
   const id = Number(params.id);
