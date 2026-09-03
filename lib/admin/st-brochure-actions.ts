@@ -1,5 +1,7 @@
 'use server';
 
+import { emailShell, sendEmail } from '@/lib/email';
+import { emailBrand } from '@/lib/email-brand';
 import { createHash, randomBytes } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/guard';
@@ -600,4 +602,100 @@ export async function setStBrochureTripHidden(
   refresh(brochureId);
   await revalidatePcst(null);
   return { ok: true, id: brochureId };
+}
+
+/* ──────────────────────────── teacher invites ──────────────────────────── */
+
+const esc = (v: string) =>
+  v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/**
+ * A personal link for one teacher: their page at /b/<token> on the School
+ * Trips site, with their name, their school's logo, a message and a button
+ * into the brochure. The token also opens a password-protected brochure.
+ */
+export async function createStBrochureInvite(
+  brochureId: number,
+  input: { teacherName: string; schoolName: string; email: string; message: string; logoImageId: number | null },
+): Promise<BrochureResult & { url?: string }> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const teacherName = input.teacherName.trim();
+  if (!teacherName) return { ok: false, error: "Give the teacher's name." };
+  const email = input.email.trim();
+  if (email && !email.includes('@')) return { ok: false, error: 'That email address does not look right.' };
+
+  const db = pcstClient();
+  const token = randomBytes(24).toString('hex');
+  const { error } = await db.from('brochure_invites').insert({
+    brochure_id: brochureId,
+    token,
+    teacher_name: teacherName,
+    school_name: input.schoolName.trim(),
+    email: email || null,
+    message: input.message.trim(),
+    logo_image_id: input.logoImageId,
+  });
+  if (error) {
+    if (/brochure_invites/.test(error.message)) {
+      return { ok: false, error: 'Run the invites migration first (supabase/migrations/20260903010000_brochure_invites.sql).' };
+    }
+    return { ok: false, error: error.message };
+  }
+  refresh(brochureId);
+  return { ok: true, id: brochureId, url: `${PCST_SITE_URL}/b/${token}` };
+}
+
+export async function deleteStBrochureInvite(inviteId: number): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: row } = await db.from('brochure_invites').select('brochure_id').eq('id', inviteId).maybeSingle();
+  if (!row) return { ok: false, error: 'Link not found.' };
+  const { error } = await db.from('brochure_invites').delete().eq('id', inviteId);
+  if (error) return { ok: false, error: error.message };
+  refresh(row.brochure_id);
+  return { ok: true, id: row.brochure_id };
+}
+
+/** Email the teacher their link, with the message as the body. */
+export async function sendStBrochureInvite(inviteId: number): Promise<BrochureResult & { skipped?: boolean }> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: inv } = await db.from('brochure_invites').select('*, brochures(title, subtitle)').eq('id', inviteId).maybeSingle();
+  if (!inv) return { ok: false, error: 'Link not found.' };
+  if (!inv.email) return { ok: false, error: 'This link has no email address.' };
+
+  const brand = emailBrand('schooltrips');
+  const url = `${PCST_SITE_URL}/b/${inv.token}`;
+  const title = inv.brochures?.title ?? 'Our brochure';
+  const first = String(inv.teacher_name).trim().split(/\s+/)[0] || 'there';
+  const message = String(inv.message ?? '').trim();
+  const paragraphs = (message ? message.split(/\n\s*\n/) : [
+    'We have put together a selection of trips we think would suit your students. Have a look through, and we would be glad to talk any of them over.',
+  ])
+    .map((para) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.65;color:#425964">${esc(para.trim()).replace(/\n/g, '<br/>')}</p>`)
+    .join('');
+
+  const html = emailShell({
+    brand,
+    eyebrow: 'A brochure for you',
+    title: `Hello ${esc(first)},`,
+    bodyHtml: `
+      ${paragraphs}
+      <p style="margin:22px 0 0">
+        <a href="${url}" style="display:inline-block;background:#19BAAB;color:#fff;text-decoration:none;font-weight:700;padding:13px 24px;border-radius:999px">Open ${esc(title)}</a>
+      </p>
+      <p style="margin:18px 0 0;font-size:13px;color:#7a8a93">Or copy this link: <a href="${url}" style="color:#19BAAB">${url}</a></p>
+    `,
+  });
+
+  const sent = await sendEmail({ to: inv.email, subject: `${title} — a brochure for ${inv.school_name || first}`, html });
+  if (!sent.ok) return { ok: false, error: sent.error ?? 'The email could not be sent.' };
+  if (sent.skipped) return { ok: true, id: inv.brochure_id, skipped: true };
+
+  await db.from('brochure_invites').update({ sent_at: new Date().toISOString() }).eq('id', inviteId);
+  refresh(inv.brochure_id);
+  return { ok: true, id: inv.brochure_id };
 }

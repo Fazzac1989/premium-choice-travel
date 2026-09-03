@@ -29,6 +29,35 @@ export default async function StBrochurePage({ params }: { params: { id: string 
   const warnings = checkTrips(trips, brochure.detailLevel);
   const tripTitles = Object.fromEntries(trips.map((t) => [t.id, t.title]));
 
+  // The teachers this brochure has gone to. Before the invites migration the
+  // table does not exist, and the tab simply lists nobody.
+  const { data: inviteRows } = await db
+    .from('brochure_invites')
+    .select('*')
+    .eq('brochure_id', id)
+    .order('created_at', { ascending: false });
+  const logoIds = (inviteRows ?? []).map((r) => r.logo_image_id).filter(Boolean);
+  const { data: logoRows } = logoIds.length
+    ? await db.from('brochure_images').select('id, storage_path').in('id', logoIds)
+    : { data: [] as any[] };
+  const logoUrl = (imageId: number | null) => {
+    const hit = (logoRows ?? []).find((l) => l.id === imageId);
+    return hit ? db.storage.from('brochure-images').getPublicUrl(hit.storage_path).data.publicUrl : null;
+  };
+  const invites = (inviteRows ?? []).map((r) => ({
+    id: r.id as number,
+    token: r.token as string,
+    teacherName: (r.teacher_name ?? '') as string,
+    schoolName: (r.school_name ?? '') as string,
+    email: (r.email ?? null) as string | null,
+    message: (r.message ?? '') as string,
+    logoUrl: logoUrl(r.logo_image_id),
+    openCount: (r.open_count ?? 0) as number,
+    firstOpenedAt: (r.first_opened_at ?? null) as string | null,
+    sentAt: (r.sent_at ?? null) as string | null,
+    createdAt: (r.created_at ?? '') as string,
+  }));
+
   return (
     <>
       <Link
@@ -44,6 +73,7 @@ export default async function StBrochurePage({ params }: { params: { id: string 
         tripTitles={tripTitles}
         trips={trips.map((t) => ({ id: t.id, title: t.title, days: (t.days ?? []).length }))}
         warnings={warnings}
+        invites={invites}
         siteUrl={PCST_SITE_URL}
       />
     </>

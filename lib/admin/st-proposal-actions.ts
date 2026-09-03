@@ -717,7 +717,8 @@ export async function uploadStProposalImage(_prev: ImageResult, formData: FormDa
 
   const db = pcstClient();
   const { data: owner } = await db.from('brochures').select('id, kind').eq('id', id).maybeSingle();
-  if (!owner || owner.kind !== 'proposal') return { ok: false, error: 'Proposal not found.' };
+  // Proposals and brochures alike: a brochure's teacher invites carry a school logo.
+  if (!owner) return { ok: false, error: 'Brochure not found.' };
 
   const clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-+|-+$/g, '');
   const storagePath = `proposals/${id}/${Date.now()}-${clean || 'photo.jpg'}`;

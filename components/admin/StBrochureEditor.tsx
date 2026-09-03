@@ -18,6 +18,7 @@ import {
 } from '@/lib/brochure/schema';
 import type { TripWarning } from '@/lib/brochure/build';
 import StBrochureContents from '@/components/admin/StBrochureContents';
+import StBrochureInvites, { type InviteRow } from '@/components/admin/StBrochureInvites';
 
 /** What each row of copy is, in the reader's terms rather than the template's. */
 const COPY_LABELS: Record<string, string> = {
@@ -43,6 +44,7 @@ export default function StBrochureEditor({
   tripTitles,
   trips,
   warnings,
+  invites,
   siteUrl,
 }: {
   brochure: Brochure;
@@ -50,6 +52,7 @@ export default function StBrochureEditor({
   tripTitles: Record<string, string>;
   trips: { id: number; title: string; days: number }[];
   warnings: TripWarning[];
+  invites: InviteRow[];
   siteUrl: string;
 }) {
   const router = useRouter();
@@ -58,7 +61,7 @@ export default function StBrochureEditor({
   const [flags, setFlags] = useState<string[]>([]);
   const [note, setNote] = useState<string | null>(null);
   const [open, setOpen] = useState<number | null>(null);
-  const [tab, setTab] = useState<'pages' | 'settings'>('pages');
+  const [tab, setTab] = useState<'pages' | 'teachers' | 'settings'>('pages');
 
   const url = `${siteUrl}/brochures/${brochure.slug}`;
   const composed = pages.some((p) => p.content?.headline);
@@ -178,7 +181,7 @@ export default function StBrochureEditor({
       )}
 
       <div className="mt-8 flex gap-6 border-b border-line">
-        {(['pages', 'settings'] as const).map((t) => (
+        {(['pages', 'teachers', 'settings'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -250,6 +253,8 @@ export default function StBrochureEditor({
             </div>
           </section>
         </div>
+      ) : tab === 'teachers' ? (
+        <StBrochureInvites brochure={brochure} invites={invites} siteUrl={siteUrl} run={run} busy={busy} />
       ) : (
         <Settings brochure={brochure} busy={busy !== null} run={run} />
       )}
