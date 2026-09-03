@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
-import { EMPTY_CONTENT, type ProposalContent } from '@/lib/brochure/proposal-schema';
+import { EMPTY_CONTENT, referencedImageIds, type ProposalContent } from '@/lib/brochure/proposal-schema';
 import { signPreviewToken } from '@/lib/brochure/preview-token';
 import StProposalEditor from '@/components/admin/StProposalEditor';
 
@@ -21,13 +21,11 @@ export default async function StProposalPage({ params }: { params: { id: string 
   const [
     { data: dayRows },
     { data: flightRows },
-    { data: imageRows },
     { data: termsRows },
     { data: eventRows },
   ] = await Promise.all([
       db.from('brochure_days').select('*').eq('brochure_id', id).order('sort_order'),
       db.from('brochure_flights').select('*').eq('brochure_id', id).order('sort_order'),
-      db.from('brochure_images').select('*').order('id'),
       db.from('brochure_terms_sets').select('id, name, version, is_default').order('name'),
       db
         .from('proposal_events')
@@ -79,12 +77,42 @@ export default async function StProposalPage({ params }: { params: { id: string 
     sortOrder: f.sort_order as number,
   }));
 
-  // Public URLs so the editor can show what it is choosing between.
-  const images = (imageRows ?? []).map((i) => ({
-    id: i.id as number,
-    alt: (i.alt ?? '') as string,
-    url: db.storage.from('brochure-images').getPublicUrl(i.storage_path).data.publicUrl,
-  }));
+  // This proposal's own photographs, plus any it references from before
+  // images recorded an owner. Every proposal used to be offered every image,
+  // which is how a new one opened with another trip's pictures. Before the
+  // migration the first query fails on the missing column; the referenced
+  // set is shown and the Photos tab says why.
+  const referenced = referencedImageIds(
+    { ...EMPTY_CONTENT, ...(row.content ?? {}) },
+    (dayRows ?? []).map((d) => (Array.isArray(d.image_ids) ? d.image_ids : [])),
+    row.cover_image,
+  );
+  const idList = referenced.length ? referenced.join(',') : '0';
+  const owned = await db
+    .from('brochure_images')
+    .select('*')
+    .or(`brochure_id.eq.${id},id.in.(${idList})`)
+    .order('id');
+  const imagesScoped = !owned.error;
+  const imageRows = imagesScoped
+    ? owned.data
+    : (await db.from('brochure_images').select('*').in('id', referenced.length ? referenced : [0]).order('id')).data;
+
+  // Public URLs so the editor can show what it is choosing between. The
+  // school's logo is one of these rows but not a photograph, so it is kept
+  // apart from the pickers.
+  const publicUrl = (storagePath: string) =>
+    db.storage.from('brochure-images').getPublicUrl(storagePath).data.publicUrl;
+  const isLogo = (i: any) => Array.isArray(i.tags) && i.tags.includes('logo');
+  const images = (imageRows ?? [])
+    .filter((i) => !isLogo(i))
+    .map((i) => ({
+      id: i.id as number,
+      alt: (i.alt ?? '') as string,
+      url: publicUrl(i.storage_path),
+    }));
+  const logoRow = (imageRows ?? []).find((i) => i.id === Number(row.content?.schoolLogoImageId));
+  const schoolLogo = logoRow ? { id: logoRow.id as number, url: publicUrl(logoRow.storage_path) } : null;
 
   const content: ProposalContent = { ...EMPTY_CONTENT, ...(row.content ?? {}) };
 
@@ -147,6 +175,8 @@ export default async function StProposalPage({ params }: { params: { id: string 
         }))}
         previewToken={previewToken}
         siteUrl={PCST_SITE_URL}
+        imagesScoped={imagesScoped}
+        schoolLogo={schoolLogo}
       />
     </>
   );

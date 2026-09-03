@@ -685,3 +685,141 @@ export async function deleteStProposal(id: number): Promise<ProposalResult> {
   refresh();
   return { ok: true };
 }
+
+/* ────────────────────────────── photographs ────────────────────────────── */
+
+export type ImageResult = { ok: true; id: number } | { ok: false; error: string } | null;
+
+const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/svg+xml'];
+// Vercel rejects a request body over 4.5MB before this runs; the browser resizes first.
+const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
+const IMAGE_BUCKET = 'brochure-images';
+const IMAGES_MIGRATION = 'supabase/migrations/20260903000000_brochure_images_owner.sql';
+
+/**
+ * Upload one photograph for one proposal.
+ *
+ * Called with FormData from the Photos tab, one file at a time. The row records
+ * its owner, which is what keeps another proposal's pictures out of the pickers.
+ */
+export async function uploadStProposalImage(_prev: ImageResult, formData: FormData): Promise<ImageResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+
+  const id = Number(formData.get('proposalId'));
+  const file = formData.get('file');
+  if (!Number.isFinite(id)) return { ok: false, error: 'Which proposal?' };
+  if (!(file instanceof File) || file.size === 0) return { ok: false, error: 'No file received.' };
+  if (!IMAGE_TYPES.includes(file.type)) return { ok: false, error: 'JPG, PNG, WebP or AVIF only.' };
+  if (file.size > IMAGE_MAX_BYTES) {
+    return { ok: false, error: 'Still over 4MB after resizing — save it at a smaller size and try again.' };
+  }
+
+  const db = pcstClient();
+  const { data: owner } = await db.from('brochures').select('id, kind').eq('id', id).maybeSingle();
+  if (!owner || owner.kind !== 'proposal') return { ok: false, error: 'Proposal not found.' };
+
+  const clean = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-+|-+$/g, '');
+  const storagePath = `proposals/${id}/${Date.now()}-${clean || 'photo.jpg'}`;
+  const up = await db.storage
+    .from(IMAGE_BUCKET)
+    .upload(storagePath, file, { contentType: file.type, cacheControl: '31536000', upsert: false });
+  if (up.error) return { ok: false, error: `Upload failed: ${up.error.message}` };
+
+  const { data: row, error } = await db
+    .from('brochure_images')
+    .insert({
+      storage_path: storagePath,
+      alt: String(formData.get('alt') ?? '').trim(),
+      brochure_id: id,
+      width: Number(formData.get('width')) || null,
+      height: Number(formData.get('height')) || null,
+      // "logo" keeps the school's mark out of the photograph pickers.
+      tags: formData.get('tag') ? [String(formData.get('tag'))] : [],
+    })
+    .select('id')
+    .single();
+  if (error) {
+    // Nothing half-done: the file goes if the row could not be written.
+    await db.storage.from(IMAGE_BUCKET).remove([storagePath]);
+    if (/brochure_id/.test(error.message)) {
+      return { ok: false, error: `Run the photographs migration first (${IMAGES_MIGRATION}).` };
+    }
+    return { ok: false, error: error.message };
+  }
+
+  await touch(id);
+  refresh(id);
+  return { ok: true, id: row.id };
+}
+
+export async function updateStProposalImageAlt(
+  proposalId: number,
+  imageId: number,
+  alt: string,
+): Promise<ProposalResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { error } = await db
+    .from('brochure_images')
+    .update({ alt: alt.trim() })
+    .eq('id', imageId)
+    .eq('brochure_id', proposalId);
+  if (error) return { ok: false, error: error.message };
+  await touch(proposalId);
+  refresh(proposalId);
+  return { ok: true };
+}
+
+/**
+ * Delete a photograph and every reference to it, so no day or page is left
+ * pointing at a picture that is gone. Only a proposal's own photographs can
+ * be deleted from its studio.
+ */
+export async function deleteStProposalImage(proposalId: number, imageId: number): Promise<ProposalResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+
+  const { data: image } = await db
+    .from('brochure_images')
+    .select('id, storage_path, brochure_id')
+    .eq('id', imageId)
+    .maybeSingle();
+  if (!image || image.brochure_id !== proposalId) {
+    return { ok: false, error: 'That photograph does not belong to this proposal.' };
+  }
+
+  const { data: days } = await db.from('brochure_days').select('id, image_ids').eq('brochure_id', proposalId);
+  for (const d of days ?? []) {
+    const ids: number[] = Array.isArray(d.image_ids) ? d.image_ids : [];
+    if (ids.includes(imageId)) {
+      await db.from('brochure_days').update({ image_ids: ids.filter((x) => x !== imageId) }).eq('id', d.id);
+    }
+  }
+
+  const { data: row } = await db.from('brochures').select('content, cover_image').eq('id', proposalId).maybeSingle();
+  if (row) {
+    const content: ProposalContent = { ...EMPTY_CONTENT, ...(row.content ?? {}) };
+    const strip = (v: number | null) => (v === imageId ? null : v);
+    const next: ProposalContent = {
+      ...content,
+      heroImageId: strip(content.heroImageId),
+      schoolLogoImageId: strip(content.schoolLogoImageId),
+      signatureExperiences: content.signatureExperiences.map((e) => ({ ...e, imageId: strip(e.imageId) })),
+      customPages: content.customPages.map((p) => ({ ...p, imageId: strip(p.imageId) })),
+    };
+    const update: Record<string, unknown> = { content: next };
+    if (String(row.cover_image) === String(imageId)) update.cover_image = null;
+    await db.from('brochures').update(update).eq('id', proposalId);
+  }
+
+  await db.storage.from(IMAGE_BUCKET).remove([image.storage_path]);
+  const { error } = await db.from('brochure_images').delete().eq('id', imageId);
+  if (error) return { ok: false, error: error.message };
+
+  await touch(proposalId);
+  refresh(proposalId);
+  return { ok: true };
+}

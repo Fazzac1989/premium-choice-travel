@@ -17,7 +17,10 @@ import {
   updateStProposalCommercials,
   updateStProposalContent,
 } from '@/lib/admin/st-proposal-actions';
-import type { ProposalContent } from '@/lib/brochure/proposal-schema';
+import { airlineCode, airlineLogoUrl, type ProposalContent } from '@/lib/brochure/proposal-schema';
+import StProposalPages from '@/components/admin/StProposalPages';
+import StProposalPhotos from '@/components/admin/StProposalPhotos';
+import StSchoolLogo from '@/components/admin/StSchoolLogo';
 
 type Day = {
   id: number;
@@ -78,7 +81,7 @@ type ProposalEvent = {
   createdAt: string;
 };
 
-const TABS = ['Document', 'Itinerary', 'Flights', 'Price', 'Share'] as const;
+const TABS = ['Document', 'Pages', 'Itinerary', 'Photos', 'Flights', 'Price', 'Share'] as const;
 type Tab = (typeof TABS)[number];
 
 export default function StProposalEditor({
@@ -90,6 +93,8 @@ export default function StProposalEditor({
   events,
   previewToken,
   siteUrl,
+  imagesScoped,
+  schoolLogo,
 }: {
   proposal: Proposal;
   days: Day[];
@@ -99,6 +104,9 @@ export default function StProposalEditor({
   events: ProposalEvent[];
   previewToken: string;
   siteUrl: string;
+  /** False until the photographs migration has run; the Photos tab explains. */
+  imagesScoped: boolean;
+  schoolLogo: { id: number; url: string } | null;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('Document');
@@ -174,7 +182,26 @@ export default function StProposalEditor({
 
       <div className="mt-6">
         {tab === 'Document' && (
-          <DocumentTab proposal={proposal} images={images} run={run} busy={busy} />
+          <DocumentTab
+            proposal={proposal}
+            images={images}
+            run={run}
+            busy={busy}
+            schoolLogo={schoolLogo}
+            imagesScoped={imagesScoped}
+          />
+        )}
+        {tab === 'Pages' && (
+          <StProposalPages
+            proposalId={proposal.id}
+            content={proposal.content}
+            images={images}
+            run={run}
+            busy={busy}
+          />
+        )}
+        {tab === 'Photos' && (
+          <StProposalPhotos proposalId={proposal.id} images={images} scoped={imagesScoped} />
         )}
         {tab === 'Itinerary' && (
           <ItineraryTab proposal={proposal} days={days} images={images} run={run} busy={busy} />
@@ -198,11 +225,15 @@ function DocumentTab({
   images,
   run,
   busy,
+  schoolLogo,
+  imagesScoped,
 }: {
   proposal: Proposal;
   images: { id: number; alt: string; url: string }[];
   run: (k: string, f: () => Promise<any>, s?: string) => Promise<any>;
   busy: string | null;
+  schoolLogo: { id: number; url: string } | null;
+  imagesScoped: boolean;
 }) {
   const c = proposal.content;
   const [form, setForm] = useState({
@@ -336,6 +367,8 @@ function DocumentTab({
           <p className="mt-1 text-xs text-ink-soft">Leave a blank line between paragraphs.</p>
         </div>
       </section>
+
+      <StSchoolLogo proposalId={proposal.id} logo={schoolLogo} scoped={imagesScoped} />
 
       <section className="card p-6">
         <h2 className="font-serif text-xl text-ink">Parents, children, teachers</h2>
@@ -689,6 +722,13 @@ function FlightsTab({
             <div>
               <label className="field-label">Carrier</label>
               <input className="field" value={row.carrier} onChange={(e) => set(n, 'carrier', e.target.value)} />
+              {airlineLogoUrl(row) && (
+                <p className="mt-1 flex items-center gap-2 text-xs text-ink-soft">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={airlineLogoUrl(row)!} alt="" className="h-6 w-auto rounded bg-white px-1" />
+                  {airlineCode(row)} — this logo goes on the proposal
+                </p>
+              )}
             </div>
             <div className="flex items-end">
               <button
