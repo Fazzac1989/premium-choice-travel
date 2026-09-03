@@ -193,6 +193,8 @@ export async function composeStBrochure(brochureId: number): Promise<BrochureRes
       ctaLabel: 'Explore the full itinerary',
       ctaHref: `${PCST_SITE_URL}/trips/${trip.slug}`,
       imageUrls: trip.landscapeImages.slice(0, 4),
+      // The trip's own list, to be edited on the page.
+      inclusions: trip.includes,
     };
 
     // The "Why <country>" page, written from the same material.
@@ -239,6 +241,7 @@ export async function recomposeStTrip(brochureId: number, tripId: number): Promi
     ctaLabel: 'Explore the full itinerary',
     ctaHref: `${PCST_SITE_URL}/trips/${trip.slug}`,
     imageUrls: trip.landscapeImages.slice(0, 4),
+    inclusions: trip.includes,
   };
 
   const flags = flagUntraceable(result.content, trip).map((f) => `${trip.title}: ${f}`);
@@ -717,9 +720,18 @@ async function writeTripCopy(
   content: PageContent,
   why: WhyCopy | null,
 ): Promise<string | null> {
+  // The exclusions typed by a person on the introduction row survive a rewrite.
+  const { data: intro } = await db
+    .from('brochure_pages')
+    .select('content')
+    .eq('brochure_id', brochureId)
+    .eq('trip_id', tripId)
+    .eq('page_type', 'tripHero')
+    .maybeSingle();
+  const exclusions = (intro?.content as PageContent | null)?.exclusions;
   const { error } = await db
     .from('brochure_pages')
-    .update({ content, copy_status: 'ai' })
+    .update({ content: { ...content, ...(exclusions?.length ? { exclusions } : {}) }, copy_status: 'ai' })
     .eq('brochure_id', brochureId)
     .eq('trip_id', tripId)
     .neq('page_type', 'tripWhy');

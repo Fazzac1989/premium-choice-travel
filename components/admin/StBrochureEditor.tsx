@@ -27,7 +27,7 @@ import { useRef } from 'react';
 
 /** What each row of copy is, in the reader's terms rather than the template's. */
 const COPY_LABELS: Record<string, string> = {
-  tripHero: 'Introduction — headline and proposition',
+  tripHero: 'Introduction — headline, proposition, what is included',
   tripOverview: 'Overview',
   tripHighlights: 'Highlights',
   tripItinerary: 'Journey',
@@ -322,6 +322,34 @@ function PageEditor({
         <span className="field-label">Introduction</span>
         <textarea rows={3} className="field" value={c.intro ?? ''} onChange={(e) => set('intro', e.target.value)} />
       </label>
+
+      {page.pageType === 'tripHero' && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label>
+            <span className="field-label">Included — one per line</span>
+            <textarea
+              rows={5}
+              className="field"
+              value={(c.inclusions ?? []).join('\n')}
+              placeholder="Pre-filled from the trip when the copy is written"
+              onChange={(e) => set('inclusions', e.target.value.split('\n').map((x) => x.trim()).filter(Boolean))}
+            />
+          </label>
+          <label>
+            <span className="field-label">Not included — one per line</span>
+            <textarea
+              rows={5}
+              className="field"
+              value={(c.exclusions ?? []).join('\n')}
+              placeholder="e.g. Visa fees, personal spending, optional activities"
+              onChange={(e) => set('exclusions', e.target.value.split('\n').map((x) => x.trim()).filter(Boolean))}
+            />
+          </label>
+          <p className="text-xs text-ink-soft sm:col-span-2">
+            Both print beneath the day-by-day itinerary. Rewriting the copy refreshes the included list from the trip and keeps what you typed under not included.
+          </p>
+        </div>
+      )}
 
       {(c.highlights ?? []).length > 0 && (
         <div>
