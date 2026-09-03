@@ -282,3 +282,96 @@ export function flagUntraceable(content: PageContent, trip: TripSource): string[
 
   return flags;
 }
+
+/* ───────────────────────── the "Why <country>" page ───────────────────────── */
+
+const WHY_SYSTEM = `${SYSTEM}
+
+THIS PAGE IS DIFFERENT. It is the "Why <country>" page that closes a trip's run of pages, and it is allowed one thing the rest of the brochure is not: widely known, uncontroversial facts about the country itself — its landscape, climate, history, institutions — the kind found in any encyclopaedia. Everything about THIS TRIP — what the group does and sees, where it goes — must still come from the material you are given.
+
+Never state a price. Never state an age group as a fact: the source records none, so "suited to" is your professional recommendation from the physical demands and curriculum level of the activities, phrased as a recommendation. Exactly five educational values, each tied to something the trip actually does.`;
+
+const WHY_SCHEMA = {
+  type: 'object',
+  properties: {
+    whyCountry: {
+      type: 'string',
+      description:
+        'Two or three sentences, under 420 characters: why this country is the right place to teach this subject to a school group. Widely known facts about the country are allowed; nothing about the trip the source does not say.',
+    },
+    pctView: {
+      type: 'string',
+      description:
+        'Two sentences, under 300 characters, in Premium Choice\'s own voice ("we"): why we recommend this trip, drawn from what the source says it does well. Warm, specific, unhurried.',
+    },
+    ageGroup: {
+      type: 'string',
+      description:
+        'A recommendation, under 60 characters, e.g. "Years 9–11 (ages 13–16)", judged from the activities\' physical demands and curriculum level. Empty string if the source gives no basis.',
+    },
+    educationalValues: {
+      type: 'array',
+      description:
+        'Exactly five things a student gains from this trip, each grounded in an activity, place or subject link that the source names.',
+      items: {
+        type: 'object',
+        properties: {
+          title: { type: 'string', description: 'Three to six words, e.g. "Fieldwork in a live volcanic landscape".' },
+          detail: { type: 'string', description: 'One sentence, under 160 characters, naming what in the trip delivers it.' },
+        },
+        required: ['title', 'detail'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['whyCountry', 'pctView', 'ageGroup', 'educationalValues'],
+  additionalProperties: false,
+} as const;
+
+export type WhyCopy = Required<Pick<PageContent, 'whyCountry' | 'pctView' | 'ageGroup' | 'educationalValues'>>;
+
+/** Tidy the model's reply. Never carries a price: that is typed by a person. */
+export function normaliseWhy(raw: any): WhyCopy {
+  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : '');
+  const values = Array.isArray(raw?.educationalValues) ? raw.educationalValues : [];
+  return {
+    whyCountry: str(raw?.whyCountry),
+    pctView: str(raw?.pctView),
+    ageGroup: str(raw?.ageGroup),
+    educationalValues: values
+      .map((v: any) => ({ title: str(v?.title), detail: str(v?.detail) }))
+      .filter((v: { title: string; detail: string }) => v.title || v.detail)
+      .slice(0, 5),
+  };
+}
+
+export type WhyResult = { ok: true; content: WhyCopy } | { ok: false; error: string };
+
+/** Write the "Why <country>" page for one trip. */
+export async function composeWhyCopy(trip: TripSource, detailLevel: DetailLevel): Promise<WhyResult> {
+  if (!process.env.ANTHROPIC_API_KEY) return { ok: false, error: 'ANTHROPIC_API_KEY is not configured.' };
+  const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  try {
+    const response = await client.messages.create({
+      model: COMPOSE_MODEL,
+      max_tokens: 2000,
+      output_config: { effort: 'medium', format: { type: 'json_schema', schema: WHY_SCHEMA } },
+      system: WHY_SYSTEM,
+      messages: [
+        {
+          role: 'user',
+          content: `${BRIEF[detailLevel]}\n\nWrite the "Why ${trip.country ?? 'this destination'}" page. Here is everything held for this trip.\n\n${sourceBrief(trip)}`,
+        },
+      ],
+    });
+    if (response.stop_reason === 'refusal') return { ok: false, error: 'Claude declined this request.' };
+    if (response.stop_reason === 'max_tokens') return { ok: false, error: 'The reply was cut short — try again.' };
+    const block = response.content.find((b) => b.type === 'text');
+    if (!block || block.type !== 'text') return { ok: false, error: 'Claude returned no content.' };
+    return { ok: true, content: normaliseWhy(JSON.parse(block.text)) };
+  } catch (e: any) {
+    if (e instanceof Anthropic.AuthenticationError) return { ok: false, error: 'The Claude API key was rejected — check ANTHROPIC_API_KEY.' };
+    if (e instanceof Anthropic.RateLimitError) return { ok: false, error: 'Rate limited by the Claude API — try again shortly.' };
+    return { ok: false, error: `Could not write the Why page: ${e.message}` };
+  }
+}

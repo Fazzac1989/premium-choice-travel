@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  addStWhyPages,
   moveStBrochureTrip,
   setStBrochureTripHidden,
   updateStBrochureDesign,
@@ -20,7 +21,7 @@ import type { Brochure, BrochurePage } from '@/lib/brochure/schema';
  * cover picks its theme. Every change is saved as it is made.
  */
 
-type TripInfo = { id: number; title: string; days: number };
+type TripInfo = { id: number; title: string; days: number; country: string | null };
 
 export default function StBrochureContents({
   brochure,
@@ -45,6 +46,13 @@ export default function StBrochureContents({
   const hiddenTrip = (id: number) => pages.filter((p) => p.tripId === id).every((p) => p.hidden);
   const info = (id: number) => trips.find((t) => t.id === id);
   const shown = order.filter((id) => !hiddenTrip(id));
+
+  const whyRow = (id: number) => pages.find((p) => p.tripId === id && p.pageType === 'tripWhy');
+  const whyWritten = (id: number) => {
+    const c = whyRow(id)?.content ?? {};
+    return Boolean(c.whyCountry || c.pctView || (c.educationalValues ?? []).length);
+  };
+  const missingWhy = order.filter((id) => !whyRow(id));
 
   const hasClosing = Boolean(
     brochure.closingText || pages.some((p) => p.pageType === 'contact' || p.pageType === 'callToAction'),
@@ -137,7 +145,10 @@ export default function StBrochureContents({
           const t = info(id);
           const hidden = hiddenTrip(id);
           const withDays = on(d.showItinerary) && (t?.days ?? 0) > 0;
-          const number = hidden ? '—' : withDays ? `${num()}–${num()}` : num();
+          const withWhy = whyWritten(id);
+          const count = 1 + (withDays ? 1 : 0) + (withWhy ? 1 : 0);
+          const number = hidden ? '—' : count > 1 ? span(count) : num();
+          const parts = ['Introduction', withDays ? `day-by-day itinerary (${t?.days} days)` : null, withWhy ? `Why ${t?.country ?? 'this country'}` : null].filter(Boolean);
           return (
             <Row
               key={id}
@@ -146,9 +157,7 @@ export default function StBrochureContents({
               detail={
                 hidden
                   ? 'Hidden — not in the brochure'
-                  : withDays
-                    ? `Introduction, then the day-by-day itinerary (${t?.days} days)`
-                    : 'Introduction'
+                  : parts.join(', then ') + (whyRow(id) && !withWhy ? ' · the "Why" page is empty — write it below' : '')
               }
               muted={hidden}
               right={
@@ -187,6 +196,22 @@ export default function StBrochureContents({
             />
           );
         })}
+
+        {missingWhy.length > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-teal/40 bg-teal/5 px-4 py-3 text-sm text-ink">
+            <span>
+              {missingWhy.length === order.length ? 'This brochure predates the' : `${missingWhy.length} trip${missingWhy.length === 1 ? ' has' : 's have'} no`}{' '}
+              &ldquo;Why this country&rdquo; page{missingWhy.length === 1 && missingWhy.length !== order.length ? '' : 's'}.
+            </span>
+            <button
+              className="btn-primary !py-2 text-xs"
+              disabled={busy !== null}
+              onClick={() => run('why', () => addStWhyPages(brochure.id), 'Why pages added and written.')}
+            >
+              {busy === 'why' ? 'Writing…' : 'Add and write them with AI'}
+            </button>
+          </div>
+        )}
 
         {order.some((id) => (info(id)?.days ?? 0) > 0) && (
           <div className="px-4 py-1">

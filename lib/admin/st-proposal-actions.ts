@@ -688,7 +688,7 @@ export async function deleteStProposal(id: number): Promise<ProposalResult> {
 
 /* ────────────────────────────── photographs ────────────────────────────── */
 
-export type ImageResult = { ok: true; id: number } | { ok: false; error: string } | null;
+export type ImageResult = { ok: true; id: number; url: string } | { ok: false; error: string } | null;
 
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/svg+xml'];
 // Vercel rejects a request body over 4.5MB before this runs; the browser resizes first.
@@ -751,7 +751,7 @@ export async function uploadStProposalImage(_prev: ImageResult, formData: FormDa
 
   await touch(id);
   refresh(id);
-  return { ok: true, id: row.id };
+  return { ok: true, id: row.id, url: db.storage.from(IMAGE_BUCKET).getPublicUrl(storagePath).data.publicUrl };
 }
 
 export async function updateStProposalImageAlt(

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   composeStBrochure,
   publishStBrochure,
+  recomposeStWhy,
   recomposeStTrip,
   setStBrochurePassword,
   updateStBrochure,
@@ -19,6 +20,10 @@ import {
 import type { TripWarning } from '@/lib/brochure/build';
 import StBrochureContents from '@/components/admin/StBrochureContents';
 import StBrochureInvites, { type InviteRow } from '@/components/admin/StBrochureInvites';
+import StWhyEditor from '@/components/admin/StWhyEditor';
+import { uploadStProposalImage } from '@/lib/admin/st-proposal-actions';
+import { compressImage } from '@/lib/compress-image';
+import { useRef } from 'react';
 
 /** What each row of copy is, in the reader's terms rather than the template's. */
 const COPY_LABELS: Record<string, string> = {
@@ -27,6 +32,7 @@ const COPY_LABELS: Record<string, string> = {
   tripHighlights: 'Highlights',
   tripItinerary: 'Journey',
   tripGallery: 'Photographs',
+  tripWhy: 'Why this country',
   cover: 'Cover text',
   contact: 'Closing page',
   callToAction: 'Closing page',
@@ -50,7 +56,7 @@ export default function StBrochureEditor({
   brochure: Brochure;
   pages: BrochurePage[];
   tripTitles: Record<string, string>;
-  trips: { id: number; title: string; days: number }[];
+  trips: { id: number; title: string; days: number; country: string | null }[];
   warnings: TripWarning[];
   invites: InviteRow[];
   siteUrl: string;
@@ -231,7 +237,17 @@ export default function StBrochureEditor({
                     </button>
                   </div>
 
-                  {open === page.id && (
+                  {open === page.id && page.pageType === 'tripWhy' && (
+                    <StWhyEditor
+                      page={page}
+                      country={trips.find((t) => t.id === page.tripId)?.country ?? 'this country'}
+                      busy={busy !== null}
+                      onSave={(content) => run(`save-${page.id}`, () => updateStBrochurePage(page.id, { content }), 'Saved.')}
+                      onApprove={() => run(`ok-${page.id}`, () => updateStBrochurePage(page.id, { copyStatus: 'approved' }), 'Approved.')}
+                      onRecompose={() => run(`re-${page.id}`, () => recomposeStWhy(brochure.id, page.tripId!), 'Written.')}
+                    />
+                  )}
+                  {open === page.id && page.pageType !== 'tripWhy' && (
                     <PageEditor
                       page={page}
                       busy={busy !== null}
@@ -389,9 +405,56 @@ function Settings({
   const [visibility, setVisibility] = useState(brochure.visibility);
   const [mode, setMode] = useState(brochure.publishingMode);
   const [password, setPassword] = useState('');
+  const logoInput = useRef<HTMLInputElement>(null);
+  const [logoBusy, setLogoBusy] = useState(false);
+  const [logoError, setLogoError] = useState<string | null>(null);
+
+  async function uploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setLogoBusy(true);
+    setLogoError(null);
+    const fd = new FormData();
+    fd.append('proposalId', String(brochure.id));
+    fd.append('file', await compressImage(file, 1200));
+    fd.append('alt', `${clientName || brochure.title} logo`);
+    fd.append('tag', 'logo');
+    const up = await uploadStProposalImage(null, fd);
+    setLogoBusy(false);
+    if (logoInput.current) logoInput.current.value = '';
+    if (!up?.ok) return setLogoError(up?.error ?? 'The logo could not be uploaded.');
+    run('logo', () => updateStBrochure(brochure.id, { clientLogo: up.url }), 'Logo saved.');
+  }
 
   return (
     <div className="card mt-6 grid gap-5 p-6">
+      <div className="rounded-xl border border-line p-4">
+        <span className="field-label">School logo</span>
+        <p className="mb-3 text-xs text-ink-soft">
+          On the cover, and at the foot of every page. A PNG with a transparent background looks best.
+        </p>
+        <div className="flex flex-wrap items-center gap-4">
+          {brochure.clientLogo ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={brochure.clientLogo} alt="School logo" className="h-14 w-auto max-w-[200px] rounded bg-white object-contain p-1" />
+          ) : (
+            <span className="text-sm text-ink-soft">No logo yet.</span>
+          )}
+          <input ref={logoInput} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" onChange={uploadLogo} disabled={busy || logoBusy} className="field !w-auto !py-2" />
+          {brochure.clientLogo && (
+            <button
+              className="text-sm font-semibold text-danger hover:underline"
+              disabled={busy || logoBusy}
+              onClick={() => run('logo', () => updateStBrochure(brochure.id, { clientLogo: null }), 'Logo removed.')}
+            >
+              Remove
+            </button>
+          )}
+        </div>
+        {logoBusy && <p className="mt-2 text-xs text-ink-soft">Uploading…</p>}
+        {logoError && <p className="mt-2 text-sm text-danger">{logoError}</p>}
+      </div>
+
       <div className="grid gap-3 sm:grid-cols-2">
         <label>
           <span className="field-label">Title</span>

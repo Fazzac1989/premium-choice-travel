@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
 import { revalidatePcst } from '@/lib/pcst-revalidate';
-import { composeTripCopy, flagUntraceable } from '@/lib/brochure/compose';
+import { composeTripCopy, flagUntraceable, composeWhyCopy, type WhyCopy } from '@/lib/brochure/compose';
 import { loadTripRecords, planPages, padToSpread, checkTrips, type TripWarning } from '@/lib/brochure/build';
 import type { BrochureKind, DetailLevel, PageContent } from '@/lib/brochure/schema';
 
@@ -195,14 +195,14 @@ export async function composeStBrochure(brochureId: number): Promise<BrochureRes
       imageUrls: trip.landscapeImages.slice(0, 4),
     };
 
-    const { error } = await db
-      .from('brochure_pages')
-      .update({ content, copy_status: 'ai' })
-      .eq('brochure_id', brochureId)
-      .eq('trip_id', trip.id);
+    // The "Why <country>" page, written from the same material.
+    const why = await composeWhyCopy(trip, detail);
+    if (!why.ok) flags.push(`${trip.title}: the "Why" page could not be written — ${why.error}`);
+
+    const error = await writeTripCopy(db, brochureId, trip.id, content, why.ok ? why.content : null);
     if (error) {
       failed++;
-      flags.push(`${trip.title}: ${error.message}`);
+      flags.push(`${trip.title}: ${error}`);
       continue;
     }
     composed++;
@@ -241,15 +241,15 @@ export async function recomposeStTrip(brochureId: number, tripId: number): Promi
     imageUrls: trip.landscapeImages.slice(0, 4),
   };
 
-  const { error } = await db
-    .from('brochure_pages')
-    .update({ content, copy_status: 'ai' })
-    .eq('brochure_id', brochureId)
-    .eq('trip_id', tripId);
-  if (error) return { ok: false, error: error.message };
+  const flags = flagUntraceable(result.content, trip).map((f) => `${trip.title}: ${f}`);
+  const why = await composeWhyCopy(trip, (brochure.detail_level ?? 'standard') as DetailLevel);
+  if (!why.ok) flags.push(`${trip.title}: the "Why" page could not be written — ${why.error}`);
+
+  const error = await writeTripCopy(db, brochureId, tripId, content, why.ok ? why.content : null);
+  if (error) return { ok: false, error };
 
   refresh(brochureId);
-  return { ok: true, flags: flagUntraceable(result.content, trip).map((f) => `${trip.title}: ${f}`) };
+  return { ok: true, flags };
 }
 
 /* ────────────────────────────── editing ────────────────────────────── */
@@ -698,4 +698,140 @@ export async function sendStBrochureInvite(inviteId: number): Promise<BrochureRe
   await db.from('brochure_invites').update({ sent_at: new Date().toISOString() }).eq('id', inviteId);
   refresh(inv.brochure_id);
   return { ok: true, id: inv.brochure_id };
+}
+
+/* ──────────────────────── the "Why <country>" pages ──────────────────────── */
+
+type Db = ReturnType<typeof pcstClient>;
+
+/**
+ * A trip's copy goes on its introduction rows and its "Why" copy on its
+ * "Why" row, which is made if the brochure predates it. They are kept apart
+ * because the deck merges a trip's rows first-wins: the same field on an
+ * earlier row would hide an edit made on the later one.
+ */
+async function writeTripCopy(
+  db: Db,
+  brochureId: number,
+  tripId: number,
+  content: PageContent,
+  why: WhyCopy | null,
+): Promise<string | null> {
+  const { error } = await db
+    .from('brochure_pages')
+    .update({ content, copy_status: 'ai' })
+    .eq('brochure_id', brochureId)
+    .eq('trip_id', tripId)
+    .neq('page_type', 'tripWhy');
+  if (error) return error.message;
+  if (!why) return null;
+
+  const whyId = await ensureWhyRow(db, brochureId, tripId);
+  if (!whyId) return 'The "Why" page could not be created.';
+  // The price range is typed by a person; a rewrite keeps it.
+  const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
+  const priceRange = (current?.content as PageContent | null)?.priceRange;
+  const { error: e2 } = await db
+    .from('brochure_pages')
+    .update({ content: { ...why, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' })
+    .eq('id', whyId);
+  return e2 ? e2.message : null;
+}
+
+/** The trip's "Why" row, made after its last row when it has none. */
+async function ensureWhyRow(db: Db, brochureId: number, tripId: number): Promise<number | null> {
+  const { data: rows } = await db
+    .from('brochure_pages')
+    .select('id, trip_id, page_type, sort_order, layout_variant')
+    .eq('brochure_id', brochureId)
+    .order('sort_order');
+  const all = rows ?? [];
+  const existing = all.find((r) => r.trip_id === tripId && r.page_type === 'tripWhy');
+  if (existing) return existing.id;
+
+  const mine = all.filter((r) => r.trip_id === tripId);
+  if (!mine.length) return null;
+  const last = mine[mine.length - 1];
+
+  // Make room: everything after the trip's last row moves down one, from the end.
+  const after = all.filter((r) => r.sort_order > last.sort_order).sort((a, b) => b.sort_order - a.sort_order);
+  for (const r of after) await db.from('brochure_pages').update({ sort_order: r.sort_order + 1 }).eq('id', r.id);
+
+  const { data: made, error } = await db
+    .from('brochure_pages')
+    .insert({
+      brochure_id: brochureId,
+      trip_id: tripId,
+      page_type: 'tripWhy',
+      layout_variant: last.layout_variant ?? 'a',
+      sort_order: last.sort_order + 1,
+      content: {},
+      copy_status: 'ai',
+      hidden: false,
+    })
+    .select('id')
+    .single();
+  return error ? null : (made.id as number);
+}
+
+/** Give every trip in an older brochure its "Why" page, and write them. */
+export async function addStWhyPages(brochureId: number): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: brochure } = await db.from('brochures').select('id, detail_level, trip_ids').eq('id', brochureId).maybeSingle();
+  if (!brochure) return { ok: false, error: 'Brochure not found.' };
+
+  const trips = await loadTripRecords((brochure.trip_ids ?? []) as number[]);
+  const detail = (brochure.detail_level ?? 'standard') as DetailLevel;
+  const flags: string[] = [];
+  let made = 0;
+  for (const trip of trips) {
+    const whyId = await ensureWhyRow(db, brochureId, trip.id);
+    if (!whyId) {
+      flags.push(`${trip.title}: no pages in this brochure, so no "Why" page.`);
+      continue;
+    }
+    const why = await composeWhyCopy(trip, detail);
+    if (!why.ok) {
+      flags.push(`${trip.title}: the page was added but not written — ${why.error}`);
+      continue;
+    }
+    const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
+    const priceRange = (current?.content as PageContent | null)?.priceRange;
+    await db.from('brochure_pages').update({ content: { ...why.content, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' }).eq('id', whyId);
+    made++;
+  }
+  await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);
+  refresh(brochureId);
+  await revalidatePcst(null);
+  if (made === 0 && flags.length) return { ok: false, error: flags[0] };
+  return { ok: true, id: brochureId, flags };
+}
+
+/** Rewrite one trip's "Why" page only. */
+export async function recomposeStWhy(brochureId: number, tripId: number): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+  const { data: brochure } = await db.from('brochures').select('detail_level').eq('id', brochureId).maybeSingle();
+  if (!brochure) return { ok: false, error: 'Brochure not found.' };
+  const [trip] = await loadTripRecords([tripId]);
+  if (!trip) return { ok: false, error: 'Trip not found.' };
+
+  const why = await composeWhyCopy(trip, (brochure.detail_level ?? 'standard') as DetailLevel);
+  if (!why.ok) return { ok: false, error: why.error };
+  const whyId = await ensureWhyRow(db, brochureId, tripId);
+  if (!whyId) return { ok: false, error: 'The "Why" page could not be created.' };
+  const { data: current } = await db.from('brochure_pages').select('content').eq('id', whyId).maybeSingle();
+  const priceRange = (current?.content as PageContent | null)?.priceRange;
+  const { error } = await db
+    .from('brochure_pages')
+    .update({ content: { ...why.content, ...(priceRange ? { priceRange } : {}) }, copy_status: 'ai' })
+    .eq('id', whyId);
+  if (error) return { ok: false, error: error.message };
+  await db.from('brochures').update({ updated_at: new Date().toISOString() }).eq('id', brochureId);
+  refresh(brochureId);
+  await revalidatePcst(null);
+  return { ok: true, id: brochureId };
 }

@@ -87,15 +87,18 @@ function tripPages(trip: TripRecord, detail: DetailLevel, index: number): Planne
     { pageType: 'tripOverview', tripId: trip.id, layoutVariant: variant },
   ];
 
-  if (detail === 'inspiration') return pages;
-
-  if (trip.landscapeImages.length >= 3) {
-    pages.push({ pageType: 'tripGallery', tripId: trip.id, layoutVariant: variant });
+  if (detail !== 'inspiration') {
+    if (trip.landscapeImages.length >= 3) {
+      pages.push({ pageType: 'tripGallery', tripId: trip.id, layoutVariant: variant });
+    }
+    if (detail === 'detailed' && trip.days.some((d) => d.summary || d.title)) {
+      pages.push({ pageType: 'tripItinerary', tripId: trip.id, layoutVariant: variant });
+    }
   }
 
-  if (detail === 'detailed' && trip.days.some((d) => d.summary || d.title)) {
-    pages.push({ pageType: 'tripItinerary', tripId: trip.id, layoutVariant: variant });
-  }
+  // Every trip closes on "Why <country>", at every detail level: why the
+  // country, our view, who it suits, what it costs, what it teaches.
+  pages.push({ pageType: 'tripWhy', tripId: trip.id, layoutVariant: variant });
 
   return pages;
 }
