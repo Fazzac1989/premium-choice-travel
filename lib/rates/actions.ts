@@ -1,6 +1,6 @@
 'use server';
 
-import { RATES_PREVIEW_COOKIE, findCachedOffer, getOffers, getRate, ratesVisible } from '@/lib/rates';
+import { RATES_PREVIEW_COOKIE, activeProvider, findCachedOffer, getOffers, getRate, ratesVisible } from '@/lib/rates';
 import { cookies } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { toPublicOffer, type DisplayRate, type PublicRoomOffer } from '@/lib/rates/types';
@@ -191,7 +191,7 @@ export async function submitBookingRequest(payload: {
     net_amount: offer.net,
     extra_fees: fees || null,
     offer_id: offer.offerId,
-    provider: 'liteapi',
+    provider: activeProvider()?.name ?? 'unknown',
     name,
     email,
     phone: payload.phone.trim() || null,

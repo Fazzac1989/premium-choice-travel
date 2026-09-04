@@ -86,6 +86,37 @@ production key and secret, and `RATES_PUBLIC=1` when you are happy for every
 visitor to see prices. Booking is still a *request* — a specialist confirms
 each one — so nothing here charges a card or holds a room.
 
+## Certification — where we stand (4 September 2026)
+
+Hotelbeds certifies an integration before issuing live keys
+(developer.hotelbeds.com → Hotels → Knowledge Base → Certification process;
+requests go to apitude@hotelbeds.com with the workflow description, the
+certification URL and any commercial exclusions). They check six areas.
+Status of this site against each:
+
+| Area | Requirement | Status |
+|---|---|---|
+| Technical | Correct headers, GZIP | ✅ `Accept-Encoding: gzip` on every call |
+| Workflow | Availability → CheckRate only for `rateType=RECHECK` → Booking; never repeat availability | ✅ availability cached (12 h quotes, 30 min offers), booking uses the cached `rateKey`. ❌ no CheckRate step before confirming a RECHECK rate, ❌ no `/bookings` call at all |
+| Availability | Show room, board, price, dates, category | ✅ |
+| | Children need real ages | ❌ ages are assumed (8) — the booking page must collect them |
+| | Opaque rates (`packaging: true`) only in packages | ❌ not filtered out yet |
+| | `sourceMarket` used consistently | ✅ AE, and prices only shown to that market |
+| | Cancellation policies shown | ✅ deadline and non-refundable flag |
+| | Rate comments shown before confirmation | ❌ `rateCommentsId` not resolved via Content API |
+| | Promotions shown (suggested) | ❌ |
+| | Booking confirmation timeout ≥ 60 s | n/a until `/bookings` exists |
+| | Respect `hotelMandatory` selling rates | ❌ not read |
+| Voucher | Mandatory for every confirmed booking: hotel name + address, holder and one name per room, children's ages, Hotelbeds reference, dates, room, board, rate comments, "Payable through … VAT … Reference …" line | ❌ none — bookings are confirmed by a specialist off-platform today |
+| Content | Optional; stored locally, refreshed weekly; say which parts are used | ✅ catalogue stored (`lib/generated/hotelbeds-uae-hotels.json`); we use codes, names, coordinates only. Photos stay Google's |
+| Live environment | One real booking six months out (2 adults, 2 children, refundable rate), send voucher + price, then cancel it | ⏳ after certification |
+
+The gap is the booking half: certification assumes the site *confirms* with
+Hotelbeds through the API and issues the voucher. Today a booking request
+goes to a specialist, who books elsewhere. See the plan agreed with the
+user in the session notes before building the booking, cancellation and
+voucher pieces.
+
 ## Where the code lives
 
 | Piece | File |
