@@ -9,11 +9,14 @@ export async function sendEmail({
   subject,
   html,
   replyTo,
+  attachments,
 }: {
   to: string;
   subject: string;
   html: string;
   replyTo?: string;
+  /** Files to attach, e.g. a voucher PDF. Buffers are base64-encoded here. */
+  attachments?: { filename: string; content: Buffer | string }[];
 }): Promise<{ ok: boolean; skipped?: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   // "a@x.com, b@y.com" → both get a copy.
@@ -25,7 +28,21 @@ export async function sendEmail({
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify({ from, to: recipients, subject, html, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      body: JSON.stringify({
+        from,
+        to: recipients,
+        subject,
+        html,
+        ...(replyTo ? { reply_to: replyTo } : {}),
+        ...(attachments?.length
+          ? {
+              attachments: attachments.map((a) => ({
+                filename: a.filename,
+                content: Buffer.isBuffer(a.content) ? a.content.toString('base64') : a.content,
+              })),
+            }
+          : {}),
+      }),
     });
     if (!res.ok) {
       const body = await res.text();

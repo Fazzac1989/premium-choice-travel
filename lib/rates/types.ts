@@ -84,6 +84,14 @@ export type RoomOffer = {
   currency: string;
   /** Charges the supplier says are collected at the hotel, not in the price. */
   extraFees: { description: string; amount: number; currency: string }[];
+  /** BOOKABLE can be confirmed as is; RECHECK must be re-priced first. */
+  rateType?: 'BOOKABLE' | 'RECHECK';
+  /** Supplier promotions and applied discounts, e.g. "Child discount". */
+  promotions?: string[];
+  /** Rate comments the customer must see before confirming — insurance, deposits, works. */
+  comments?: string;
+  /** Supplier's rate-comments handle, resolved into `comments` when possible. */
+  commentsId?: string;
 };
 
 /** The same offer with our cost removed, safe to send to the page. */

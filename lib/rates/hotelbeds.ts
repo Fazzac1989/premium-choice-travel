@@ -2,18 +2,23 @@ import { createHash } from 'node:crypto';
 import type { RateProvider, RateQuery, RateQuote, RoomOffer } from './types';
 
 /**
- * Hotelbeds APItude — hotel availability, room offers and (for the mapping
- * script) the content catalogue.
+ * Hotelbeds APItude — availability, room offers, booking, cancellation and
+ * the content catalogue.
  *
  * Auth is a per-request X-Signature: sha256(apiKey + secret + unix seconds).
- * The test environment answers with a small set of demo hotels and allows
- * 50 requests a day, which is why every caller here is deliberately frugal
- * and the catalogue is cached to disk by the mapping script.
+ * The test environment answers with demo inventory and allows 50 requests a
+ * day, which is why every caller here is deliberately frugal and the
+ * catalogue is cached to disk by the mapping script.
  *
  * Money: `net` is what Premium Choice pays. A customer never sees it. The
  * figure shown is `sellingRate` when the account is set up to return one,
  * otherwise net plus HOTELBEDS_MARKUP_PERCENT (default 15). Prices come back
  * in the account's currency; lib/rates/index.ts converts them to dirhams.
+ *
+ * Workflow, as Hotelbeds certifies it: availability → checkrate only for a
+ * RECHECK rate → booking. Availability is never repeated for the same
+ * search (see the cache in lib/rates/index.ts); a specialist confirms each
+ * booking from the admin, never the site on its own.
  */
 
 const HOSTS = {
@@ -27,6 +32,9 @@ export const HOTELBEDS_PHOTO_BASE = 'https://photos.hotelbeds.com/giata/bigger/'
 const DEFAULT_MARKUP_PERCENT = 15;
 /** Without real ages a mid-range child keeps the search valid, as LiteAPI does. */
 const ASSUMED_CHILD_AGE = 8;
+/** Hotelbeds asks for at least 60 s on a booking confirmation. */
+const BOOKING_TIMEOUT_MS = 75_000;
+const DEFAULT_TIMEOUT_MS = 25_000;
 
 export function hotelbedsCredentials() {
   const key = process.env.HOTELBEDS_API_KEY;
@@ -43,13 +51,19 @@ function signature(key: string, secret: string) {
 
 export class HotelbedsError extends Error {
   status: number;
+  detail: string;
   constructor(status: number, detail: string) {
     super(`Hotelbeds ${status}: ${detail}`);
     this.status = status;
+    this.detail = detail;
   }
   /** The daily test quota (50) is spent, or the key is not allowed here. */
   get quotaOrForbidden() {
     return this.status === 403 || this.status === 429;
+  }
+  /** The rate key has expired or is no longer sold — search again. */
+  get rateGone() {
+    return /rate|key|expired|not\s*found|invalid/i.test(this.detail) && (this.status === 400 || this.status === 404);
   }
 }
 
@@ -62,7 +76,10 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
  * quota, and answers a burst with 429 "Rate limit exceeded". That is worth
  * a short wait and one more try; a 403 (quota spent, key refused) is not.
  */
-export async function hotelbedsFetch<T = any>(path: string, init: { method?: 'GET' | 'POST'; body?: unknown } = {}): Promise<T> {
+export async function hotelbedsFetch<T = any>(
+  path: string,
+  init: { method?: 'GET' | 'POST' | 'DELETE'; body?: unknown; timeoutMs?: number } = {},
+): Promise<T> {
   const creds = hotelbedsCredentials();
   if (!creds) throw new Error('HOTELBEDS_API_KEY / HOTELBEDS_SECRET are not set');
   const waits = [1500, 3500];
@@ -78,12 +95,21 @@ export async function hotelbedsFetch<T = any>(path: string, init: { method?: 'GE
       },
       body: init.body ? JSON.stringify(init.body) : undefined,
       cache: 'no-store',
+      signal: AbortSignal.timeout(init.timeoutMs ?? DEFAULT_TIMEOUT_MS),
     });
     if (res.ok) return (await res.json()) as T;
-    const detail = (await res.text()).slice(0, 300);
+    const text = await res.text();
     if (res.status === 429 && attempt < waits.length) {
       await sleep(waits[attempt]);
       continue;
+    }
+    // Hotelbeds puts the useful sentence in error.message; keep that.
+    let detail = text.slice(0, 300);
+    try {
+      const j = JSON.parse(text);
+      detail = String(j?.error?.message ?? j?.error ?? detail).slice(0, 300);
+    } catch {
+      // plain text already
     }
     throw new HotelbedsError(res.status, detail);
   }
@@ -123,9 +149,17 @@ function sellPrice(rate: any): { total: number; net: number | null } {
   return { total: round2(net * (1 + markupPercent() / 100)), net: round2(net) };
 }
 
+/** Real ages when the form gave them, an assumed age when it did not. */
+export function childAges(query: Pick<RateQuery, 'children' | 'childrenAges'>) {
+  return Array.from({ length: query.children }, (_, i) => {
+    const a = Number(query.childrenAges?.[i]);
+    return Number.isFinite(a) && a >= 0 && a <= 17 ? Math.round(a) : ASSUMED_CHILD_AGE;
+  });
+}
+
 /** Availability request body. Children need ages or the supplier rejects the search. */
 function availabilityBody(query: RateQuery) {
-  const ages = Array.from({ length: query.children }, (_, i) => query.childrenAges?.[i] ?? ASSUMED_CHILD_AGE);
+  const ages = childAges(query);
   return {
     stay: { checkIn: query.checkIn, checkOut: addDays(query.checkIn, query.nights) },
     occupancies: [
@@ -157,6 +191,9 @@ function toOffers(hotel: any): RoomOffer[] {
   for (const room of hotel?.rooms ?? []) {
     for (const rate of room?.rates ?? []) {
       if (!rate?.rateKey) continue;
+      // Opaque rates may only be sold inside a package with other services
+      // (flights, transfers). We sell the room on its own, so they are out.
+      if (rate.packaging === true) continue;
       const { total, net } = sellPrice(rate);
       if (total <= 0) continue;
 
@@ -173,10 +210,15 @@ function toOffers(hotel: any): RoomOffer[] {
         .filter((t) => t && t.included === false && Number(t.amount) > 0)
         .map((t) => ({
           // The page itself adds "paid at the hotel", so this is just the what.
-          description: String(t.type ?? 'taxes and fees').toLowerCase().replace(/_/g, ' '),
+          description: String(t.subType ?? t.type ?? 'taxes and fees').toLowerCase().replace(/_/g, ' '),
           amount: round2(Number(t.amount)),
           currency: String(t.currency ?? currency),
         }));
+
+      const promotions = [
+        ...((rate.promotions ?? []) as any[]).map((p) => String(p?.name ?? '').trim()),
+        ...((rate.offers ?? []) as any[]).map((o) => String(o?.name ?? '').trim()),
+      ].filter(Boolean);
 
       offers.push({
         offerId: String(rate.rateKey),
@@ -188,6 +230,10 @@ function toOffers(hotel: any): RoomOffer[] {
         net,
         currency,
         extraFees,
+        rateType: rate.rateType === 'RECHECK' ? 'RECHECK' : 'BOOKABLE',
+        ...(promotions.length ? { promotions: Array.from(new Set(promotions)) } : {}),
+        ...(rate.rateComments ? { comments: String(rate.rateComments).trim() } : {}),
+        ...(rate.rateCommentsId ? { commentsId: String(rate.rateCommentsId) } : {}),
       });
     }
   }
@@ -209,6 +255,60 @@ export const hotelbedsOffersFromHotel = toOffers;
 async function availability(query: RateQuery): Promise<any | null> {
   const json: any = await hotelbedsFetch('/hotel-api/1.0/hotels', { method: 'POST', body: availabilityBody(query) });
   return json?.hotels?.hotels?.[0] ?? null;
+}
+
+// ── Rate comments ────────────────────────────────────────────────
+// Availability gives a handle ("incoming|hotel|code"); the text lives in
+// the Content API and must be shown to the customer before they confirm.
+
+const commentsCache = new Map<string, { text: string; at: number }>();
+const COMMENTS_HOLD_MS = 12 * 3600_000;
+
+export async function hotelbedsRateComments(commentsId: string, checkIn: string): Promise<string> {
+  const key = `${commentsId}|${checkIn}`;
+  const hit = commentsCache.get(key);
+  if (hit && Date.now() - hit.at < COMMENTS_HOLD_MS) return hit.text;
+
+  const [incoming, hotel, code] = commentsId.split('|');
+  if (!incoming || !hotel) return '';
+  const json: any = await hotelbedsFetch(
+    `/hotel-content-api/1.0/types/ratecomments?fields=all&code=${encodeURIComponent(`${incoming}|${hotel}`)}&date=${checkIn}`,
+  );
+  const lines: string[] = [];
+  for (const rc of json?.rateComments ?? []) {
+    for (const byRate of rc?.commentsByRates ?? []) {
+      const codes: any[] = Array.isArray(byRate?.rateCodes) ? byRate.rateCodes : [];
+      if (code !== undefined && codes.length && !codes.map(String).includes(String(code))) continue;
+      for (const c of byRate?.comments ?? []) {
+        const start = String(c?.dateStart ?? '');
+        const end = String(c?.dateEnd ?? '');
+        if ((start && checkIn < start) || (end && checkIn > end)) continue;
+        const text = String(c?.description ?? '').trim();
+        if (text) lines.push(text);
+      }
+    }
+  }
+  const text = Array.from(new Set(lines)).join('\n');
+  commentsCache.set(key, { text, at: Date.now() });
+  return text;
+}
+
+/** Fill `comments` for offers that only carry a handle — a few calls at most. */
+async function withComments(offers: RoomOffer[], checkIn: string): Promise<RoomOffer[]> {
+  const ids = Array.from(new Set(offers.filter((o) => !o.comments && o.commentsId).map((o) => o.commentsId!))).slice(0, 3);
+  if (!ids.length) return offers;
+  const resolved = new Map<string, string>();
+  for (const id of ids) {
+    try {
+      resolved.set(id, await hotelbedsRateComments(id, checkIn));
+    } catch (e: any) {
+      console.error('[hotelbeds ratecomments]', e?.message ?? e);
+    }
+  }
+  return offers.map((o) => {
+    const text = o.commentsId ? resolved.get(o.commentsId) : undefined;
+    return text ? { ...o, comments: text } : o;
+  });
 }
 
 export const hotelbeds: RateProvider = {
@@ -242,21 +342,166 @@ export const hotelbeds: RateProvider = {
   async offers(query: RateQuery): Promise<RoomOffer[]> {
     if (!hotelbeds.ownsCode!(query.supplierCode)) return [];
     const hotel = await availability(query);
-    return hotel ? toOffers(hotel) : [];
+    return hotel ? withComments(toOffers(hotel), query.checkIn) : [];
   },
 };
 
+// ── Check rate, book, cancel ─────────────────────────────────────
+
 /**
- * Re-check one rate before a request goes to a specialist. RECHECK-type rates
- * may move between search and booking; this is the supplier's own answer.
+ * Re-check one rate before confirming. Required for RECHECK rates, and the
+ * only way to get rate comments for them; useful for any rate a few hours
+ * after the search, since the price may have moved.
  */
 export async function hotelbedsCheckRate(rateKey: string): Promise<RoomOffer | null> {
   const json: any = await hotelbedsFetch('/hotel-api/1.0/checkrates', { method: 'POST', body: { rooms: [{ rateKey }] } });
   const hotel = json?.hotel;
-  return hotel ? toOffers(hotel)[0] ?? null : null;
+  if (!hotel) return null;
+  const offer = toOffers(hotel)[0];
+  return offer ?? null;
 }
 
-// ── Content API (used by scripts/map-hotelbeds-hotels.ts) ────────────
+export type SupplierPax = { type: 'AD' | 'CH'; name: string; surname: string; age?: number };
+
+export type SupplierBooking = {
+  reference: string;
+  clientReference: string;
+  status: string;
+  creationDate: string;
+  holder: { name: string; surname: string };
+  remark: string;
+  totalNet: number;
+  pendingAmount: number | null;
+  currency: string;
+  invoiceCompany: { code: string; company: string; registrationNumber: string } | null;
+  hotel: {
+    code: number;
+    name: string;
+    categoryName: string;
+    destinationName: string;
+    checkIn: string;
+    checkOut: string;
+    supplier: { name: string; vatNumber: string } | null;
+    rooms: {
+      code: string;
+      name: string;
+      status: string;
+      paxes: SupplierPax[];
+      rates: { boardName: string; net: number; rateClass: string; rateComments: string; cancellationPolicies: { amount: number; from: string }[] }[];
+    }[];
+  };
+  /** Everything the supplier sent, kept for disputes and reprints. */
+  raw: any;
+};
+
+function parseBooking(json: any): SupplierBooking {
+  const b = json?.booking ?? json;
+  if (!b?.reference) throw new Error('Hotelbeds returned no booking reference');
+  const h = b.hotel ?? {};
+  return {
+    reference: String(b.reference),
+    clientReference: String(b.clientReference ?? ''),
+    status: String(b.status ?? ''),
+    creationDate: String(b.creationDate ?? ''),
+    holder: { name: String(b.holder?.name ?? ''), surname: String(b.holder?.surname ?? '') },
+    remark: String(b.remark ?? ''),
+    totalNet: Number(b.totalNet ?? h.totalNet ?? 0),
+    pendingAmount: b.pendingAmount != null ? Number(b.pendingAmount) : null,
+    currency: String(b.currency ?? h.currency ?? ''),
+    invoiceCompany: b.invoiceCompany
+      ? {
+          code: String(b.invoiceCompany.code ?? ''),
+          company: String(b.invoiceCompany.company ?? ''),
+          registrationNumber: String(b.invoiceCompany.registrationNumber ?? ''),
+        }
+      : null,
+    hotel: {
+      code: Number(h.code ?? 0),
+      name: String(h.name ?? ''),
+      categoryName: String(h.categoryName ?? ''),
+      destinationName: String(h.destinationName ?? ''),
+      checkIn: String(h.checkIn ?? ''),
+      checkOut: String(h.checkOut ?? ''),
+      supplier: h.supplier ? { name: String(h.supplier.name ?? ''), vatNumber: String(h.supplier.vatNumber ?? '') } : null,
+      rooms: ((h.rooms ?? []) as any[]).map((r) => ({
+        code: String(r.code ?? ''),
+        name: String(r.name ?? ''),
+        status: String(r.status ?? ''),
+        paxes: ((r.paxes ?? []) as any[]).map((p) => ({
+          type: p.type === 'CH' ? 'CH' : 'AD',
+          name: String(p.name ?? ''),
+          surname: String(p.surname ?? ''),
+          ...(p.age != null ? { age: Number(p.age) } : {}),
+        })),
+        rates: ((r.rates ?? []) as any[]).map((x) => ({
+          boardName: String(x.boardName ?? x.boardCode ?? ''),
+          net: Number(x.net ?? 0),
+          rateClass: String(x.rateClass ?? ''),
+          rateComments: String(x.rateComments ?? '').trim(),
+          cancellationPolicies: ((x.cancellationPolicies ?? []) as any[]).map((c) => ({
+            amount: Number(c.amount ?? 0),
+            from: String(c.from ?? ''),
+          })),
+        })),
+      })),
+    },
+    raw: b,
+  };
+}
+
+/**
+ * POST /hotel-api/1.0/bookings — the confirmation. Real in the live
+ * environment: the hotel is told, and cancellation terms apply from here.
+ */
+export async function hotelbedsBook(input: {
+  rateKey: string;
+  holder: { name: string; surname: string };
+  paxes: SupplierPax[];
+  clientReference: string;
+  remark?: string;
+}): Promise<SupplierBooking> {
+  const json = await hotelbedsFetch('/hotel-api/1.0/bookings', {
+    method: 'POST',
+    timeoutMs: BOOKING_TIMEOUT_MS,
+    body: {
+      holder: input.holder,
+      rooms: [
+        {
+          rateKey: input.rateKey,
+          paxes: input.paxes.map((p) => ({
+            roomId: 1,
+            type: p.type,
+            name: p.name,
+            surname: p.surname,
+            ...(p.type === 'CH' && p.age != null ? { age: p.age } : {}),
+          })),
+        },
+      ],
+      clientReference: input.clientReference.slice(0, 20),
+      ...(input.remark ? { remark: input.remark.slice(0, 900) } : {}),
+      // Accept a price drift of up to 2% between search and confirmation.
+      tolerance: 2,
+    },
+  });
+  return parseBooking(json);
+}
+
+/** GET /hotel-api/1.0/bookings/{reference}. */
+export async function hotelbedsBooking(reference: string): Promise<SupplierBooking> {
+  return parseBooking(await hotelbedsFetch(`/hotel-api/1.0/bookings/${encodeURIComponent(reference)}`));
+}
+
+/** DELETE …?cancellationFlag=CANCELLATION — the supplier's own cancellation. */
+export async function hotelbedsCancel(reference: string): Promise<SupplierBooking> {
+  return parseBooking(
+    await hotelbedsFetch(`/hotel-api/1.0/bookings/${encodeURIComponent(reference)}?cancellationFlag=CANCELLATION`, {
+      method: 'DELETE',
+      timeoutMs: BOOKING_TIMEOUT_MS,
+    }),
+  );
+}
+
+// ── Content API ──────────────────────────────────────────────────
 
 export type HotelbedsDestination = { code: string; name: string; countryCode: string };
 export type HotelbedsHotel = {
@@ -269,6 +514,42 @@ export type HotelbedsHotel = {
   longitude: number | null;
   address?: string;
 };
+
+/** What a voucher needs to say about the hotel. */
+export type HotelbedsHotelDetails = {
+  code: number;
+  name: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  phone: string;
+  email: string;
+  category: string;
+  destination: string;
+};
+
+/** GET /hotel-content-api/1.0/hotels/{code}/details. */
+export async function hotelbedsHotelDetails(code: number | string): Promise<HotelbedsHotelDetails> {
+  const json: any = await hotelbedsFetch(`/hotel-content-api/1.0/hotels/${encodeURIComponent(String(code))}/details?language=ENG&useSecondaryLanguage=false`);
+  const h = json?.hotel ?? json ?? {};
+  const phones: any[] = Array.isArray(h.phones) ? h.phones : [];
+  const phone =
+    phones.find((p) => p?.phoneType === 'PHONEHOTEL')?.phoneNumber ??
+    phones.find((p) => p?.phoneType === 'PHONEBOOKING')?.phoneNumber ??
+    phones[0]?.phoneNumber ??
+    '';
+  return {
+    code: Number(h.code ?? code),
+    name: String(h.name?.content ?? h.name ?? ''),
+    address: String(h.address?.content ?? h.address?.street ?? ''),
+    city: String(h.city?.content ?? ''),
+    postalCode: String(h.postalCode ?? ''),
+    phone: String(phone),
+    email: String(h.email ?? ''),
+    category: String(h.categoryName?.description?.content ?? h.category?.description?.content ?? h.categoryCode ?? ''),
+    destination: String(h.destinationName?.name?.content ?? h.destination?.name?.content ?? h.destinationCode ?? ''),
+  };
+}
 
 /** GET /hotel-content-api/1.0/locations/destinations — one call per country. */
 export async function hotelbedsDestinations(countryCode = 'AE'): Promise<HotelbedsDestination[]> {

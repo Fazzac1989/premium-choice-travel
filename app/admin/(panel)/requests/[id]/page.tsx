@@ -4,8 +4,12 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
 import { getTravellers, passportWarning } from '@/lib/travellers';
+import SupplierBookingPanel from '@/components/admin/SupplierBookingPanel';
 
 export const dynamic = 'force-dynamic';
+// A Hotelbeds confirmation is allowed to take up to a minute; give the
+// server actions on this page room for that.
+export const maxDuration = 90;
 
 export const metadata = { title: 'Booking request — Admin' };
 
@@ -19,7 +23,13 @@ function Row({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-export default async function AdminRequestPage({ params }: { params: { id: string } }) {
+export default async function AdminRequestPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { note?: string };
+}) {
   await requireAdmin();
   const db = createAdminClient();
   const { data: r } = await db.from('booking_requests').select('*').eq('id', Number(params.id)).maybeSingle();
@@ -65,7 +75,7 @@ export default async function AdminRequestPage({ params }: { params: { id: strin
               <Row label="Stay" value={`${r.check_in} · ${r.nights} night${r.nights === 1 ? '' : 's'}`} />
               <Row
                 label="Party"
-                value={`${r.adults} adult${r.adults === 1 ? '' : 's'}${r.children ? `, ${r.children} child${r.children === 1 ? '' : 'ren'}` : ''}`}
+                value={`${r.adults} adult${r.adults === 1 ? '' : 's'}${r.children ? `, ${r.children} child${r.children === 1 ? '' : 'ren'}${Array.isArray(r.children_ages) && r.children_ages.length ? ` (ages ${r.children_ages.join(', ')})` : ''}` : ''}`}
               />
               <Row label="Room" value={r.room_name} />
               <Row label="Board" value={r.board} />
@@ -115,6 +125,8 @@ export default async function AdminRequestPage({ params }: { params: { id: strin
               Save
             </button>
           </form>
+
+          <SupplierBookingPanel r={r} note={searchParams.note} />
         </div>
 
         <aside className="space-y-6">

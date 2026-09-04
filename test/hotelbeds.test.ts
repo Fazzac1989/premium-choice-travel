@@ -46,7 +46,21 @@ const hotel = {
     {
       code: 'SUI',
       name: 'SUITE',
-      rates: [{ rateKey: 'pay-later', rateClass: 'NOR', net: '400.00', paymentType: 'AT_HOTEL', boardName: 'HALF BOARD' }],
+      rates: [
+        {
+          rateKey: 'pay-later',
+          rateClass: 'NOR',
+          rateType: 'RECHECK',
+          net: '400.00',
+          paymentType: 'AT_HOTEL',
+          boardName: 'HALF BOARD',
+          promotions: [{ code: '073', name: 'Early booking' }],
+          offers: [{ code: '9001', name: 'Child discount', amount: '-50.00' }],
+          rateCommentsId: '102|12345|0',
+        },
+        // Opaque: may only be sold inside a package, so it must never appear.
+        { rateKey: 'opaque', rateClass: 'NOR', net: '90.00', packaging: true, boardName: 'ROOM ONLY' },
+      ],
     },
   ],
 };
@@ -97,6 +111,16 @@ describe('Hotelbeds offers', () => {
     expect(offers.map((o) => o.total)).toEqual([190, 230, 460]);
     expect(offers[0].offerId).toContain('|DBL.ST|RO|');
     expect(offers.every((o) => o.currency === 'EUR')).toBe(true);
+  });
+
+  it('drops opaque package rates and carries rate type, promotions and the comments handle', () => {
+    const offers = hotelbedsOffersFromHotel(hotel);
+    expect(offers.find((o) => o.offerId === 'opaque')).toBeUndefined();
+    const suite = offers.find((o) => o.roomName.startsWith('SUITE'))!;
+    expect(suite.rateType).toBe('RECHECK');
+    expect(suite.promotions).toEqual(['Early booking', 'Child discount']);
+    expect(suite.commentsId).toBe('102|12345|0');
+    expect(offers.find((o) => o.board === 'BED AND BREAKFAST')!.rateType).toBe('BOOKABLE');
   });
 
   it('only owns plain numeric codes', () => {

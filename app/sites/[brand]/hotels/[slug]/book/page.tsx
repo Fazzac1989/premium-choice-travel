@@ -25,7 +25,7 @@ export default async function HotelBookingPage({
   searchParams,
 }: {
   params: { brand: string; slug: string };
-  searchParams: { from?: string; nights?: string; adults?: string; children?: string };
+  searchParams: { from?: string; nights?: string; adults?: string; children?: string; ages?: string };
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.slug !== 'staycations') notFound();
@@ -45,6 +45,11 @@ export default async function HotelBookingPage({
   const nights = Math.max(1, Math.min(30, Number(searchParams.nights) || 2));
   const adults = Math.max(1, Math.min(12, Number(searchParams.adults) || 2));
   const children = Math.max(0, Math.min(8, Number(searchParams.children) || 0));
+  const childrenAges = String(searchParams.ages ?? '')
+    .split(/[^0-9]+/)
+    .filter(Boolean)
+    .map((n) => Math.max(0, Math.min(17, Number(n))))
+    .slice(0, children);
 
   // Signed in, we already know who they are and who they travel with, so
   // nobody retypes a name they have given us before. Signed out, the page
@@ -53,7 +58,9 @@ export default async function HotelBookingPage({
   const account = await getAccount();
   const travellers = account ? await getTravellers(account.id) : [];
 
-  const here = `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}`;
+  const here =
+    `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}` +
+    (childrenAges.length ? `&ages=${childrenAges.join(',')}` : '');
 
   return (
     <BookingPage
@@ -66,6 +73,7 @@ export default async function HotelBookingPage({
       nights={nights}
       adults={adults}
       children={children}
+      childrenAges={childrenAges}
       account={account ? { email: account.email, fullName: account.fullName, phone: account.phone } : null}
       travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
       signInHref={`/account/sign-in?next=${encodeURIComponent(here)}`}

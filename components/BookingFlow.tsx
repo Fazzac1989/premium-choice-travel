@@ -27,12 +27,17 @@ export default function BookingFlow({
     nights: defaultNights,
     adults: 2,
     children: 0,
+    ages: '',
   });
 
   const today = new Date();
   const minDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-  const href = `${bookHref}?from=${form.checkIn}&nights=${form.nights}&adults=${form.adults}&children=${form.children}`;
+  // "4 and 9" → 4,9 — hotels price children by age, so the ages travel too.
+  const ages = form.ages.split(/[^0-9]+/).filter(Boolean).slice(0, form.children).join(',');
+  const href =
+    `${bookHref}?from=${form.checkIn}&nights=${form.nights}&adults=${form.adults}&children=${form.children}` +
+    (form.children && ages ? `&ages=${ages}` : '');
 
   const field =
     'mt-1 w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40';
@@ -88,6 +93,18 @@ export default function BookingFlow({
             ))}
           </select>
         </div>
+        {form.children > 0 && (
+          <div className="col-span-2">
+            <label className={label}>Children’s ages</label>
+            <input
+              value={form.ages}
+              onChange={(e) => setForm({ ...form, ages: e.target.value })}
+              placeholder={form.children === 1 ? 'e.g. 6' : 'e.g. 4 and 9'}
+              inputMode="numeric"
+              className={field}
+            />
+          </div>
+        )}
       </div>
 
       {form.checkIn ? (

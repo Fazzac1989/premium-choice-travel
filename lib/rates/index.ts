@@ -191,19 +191,47 @@ const OFFER_MINUTES = 30;
  * from here rather than from the browser — so a customer cannot submit a
  * request at a price we never showed.
  */
-export async function getOffers(params: {
+/**
+ * Children's ages, clamped and never longer than the head count. Suppliers
+ * price by age, so ages are part of what an offer was for.
+ */
+export function cleanAges(ages: number[] | undefined, children: number): number[] {
+  return (ages ?? [])
+    .slice(0, Math.max(0, children))
+    .map((n) => Math.max(0, Math.min(17, Math.round(Number(n) || 0))));
+}
+
+/**
+ * The cache row's `offers` column holds either a bare list (older rows) or
+ * `{ages, list}` — the ages the list was priced for. A list priced for other
+ * ages is not an answer for this party, so it counts as a miss.
+ */
+type StoredOffers = RoomOffer[] | { ages?: number[]; list?: RoomOffer[] } | null | undefined;
+
+function unpackOffers(stored: StoredOffers): { ages: string; list: RoomOffer[] } {
+  if (!stored) return { ages: '', list: [] };
+  if (Array.isArray(stored)) return { ages: '', list: stored };
+  return { ages: (stored.ages ?? []).join(','), list: stored.list ?? [] };
+}
+
+export type OffersParams = {
   hotelId: number;
   supplierCode: string | null;
   checkIn: string;
   nights: number;
   adults: number;
   children?: number;
-}): Promise<RoomOffer[]> {
+  childrenAges?: number[];
+};
+
+export async function getOffers(params: OffersParams, opts: { force?: boolean } = {}): Promise<RoomOffer[]> {
   const provider = activeProvider();
   if (!provider || !isSupabaseConfigured()) return [];
   const supplierCode = codeFor(provider, params.supplierCode);
   if (!supplierCode || !provider.offers) return [];
   const children = params.children ?? 0;
+  const ages = cleanAges(params.childrenAges, children);
+  const agesKey = ages.join(',');
   const db = createAdminClient();
 
   const where = {
@@ -219,13 +247,16 @@ export async function getOffers(params: {
     .select('offers, offers_fetched_at')
     .match(where)
     .maybeSingle();
+  const stored = unpackOffers(hit?.offers as StoredOffers);
 
   if (
+    !opts.force &&
     hit?.offers &&
     hit.offers_fetched_at &&
+    stored.ages === agesKey &&
     Date.now() - new Date(hit.offers_fetched_at).getTime() < OFFER_MINUTES * 60_000
   ) {
-    return hit.offers as RoomOffer[];
+    return stored.list;
   }
 
   let offers: RoomOffer[] = [];
@@ -238,17 +269,18 @@ export async function getOffers(params: {
         nights: params.nights,
         adults: params.adults,
         children,
+        childrenAges: ages,
       }),
     );
   } catch (e: any) {
     console.error('[offers]', provider.name, e?.message);
-    return (hit?.offers as RoomOffer[]) ?? [];
+    return stored.ages === agesKey ? stored.list : [];
   }
 
   await db.from('rate_cache').upsert(
     {
       ...where,
-      offers,
+      offers: { ages, list: offers },
       offers_fetched_at: new Date().toISOString(),
       provider: provider.name,
       currency: offers[0]?.currency ?? 'AED',
@@ -281,6 +313,6 @@ export async function findCachedOffer(params: {
       children: params.children ?? 0,
     })
     .maybeSingle();
-  const offers = (data?.offers ?? []) as RoomOffer[];
-  return offers.find((o) => o.offerId === params.offerId) ?? null;
+  const { list } = unpackOffers(data?.offers as StoredOffers);
+  return list.find((o) => o.offerId === params.offerId) ?? null;
 }

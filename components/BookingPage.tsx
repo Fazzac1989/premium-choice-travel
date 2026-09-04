@@ -43,6 +43,7 @@ export default function BookingPage({
   nights,
   adults,
   children,
+  childrenAges = [],
   account,
   travellers,
   signInHref,
@@ -56,6 +57,8 @@ export default function BookingPage({
   nights: number;
   adults: number;
   children: number;
+  /** Real ages when the visitor gave them — hotels price children by age. */
+  childrenAges?: number[];
   /** Set when they are signed in — their details fill the form. */
   account: { email: string; fullName: string; phone: string } | null;
   /** Saved travellers, so names are chosen rather than retyped. */
@@ -83,7 +86,7 @@ export default function BookingPage({
   useEffect(() => {
     let live = true;
     (async () => {
-      const res = await roomOffers({ hotelId, checkIn, nights, adults, children });
+      const res = await roomOffers({ hotelId, checkIn, nights, adults, children, childrenAges });
       if (!live) return;
       if (res.ok) setOffers(res.offers);
       else setProblem(res.message ?? 'Nothing came back for those dates.');
@@ -94,7 +97,12 @@ export default function BookingPage({
     return () => {
       live = false;
     };
-  }, [hotelId, checkIn, nights, adults, children]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotelId, checkIn, nights, adults, children, childrenAges.join(',')]);
+
+  const agesText = childrenAges.length
+    ? ` (aged ${childrenAges.length === 1 ? childrenAges[0] : `${childrenAges.slice(0, -1).join(', ')} and ${childrenAges[childrenAges.length - 1]}`})`
+    : '';
 
   const money = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 0 });
   const perNight = (o: PublicRoomOffer) => Math.round(o.total / Math.max(1, nights));
@@ -129,6 +137,7 @@ export default function BookingPage({
         nights,
         adults,
         children,
+        childrenAges,
         offerId: chosen.offerId,
         name: guest.name,
         email: guest.email,
@@ -179,7 +188,7 @@ export default function BookingPage({
       <h1 className="mt-2 font-serif text-4xl leading-tight text-ink sm:text-5xl">{hotelName}</h1>
       <p className="mt-3 text-ink-soft">
         {dates} · {nights} night{nights === 1 ? '' : 's'} · {adults} adult{adults === 1 ? '' : 's'}
-        {children ? `, ${children} child${children === 1 ? '' : 'ren'}` : ''}
+        {children ? `, ${children} child${children === 1 ? '' : 'ren'}${agesText}` : ''}
         {emirate ? ` · ${emirate}` : ''}
       </p>
 
@@ -235,6 +244,21 @@ export default function BookingPage({
                             paid at the hotel
                           </p>
                         )}
+                        {o.promotions && o.promotions.length > 0 && (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {o.promotions.map((p) => (
+                              <span key={p} className="rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold text-teal-deep">
+                                {p}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        {o.comments && (
+                          <p className="mt-2 whitespace-pre-line text-xs leading-relaxed text-ink-soft">
+                            <span className="font-semibold text-ink">Please note: </span>
+                            {o.comments}
+                          </p>
+                        )}
                       </div>
                       <div className="shrink-0 text-right">
                         <p className="font-serif text-xl text-teal-deep">
@@ -263,6 +287,12 @@ export default function BookingPage({
                   <p className="mt-1 font-serif text-xl text-teal">
                     {chosen.currency} {money(chosen.total)}
                   </p>
+                  {chosen.comments && (
+                    <p className="mt-2 whitespace-pre-line text-[11px] leading-relaxed text-white/70">
+                      <span className="font-semibold text-white">Before you send — </span>
+                      {chosen.comments}
+                    </p>
+                  )}
                 </div>
               ) : (
                 <p className="mt-3 rounded-lg bg-white/10 p-3 text-sm text-white/70">

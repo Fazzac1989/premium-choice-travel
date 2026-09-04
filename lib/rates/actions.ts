@@ -1,6 +1,6 @@
 'use server';
 
-import { RATES_PREVIEW_COOKIE, activeProvider, findCachedOffer, getOffers, getRate, ratesVisible } from '@/lib/rates';
+import { RATES_PREVIEW_COOKIE, activeProvider, cleanAges, findCachedOffer, getOffers, getRate, ratesVisible } from '@/lib/rates';
 import { cookies } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { toPublicOffer, type DisplayRate, type PublicRoomOffer } from '@/lib/rates/types';
@@ -67,6 +67,7 @@ export async function roomOffers(params: {
   nights: number;
   adults: number;
   children?: number;
+  childrenAges?: number[];
 }): Promise<{ ok: boolean; offers: PublicRoomOffer[]; message?: string }> {
   if (!ratesAllowed()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
   if (!isSupabaseConfigured()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
@@ -93,6 +94,7 @@ export async function roomOffers(params: {
     nights,
     adults,
     children,
+    childrenAges: cleanAges(params.childrenAges, children),
   });
 
   if (!offers.length) {
@@ -117,6 +119,7 @@ export async function submitBookingRequest(payload: {
   nights: number;
   adults: number;
   children?: number;
+  childrenAges?: number[];
   offerId: string;
   name: string;
   email: string;
@@ -135,6 +138,7 @@ export async function submitBookingRequest(payload: {
   const nights = Math.max(1, Math.min(30, Number(payload.nights) || 1));
   const adults = Math.max(1, Math.min(12, Number(payload.adults) || 2));
   const children = Math.max(0, Math.min(8, Number(payload.children) || 0));
+  const ages = cleanAges(payload.childrenAges, children);
 
   const db = createAdminClient();
   const { data: hotel } = await db
@@ -174,7 +178,7 @@ export async function submitBookingRequest(payload: {
   }
 
   const fees = offer.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
-  const { error } = await db.from('booking_requests').insert({
+  const row: Record<string, unknown> = {
     hotel_id: hotel.id,
     hotel_name: hotel.name,
     emirate: hotel.emirate,
@@ -204,7 +208,17 @@ export async function submitBookingRequest(payload: {
     // Ties the request to their account when they are signed in; otherwise it
     // is claimed by email the first time they sign in.
     customer_id: account?.id ?? null,
-  });
+    // Ages and rate comments travel with the request: the supplier books
+    // children by age, and the comments must be on the voucher.
+    children_ages: ages.length ? ages : null,
+    rate_comments: offer.comments ?? null,
+  };
+  let { error } = await db.from('booking_requests').insert(row);
+  if (error && /column/i.test(error.message)) {
+    // Migration 018 not run yet — keep the request, lose only the two new fields.
+    const { children_ages: _a, rate_comments: _c, ...legacy } = row;
+    ({ error } = await db.from('booking_requests').insert(legacy));
+  }
   if (error) {
     console.error('[booking-request]', error.message);
     return { ok: false, message: 'Something went wrong — please try again or call us.' };
@@ -213,13 +227,14 @@ export async function submitBookingRequest(payload: {
   const brief = [
     `BOOKING REQUEST — ${hotel.name}${hotel.emirate ? ` (${hotel.emirate})` : ''}`,
     '',
-    `${payload.checkIn} · ${nights} night${nights === 1 ? '' : 's'} · ${adults} adult${adults === 1 ? '' : 's'}${children ? `, ${children} children` : ''}`,
+    `${payload.checkIn} · ${nights} night${nights === 1 ? '' : 's'} · ${adults} adult${adults === 1 ? '' : 's'}${children ? `, ${children} children${ages.length ? ` (ages ${ages.join(', ')})` : ''}` : ''}`,
     `Room: ${offer.roomName}${offer.board ? ` · ${offer.board}` : ''}`,
     `Cancellation: ${offer.refundable === true ? `refundable${offer.cancelBy ? ` until ${offer.cancelBy}` : ''}` : offer.refundable === false ? 'non-refundable' : 'not stated'}`,
     '',
     `Customer was shown: ${offer.currency} ${offer.total.toLocaleString()} total`,
     offer.net ? `Our cost at the time: ${offer.currency} ${offer.net.toLocaleString()} (margin ${offer.currency} ${Math.round(offer.total - offer.net).toLocaleString()})` : null,
     fees ? `Payable at the hotel, not included: ${fees}` : null,
+    offer.comments ? `Rate comments (shown to the customer): ${offer.comments}` : null,
     '',
     `${name} · ${email}${payload.phone.trim() ? ` · ${payload.phone.trim()}` : ''}`,
     `Reply by: ${payload.channel || 'any'}`,
