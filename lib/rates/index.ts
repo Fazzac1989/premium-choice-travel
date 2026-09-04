@@ -3,6 +3,7 @@ import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { liteapi } from './liteapi';
 import { hotelbeds } from './hotelbeds';
 import { stub } from './stub';
+import { convertMoney, convertOffers } from './fx';
 import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
 
 /**
@@ -134,6 +135,11 @@ export async function getRate(params: {
       adults: params.adults,
       children,
     });
+    // Customers see dirhams whatever currency the supplier trades in.
+    if (quote) {
+      const money = await convertMoney(quote.amount, quote.currency);
+      quote = { ...quote, amount: money.amount, currency: money.currency };
+    }
   } catch (e: any) {
     console.error('[rates]', provider.name, e?.message);
     // A failed lookup is not an answer, so it is never cached — but a stale
@@ -224,14 +230,16 @@ export async function getOffers(params: {
 
   let offers: RoomOffer[] = [];
   try {
-    offers = await provider.offers({
-      hotelId: params.hotelId,
-      supplierCode,
-      checkIn: params.checkIn,
-      nights: params.nights,
-      adults: params.adults,
-      children,
-    });
+    offers = await convertOffers(
+      await provider.offers({
+        hotelId: params.hotelId,
+        supplierCode,
+        checkIn: params.checkIn,
+        nights: params.nights,
+        adults: params.adults,
+        children,
+      }),
+    );
   } catch (e: any) {
     console.error('[offers]', provider.name, e?.message);
     return (hit?.offers as RoomOffer[]) ?? [];

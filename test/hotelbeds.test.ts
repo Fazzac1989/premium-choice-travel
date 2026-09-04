@@ -61,7 +61,7 @@ describe('Hotelbeds offers', () => {
     delete process.env.HOTELBEDS_MARKUP_PERCENT;
     const offers = hotelbedsOffersFromHotel(hotel);
     const bb = offers.find((o) => o.board === 'BED AND BREAKFAST')!;
-    expect(bb.total).toBe(224); // 200 + 12%
+    expect(bb.total).toBe(230); // 200 + 15%
     expect(bb.net).toBe(200);
     const ro = offers.find((o) => o.board === 'ROOM ONLY')!;
     expect(ro.total).toBe(190); // sellingRate wins over net + margin
@@ -94,7 +94,7 @@ describe('Hotelbeds offers', () => {
 
   it('sorts cheapest first, drops duplicates and keeps the rate key as the offer id', () => {
     const offers = hotelbedsOffersFromHotel(hotel);
-    expect(offers.map((o) => o.total)).toEqual([190, 224, 448]);
+    expect(offers.map((o) => o.total)).toEqual([190, 230, 460]);
     expect(offers[0].offerId).toContain('|DBL.ST|RO|');
     expect(offers.every((o) => o.currency === 'EUR')).toBe(true);
   });

@@ -30,7 +30,8 @@ server-side and the browser never sees them.
 | Variable | Meaning |
 |---|---|
 | `HOTELBEDS_ENV` | `test` (default) or `live` once Hotelbeds certifies the integration |
-| `HOTELBEDS_MARKUP_PERCENT` | Margin added to Hotelbeds' net rate for the customer price. Default 12. Ignored when the account returns a `sellingRate` of its own |
+| `HOTELBEDS_MARKUP_PERCENT` | Margin added to Hotelbeds' net rate for the customer price. Default 15. Ignored when the account returns a `sellingRate` of its own |
+| `RATES_CURRENCY` | What customers see. Default `AED`. Supplier prices in any other currency are converted through the dirham's dollar peg using the European Central Bank's daily dollar rate (frankfurter.app, no key); if no rate can be fetched the price stays in the supplier's currency rather than being guessed |
 | `RATES_PROVIDER` | Force a provider: `hotelbeds`, `liteapi` or `sample`. Otherwise the first configured one wins, Hotelbeds first |
 | `RATES_PUBLIC` | `1` shows prices to everyone; until then only the preview cookie sees them (see `RATES_PREVIEW_KEY`) |
 
@@ -71,8 +72,11 @@ copies the accepted codes to `hotels.supplier_code`.
   do not loop the check script.
 - Test availability is **demo data**: prices are realistic but not bookable,
   and some real hotels return nothing. That is expected.
-- The test account's currency is usually EUR. The page shows whatever
-  currency the supplier returns; ask Hotelbeds for AED on the live contract.
+- The test account's currency is usually EUR. Prices are converted to
+  dirhams before they are cached or shown (see `RATES_CURRENCY`). Ask
+  Hotelbeds for AED on the live contract anyway — a booking is then priced
+  in the currency it is paid in, with no exchange movement between the quote
+  and the specialist's confirmation.
 
 ## Going live
 

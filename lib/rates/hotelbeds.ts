@@ -12,7 +12,8 @@ import type { RateProvider, RateQuery, RateQuote, RoomOffer } from './types';
  *
  * Money: `net` is what Premium Choice pays. A customer never sees it. The
  * figure shown is `sellingRate` when the account is set up to return one,
- * otherwise net plus HOTELBEDS_MARKUP_PERCENT (default 12).
+ * otherwise net plus HOTELBEDS_MARKUP_PERCENT (default 15). Prices come back
+ * in the account's currency; lib/rates/index.ts converts them to dirhams.
  */
 
 const HOSTS = {
@@ -23,7 +24,7 @@ const HOSTS = {
 /** Content API image paths are relative to this. */
 export const HOTELBEDS_PHOTO_BASE = 'https://photos.hotelbeds.com/giata/bigger/';
 
-const DEFAULT_MARKUP_PERCENT = 12;
+const DEFAULT_MARKUP_PERCENT = 15;
 /** Without real ages a mid-range child keeps the search valid, as LiteAPI does. */
 const ASSUMED_CHILD_AGE = 8;
 
