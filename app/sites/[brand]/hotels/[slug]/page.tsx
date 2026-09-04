@@ -61,7 +61,10 @@ export default async function StaycationHotelPage({
     ...placePhotos,
     ...hotel.gallery.map((url: string) => ({ url, alt: hotel.name, credit: '' })),
   ];
-  const heroImage = galleryImages[0]?.url || hotel.image || brand.heroImage;
+  // No photograph of this hotel means no photograph: the brand's scenery is
+  // a picture of a different, named hotel, and showing it here would be a
+  // claim about the wrong building. The branded panel is honest.
+  const heroImage = galleryImages[0]?.url || hotel.image || null;
   const hasOwnPhotography = galleryImages.length > 0;
   const credits = Array.from(new Set(placePhotos.map((p: { credit: string }) => p.credit).filter(Boolean)));
 
@@ -85,7 +88,11 @@ export default async function StaycationHotelPage({
   return (
     <>
       <section className="relative flex min-h-[56svh] items-end">
-        <Image src={heroImage} alt={hotel.name} fill priority className="object-cover" sizes="100vw" />
+        {heroImage ? (
+          <Image src={heroImage} alt={hotel.name} fill priority className="object-cover" sizes="100vw" />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink to-teal-deep/70" />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
         <div className="container-site relative pb-12 pt-36 text-white">
           <nav aria-label="Breadcrumb" className="text-xs text-white/70">
@@ -97,8 +104,8 @@ export default async function StaycationHotelPage({
             {[hotel.emirate, hotel.area, hotel.style].filter(Boolean).join(' · ')}
           </p>
           <h1 className="mt-2 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{hotel.name}</h1>
-          {!hasOwnPhotography && (
-            <p className="mt-2 text-xs text-white/60">Scenic photography shown — hotel imagery coming soon.</p>
+          {!hasOwnPhotography && !heroImage && (
+            <p className="mt-2 text-xs text-white/60">Hotel photography coming soon.</p>
           )}
         </div>
       </section>
