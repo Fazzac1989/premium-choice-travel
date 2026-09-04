@@ -1,10 +1,31 @@
 export type GuideSection = { heading: string; body: string };
 
-/** A hotel photo from the Google Places API — always shown with attribution. */
-export type PlacePhotoRef = { name: string; width: number; height: number; attribution: string };
+/**
+ * A hotel photo from the Google Places API — always shown with attribution.
+ * `url`/`path`/`cachedAt` describe our own 30-day copy in Supabase Storage
+ * (see lib/images/place-photo-cache.ts); without them the photo can only be
+ * streamed live, which is billed per view.
+ */
+export type PlacePhotoRef = {
+  name: string;
+  width: number;
+  height: number;
+  attribution: string;
+  url?: string;
+  path?: string;
+  cachedAt?: string;
+};
 
 /** A restaurant or bar, optionally with its own real photograph. */
-export type VenueSection = GuideSection & { placeId?: string; photo?: string; attribution?: string };
+export type VenueSection = GuideSection & {
+  placeId?: string;
+  photo?: string;
+  attribution?: string;
+  /** Our cached copy of `photo`, same lifecycle as PlacePhotoRef.url. */
+  photoUrl?: string;
+  photoPath?: string;
+  photoCachedAt?: string;
+};
 
 export type GalleryImage = { url: string; alt: string };
 

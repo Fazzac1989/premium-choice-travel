@@ -5,7 +5,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import type { Hotel } from '@/lib/types';
-import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
+import { hotelPhotoSrc } from '@/lib/images/google-places';
 import { findWeekend, weekendOptions } from '@/lib/weekend';
 import { PRICE_BANDS, PRICE_BASIS, priceBand } from '@/lib/price-bands';
 
@@ -27,7 +27,9 @@ function Stars({ n }: { n: number | null | undefined }) {
 
 function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }) {
   const band = priceBand(h.priceBand);
-  const photo = isPlacesConfigured() && h.photos?.[0] ? placePhotoSrc(h.photos[0].name, 800) : h.image || h.gallery[0];
+  // The first Google photo we can actually serve (cached, or live if that is
+  // on), then anything hand-picked, then the branded panel.
+  const photo = (h.photos ?? []).map((p) => hotelPhotoSrc(p, 800)).find(Boolean) || h.image || h.gallery[0];
   return (
     <Link
       href={`${base}/hotels/${hotelSlug(h.name)}${dates}`}

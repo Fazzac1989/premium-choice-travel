@@ -11,6 +11,8 @@
  * /api/place-photo. Attribution travels with each photo and must be shown.
  */
 
+import type { PlacePhotoRef, VenueSection } from '@/lib/types';
+
 const PLACES = 'https://places.googleapis.com/v1';
 
 export type PlacePhoto = {
@@ -124,12 +126,41 @@ export async function getPhotoUri(photoName: string, maxWidthPx = 1600): Promise
     // Surface Google's own reason — a blocked key and an expired handle look
     // identical from the outside otherwise.
     const detail = await res.text();
-    throw new Error(`Places media ${res.status}: ${detail.slice(0, 200)}`);
+    throw new PlacesMediaError(res.status, detail.slice(0, 200));
   }
   return (await res.json()).photoUri ?? null;
+}
+
+/** A media call Google refused; `status` tells an expired handle from a bad key. */
+export class PlacesMediaError extends Error {
+  status: number;
+  constructor(status: number, detail: string) {
+    super(`Places media ${status}: ${detail}`);
+    this.status = status;
+  }
+  /** Google no longer knows this handle — renew it, do not retry. */
+  get handleGone() {
+    return this.status === 400 || this.status === 404;
+  }
 }
 
 /** The src our pages use — the proxy keeps the API key server-side. */
 export function placePhotoSrc(photoName: string, width = 1600) {
   return `/api/place-photo?name=${encodeURIComponent(photoName)}&w=${width}`;
+}
+
+/**
+ * What a page should put in `src` for a hotel photo: our cached copy when
+ * there is one (free to serve), the live proxy only when that is switched on,
+ * otherwise nothing.
+ */
+export function hotelPhotoSrc(photo: PlacePhotoRef, width = 1600): string | null {
+  if (photo.url) return photo.url;
+  return isPlacesConfigured() && photo.name ? placePhotoSrc(photo.name, width) : null;
+}
+
+/** Same rule for a restaurant or bar inside the hotel. */
+export function venuePhotoSrc(venue: VenueSection, width = 800): string | null {
+  if (venue.photoUrl) return venue.photoUrl;
+  return isPlacesConfigured() && venue.photo ? placePhotoSrc(venue.photo, width) : null;
 }

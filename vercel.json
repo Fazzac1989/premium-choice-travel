@@ -1,0 +1,5 @@
+{
+  "crons": [
+    { "path": "/api/cron/place-photo-cache", "schedule": "0 2 * * *" }
+  ]
+}

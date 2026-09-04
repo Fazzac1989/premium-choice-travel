@@ -143,7 +143,13 @@ async function main() {
           console.warn(`? ${h.name} — no Google place matched`);
           continue;
         }
-        const photos = found.photos.slice(0, MAX_HOTEL_PHOTOS);
+        // Keep our cached copies for any handle that survived the refresh, so
+        // the photo cache does not refetch a picture it already holds.
+        const cached = new Map<string, any>((Array.isArray(h.photos) ? h.photos : []).map((p: any) => [p.name, p]));
+        const photos = found.photos.slice(0, MAX_HOTEL_PHOTOS).map((p) => {
+          const old = cached.get(p.name);
+          return old?.url ? { ...p, url: old.url, path: old.path, cachedAt: old.cachedAt } : p;
+        });
         const restaurants = await restaurantPhotos(h);
         const withPhotos = restaurants.filter((r: any) => r.photo).length;
 

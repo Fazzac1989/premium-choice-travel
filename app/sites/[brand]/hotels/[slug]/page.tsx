@@ -6,7 +6,7 @@ import AvailabilityCheck from '@/components/AvailabilityCheck';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { isPlacesConfigured, placePhotoSrc } from '@/lib/images/google-places';
+import { hotelPhotoSrc, venuePhotoSrc } from '@/lib/images/google-places';
 import type { PlacePhotoRef, VenueSection } from '@/lib/types';
 import { PRICE_BASIS, priceBand } from '@/lib/price-bands';
 import BookingFlow from '@/components/BookingFlow';
@@ -47,16 +47,12 @@ export default async function StaycationHotelPage({
   const hotel = (await getStaycationHotels()).find((h) => hotelSlug(h.name) === params.slug);
   if (!hotel) notFound();
 
-  // Real photography of the property, then anything curated by hand, then a
-  // scenic fallback that the page labels honestly as scenery.
-  // Without the Places key the proxy cannot serve anything, so fall back to
-  // scenery rather than filling the page with broken images.
-  const photosUsable = isPlacesConfigured();
-  const placePhotos = (photosUsable ? hotel.photos ?? [] : []).map((p: PlacePhotoRef) => ({
-    url: placePhotoSrc(p.name, 1600),
-    alt: hotel.name,
-    credit: p.attribution,
-  }));
+  // Real photography of the property first — our cached copies of Google's
+  // photos, or the live stream when that is switched on — then anything
+  // curated by hand. A photo we cannot serve is simply left out.
+  const placePhotos = (hotel.photos ?? [])
+    .map((p: PlacePhotoRef) => ({ url: hotelPhotoSrc(p, 1600), alt: hotel.name, credit: p.attribution }))
+    .filter((p: { url: string | null; alt: string; credit: string }): p is { url: string; alt: string; credit: string } => Boolean(p.url));
   const galleryImages = [
     ...placePhotos,
     ...hotel.gallery.map((url: string) => ({ url, alt: hotel.name, credit: '' })),
@@ -174,10 +170,10 @@ export default async function StaycationHotelPage({
               <div className="mt-6 grid gap-6 sm:grid-cols-2">
                 {hotel.restaurants.map((r: VenueSection, i: number) => (
                   <div key={i} className="overflow-hidden rounded-2xl border border-line">
-                    {photosUsable && r.photo && (
+                    {venuePhotoSrc(r, 800) && (
                       <div className="relative aspect-[16/10] bg-sand">
                         <Image
-                          src={placePhotoSrc(r.photo, 800)}
+                          src={venuePhotoSrc(r, 800)!}
                           alt={r.heading}
                           fill
                           sizes="(max-width: 640px) 100vw, 50vw"

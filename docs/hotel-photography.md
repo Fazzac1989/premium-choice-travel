@@ -57,25 +57,44 @@ GOOGLE_PLACES_API_KEY=paste-the-key-here
 Then **Deployments** → the top deployment → **⋯** → **Redeploy**. Environment
 variables only reach a *new* deployment.
 
-### Switching the live photos on and off
+### How the photos are served — the 30-day cache
 
-Every photo the websites show is a billed Place Photo request, and Next's
-image optimiser fetches each photo once per rendered width, so a busy
-directory (or a crawler) can run the bill up quickly. Because of that the
-live photos are **off by default** — the key on its own only lets the
-script below look hotels up.
+Google's terms allow its content to be cached for up to 30 days, so the
+websites never stream photos from Google directly. Each photo is copied once
+into our own Supabase Storage (`images/places/…`), served from there for
+free, and re-fetched before it is 30 days old. That is roughly one Google
+call per photo per month — inside the free allowance — instead of one call
+per view per image size, which is what ran the bill up.
 
-To show Google photos on the websites, add a second variable next to the key
-(Vercel → Settings → Environment Variables, then redeploy):
+The copies live on the hotel rows themselves: every entry in `hotels.photos`
+and every restaurant with a photo carries `url`, `path` and `cachedAt`.
 
-```
-PLACES_PHOTOS=on
-```
+- **Daily refresh** — `/api/cron/place-photo-cache` runs at 02:00 UTC
+  (schedule in `vercel.json`) and renews the oldest copies first, up to 40
+  a run. Set `CRON_SECRET` in Vercel if you want the endpoint locked to
+  Vercel's scheduler; without it, an outsider can at most bring a refresh
+  forward.
+- **First fill / catch-up** — from your machine:
 
-Remove it (or set anything other than `on`) to switch the photos off again
-without touching the key. `/api/health` reports `placesPhotos` so you can see
-which state a deployment is in. While off, hotel pages show curated images
-where they exist and the branded name panel where they do not.
+  ```bash
+  npx tsx scripts/place-photo-cache.ts
+  ```
+
+  `--budget 100` caps the number of fetches; `--only atlantis` limits it to
+  one hotel.
+
+If a photo handle has expired on Google's side, the refresh renews the
+hotel's handles (a free lookup) and caches the new pictures on the next run.
+A restaurant whose handle expired loses its photo until
+`scripts/hotel-photos.ts --refresh` finds it again.
+
+### Streaming live from Google (normally off)
+
+The old live proxy (`/api/place-photo`) still exists for a photo that has not
+been cached yet, but it only runs when `PLACES_PHOTOS=on` is set next to the
+key in Vercel — every image it serves is a billed request. Leave it off; the
+cache covers everything. `/api/health` reports `placesPhotos` so you can see
+which state a deployment is in.
 
 ### Running it
 
