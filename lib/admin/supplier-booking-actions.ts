@@ -5,29 +5,25 @@ import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
 import { activeProvider, getOffers } from '@/lib/rates';
-import { convertMoney, convertOffers } from '@/lib/rates/fx';
 import {
-  HotelbedsError,
-  hotelbedsBook,
-  hotelbedsCancel,
-  hotelbedsCheckRate,
-  hotelbedsHotelDetails,
-  type SupplierBooking,
-  type SupplierPax,
-} from '@/lib/rates/hotelbeds';
+  bookingBlocker,
+  cancelRequest,
+  confirmRequest,
+  describeSupplierError,
+  emailVoucherFor,
+  loadRequest,
+  money,
+  recheckRequest,
+  saveRequest,
+} from '@/lib/rates/supplier-booking';
+import type { SupplierPax } from '@/lib/rates/hotelbeds';
 import type { RoomOffer } from '@/lib/rates/types';
-import { emailShell, sendEmail } from '@/lib/email';
-import { emailBrand } from '@/lib/email-brand';
-import { renderVoucher, voucherFilename } from '@/lib/voucher';
 
 /**
- * The specialist's half of a Hotelbeds booking.
- *
- * A customer's request is never confirmed by the site on its own. From the
- * request page a specialist can re-check the rate, search again if the rate
- * key has expired, confirm the booking with Hotelbeds, email the voucher,
- * and cancel. Every step writes what the supplier said back to the request,
- * so the voucher can be reprinted and a dispute answered without asking again.
+ * The specialist's half of a Hotelbeds booking, as server actions behind the
+ * request page. Each one checks the admin session, hands the work to
+ * lib/rates/supplier-booking.ts (shared with the integration test), and
+ * comes back to the page with a note saying what happened.
  *
  * Workflow discipline (Hotelbeds certifies this): availability is only
  * repeated when the specialist asks for it, CheckRate is used before a
@@ -40,53 +36,17 @@ function back(id: number, note: string): never {
   redirect(`/admin/requests/${id}?note=${encodeURIComponent(note)}`);
 }
 
-async function loadRequest(id: number) {
+async function guarded(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get('id'));
   const db = createAdminClient();
-  const { data, error } = await db.from('booking_requests').select('*').eq('id', id).maybeSingle();
-  if (error) throw new Error(error.message);
-  return data;
-}
-
-function needsMigration(message: string) {
-  return /column .* does not exist|schema cache/i.test(message);
-}
-
-async function saveRequest(id: number, patch: Record<string, unknown>) {
-  const db = createAdminClient();
-  const { error } = await db.from('booking_requests').update(patch).eq('id', id);
-  if (error) {
-    throw new Error(
-      needsMigration(error.message)
-        ? 'The booking columns are missing — paste supabase/migrations/018-supplier-bookings.sql into the Supabase SQL editor, then try again.'
-        : error.message,
-    );
-  }
-}
-
-function hotelbedsOnly(row: any) {
-  const provider = activeProvider();
-  if (!provider || provider.name !== 'hotelbeds') return 'Hotelbeds is not the active rates provider on this deployment.';
-  if (row.provider && row.provider !== 'hotelbeds') return `This request was priced by ${row.provider}, not Hotelbeds — it has to be booked by hand.`;
-  if (!row.offer_id) return 'This request carries no supplier rate to book.';
-  return null;
-}
-
-function describeError(e: any) {
-  if (e instanceof HotelbedsError) {
-    if (e.rateGone) return 'Hotelbeds no longer sells that rate key — use "Search again for this room", then confirm.';
-    if (e.quotaOrForbidden) return `Hotelbeds refused the call (${e.status}) — the daily test quota may be spent, or the key is not allowed. ${e.detail}`;
-    return `Hotelbeds said: ${e.detail}`;
-  }
-  return String(e?.message ?? e);
+  const row = id ? await loadRequest(db, id) : null;
+  return { id, db, row };
 }
 
 function sameRoom(a: string, b: string) {
   const norm = (s: string) => s.toLowerCase().replace(/\(pay at the hotel\)/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
   return norm(a) === norm(b);
-}
-
-function money(n: number, currency: string) {
-  return `${currency} ${Math.round(n).toLocaleString('en-GB')}`;
 }
 
 /**
@@ -95,15 +55,12 @@ function money(n: number, currency: string) {
  * key has expired, or when the specialist wants today's price.
  */
 export async function refreshSupplierOffer(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get('id'));
-  const row = await loadRequest(id);
+  const { id, db, row } = await guarded(formData);
   if (!row) return;
-  const blocked = hotelbedsOnly(row);
+  const blocked = bookingBlocker(row, activeProvider()?.name ?? null);
   if (blocked) back(id, blocked);
   if (row.supplier_reference) back(id, 'Already confirmed with Hotelbeds — nothing to refresh.');
 
-  const db = createAdminClient();
   const { data: hotel } = await db.from('hotels').select('supplier_code').eq('id', row.hotel_id).maybeSingle();
   let offers: RoomOffer[] = [];
   try {
@@ -120,82 +77,54 @@ export async function refreshSupplierOffer(formData: FormData) {
       { force: true },
     );
   } catch (e: any) {
-    back(id, describeError(e));
+    back(id, describeSupplierError(e));
   }
   if (!offers.length) back(id, 'Hotelbeds returned nothing for these dates now. Price it by hand or ask the customer for other dates.');
 
   const exact = offers.find((o) => sameRoom(o.roomName, row.room_name ?? '') && o.board === row.board && o.refundable === row.refundable);
-  const loose = exact ?? offers.find((o) => sameRoom(o.roomName, row.room_name ?? '') && o.board === row.board) ?? offers.find((o) => sameRoom(o.roomName, row.room_name ?? ''));
-  if (!loose) back(id, `That room is no longer offered for these dates. Cheapest now: ${offers[0].roomName} · ${offers[0].board} at ${money(offers[0].total, offers[0].currency)}.`);
+  const match = exact ?? offers.find((o) => sameRoom(o.roomName, row.room_name ?? '') && o.board === row.board) ?? offers.find((o) => sameRoom(o.roomName, row.room_name ?? ''));
+  if (!match) back(id, `That room is no longer offered for these dates. Cheapest now: ${offers[0].roomName} · ${offers[0].board} at ${money(offers[0].total, offers[0].currency)}.`);
 
   const before = Number(row.amount);
-  const fees = loose.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
-  await saveRequest(id, {
-    offer_id: loose.offerId,
-    room_name: loose.roomName,
-    board: loose.board,
-    refundable: loose.refundable,
-    cancel_by: loose.cancelBy,
-    currency: loose.currency,
-    amount: loose.total,
-    net_amount: loose.net,
+  const fees = match.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
+  await saveRequest(db, id, {
+    offer_id: match.offerId,
+    room_name: match.roomName,
+    board: match.board,
+    refundable: match.refundable,
+    cancel_by: match.cancelBy,
+    currency: match.currency,
+    amount: match.total,
+    net_amount: match.net,
     extra_fees: fees || null,
-    rate_comments: loose.comments ?? null,
+    rate_comments: match.comments ?? null,
     supplier_recheck: {
       at: new Date().toISOString(),
-      total: loose.total,
-      net: loose.net,
-      currency: loose.currency,
-      rateType: loose.rateType ?? 'BOOKABLE',
-      comments: loose.comments ?? '',
+      total: match.total,
+      net: match.net,
+      currency: match.currency,
+      rateType: match.rateType ?? 'BOOKABLE',
+      comments: match.comments ?? '',
       source: 'availability',
     },
   });
-  const moved = Math.abs(loose.total - before) >= 1;
+  const moved = Math.abs(match.total - before) >= 1;
   back(
     id,
-    `Rate refreshed${exact ? '' : ' (closest match)'}: ${loose.roomName} · ${loose.board} at ${money(loose.total, loose.currency)}` +
+    `Rate refreshed${exact ? '' : ' (closest match)'}: ${match.roomName} · ${match.board} at ${money(match.total, match.currency)}` +
       (moved ? ` — was ${money(before, row.currency)}. Tell the customer before confirming.` : ' — unchanged.'),
   );
 }
 
 /** Ask Hotelbeds to re-price the exact rate key before confirming. Required for RECHECK rates. */
 export async function recheckSupplierRate(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get('id'));
-  const row = await loadRequest(id);
+  const { id, db, row } = await guarded(formData);
   if (!row) return;
-  const blocked = hotelbedsOnly(row);
+  const blocked = bookingBlocker(row, activeProvider()?.name ?? null);
   if (blocked) back(id, blocked);
   if (row.supplier_reference) back(id, 'Already confirmed with Hotelbeds.');
-
-  let checked: RoomOffer | null = null;
-  try {
-    checked = await hotelbedsCheckRate(row.offer_id);
-  } catch (e: any) {
-    back(id, describeError(e));
-  }
-  if (!checked) back(id, 'Hotelbeds could not re-check that rate. Use "Search again for this room".');
-  const [c] = await convertOffers([checked]);
-  const before = Number(row.amount);
-  await saveRequest(id, {
-    rate_comments: c.comments ?? row.rate_comments ?? null,
-    supplier_recheck: {
-      at: new Date().toISOString(),
-      total: c.total,
-      net: c.net,
-      currency: c.currency,
-      rateType: c.rateType ?? 'BOOKABLE',
-      comments: c.comments ?? '',
-      source: 'checkrate',
-    },
-  });
-  const moved = Math.abs(c.total - before) >= 1;
-  back(
-    id,
-    `Re-checked: ${money(c.total, c.currency)}${moved ? ` — was ${money(before, row.currency)}. Confirm the new price with the customer first.` : ', unchanged.'}` +
-      (c.comments ? ' Rate comments updated.' : ''),
-  );
+  const out = await recheckRequest(db, row);
+  back(id, out.note);
 }
 
 function paxesFrom(formData: FormData, row: any, holder: { name: string; surname: string }): SupplierPax[] {
@@ -221,152 +150,38 @@ function paxesFrom(formData: FormData, row: any, holder: { name: string; surname
 
 /** POST the booking to Hotelbeds, store the reply, send the voucher. */
 export async function confirmSupplierBooking(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get('id'));
-  const row = await loadRequest(id);
+  const { id, db, row } = await guarded(formData);
   if (!row) return;
-  const blocked = hotelbedsOnly(row);
+  const blocked = bookingBlocker(row, activeProvider()?.name ?? null);
   if (blocked) back(id, blocked);
-  if (row.supplier_reference) back(id, `Already confirmed — Hotelbeds reference ${row.supplier_reference}.`);
   if (String(formData.get('agreed')) !== 'yes') back(id, 'Tick the box to say the customer has agreed the price and terms.');
 
   const holder = {
     name: String(formData.get('holder_name') ?? '').trim(),
     surname: String(formData.get('holder_surname') ?? '').trim(),
   };
-  if (!holder.name || !holder.surname) back(id, 'The lead guest needs a first name and a surname, as in the passport.');
-
-  // A RECHECK rate must be re-priced first; the supplier requires it.
-  const recheck = row.supplier_recheck ?? null;
-  if (recheck?.rateType === 'RECHECK' && (recheck.source !== 'checkrate' || Date.now() - new Date(recheck.at).getTime() > 30 * 60_000)) {
-    back(id, 'This rate is marked RECHECK by Hotelbeds — press "Re-check this rate" first, then confirm within 30 minutes.');
-  }
-
-  const paxes = paxesFrom(formData, row, holder);
-  const remark = String(formData.get('remark') ?? '').trim();
-
-  let booking: SupplierBooking;
-  try {
-    booking = await hotelbedsBook({
-      rateKey: row.offer_id,
-      holder,
-      paxes,
-      clientReference: `PCS-${id}`,
-      remark,
-    });
-  } catch (e: any) {
-    console.error('[hotelbeds book]', e?.message ?? e);
-    back(id, describeError(e));
-  }
-
-  // The voucher wants the address and phone; the booking reply has neither.
-  let details: any = null;
-  try {
-    details = await hotelbedsHotelDetails(booking.hotel.code);
-  } catch (e: any) {
-    console.error('[hotelbeds details]', e?.message ?? e);
-  }
-
-  const cost = await convertMoney(booking.totalNet, booking.currency || 'EUR');
-  await saveRequest(id, {
-    status: 'confirmed',
-    holder_name: holder.name,
-    holder_surname: holder.surname,
-    paxes,
-    supplier_remark: remark || null,
-    supplier_reference: booking.reference,
-    supplier_status: booking.status,
-    supplier_booking: booking,
-    supplier_hotel: details,
-    supplier_confirmed_at: new Date().toISOString(),
-    net_amount: cost.amount,
-    rate_comments:
-      [row.rate_comments, ...booking.hotel.rooms.flatMap((r) => r.rates.map((x) => x.rateComments))]
-        .map((c) => String(c ?? '').trim())
-        .filter(Boolean)
-        .filter((c, i, a) => a.indexOf(c) === i)
-        .join('\n') || null,
+  const out = await confirmRequest(db, row, {
+    holder,
+    paxes: paxesFrom(formData, row, holder),
+    remark: String(formData.get('remark') ?? '').trim(),
   });
-
-  const fresh = await loadRequest(id);
-  const sent = await emailVoucherFor(fresh);
-  back(
-    id,
-    `Confirmed with Hotelbeds — reference ${booking.reference}, status ${booking.status}, net ${money(cost.amount, cost.currency)}.` +
-      (sent.ok ? ` Voucher emailed to ${row.email}.` : ` Voucher NOT emailed: ${sent.error ?? 'unknown error'} — use "Email voucher" to retry.`),
-  );
-}
-
-async function emailVoucherFor(row: any): Promise<{ ok: boolean; error?: string }> {
-  try {
-    const pdf = await renderVoucher(row);
-    if (!pdf) return { ok: false, error: 'nothing confirmed to print' };
-    const brand = emailBrand('staycations');
-    const staff = process.env.ENQUIRY_NOTIFY_EMAIL;
-    const res = await sendEmail({
-      to: [row.email, staff].filter(Boolean).join(', '),
-      subject: `Your hotel voucher — ${row.hotel_name} (${row.supplier_reference})`,
-      html: emailShell({
-        brand,
-        eyebrow: 'Booking confirmed',
-        title: `${row.hotel_name} is booked`,
-        bodyHtml:
-          `<p>Dear ${String(row.holder_name || row.name).replace(/</g, '&lt;')},</p>` +
-          `<p>Your stay at <strong>${String(row.hotel_name).replace(/</g, '&lt;')}</strong> from ${row.check_in} for ${row.nights} night${row.nights === 1 ? '' : 's'} is confirmed. ` +
-          `Your voucher is attached — please show it at check-in. The booking reference is <strong>${row.supplier_reference}</strong>.</p>` +
-          (row.rate_comments ? `<p><strong>Please note:</strong> ${String(row.rate_comments).replace(/</g, '&lt;').replace(/\n/g, '<br>')}</p>` : '') +
-          `<p>Anything at all before you travel, call us on +971 4 420 6965.</p>`,
-      }),
-      attachments: [{ filename: voucherFilename(row), content: pdf }],
-    });
-    if (res.ok && !res.skipped) {
-      await saveRequest(row.id, { voucher_sent_at: new Date().toISOString() });
-    }
-    return res.ok ? (res.skipped ? { ok: false, error: 'email is not configured (RESEND_API_KEY)' } : { ok: true }) : { ok: false, error: res.error };
-  } catch (e: any) {
-    console.error('[voucher email]', e?.message ?? e);
-    return { ok: false, error: String(e?.message ?? e) };
-  }
+  back(id, out.note);
 }
 
 /** Re-send the voucher (after a correction, or because the customer lost it). */
 export async function emailVoucher(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get('id'));
-  const row = await loadRequest(id);
+  const { id, db, row } = await guarded(formData);
   if (!row) return;
   if (!row.supplier_reference) back(id, 'Nothing is confirmed yet, so there is no voucher to send.');
-  const sent = await emailVoucherFor(row);
+  const sent = await emailVoucherFor(db, row);
   back(id, sent.ok ? `Voucher emailed to ${row.email}.` : `Voucher not sent: ${sent.error}`);
 }
 
 /** Cancel with Hotelbeds. Real in the live environment; charges may apply. */
 export async function cancelSupplierBooking(formData: FormData) {
-  await requireAdmin();
-  const id = Number(formData.get('id'));
-  const row = await loadRequest(id);
+  const { id, db, row } = await guarded(formData);
   if (!row) return;
-  if (!row.supplier_reference) back(id, 'Nothing is confirmed with Hotelbeds for this request.');
-  if (row.supplier_cancelled_at) back(id, 'Already cancelled with Hotelbeds.');
   if (String(formData.get('confirm')) !== 'yes') back(id, 'Tick the box to confirm the cancellation.');
-
-  let result: SupplierBooking;
-  try {
-    result = await hotelbedsCancel(row.supplier_reference);
-  } catch (e: any) {
-    console.error('[hotelbeds cancel]', e?.message ?? e);
-    back(id, describeError(e));
-  }
-  const charge = await convertMoney(result.totalNet, result.currency || 'EUR');
-  await saveRequest(id, {
-    status: 'closed',
-    supplier_status: result.status,
-    supplier_cancelled_at: new Date().toISOString(),
-    cancellation_cost: charge.amount,
-    supplier_booking: { ...row.supplier_booking, cancellation: result },
-  });
-  back(
-    id,
-    `Cancelled with Hotelbeds — status ${result.status}. Cancellation charge reported by the supplier: ${money(charge.amount, charge.currency)}. Tell the customer.`,
-  );
+  const out = await cancelRequest(db, row);
+  back(id, out.note);
 }
