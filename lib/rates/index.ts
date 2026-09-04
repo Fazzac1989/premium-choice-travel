@@ -1,6 +1,6 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
-import { liteapi, liteapiOffers } from './liteapi';
+import { liteapi } from './liteapi';
 import { hotelbeds } from './hotelbeds';
 import { stub } from './stub';
 import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
@@ -15,13 +15,35 @@ import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
  */
 
 // A real supplier always wins; the sample only runs when nothing else is set.
-const PROVIDERS: RateProvider[] = [liteapi, hotelbeds, stub];
+// Hotelbeds first: it is the contracted bed bank, LiteAPI was the sandbox.
+const PROVIDERS: RateProvider[] = [hotelbeds, liteapi, stub];
 
 /** How long a quote is treated as good enough to show. */
 const CACHE_HOURS = 12;
 
+/**
+ * The provider in use. RATES_PROVIDER pins one by name (hotelbeds, liteapi,
+ * sample) — useful while two sets of credentials exist — otherwise the first
+ * configured one wins.
+ */
 export function activeProvider(): RateProvider | null {
+  const pinned = process.env.RATES_PROVIDER?.trim().toLowerCase();
+  if (pinned) {
+    const p = PROVIDERS.find((x) => x.name === pinned);
+    return p?.configured() ? p : null;
+  }
   return PROVIDERS.find((p) => p.configured()) ?? null;
+}
+
+/**
+ * A supplier code only means something to the catalogue it came from: a
+ * LiteAPI "lp…" code sent to Hotelbeds is a bad request, not a quote. A hotel
+ * whose code belongs to another provider counts as unmapped for this one.
+ */
+function codeFor(provider: RateProvider, code: string | null | undefined) {
+  if (!code) return null;
+  if (provider.ownsCode && !provider.ownsCode(code)) return null;
+  return code;
 }
 
 export function ratesEnabled() {
@@ -69,7 +91,8 @@ export async function getRate(params: {
 }): Promise<DisplayRate> {
   const provider = activeProvider();
   if (!provider) return { status: 'off' };
-  if (!params.supplierCode) return { status: 'unmapped' };
+  const supplierCode = codeFor(provider, params.supplierCode);
+  if (!supplierCode) return { status: 'unmapped' };
   if (!isSupabaseConfigured()) return { status: 'off' };
 
   const children = params.children ?? 0;
@@ -105,7 +128,7 @@ export async function getRate(params: {
   try {
     quote = await provider.quote({
       hotelId: params.hotelId,
-      supplierCode: params.supplierCode,
+      supplierCode,
       checkIn: params.checkIn,
       nights: params.nights,
       adults: params.adults,
@@ -170,7 +193,10 @@ export async function getOffers(params: {
   adults: number;
   children?: number;
 }): Promise<RoomOffer[]> {
-  if (!activeProvider() || !params.supplierCode || !isSupabaseConfigured()) return [];
+  const provider = activeProvider();
+  if (!provider || !isSupabaseConfigured()) return [];
+  const supplierCode = codeFor(provider, params.supplierCode);
+  if (!supplierCode || !provider.offers) return [];
   const children = params.children ?? 0;
   const db = createAdminClient();
 
@@ -198,16 +224,16 @@ export async function getOffers(params: {
 
   let offers: RoomOffer[] = [];
   try {
-    offers = await liteapiOffers({
+    offers = await provider.offers({
       hotelId: params.hotelId,
-      supplierCode: params.supplierCode,
+      supplierCode,
       checkIn: params.checkIn,
       nights: params.nights,
       adults: params.adults,
       children,
     });
   } catch (e: any) {
-    console.error('[offers]', e?.message);
+    console.error('[offers]', provider.name, e?.message);
     return (hit?.offers as RoomOffer[]) ?? [];
   }
 
@@ -216,8 +242,8 @@ export async function getOffers(params: {
       ...where,
       offers,
       offers_fetched_at: new Date().toISOString(),
-      provider: 'liteapi',
-      currency: 'AED',
+      provider: provider.name,
+      currency: offers[0]?.currency ?? 'AED',
     },
     { onConflict: 'hotel_id,check_in,nights,adults,children' },
   );

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { activeProvider } from '@/lib/rates';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,9 @@ export async function GET() {
     places: Boolean(process.env.GOOGLE_PLACES_API_KEY),
     placesPhotos: process.env.PLACES_PHOTOS === 'on',
     liteapi: Boolean(process.env.LITEAPI_KEY),
+    hotelbeds: Boolean(process.env.HOTELBEDS_API_KEY && process.env.HOTELBEDS_SECRET),
+    hotelbedsEnv: process.env.HOTELBEDS_ENV === 'live' ? 'live' : 'test',
+    ratesProvider: activeProvider()?.name ?? null,
     pcstSiteUrl: Boolean(process.env.PCST_SITE_URL),
     pcstRevalidateSecret: Boolean(process.env.PCST_REVALIDATE_SECRET),
     ratesPreviewKey: Boolean(process.env.RATES_PREVIEW_KEY),

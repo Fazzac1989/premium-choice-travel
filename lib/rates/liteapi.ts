@@ -33,6 +33,15 @@ export const liteapi: RateProvider = {
     return Boolean(process.env.LITEAPI_KEY);
   },
 
+  // LiteAPI ids look like "lp42f57"; a bare number belongs to Hotelbeds.
+  ownsCode(code: string) {
+    return /^lp/i.test(code);
+  },
+
+  offers(query: RateQuery) {
+    return liteapiOffers(query);
+  },
+
   async quote(query: RateQuery): Promise<RateQuote | null> {
     const key = process.env.LITEAPI_KEY;
     if (!key) return null;

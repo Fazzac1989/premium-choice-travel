@@ -16,6 +16,8 @@ export type RateQuery = {
   nights: number;
   adults: number;
   children: number;
+  /** Ages when known; suppliers price children by age, not by count. */
+  childrenAges?: number[];
 };
 
 export type RateQuote = {
@@ -37,6 +39,13 @@ export interface RateProvider {
    * answer and gets cached; throwing means the lookup failed and should not be.
    */
   quote(query: RateQuery): Promise<RateQuote | null>;
+  /**
+   * Every bookable room option for the dates — the heavier call behind the
+   * booking page. Absent on a provider that can only give a headline price.
+   */
+  offers?(query: RateQuery): Promise<RoomOffer[]>;
+  /** Whether a stored supplier code belongs to this provider's catalogue. */
+  ownsCode?(code: string): boolean;
 }
 
 /** What the page receives — never a raw supplier response. */
