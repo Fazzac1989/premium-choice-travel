@@ -67,6 +67,8 @@ export default function VoucherDoc({ v }: { v: VoucherModel }) {
         <Text style={s.hotelMeta}>
           {[v.hotel.category, v.hotel.address, [v.hotel.city, v.hotel.postalCode].filter(Boolean).join(' '), v.hotel.destination]
             .filter(Boolean)
+            // City and destination are often the same word — say it once.
+            .filter((part, i, all) => all.findIndex((p) => p.toLowerCase() === part.toLowerCase()) === i)
             .join(' · ')}
         </Text>
         {v.hotel.phone ? <Text style={s.hotelMeta}>Tel {v.hotel.phone}</Text> : null}
