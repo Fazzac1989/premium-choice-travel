@@ -87,7 +87,7 @@ describe('Hotelbeds offers', () => {
   it('surfaces taxes collected at the hotel and labels pay-at-hotel rooms', () => {
     const offers = hotelbedsOffersFromHotel(hotel);
     const bb = offers.find((o) => o.board === 'BED AND BREAKFAST')!;
-    expect(bb.extraFees).toEqual([{ description: 'tax at the hotel', amount: 15, currency: 'AED' }]);
+    expect(bb.extraFees).toEqual([{ description: 'tax', amount: 15, currency: 'AED' }]);
     const suite = offers.find((o) => o.roomName.startsWith('SUITE'))!;
     expect(suite.roomName).toContain('pay at the hotel');
   });

@@ -171,7 +171,8 @@ function toOffers(hotel: any): RoomOffer[] {
       const extraFees = ((rate.taxes?.taxes ?? []) as any[])
         .filter((t) => t && t.included === false && Number(t.amount) > 0)
         .map((t) => ({
-          description: String(t.type ?? 'taxes and fees').toLowerCase().replace(/_/g, ' ') + ' at the hotel',
+          // The page itself adds "paid at the hotel", so this is just the what.
+          description: String(t.type ?? 'taxes and fees').toLowerCase().replace(/_/g, ' '),
           amount: round2(Number(t.amount)),
           currency: String(t.currency ?? currency),
         }));
