@@ -43,3 +43,16 @@
     @apply overflow-hidden rounded-2xl border border-line bg-white;
   }
 }
+
+/* Installed-app mode (Staycations PWA). The website never shows these. */
+.pwa-only {
+  display: none;
+}
+@media (display-mode: standalone) {
+  .pwa-only {
+    display: flex;
+  }
+  .pwa-hidden {
+    display: none !important;
+  }
+}

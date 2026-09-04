@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { submitAvailabilityCheck } from '@/lib/availability-actions';
 import GuardFields, { type GuardValues } from '@/components/GuardFields';
+import { addLocalEnquiry } from '@/lib/pwa/local-enquiries';
 
 const MEAL_PLANS = ['No preference', 'Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
 const CHANNELS = ['WhatsApp', 'Email', 'Phone'];
@@ -13,12 +14,15 @@ const CHANNELS = ['WhatsApp', 'Email', 'Phone'];
  */
 export default function AvailabilityCheck({
   hotelName,
+  hotelHref = '',
   emirate = '',
   mealPlans = [],
   defaultCheckIn = '',
   defaultNights = 2,
 }: {
   hotelName: string;
+  /** Where the app's Enquiries tab links back to. */
+  hotelHref?: string;
   emirate?: string;
   mealPlans?: string[];
   /** Pre-filled from the weekend chosen on the hotels page. */
@@ -64,8 +68,20 @@ export default function AvailabilityCheck({
         setError('');
         startTransition(async () => {
           const res = await submitAvailabilityCheck({ ...form, hotelName, emirate, guard });
-          if (res.ok) setDone(res.message);
-          else setError(res.message);
+          if (res.ok) {
+            setDone(res.message);
+            // The customer's own copy, for the app's Enquiries tab.
+            addLocalEnquiry({
+              hotelName,
+              hotelHref,
+              checkIn: form.checkIn,
+              nights: form.nights,
+              adults: form.adults,
+              childrenAges: form.childrenAges,
+              mealPlan: form.mealPlan,
+              channel: form.channel,
+            });
+          } else setError(res.message);
         });
       }}
       className="space-y-3"

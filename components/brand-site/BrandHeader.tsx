@@ -38,7 +38,17 @@ export default function BrandHeader({
   const [open, setOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const home = base || '/';
+  // As an installed app, Staycations has no front page: the logo goes to the hotels.
+  const [standalone, setStandalone] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(display-mode: standalone)');
+    const update = () =>
+      setStandalone(mq.matches || (navigator as unknown as { standalone?: boolean }).standalone === true);
+    update();
+    mq.addEventListener?.('change', update);
+    return () => mq.removeEventListener?.('change', update);
+  }, []);
+  const home = isStaycations && standalone ? `${base}/hotels` : base || '/';
 
   // Path relative to this brand site (base is '' on the brand's own domain).
   const rel = (base && pathname.startsWith(base) ? pathname.slice(base.length) : pathname) || '/';
@@ -46,7 +56,8 @@ export default function BrandHeader({
     rel === '/' ||
     /^\/journeys\/[^/]+$/.test(rel) ||
     /^\/destinations\/[^/]+$/.test(rel) ||
-    /^\/hotels\/[^/]+$/.test(rel);
+    // Hotel pages open on a photo; the saved-hotels list does not.
+    /^\/hotels\/(?!saved$)[^/]+$/.test(rel);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);

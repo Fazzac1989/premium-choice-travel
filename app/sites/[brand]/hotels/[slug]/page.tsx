@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import GalleryLightbox from '@/components/GalleryLightbox';
 import AvailabilityCheck from '@/components/AvailabilityCheck';
+import SaveHotelButton from '@/components/staycations/SaveHotelButton';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
@@ -99,7 +100,10 @@ export default async function StaycationHotelPage({
           <p className="eyebrow mt-4 !text-teal">
             {[hotel.emirate, hotel.area, hotel.style].filter(Boolean).join(' · ')}
           </p>
-          <h1 className="mt-2 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{hotel.name}</h1>
+          <div className="mt-2 flex items-end justify-between gap-4">
+            <h1 className="max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{hotel.name}</h1>
+            <SaveHotelButton slug={params.slug} name={hotel.name} className="mb-2 shrink-0" />
+          </div>
           {!hasOwnPhotography && !heroImage && (
             <p className="mt-2 text-xs text-white/60">Hotel photography coming soon.</p>
           )}
@@ -244,6 +248,7 @@ export default async function StaycationHotelPage({
               ) : (
                 <AvailabilityCheck
                   hotelName={hotel.name}
+                  hotelHref={`${base}/hotels/${params.slug}`}
                   emirate={hotel.emirate ?? ''}
                   mealPlans={hotel.mealPlans}
                   defaultCheckIn={searchParams.from ?? ''}

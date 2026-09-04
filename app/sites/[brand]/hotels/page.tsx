@@ -1,13 +1,12 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import HotelCard from '@/components/staycations/HotelCard';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import type { Hotel } from '@/lib/types';
-import { hotelPhotoSrc } from '@/lib/images/google-places';
+import { getStaycationHotels } from '@/lib/data';
+import { toHotelCard } from '@/lib/staycations/hotel-card';
 import { findWeekend, weekendOptions } from '@/lib/weekend';
-import { PRICE_BANDS, PRICE_BASIS, priceBand } from '@/lib/price-bands';
+import { PRICE_BANDS, PRICE_BASIS } from '@/lib/price-bands';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,74 +18,6 @@ export const metadata = {
 
 const EMIRATES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'];
 const MEAL_PLANS = ['Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
-
-function Stars({ n }: { n: number | null | undefined }) {
-  if (!n) return null;
-  return <span className="text-[13px] tracking-[0.1em] text-teal-deep">{'★'.repeat(n)}</span>;
-}
-
-function HotelCard({ h, base, dates }: { h: Hotel; base: string; dates: string }) {
-  const band = priceBand(h.priceBand);
-  // The first Google photo we can actually serve (cached, or live if that is
-  // on), then anything hand-picked, then the branded panel.
-  const photo = (h.photos ?? []).map((p) => hotelPhotoSrc(p, 800)).find(Boolean) || h.image || h.gallery[0];
-  return (
-    <Link
-      href={`${base}/hotels/${hotelSlug(h.name)}${dates}`}
-      className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-xl hover:shadow-ink/10"
-    >
-      <div className="relative aspect-[16/10] bg-ink">
-        {photo ? (
-          <Image
-            src={photo}
-            alt={h.name}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-ink to-teal-deep/60 p-6">
-            <p className="text-center font-serif text-2xl leading-snug text-white/90">{h.name}</p>
-          </div>
-        )}
-        {h.featured && (
-          <span className="absolute left-3 top-3 rounded-full bg-teal px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-            Specialist pick
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-serif text-xl leading-snug text-ink group-hover:text-teal-deep">{h.name}</h3>
-          <Stars n={h.stars} />
-        </div>
-        <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-teal-deep">
-          {[h.emirate, h.area].filter(Boolean).join(' · ')}
-        </p>
-        {h.style && <p className="mt-2 text-sm leading-relaxed text-ink-soft">{h.style}</p>}
-        {h.mealPlans.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {h.mealPlans.slice(0, 3).map((m) => (
-              <span key={m} className="rounded-full bg-sand px-2.5 py-1 text-[11px] font-semibold text-ink-soft">{m}</span>
-            ))}
-            {h.mealPlans.length > 3 && (
-              <span className="rounded-full bg-sand px-2.5 py-1 text-[11px] font-semibold text-ink-soft">+{h.mealPlans.length - 3}</span>
-            )}
-          </div>
-        )}
-        {band && (
-          <p className="mt-3 text-sm font-semibold text-ink">
-            {band.label}
-            <span className="font-normal text-ink-soft"> a night, roughly</span>
-          </p>
-        )}
-        <p className="mt-auto pt-4 text-sm font-bold text-teal-deep">
-          Ask about this hotel <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-        </p>
-      </div>
-    </Link>
-  );
-}
 
 type Filters = { when?: string; budget?: string; emirate?: string; stars?: string; meal?: string };
 
@@ -248,12 +179,17 @@ export default async function StaycationHotelsPage({
             </div>
           ) : (
             <>
-              <p className="text-xs text-ink-soft">
-                {filtered.length} hotel{filtered.length === 1 ? '' : 's'}
-              </p>
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-xs text-ink-soft">
+                  {filtered.length} hotel{filtered.length === 1 ? '' : 's'}
+                </p>
+                <Link href={`${base}/hotels/saved`} className="text-xs font-bold text-teal-deep hover:underline">
+                  Saved hotels →
+                </Link>
+              </div>
               <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((h) => (
-                  <HotelCard key={h.id} h={h} base={base} dates={dateQuery} />
+                {filtered.map((h, i) => (
+                  <HotelCard key={h.id} hotel={toHotelCard(h)} base={base} dates={dateQuery} priority={i < 3} />
                 ))}
               </div>
             </>

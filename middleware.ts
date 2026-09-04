@@ -40,7 +40,10 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith('/sites') ||
       pathname.startsWith('/images') ||
       pathname === '/robots.txt' ||
-      pathname === '/sitemap.xml';
+      pathname === '/sitemap.xml' ||
+      // Installable-app files: the manifest is host-aware, the worker is static.
+      pathname === '/manifest.webmanifest' ||
+      pathname === '/sw.js';
     if (!passthrough) {
       const url = request.nextUrl.clone();
       url.pathname = `/sites/${brand.slug}${pathname === '/' ? '' : pathname}`;

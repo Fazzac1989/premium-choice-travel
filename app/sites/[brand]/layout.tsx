@@ -1,18 +1,40 @@
 import { notFound } from 'next/navigation';
+import type { Metadata, Viewport } from 'next';
 import BrandHeader, { type HeaderDestinationGroup } from '@/components/brand-site/BrandHeader';
 import BrandFooter from '@/components/brand-site/BrandFooter';
+import AppTabBar from '@/components/brand-site/AppTabBar';
+import PwaSetup from '@/components/brand-site/PwaSetup';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { brand: string } }) {
+export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
   const brand = getBrand(params.brand);
   if (!brand) return {};
+  const isStaycations = brand.slug === 'staycations';
   return {
     title: { default: brand.name, template: `%s — ${brand.name}` },
     description: brand.description,
+    // Staycations installs as an app that opens on the hotel list.
+    ...(isStaycations
+      ? {
+          manifest: '/manifest.webmanifest',
+          appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Staycations' },
+          icons: { apple: '/images/pwa/apple-touch-icon.png' },
+        }
+      : {}),
+  };
+}
+
+export function generateViewport({ params }: { params: { brand: string } }): Viewport {
+  const brand = getBrand(params.brand);
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover',
+    ...(brand?.slug === 'staycations' ? { themeColor: '#16242E' } : {}),
   };
 }
 
@@ -30,6 +52,7 @@ export default async function BrandSiteLayout({
   if (!brand || brand.externalUrl) notFound();
   const base = brandBase(brand);
   const isHolidays = brand.slug === 'holidays';
+  const isStaycations = brand.slug === 'staycations';
 
   let destinationGroups: HeaderDestinationGroup[] = [];
   if (isHolidays) {
@@ -52,18 +75,27 @@ export default async function BrandSiteLayout({
         logo={brand.logo}
         logoWhite={brand.logoWhite}
         isHolidays={isHolidays}
-        isStaycations={brand.slug === 'staycations'}
+        isStaycations={isStaycations}
         destinationGroups={destinationGroups}
       />
       {children}
-      <BrandFooter
-        name={brand.name}
-        description={brand.description}
-        logoWhite={brand.logoWhite}
-        base={base}
-        isHolidays={isHolidays}
-        isStaycations={brand.slug === 'staycations'}
-      />
+      {/* In app mode the marketing footer gives way to the tab bar. */}
+      <div className={isStaycations ? 'pwa-hidden' : undefined}>
+        <BrandFooter
+          name={brand.name}
+          description={brand.description}
+          logoWhite={brand.logoWhite}
+          base={base}
+          isHolidays={isHolidays}
+          isStaycations={isStaycations}
+        />
+      </div>
+      {isStaycations && (
+        <>
+          <AppTabBar base={base} />
+          <PwaSetup base={base} />
+        </>
+      )}
     </>
   );
 }
