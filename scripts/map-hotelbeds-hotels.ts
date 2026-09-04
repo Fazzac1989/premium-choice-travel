@@ -90,12 +90,24 @@ async function catalogue(): Promise<HotelbedsHotel[]> {
       return cached;
     }
   }
+  // Each destination is cached the moment it arrives, so a rate-limit
+  // failure halfway through costs one request on the re-run, not ten.
+  const PARTIAL = `${GEN}/hotelbeds-uae-hotels.partial.json`;
+  const partial = refresh ? {} : readJson<Record<string, HotelbedsHotel[]>>(PARTIAL, {});
   const destinations = await hotelbedsDestinations('AE');
   console.log(`Hotelbeds lists ${destinations.length} UAE destination(s): ${destinations.map((d) => `${d.name} [${d.code}]`).join(', ')}`);
   const all: HotelbedsHotel[] = [];
   for (const d of destinations) {
-    const rows = await hotelbedsHotelsIn(d.code);
-    console.log(`  ${d.name}: ${rows.length} hotels`);
+    const wasCached = Boolean(partial[d.code]);
+    let rows = partial[d.code];
+    if (!rows) {
+      // A polite gap between calls — the test key also limits requests per second.
+      await new Promise((r) => setTimeout(r, 1200));
+      rows = await hotelbedsHotelsIn(d.code);
+      partial[d.code] = rows;
+      writeJson(PARTIAL, partial);
+    }
+    console.log(`  ${d.name}: ${rows.length} hotels${wasCached ? ' (cached)' : ''}`);
     all.push(...rows);
   }
   writeJson(CATALOGUE, all);

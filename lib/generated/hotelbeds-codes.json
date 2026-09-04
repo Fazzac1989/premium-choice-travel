@@ -1,0 +1,476 @@
+{
+  "generatedAt": "2026-09-04T04:20:27.665Z",
+  "accepted": [
+    {
+      "hotelId": 11,
+      "hotel": "Address Beach Resort",
+      "code": 744361,
+      "hotelbedsName": "Address Beach Resort",
+      "metres": 830,
+      "score": 1
+    },
+    {
+      "hotelId": 54,
+      "hotel": "Address Beach Resort Fujairah",
+      "code": 887837,
+      "hotelbedsName": "Address Beach Resort Fujairah",
+      "metres": 42,
+      "score": 1
+    },
+    {
+      "hotelId": 21,
+      "hotel": "Address Downtown",
+      "code": 115398,
+      "hotelbedsName": "Address Downtown",
+      "metres": 159,
+      "score": 1
+    },
+    {
+      "hotelId": 44,
+      "hotel": "Al Wathba, a Luxury Collection Desert Resort & Spa",
+      "code": 648117,
+      "hotelbedsName": "Al Wathba, A Luxury Collection Desert Resort & Spa",
+      "metres": 593,
+      "score": 1
+    },
+    {
+      "hotelId": 15,
+      "hotel": "Anantara The Palm Dubai Resort",
+      "code": 216744,
+      "hotelbedsName": "Anantara The Palm Dubai Resort",
+      "metres": 71,
+      "score": 1
+    },
+    {
+      "hotelId": 6,
+      "hotel": "Atlantis The Royal",
+      "code": 738790,
+      "hotelbedsName": "Atlantis, The Royal",
+      "metres": 98,
+      "score": 1
+    },
+    {
+      "hotelId": 5,
+      "hotel": "Atlantis, The Palm",
+      "code": 103294,
+      "hotelbedsName": "Atlantis The Palm",
+      "metres": 4,
+      "score": 1
+    },
+    {
+      "hotelId": 23,
+      "hotel": "Bab Al Shams, A Rare Finds Desert Resort",
+      "code": 69559,
+      "hotelbedsName": "Bab Al Shams Desert Resort & Spa",
+      "metres": 144,
+      "score": 0.6
+    },
+    {
+      "hotelId": 20,
+      "hotel": "Banyan Tree Dubai",
+      "code": 644547,
+      "hotelbedsName": "Banyan Tree Dubai",
+      "metres": 60,
+      "score": 1
+    },
+    {
+      "hotelId": 66,
+      "hotel": "Barracuda Beach Resort",
+      "code": 344433,
+      "hotelbedsName": "Barracuda Beach Resort",
+      "metres": 66,
+      "score": 1
+    },
+    {
+      "hotelId": 7,
+      "hotel": "Burj Al Arab Jumeirah",
+      "code": 7660,
+      "hotelbedsName": "Jumeirah Burj Al Arab Dubai",
+      "metres": 33,
+      "score": 1
+    },
+    {
+      "hotelId": 27,
+      "hotel": "Centara Mirage Beach Resort Dubai",
+      "code": 884533,
+      "hotelbedsName": "Centara Mirage Beach Resort Dubai",
+      "metres": 4,
+      "score": 1
+    },
+    {
+      "hotelId": 42,
+      "hotel": "Conrad Abu Dhabi Etihad Towers",
+      "code": 157236,
+      "hotelbedsName": "Conrad Abu Dhabi Etihad Towers",
+      "metres": 321,
+      "score": 1
+    },
+    {
+      "hotelId": 60,
+      "hotel": "Coral Beach Resort Sharjah",
+      "code": 62859,
+      "hotelbedsName": "Coral Beach Resort Sharjah",
+      "metres": 45,
+      "score": 1
+    },
+    {
+      "hotelId": 39,
+      "hotel": "Crowne Plaza Abu Dhabi Yas Island",
+      "code": 130040,
+      "hotelbedsName": "Crowne Plaza Hotel Abu Dhabi Yas Island",
+      "metres": 17,
+      "score": 1
+    },
+    {
+      "hotelId": 50,
+      "hotel": "DoubleTree by Hilton Resort & Spa Marjan Island",
+      "code": 391130,
+      "hotelbedsName": "DoubleTree by Hilton Resort & Spa Marjan Island",
+      "metres": 1194,
+      "score": 1
+    },
+    {
+      "hotelId": 30,
+      "hotel": "Emirates Palace Mandarin Oriental, Abu Dhabi",
+      "code": 66530,
+      "hotelbedsName": "Emirates Palace Mandarin Oriental",
+      "metres": 40,
+      "score": 1
+    },
+    {
+      "hotelId": 62,
+      "hotel": "Fairmont Ajman",
+      "code": 403649,
+      "hotelbedsName": "Fairmont Ajman",
+      "metres": 144,
+      "score": 1
+    },
+    {
+      "hotelId": 40,
+      "hotel": "Fairmont Bab Al Bahr",
+      "code": 142608,
+      "hotelbedsName": "Fairmont Bab Al Bahr Abu Dhabi",
+      "metres": 56,
+      "score": 1
+    },
+    {
+      "hotelId": 56,
+      "hotel": "Fairmont Fujairah Beach Resort",
+      "code": 578404,
+      "hotelbedsName": "Fairmont Fujairah Beach Resort",
+      "metres": 308,
+      "score": 1
+    },
+    {
+      "hotelId": 14,
+      "hotel": "Fairmont The Palm",
+      "code": 191488,
+      "hotelbedsName": "Fairmont The Palm",
+      "metres": 8,
+      "score": 1
+    },
+    {
+      "hotelId": 13,
+      "hotel": "FIVE Palm Jumeirah",
+      "code": 578241,
+      "hotelbedsName": "Five Palm Jumeirah Dubai",
+      "metres": 30,
+      "score": 1
+    },
+    {
+      "hotelId": 49,
+      "hotel": "Hampton by Hilton Marjan Island",
+      "code": 883497,
+      "hotelbedsName": "Hampton by Hilton Marjan Island",
+      "metres": 16,
+      "score": 1
+    },
+    {
+      "hotelId": 37,
+      "hotel": "Hilton Abu Dhabi Yas Island",
+      "code": 875362,
+      "hotelbedsName": "Hilton Abu Dhabi Yas Island",
+      "metres": 137,
+      "score": 1
+    },
+    {
+      "hotelId": 29,
+      "hotel": "JA Hatta Fort Hotel",
+      "code": 129814,
+      "hotelbedsName": "JA Hatta Fort Hotel",
+      "metres": 74,
+      "score": 1
+    },
+    {
+      "hotelId": 22,
+      "hotel": "JA The Resort",
+      "code": 64759,
+      "hotelbedsName": "JA The Resort – JA Beach Hotel, Dubai",
+      "metres": 15,
+      "score": 1
+    },
+    {
+      "hotelId": 9,
+      "hotel": "Jumeirah Al Naseem",
+      "code": 545301,
+      "hotelbedsName": "Jumeirah Al Naseem Dubai",
+      "metres": 596,
+      "score": 1
+    },
+    {
+      "hotelId": 10,
+      "hotel": "Jumeirah Al Qasr",
+      "code": 96968,
+      "hotelbedsName": "Jumeirah Al Qasr Dubai",
+      "metres": 99,
+      "score": 1
+    },
+    {
+      "hotelId": 8,
+      "hotel": "Jumeirah Beach Hotel",
+      "code": 7656,
+      "hotelbedsName": "Jumeirah Beach Hotel Dubai",
+      "metres": 49,
+      "score": 1
+    },
+    {
+      "hotelId": 33,
+      "hotel": "Jumeirah Saadiyat Island Resort",
+      "code": 644115,
+      "hotelbedsName": "Jumeirah Saadiyat Island Abu Dhabi",
+      "metres": 31,
+      "score": 1
+    },
+    {
+      "hotelId": 25,
+      "hotel": "Lapita, Dubai Parks and Resorts, Autograph Collection",
+      "code": 539281,
+      "hotelbedsName": "Lapita,Dubai Parks & Resorts,Autograph Collection",
+      "metres": 33,
+      "score": 1
+    },
+    {
+      "hotelId": 55,
+      "hotel": "Le Méridien Al Aqah Beach Resort",
+      "code": 88228,
+      "hotelbedsName": "Le Méridien Al Aqah Beach Resort",
+      "metres": 3,
+      "score": 1
+    },
+    {
+      "hotelId": 18,
+      "hotel": "Le Méridien Mina Seyahi Beach Resort & Waterpark",
+      "code": 9234,
+      "hotelbedsName": "Le Meridien Mina Seyahi Beach Resort & Marina",
+      "metres": 129,
+      "score": 0.8
+    },
+    {
+      "hotelId": 48,
+      "hotel": "Mövenpick Resort Al Marjan Island",
+      "code": 935230,
+      "hotelbedsName": "Movenpick Resort Al Marjan Island",
+      "metres": 34,
+      "score": 1
+    },
+    {
+      "hotelId": 61,
+      "hotel": "Mysk Kingfisher Retreat",
+      "code": 632196,
+      "hotelbedsName": "Mysk Kingfisher Retreat",
+      "metres": 884,
+      "score": 1
+    },
+    {
+      "hotelId": 17,
+      "hotel": "One&Only Royal Mirage",
+      "code": 199054,
+      "hotelbedsName": "One & Only Royal Mirage",
+      "metres": 599,
+      "score": 1
+    },
+    {
+      "hotelId": 34,
+      "hotel": "Park Hyatt Abu Dhabi Hotel and Villas",
+      "code": 154166,
+      "hotelbedsName": "Park Hyatt Abu Dhabi Hotel & Villas",
+      "metres": 10,
+      "score": 1
+    },
+    {
+      "hotelId": 43,
+      "hotel": "Qasr Al Sarab Desert Resort by Anantara",
+      "code": 125606,
+      "hotelbedsName": "Anantara Qasr Al Sarab Resort & Spa",
+      "metres": 139,
+      "score": 0.75
+    },
+    {
+      "hotelId": 28,
+      "hotel": "Riu Dubai",
+      "code": 721498,
+      "hotelbedsName": "Hotel Riu Dubai - All Inclusive",
+      "metres": 60,
+      "score": 1
+    },
+    {
+      "hotelId": 47,
+      "hotel": "Rixos Bab Al Bahr",
+      "code": 228658,
+      "hotelbedsName": "Rixos Bab Al Bahr - All Inclusive",
+      "metres": 163,
+      "score": 1
+    },
+    {
+      "hotelId": 32,
+      "hotel": "Rixos Premium Saadiyat Island",
+      "code": 634028,
+      "hotelbedsName": "Rixos Premium Saadiyat Island ALL INCLUSIVE",
+      "metres": 52,
+      "score": 1
+    },
+    {
+      "hotelId": 12,
+      "hotel": "Rixos The Palm Dubai Hotel & Suites",
+      "code": 164765,
+      "hotelbedsName": "Rixos The Palm Hotel & Suites Ultra All Inclusive",
+      "metres": 53,
+      "score": 0.67
+    },
+    {
+      "hotelId": 26,
+      "hotel": "Rove La Mer Beach",
+      "code": 745918,
+      "hotelbedsName": "Rove La Mer Beach, Jumeirah",
+      "metres": 21,
+      "score": 0.75
+    },
+    {
+      "hotelId": 35,
+      "hotel": "Saadiyat Rotana Resort & Villas",
+      "code": 616221,
+      "hotelbedsName": "Saadiyat Rotana Resort and Resort",
+      "metres": 43,
+      "score": 1
+    },
+    {
+      "hotelId": 57,
+      "hotel": "Sandy Beach Hotel & Resort",
+      "code": 130023,
+      "hotelbedsName": "Sandy Beach Hotel & Resort",
+      "metres": 0,
+      "score": 1
+    },
+    {
+      "hotelId": 41,
+      "hotel": "Shangri-La Qaryat Al Beri, Abu Dhabi",
+      "code": 120153,
+      "hotelbedsName": "Shangri-La Qaryat Al Beri, Abu Dhabi",
+      "metres": 4,
+      "score": 1
+    },
+    {
+      "hotelId": 59,
+      "hotel": "Sheraton Sharjah Beach Resort & Spa",
+      "code": 426078,
+      "hotelbedsName": "Sheraton Sharjah Beach Resort & Spa",
+      "metres": 50,
+      "score": 1
+    },
+    {
+      "hotelId": 16,
+      "hotel": "Sofitel Dubai The Palm",
+      "code": 224014,
+      "hotelbedsName": "Sofitel Dubai The Palm",
+      "metres": 10,
+      "score": 1
+    },
+    {
+      "hotelId": 63,
+      "hotel": "The Ajman Saray, a Luxury Collection Resort",
+      "code": 235966,
+      "hotelbedsName": "Ajman Saray, A Luxury Collection Resort",
+      "metres": 49,
+      "score": 1
+    },
+    {
+      "hotelId": 58,
+      "hotel": "The Chedi Al Bait, Sharjah",
+      "code": 629448,
+      "hotelbedsName": "The Chedi Al Bait",
+      "metres": 27,
+      "score": 1
+    },
+    {
+      "hotelId": 51,
+      "hotel": "The Cove Rotana Resort",
+      "code": 120183,
+      "hotelbedsName": "The Cove Rotana Resort -Ras Al Khaimah",
+      "metres": 135,
+      "score": 1
+    },
+    {
+      "hotelId": 46,
+      "hotel": "The Ritz-Carlton Ras Al Khaimah, Al Wadi Desert",
+      "code": 134021,
+      "hotelbedsName": "Al Wadi Desert, Ras Al Khaimah, Ritz-Carlton hotel",
+      "metres": 37,
+      "score": 1
+    },
+    {
+      "hotelId": 19,
+      "hotel": "The Ritz-Carlton, Dubai",
+      "code": 93664,
+      "hotelbedsName": "The Ritz-Carlton, Dubai",
+      "metres": 11,
+      "score": 1
+    },
+    {
+      "hotelId": 31,
+      "hotel": "The St. Regis Saadiyat Island Resort, Abu Dhabi",
+      "code": 155808,
+      "hotelbedsName": "St. Regis Saadiyat Island Abu Dhabi",
+      "metres": 47,
+      "score": 1
+    },
+    {
+      "hotelId": 38,
+      "hotel": "The WB Abu Dhabi, Curio Collection by Hilton",
+      "code": 899994,
+      "hotelbedsName": "The Wb Abu Dhabi, Curio Collection By Hilton",
+      "metres": 889,
+      "score": 1
+    },
+    {
+      "hotelId": 65,
+      "hotel": "Vida Beach Resort Umm Al Quwain",
+      "code": 876941,
+      "hotelbedsName": "Vida Beach Resort Umm Al Quwain",
+      "metres": 27,
+      "score": 1
+    },
+    {
+      "hotelId": 36,
+      "hotel": "W Abu Dhabi - Yas Island",
+      "code": 129815,
+      "hotelbedsName": "W Abu Dhabi - Yas Island",
+      "metres": 88,
+      "score": 1
+    },
+    {
+      "hotelId": 45,
+      "hotel": "Waldorf Astoria Ras Al Khaimah",
+      "code": 222702,
+      "hotelbedsName": "Waldorf Astoria Ras Al Khaimah",
+      "metres": 40,
+      "score": 1
+    }
+  ],
+  "unmatched": [],
+  "manual": {
+    "Ajman Hotel by Blazon Hotels": "129824",
+    "Al Maha, a Luxury Collection Desert Resort & Spa": "123580",
+    "Anantara Mina Al Arab Ras Al Khaimah Resort": "1021144",
+    "InterContinental Fujairah Resort": "637064"
+  }
+}

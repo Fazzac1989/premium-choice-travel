@@ -52,24 +52,40 @@ export class HotelbedsError extends Error {
   }
 }
 
-/** One signed call. `path` starts with /hotel-api or /hotel-content-api. */
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * One signed call. `path` starts with /hotel-api or /hotel-content-api.
+ *
+ * Hotelbeds also limits requests per second, separately from the daily
+ * quota, and answers a burst with 429 "Rate limit exceeded". That is worth
+ * a short wait and one more try; a 403 (quota spent, key refused) is not.
+ */
 export async function hotelbedsFetch<T = any>(path: string, init: { method?: 'GET' | 'POST'; body?: unknown } = {}): Promise<T> {
   const creds = hotelbedsCredentials();
   if (!creds) throw new Error('HOTELBEDS_API_KEY / HOTELBEDS_SECRET are not set');
-  const res = await fetch(`${creds.host}${path}`, {
-    method: init.method ?? 'GET',
-    headers: {
-      'Api-key': creds.key,
-      'X-Signature': signature(creds.key, creds.secret),
-      Accept: 'application/json',
-      'Accept-Encoding': 'gzip',
-      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-    },
-    body: init.body ? JSON.stringify(init.body) : undefined,
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new HotelbedsError(res.status, (await res.text()).slice(0, 300));
-  return (await res.json()) as T;
+  const waits = [1500, 3500];
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(`${creds.host}${path}`, {
+      method: init.method ?? 'GET',
+      headers: {
+        'Api-key': creds.key,
+        'X-Signature': signature(creds.key, creds.secret),
+        Accept: 'application/json',
+        'Accept-Encoding': 'gzip',
+        ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+      },
+      body: init.body ? JSON.stringify(init.body) : undefined,
+      cache: 'no-store',
+    });
+    if (res.ok) return (await res.json()) as T;
+    const detail = (await res.text()).slice(0, 300);
+    if (res.status === 429 && attempt < waits.length) {
+      await sleep(waits[attempt]);
+      continue;
+    }
+    throw new HotelbedsError(res.status, detail);
+  }
 }
 
 /** GET /hotel-api/1.0/status — the cheapest way to prove the credentials work. */
