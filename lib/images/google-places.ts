@@ -29,8 +29,21 @@ export type PlaceMatch = {
   photos: PlacePhoto[];
 };
 
-export function isPlacesConfigured() {
+/** The key exists — enough for the scripts that look hotels up. */
+export function hasPlacesKey() {
   return Boolean(process.env.GOOGLE_PLACES_API_KEY);
+}
+
+/**
+ * Whether the websites may stream Google photos right now.
+ *
+ * Every photo shown is a billed Place Photo call, and the image optimiser
+ * multiplies that by the number of widths it renders, so this is OFF unless
+ * PLACES_PHOTOS=on is set explicitly. The key alone is not consent to spend.
+ * Off means the directory falls back to curated images or the branded panel.
+ */
+export function isPlacesConfigured() {
+  return hasPlacesKey() && process.env.PLACES_PHOTOS === 'on';
 }
 
 function key() {

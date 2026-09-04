@@ -57,6 +57,26 @@ GOOGLE_PLACES_API_KEY=paste-the-key-here
 Then **Deployments** → the top deployment → **⋯** → **Redeploy**. Environment
 variables only reach a *new* deployment.
 
+### Switching the live photos on and off
+
+Every photo the websites show is a billed Place Photo request, and Next's
+image optimiser fetches each photo once per rendered width, so a busy
+directory (or a crawler) can run the bill up quickly. Because of that the
+live photos are **off by default** — the key on its own only lets the
+script below look hotels up.
+
+To show Google photos on the websites, add a second variable next to the key
+(Vercel → Settings → Environment Variables, then redeploy):
+
+```
+PLACES_PHOTOS=on
+```
+
+Remove it (or set anything other than `on`) to switch the photos off again
+without touching the key. `/api/health` reports `placesPhotos` so you can see
+which state a deployment is in. While off, hotel pages show curated images
+where they exist and the branded name panel where they do not.
+
 ### Running it
 
 ```bash

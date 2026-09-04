@@ -22,7 +22,7 @@
  */
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
-import { findPlace, getPlacePhotos, isPlacesConfigured } from '../lib/images/google-places';
+import { findPlace, getPlacePhotos, hasPlacesKey } from '../lib/images/google-places';
 
 config({ path: '.env.local' });
 config({ path: '.env' });
@@ -30,7 +30,7 @@ config({ path: '.env' });
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !serviceKey) throw new Error('Missing Supabase env (.env.local)');
-if (!isPlacesConfigured()) {
+if (!hasPlacesKey()) {
   console.error(
     [
       'GOOGLE_PLACES_API_KEY is not set.',

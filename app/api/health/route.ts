@@ -10,6 +10,7 @@ export async function GET() {
     anthropic: Boolean(process.env.ANTHROPIC_API_KEY),
     resend: Boolean(process.env.RESEND_API_KEY),
     places: Boolean(process.env.GOOGLE_PLACES_API_KEY),
+    placesPhotos: process.env.PLACES_PHOTOS === 'on',
     liteapi: Boolean(process.env.LITEAPI_KEY),
     pcstSiteUrl: Boolean(process.env.PCST_SITE_URL),
     pcstRevalidateSecret: Boolean(process.env.PCST_REVALIDATE_SECRET),
