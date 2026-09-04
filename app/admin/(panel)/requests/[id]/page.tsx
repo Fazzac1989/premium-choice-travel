@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireAdmin } from '@/lib/admin/guard';
+import { requireRequestsStaff } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
 import { getTravellers, passportWarning } from '@/lib/travellers';
 import SupplierBookingPanel from '@/components/admin/SupplierBookingPanel';
@@ -30,7 +30,9 @@ export default async function AdminRequestPage({
   params: { id: string };
   searchParams: { note?: string };
 }) {
-  await requireAdmin();
+  const staff = await requireRequestsStaff();
+  // A reviewer handles the booking; quotes and passport details are not theirs to see.
+  const reviewer = staff.role === 'reviewer';
   const db = createAdminClient();
   const { data: r } = await db.from('booking_requests').select('*').eq('id', Number(params.id)).maybeSingle();
   if (!r) notFound();
@@ -43,7 +45,7 @@ export default async function AdminRequestPage({
 
   // Their saved travellers, so whoever books this has the passport spellings
   // without emailing to ask for them.
-  const travellers = r.customer_id ? await getTravellers(r.customer_id) : [];
+  const travellers = r.customer_id && !reviewer ? await getTravellers(r.customer_id) : [];
 
   const margin = r.net_amount ? Math.round(Number(r.amount) - Number(r.net_amount)) : null;
   const money = (n: any) => `${r.currency} ${Number(n).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
@@ -152,6 +154,7 @@ export default async function AdminRequestPage({
             </p>
           </div>
 
+          {!reviewer && (
           <div className="rounded-2xl border border-line bg-white p-6">
             <h3 className="font-serif text-lg text-ink">Quotes</h3>
             {quotes && quotes.length > 0 ? (
@@ -177,6 +180,7 @@ export default async function AdminRequestPage({
               Opens a draft already filled in with the hotel, dates, party and their price.
             </p>
           </div>
+          )}
 
           {travellers.length > 0 && (
             <div className="rounded-2xl border border-line bg-white p-6">

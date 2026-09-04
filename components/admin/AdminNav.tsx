@@ -55,9 +55,26 @@ const brandItems = (key: string): NavItem[] => [
   { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
 ];
 
-export default function AdminNav() {
+export default function AdminNav({ role = 'admin' }: { role?: 'admin' | 'reviewer' | 'customer' }) {
   const pathname = usePathname();
   const router = useRouter();
+
+  // A reviewer gets one link and no workspace switcher.
+  if (role === 'reviewer') {
+    const active = pathname.startsWith('/admin/requests');
+    return (
+      <nav className="flex-1 space-y-1 p-4">
+        <Link
+          href="/admin/requests"
+          className={`block rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors ${
+            active ? 'bg-teal text-white' : 'text-white/70 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          Booking requests
+        </Link>
+      </nav>
+    );
+  }
 
   // Which workspace are we in?
   const brandMatch = pathname.match(/^\/admin\/brands\/([a-z-]+)/);

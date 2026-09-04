@@ -6,7 +6,8 @@
  * role to admin, which is what /admin checks.
  *
  * Usage:
- *   npx tsx scripts/create-staff.ts reviewer@example.com 'a-strong-password'
+ *   npx tsx scripts/create-staff.ts colleague@example.com 'a-strong-password'            # full admin
+ *   npx tsx scripts/create-staff.ts reviewer@example.com 'a-strong-password' reviewer    # Booking requests only
  */
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
@@ -18,11 +19,13 @@ const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !serviceKey) throw new Error('Missing Supabase env (.env.local)');
 
-const [email, password] = process.argv.slice(2);
-if (!email || !password) {
-  console.error('Usage: npx tsx scripts/create-staff.ts <email> <password>');
+const [email, password, roleArg = 'admin'] = process.argv.slice(2);
+if (!email || !password || !['admin', 'reviewer'].includes(roleArg)) {
+  console.error('Usage: npx tsx scripts/create-staff.ts <email> <password> [admin|reviewer]');
+  console.error('  reviewer = sees and uses only the Booking requests section (needs migration 019).');
   process.exit(1);
 }
+const role = roleArg as 'admin' | 'reviewer';
 if (password.length < 10) {
   console.error('Use a password of at least 10 characters.');
   process.exit(1);
@@ -46,9 +49,15 @@ async function main() {
   }
   const { error: profileError } = await db
     .from('profiles')
-    .upsert({ id: user.id, email, role: 'admin' }, { onConflict: 'id' });
-  if (profileError) throw new Error(`profile: ${profileError.message}`);
-  console.log('✓ Role set to admin — they can sign in at /admin/login');
+    .upsert({ id: user.id, email, role }, { onConflict: 'id' });
+  if (profileError) {
+    throw new Error(
+      /profiles_role_check/.test(profileError.message)
+        ? 'The reviewer role is not allowed yet — paste supabase/migrations/019-reviewer-role.sql into the Supabase SQL editor first.'
+        : `profile: ${profileError.message}`,
+    );
+  }
+  console.log(`✓ Role set to ${role} — they can sign in at /admin/login${role === 'reviewer' ? ' and will see only Booking requests' : ''}`);
 }
 
 main().catch((e) => {

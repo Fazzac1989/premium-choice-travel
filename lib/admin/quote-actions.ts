@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireAdmin } from '@/lib/admin/guard';
+import { requireAdmin, requireRequestsStaff } from '@/lib/admin/guard';
 import { DEFAULT_TERMS, getQuoteById, nextQuoteRef, type QuoteLine } from '@/lib/quotes';
 import { emailShell, sendEmail } from '@/lib/email';
 
@@ -249,7 +249,8 @@ export async function createQuoteFromBookingRequest(formData: FormData) {
 
 /** Move a booking request along, and keep whatever the specialist noted. */
 export async function updateBookingRequest(formData: FormData) {
-  await requireAdmin();
+  // Reviewers may do this too — it is part of handling a request.
+  await requireRequestsStaff();
   const id = Number(formData.get('id'));
   if (!id) return;
   const status = String(formData.get('status') ?? 'new');

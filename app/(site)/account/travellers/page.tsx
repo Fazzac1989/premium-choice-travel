@@ -16,7 +16,7 @@ export const metadata = {
 export default async function TravellersPage() {
   const account = await getAccount();
   if (!account) redirect('/account/sign-in?next=/account/travellers');
-  if (account.role === 'admin') redirect('/admin');
+  if (account.role === 'admin' || account.role === 'reviewer') redirect('/admin');
 
   const travellers = await getTravellers(account.id);
 

@@ -16,8 +16,11 @@ export type Account = {
   email: string;
   fullName: string;
   phone: string;
-  role: 'customer' | 'admin';
+  /** reviewer = staff who may use only the Booking requests section. */
+  role: 'customer' | 'admin' | 'reviewer';
 };
+
+export type Role = Account['role'];
 
 export async function getAccount(): Promise<Account | null> {
   if (!isSupabaseConfigured()) return null;
@@ -41,8 +44,13 @@ export async function getAccount(): Promise<Account | null> {
     email: data?.email || user.email || '',
     fullName: data?.full_name ?? '',
     phone: data?.phone ?? '',
-    role: data?.role === 'admin' ? 'admin' : 'customer',
+    role: data?.role === 'admin' ? 'admin' : data?.role === 'reviewer' ? 'reviewer' : 'customer',
   };
+}
+
+/** Anyone who belongs in the admin console at all. */
+export function isStaffRole(role: Role | undefined | null) {
+  return role === 'admin' || role === 'reviewer';
 }
 
 export async function isAdmin() {

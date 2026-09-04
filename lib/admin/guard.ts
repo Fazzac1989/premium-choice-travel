@@ -16,3 +16,13 @@ export async function requireAdmin() {
   if (!account || account.role !== 'admin') throw new Error('Not authorised');
   return account;
 }
+
+/**
+ * Admins and reviewers. Only for the Booking requests section — the one
+ * part of the console a reviewer (e.g. Hotelbeds' certification team) may use.
+ */
+export async function requireRequestsStaff() {
+  const account = await getAccount();
+  if (!account || (account.role !== 'admin' && account.role !== 'reviewer')) throw new Error('Not authorised');
+  return account;
+}

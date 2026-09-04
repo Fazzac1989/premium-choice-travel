@@ -103,6 +103,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // A reviewer may only use the Booking requests section. Every other admin
+  // URL — the dashboard included — goes there. The role is read through the
+  // service role so RLS never decides who is staff.
+  if (user && !pathname.startsWith('/admin/requests') && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const admin = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+      cookies: { getAll: () => [], setAll: () => undefined },
+    });
+    const { data: profile } = await admin.from('profiles').select('role').eq('id', user.id).maybeSingle();
+    if (profile?.role === 'reviewer') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin/requests';
+      url.search = '';
+      return NextResponse.redirect(url);
+    }
+  }
+
   return response;
 }
 

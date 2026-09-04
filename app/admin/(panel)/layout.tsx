@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { signOut } from '@/lib/admin/actions';
 import AdminNav from '@/components/admin/AdminNav';
 import { redirect } from 'next/navigation';
-import { getAccount } from '@/lib/account';
+import { getAccount, isStaffRole } from '@/lib/account';
 
 export const metadata = { title: 'Admin — Premium Choice Travel' };
 
@@ -14,18 +14,23 @@ export const dynamic = 'force-dynamic';
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const account = await getAccount();
   if (!account) redirect('/admin/login');
-  if (account.role !== 'admin') redirect('/account');
+  if (!isStaffRole(account.role)) redirect('/account');
+  // A reviewer's console is the Booking requests section and nothing else;
+  // middleware sends any other admin URL there too.
+  const reviewer = account.role === 'reviewer';
 
   return (
     <div className="flex min-h-screen bg-sand">
       <aside className="fixed inset-y-0 left-0 z-40 flex w-60 flex-col bg-ink text-white">
         <div className="border-b border-white/10 px-6 py-5">
-          <Link href="/admin">
+          <Link href={reviewer ? '/admin/requests' : '/admin'}>
             <Image src="/images/logo-white.png" alt="Premium Choice Travel" width={150} height={39} className="h-9 w-auto" />
           </Link>
-          <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-white/50">Admin console</p>
+          <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-white/50">
+            {reviewer ? 'Booking requests' : 'Admin console'}
+          </p>
         </div>
-        <AdminNav />
+        <AdminNav role={account.role} />
         <div className="border-t border-white/10 p-4">
           <Link href="/" target="_blank" className="block rounded-lg px-3 py-2 text-sm text-white/70 hover:bg-white/10 hover:text-white">
             ↗ View website

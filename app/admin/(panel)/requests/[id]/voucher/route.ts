@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireAdmin } from '@/lib/admin/guard';
+import { requireRequestsStaff } from '@/lib/admin/guard';
 import { renderVoucher, voucherFilename } from '@/lib/voucher';
 
 export const runtime = 'nodejs';
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 /** The voucher PDF for a confirmed request — staff only. */
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
   try {
-    await requireAdmin();
+    await requireRequestsStaff();
   } catch {
     return NextResponse.json({ ok: false, error: 'Not authorised' }, { status: 403 });
   }

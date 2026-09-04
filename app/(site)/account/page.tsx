@@ -45,7 +45,7 @@ function when(iso: string) {
 export default async function AccountPage() {
   const account = await getAccount();
   if (!account) redirect('/account/sign-in');
-  if (account.role === 'admin') redirect('/admin');
+  if (account.role === 'admin' || account.role === 'reviewer') redirect('/admin');
 
   const { enquiries, bookings, quotes } = await getAccountActivity(account);
   const nothingYet = enquiries.length === 0 && bookings.length === 0 && quotes.length === 0;

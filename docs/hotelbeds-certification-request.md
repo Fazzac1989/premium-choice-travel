@@ -100,12 +100,17 @@ Premium Choice Travel, Dubai
 
 1. **Create a reviewer admin login** (do not share your own):
 
+   Paste `supabase/migrations/019-reviewer-role.sql` in the Supabase SQL
+   editor once, then:
+
    ```bash
-   npx tsx scripts/create-staff.ts hotelbeds-review@premiumchoicetravel.com 'choose-a-strong-password'
+   npx tsx scripts/create-staff.ts hotelbeds-review@premiumchoicetravel.com 'choose-a-strong-password' reviewer
    ```
 
-   That creates the login and gives it the admin role. Delete the user in
-   Supabase → Authentication → Users once certification is done.
+   A *reviewer* signs in at the same /admin/login but sees and can use only
+   Booking requests — no other brands, tabs, quotes or traveller passport
+   details. Delete the user in Supabase → Authentication → Users once
+   certification is done.
 2. **Preview link**: replace `YOUR_RATES_PREVIEW_KEY` with the value of
    `RATES_PREVIEW_KEY` in Vercel. Changing that variable later revokes the
    link.

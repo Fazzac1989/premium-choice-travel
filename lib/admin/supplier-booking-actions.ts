@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireAdmin } from '@/lib/admin/guard';
+import { requireRequestsStaff } from '@/lib/admin/guard';
 import { activeProvider, getOffers } from '@/lib/rates';
 import {
   bookingBlocker,
@@ -37,7 +37,7 @@ function back(id: number, note: string): never {
 }
 
 async function guarded(formData: FormData) {
-  await requireAdmin();
+  await requireRequestsStaff();
   const id = Number(formData.get('id'));
   const db = createAdminClient();
   const row = id ? await loadRequest(db, id) : null;

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireAdmin } from '@/lib/admin/guard';
+import { requireRequestsStaff } from '@/lib/admin/guard';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,7 +24,7 @@ function when(iso: string) {
 }
 
 export default async function AdminRequestsPage() {
-  await requireAdmin();
+  await requireRequestsStaff();
   const db = createAdminClient();
   const { data: requests } = await db
     .from('booking_requests')
