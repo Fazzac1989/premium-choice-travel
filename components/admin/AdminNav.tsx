@@ -50,6 +50,8 @@ const brandItems = (key: string): NavItem[] => [
   { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
   { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
   { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
+  // Hotel booking requests (Hotelbeds confirmations) only exist for Staycations.
+  ...(key === 'staycations' ? [{ href: '/admin/requests', label: 'Booking requests' }] : []),
   { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
 ];
 
