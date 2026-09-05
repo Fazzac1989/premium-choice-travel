@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { getAccount } from '@/lib/account';
+import { describeRejection, guardPayloadFromForm, guardSubmission, remoteIpFrom } from '@/lib/spam-guard';
 
 export type AccountState = { ok: boolean; message: string } | null;
 
@@ -23,6 +24,21 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
   const next = String(formData.get('next') ?? '/account').trim();
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Sign-in is not available right now.' };
+
+  // Bots, before any email goes out. Every submit here makes Supabase send a
+  // link to whatever address was typed; a bot typing scraped addresses had
+  // Supabase warning that its sender was about to be cut off for bounces.
+  // A silent rejection gets the same "on its way" as everyone, so it learns
+  // nothing — and no email is sent.
+  const verdict = await guardSubmission({
+    ...guardPayloadFromForm(formData),
+    fields: [],
+    remoteIp: remoteIpFrom(headers().get('x-forwarded-for')),
+  });
+  if (!verdict.ok) {
+    console.warn(describeRejection(verdict, 'sign-in link', email));
+    return verdict.silent ? { ok: true, message: SENT(email) } : { ok: false, message: verdict.message };
+  }
 
   // Come back to the site they signed in from, not to the master one. A
   // Supabase session is a cookie and cookies do not cross domains, so landing
@@ -57,11 +73,12 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
 
   // Deliberately the same words whether or not the address is known to us:
   // otherwise this form quietly tells a stranger who has an account here.
-  return {
-    ok: true,
-    message: `If we can reach you at ${email}, a sign-in link is on its way. It works once and lasts an hour.`,
-  };
+  return { ok: true, message: SENT(email) };
 }
+
+/** The same words whether or not the address is known — or wanted. */
+const SENT = (email: string) =>
+  `If we can reach you at ${email}, a sign-in link is on its way. It works once and lasts an hour.`;
 
 export async function signOutAccount() {
   const supabase = createClient();

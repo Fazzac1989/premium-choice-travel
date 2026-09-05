@@ -2,11 +2,13 @@
 
 import { useFormState, useFormStatus } from 'react-dom';
 import { requestSignInLink, type AccountState } from '@/lib/account-actions';
+import GuardFields, { type GuardValues } from '@/components/GuardFields';
+import { useState } from 'react';
 
-function SubmitButton() {
+function SubmitButton({ ready }: { ready: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending} className="btn-primary w-full disabled:opacity-60">
+    <button type="submit" disabled={pending || !ready} className="btn-primary w-full disabled:opacity-60">
       {pending ? 'Sending…' : 'Email me a sign-in link'}
     </button>
   );
@@ -14,6 +16,7 @@ function SubmitButton() {
 
 export default function SignInForm({ next = '/account' }: { next?: string }) {
   const [state, formAction] = useFormState<AccountState, FormData>(requestSignInLink, null);
+  const [guard, setGuard] = useState<GuardValues>({ honeypot: '', stamp: '', turnstile: '', ready: false });
 
   if (state?.ok) {
     return (
@@ -41,8 +44,9 @@ export default function SignInForm({ next = '/account' }: { next?: string }) {
           className="field"
         />
       </div>
+      <GuardFields onChange={setGuard} />
       {state && !state.ok && <p className="text-sm text-red-600">{state.message}</p>}
-      <SubmitButton />
+      <SubmitButton ready={guard.ready} />
       <p className="text-center text-xs leading-relaxed text-ink-soft">
         No password needed. We email you a link that signs you in — it works once and lasts an
         hour. If you have enquired before, everything you have sent us will be waiting.
