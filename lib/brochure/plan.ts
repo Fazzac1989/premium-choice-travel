@@ -79,8 +79,8 @@ export type PlannedPage = {
 const VARIANTS: LayoutVariant[] = ['a', 'b', 'c', 'd'];
 const variantFor = (index: number): LayoutVariant => VARIANTS[index % VARIANTS.length];
 
-/** How many pages a trip earns, by detail level. */
-function tripPages(trip: TripRecord, detail: DetailLevel, index: number): PlannedPage[] {
+/** How many pages a trip earns, by detail level. Exported so a trip can be added to a brochure later. */
+export function tripPages(trip: TripRecord, detail: DetailLevel, index: number): PlannedPage[] {
   const variant = variantFor(index);
   const pages: PlannedPage[] = [
     { pageType: 'tripHero', tripId: trip.id, layoutVariant: variant, backgroundImage: trip.heroImage },

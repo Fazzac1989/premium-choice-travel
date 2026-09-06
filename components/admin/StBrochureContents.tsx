@@ -1,6 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import {
+  addStBrochureTrips,
   addStWhyPages,
   moveStBrochureTrip,
   setStBrochureTripHidden,
@@ -23,20 +25,37 @@ import type { Brochure, BrochurePage } from '@/lib/brochure/schema';
 
 type TripInfo = { id: number; title: string; days: number; country: string | null };
 
+/** A published trip that is not in the brochure yet. */
+export type CatalogueTrip = { id: number; title: string; subject: string; country: string; days: number };
+
 export default function StBrochureContents({
   brochure,
   pages,
   trips,
+  catalogue,
   run,
   busy,
 }: {
   brochure: Brochure;
   pages: BrochurePage[];
   trips: TripInfo[];
+  catalogue: CatalogueTrip[];
   run: (k: string, f: () => Promise<any>, s?: string) => Promise<any>;
   busy: string | null;
 }) {
   const d = brochure.design;
+  const [picked, setPicked] = useState<number[]>([]);
+  const [search, setSearch] = useState('');
+  const [showPicker, setShowPicker] = useState(false);
+  const found = catalogue.filter((t) => {
+    const q = search.trim().toLowerCase();
+    return !q || `${t.title} ${t.subject} ${t.country}`.toLowerCase().includes(q);
+  });
+  const addPicked = () =>
+    run('add-trips', () => addStBrochureTrips(brochure.id, picked), `${picked.length} trip${picked.length === 1 ? '' : 's'} added and written.`).then(() => {
+      setPicked([]);
+      setShowPicker(false);
+    });
   const on = (v: boolean | undefined) => v !== false;
   const light = d.coverTheme === 'light';
 
@@ -212,6 +231,55 @@ export default function StBrochureContents({
             </button>
           </div>
         )}
+
+        <div className="rounded-xl border border-dashed border-line p-4">
+          {!showPicker ? (
+            <button type="button" className="text-sm font-semibold text-teal-deep hover:underline" onClick={() => setShowPicker(true)}>
+              + Add trips from the catalogue ({catalogue.length} available)
+            </button>
+          ) : (
+            <div className="grid gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm font-semibold text-ink">Add trips from the catalogue</p>
+                <input
+                  className="field !w-64 !py-1.5 text-sm"
+                  placeholder="Search by title, subject or country"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <div className="grid max-h-72 gap-1 overflow-y-auto rounded-lg border border-line bg-white p-2">
+                {found.length === 0 && <p className="p-2 text-sm text-ink-soft">No trips match.</p>}
+                {found.map((t) => {
+                  const on = picked.includes(t.id);
+                  return (
+                    <label key={t.id} className={`flex cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 text-sm ${on ? 'bg-teal/10' : 'hover:bg-sand'}`}>
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 accent-teal"
+                        checked={on}
+                        onChange={(e) => setPicked((list) => (e.target.checked ? [...list, t.id] : list.filter((x) => x !== t.id)))}
+                      />
+                      <span className="flex-1 text-ink">{t.title}</span>
+                      <span className="text-xs text-ink-soft">
+                        {[t.subject, t.country, t.days ? `${t.days} days` : null].filter(Boolean).join(' · ')}
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                <button type="button" className="btn-primary !py-2 text-xs" disabled={busy !== null || picked.length === 0} onClick={addPicked}>
+                  {busy === 'add-trips' ? 'Adding and writing…' : `Add ${picked.length || ''} trip${picked.length === 1 ? '' : 's'} and write their copy`}
+                </button>
+                <button type="button" className="text-xs font-semibold text-ink-soft hover:text-ink" onClick={() => { setShowPicker(false); setPicked([]); }}>
+                  Cancel
+                </button>
+                <span className="text-xs text-ink-soft">Each trip gets its introduction, day-by-day and Why pages, written by AI, placed after the trips above.</span>
+              </div>
+            </div>
+          )}
+        </div>
 
         {order.some((id) => (info(id)?.days ?? 0) > 0) && (
           <div className="px-4 py-1">

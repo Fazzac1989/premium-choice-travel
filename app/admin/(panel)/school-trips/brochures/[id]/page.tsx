@@ -32,6 +32,23 @@ export default async function StBrochurePage({ params }: { params: { id: string 
   const warnings = checkTrips(trips, brochure.detailLevel);
   const tripTitles = Object.fromEntries(trips.map((t) => [t.id, t.title]));
 
+  // Every published trip not yet in the brochure, for adding.
+  const { data: catalogueRows } = await db
+    .from('trips')
+    .select('id, title, duration_days, subjects(name), countries(name)')
+    .eq('status', 'published')
+    .order('title');
+  const inBrochure = new Set(brochure.tripIds);
+  const catalogue = (catalogueRows ?? [])
+    .filter((t) => !inBrochure.has(t.id as number))
+    .map((t: any) => ({
+      id: t.id as number,
+      title: (t.title ?? '') as string,
+      subject: (t.subjects?.name ?? '') as string,
+      country: (t.countries?.name ?? '') as string,
+      days: (t.duration_days ?? 0) as number,
+    }));
+
   // The teachers this brochure has gone to. Before the invites migration the
   // table does not exist, and the tab simply lists nobody.
   const { data: inviteRows } = await db
@@ -77,6 +94,7 @@ export default async function StBrochurePage({ params }: { params: { id: string 
         trips={trips.map((t) => ({ id: t.id, title: t.title, days: (t.days ?? []).length, country: t.country ?? null }))}
         warnings={warnings}
         invites={invites}
+        catalogue={catalogue}
         siteUrl={PCST_SITE_URL}
       />
     </>

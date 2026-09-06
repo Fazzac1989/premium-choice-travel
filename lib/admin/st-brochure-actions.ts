@@ -8,7 +8,7 @@ import { requireAdmin } from '@/lib/admin/guard';
 import { pcstClient, isPcstConfigured, PCST_SITE_URL } from '@/lib/pcst';
 import { revalidatePcst } from '@/lib/pcst-revalidate';
 import { composeTripCopy, flagUntraceable, composeWhyCopy, type WhyCopy } from '@/lib/brochure/compose';
-import { loadTripRecords, planPages, padToSpread, checkTrips, type TripWarning } from '@/lib/brochure/build';
+import { loadTripRecords, planPages, padToSpread, checkTrips, type TripWarning, tripPages } from '@/lib/brochure/build';
 import type { BrochureKind, DetailLevel, PageContent } from '@/lib/brochure/schema';
 
 /**
@@ -851,4 +851,95 @@ export async function recomposeStWhy(brochureId: number, tripId: number): Promis
   refresh(brochureId);
   await revalidatePcst(null);
   return { ok: true, id: brochureId };
+}
+
+/* ──────────────────────── adding trips later ──────────────────────── */
+
+/**
+ * Add trips from the catalogue to a brochure that already exists.
+ *
+ * Each new trip gets the same run of pages a new brochure would give it —
+ * introduction, gallery, itinerary and "Why" as the detail level allows —
+ * placed after the last trip and before the closing pages, and its copy is
+ * written straight away. Trips already in the brochure are left alone.
+ */
+export async function addStBrochureTrips(brochureId: number, tripIds: number[]): Promise<BrochureResult> {
+  await requireAdmin();
+  if (!isPcstConfigured()) return NOT_CONFIGURED;
+  const db = pcstClient();
+
+  const { data: brochure } = await db
+    .from('brochures')
+    .select('id, detail_level, trip_ids')
+    .eq('id', brochureId)
+    .maybeSingle();
+  if (!brochure) return { ok: false, error: 'Brochure not found.' };
+
+  const have = new Set<number>((brochure.trip_ids ?? []) as number[]);
+  const wanted = Array.from(new Set(tripIds.map(Number))).filter((id) => Number.isFinite(id) && !have.has(id));
+  if (!wanted.length) return { ok: false, error: 'Those trips are already in this brochure.' };
+
+  const trips = await loadTripRecords(wanted);
+  if (!trips.length) return { ok: false, error: 'None of those trips could be loaded.' };
+  const detail = (brochure.detail_level ?? 'standard') as DetailLevel;
+
+  // Where the trips end: new pages go after the last trip row, ahead of the
+  // closing pages, which move down to make room.
+  const { data: rows } = await db
+    .from('brochure_pages')
+    .select('id, trip_id, sort_order')
+    .eq('brochure_id', brochureId)
+    .order('sort_order');
+  const all = rows ?? [];
+  const lastTripAt = all.reduce((at, r) => (r.trip_id ? r.sort_order : at), -1);
+  const insertAt = lastTripAt + 1;
+
+  const planned = trips.flatMap((trip, i) => tripPages(trip, detail, have.size + i));
+  const tail = all.filter((r) => r.sort_order >= insertAt).sort((a, b) => b.sort_order - a.sort_order);
+  for (const r of tail) {
+    await db.from('brochure_pages').update({ sort_order: r.sort_order + planned.length }).eq('id', r.id);
+  }
+  const { error: pageErr } = await db.from('brochure_pages').insert(
+    planned.map((pg, i) => ({
+      brochure_id: brochureId,
+      page_type: pg.pageType,
+      sort_order: insertAt + i,
+      trip_id: pg.tripId ?? null,
+      layout_variant: pg.layoutVariant ?? 'a',
+      content: pg.content ?? {},
+      background_image: pg.backgroundImage ?? null,
+    })),
+  );
+  if (pageErr) return { ok: false, error: `Pages could not be created: ${pageErr.message}` };
+
+  await db
+    .from('brochures')
+    .update({ trip_ids: [...Array.from(have), ...trips.map((t) => t.id)], updated_at: new Date().toISOString() })
+    .eq('id', brochureId);
+
+  // Written now, so the pages are never blank in the brochure.
+  const flags: string[] = [];
+  for (const trip of trips) {
+    const result = await composeTripCopy(trip, detail);
+    if (!result.ok) {
+      flags.push(`${trip.title}: added, but its copy could not be written — ${result.error}`);
+      continue;
+    }
+    for (const f of flagUntraceable(result.content, trip)) flags.push(`${trip.title}: ${f}`);
+    const why = await composeWhyCopy(trip, detail);
+    if (!why.ok) flags.push(`${trip.title}: the "Why" page could not be written — ${why.error}`);
+    const content: PageContent = {
+      ...result.content,
+      ctaLabel: 'Explore the full itinerary',
+      ctaHref: `${PCST_SITE_URL}/trips/${trip.slug}`,
+      imageUrls: trip.landscapeImages.slice(0, 4),
+      inclusions: trip.includes,
+    };
+    const err = await writeTripCopy(db, brochureId, trip.id, content, why.ok ? why.content : null);
+    if (err) flags.push(`${trip.title}: ${err}`);
+  }
+
+  refresh(brochureId);
+  await revalidatePcst(null);
+  return { ok: true, id: brochureId, flags };
 }

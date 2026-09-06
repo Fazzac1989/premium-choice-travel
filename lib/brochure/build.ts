@@ -10,7 +10,7 @@ import type { TripRecord } from './plan';
  */
 
 export type { TripRecord, TripWarning, PlannedPage, PlanInput } from './plan';
-export { checkTrips, planPages, padToSpread } from './plan';
+export { checkTrips, planPages, padToSpread, tripPages } from './plan';
 
 const TRIP_SELECT = `
   id, slug, title, status, city, duration_days, duration_nights, overview, includes,

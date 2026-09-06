@@ -18,7 +18,7 @@ import {
   type PageContent,
 } from '@/lib/brochure/schema';
 import type { TripWarning } from '@/lib/brochure/build';
-import StBrochureContents from '@/components/admin/StBrochureContents';
+import StBrochureContents, { type CatalogueTrip } from '@/components/admin/StBrochureContents';
 import StBrochureInvites, { type InviteRow } from '@/components/admin/StBrochureInvites';
 import StWhyEditor from '@/components/admin/StWhyEditor';
 import { uploadStProposalImage } from '@/lib/admin/st-proposal-actions';
@@ -51,6 +51,7 @@ export default function StBrochureEditor({
   trips,
   warnings,
   invites,
+  catalogue,
   siteUrl,
 }: {
   brochure: Brochure;
@@ -59,6 +60,7 @@ export default function StBrochureEditor({
   trips: { id: number; title: string; days: number; country: string | null }[];
   warnings: TripWarning[];
   invites: InviteRow[];
+  catalogue: CatalogueTrip[];
   siteUrl: string;
 }) {
   const router = useRouter();
@@ -202,7 +204,7 @@ export default function StBrochureEditor({
 
       {tab === 'pages' ? (
         <div className="mt-6 grid gap-8">
-          <StBrochureContents brochure={brochure} pages={pages} trips={trips} run={run} busy={busy} />
+          <StBrochureContents brochure={brochure} pages={pages} trips={trips} catalogue={catalogue} run={run} busy={busy} />
 
           <section>
             <h2 className="font-serif text-xl text-ink">The copy, page by page</h2>
