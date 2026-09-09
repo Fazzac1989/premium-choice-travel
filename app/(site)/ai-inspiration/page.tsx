@@ -228,7 +228,7 @@ export default function AiInspirationPage() {
               </ul>
             </div>
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
-              <Image src="/images/hero/hero-2.jpg" alt="Boardwalk to overwater villas at sunset" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
+              <Image src="/images/hero/hero-2.jpg" alt="Wooden jetty leading to a palm-fringed island at dusk" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent" />
               <div className="absolute bottom-0 p-6 text-white">
                 <p className="font-serif text-xl">Dreamed up in a minute.</p>

@@ -6,19 +6,19 @@ import { useEffect, useState } from 'react';
 const SLIDES: { src: string; alt: string }[] = [
   {
     src: '/images/hero/hero-1.jpg',
-    alt: 'Wooden jetty leading to a palm-fringed island over turquoise water',
+    alt: 'Overwater villas curving across a turquoise lagoon under a peach sunset',
   },
   {
     src: '/images/hero/hero-2.jpg',
-    alt: 'Boardwalk winding to overwater villas under a fiery sunset sky',
+    alt: 'Wooden jetty leading to a palm-fringed island at dusk',
   },
   {
     src: '/images/hero/hero-3.jpg',
-    alt: 'Overwater villas and a curving jetty at dusk',
+    alt: 'Tokyo skyline and Tokyo Tower with Mount Fuji behind at sunset',
   },
   {
     src: '/images/hero/hero-4.jpg',
-    alt: 'Boat crossing a lagoon at sunset, palm trees on the horizon',
+    alt: 'Giraffes among acacia trees on safari under a blue sky',
   },
 ];
 
