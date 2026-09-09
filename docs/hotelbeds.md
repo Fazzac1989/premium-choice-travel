@@ -86,6 +86,27 @@ production key and secret, and `RATES_PUBLIC=1` when you are happy for every
 visitor to see prices. Booking is still a *request* — a specialist confirms
 each one — so nothing here charges a card or holds a room.
 
+## Who sees prices
+
+**Public since 10 September 2026.** `RATES_PUBLIC=1` is set in Vercel
+production, so every visitor to premiumchoicestaycations.com sees live
+prices — no preview cookie needed.
+
+Two things follow from that while the key is still the **test** key:
+
+- The prices come from Hotelbeds test inventory. They are realistic but not
+  bookable, and some hotels return nothing for some dates. A specialist
+  confirms the real price before anything is booked, which is what every
+  screen says.
+- The test key allows **50 requests a day**. One search prices the whole
+  results list, and every quote is cached for 12 hours per hotel, dates and
+  party, so ordinary browsing is cheap. Heavy traffic can still spend the
+  day's quota; when it does, the site falls back to the guide bands and
+  says so rather than showing an error.
+
+When the live keys arrive, set `HOTELBEDS_ENV=live` with them and both
+issues go away.
+
 ## Confirming a booking (specialist-led)
 
 The site never books on its own. A customer's request lands in
