@@ -1,14 +1,34 @@
 import { notFound } from 'next/navigation';
 import type { Metadata, Viewport } from 'next';
+import { Cormorant_Garamond, Inter } from 'next/font/google';
 import BrandHeader, { type HeaderDestinationGroup } from '@/components/brand-site/BrandHeader';
 import BrandFooter from '@/components/brand-site/BrandFooter';
-import AppTabBar from '@/components/brand-site/AppTabBar';
 import PwaSetup from '@/components/brand-site/PwaSetup';
+import { CoastalHeader, CoastalTabBar } from '@/components/staycations/coastal/CoastalNav';
+import { ChromeProvider } from '@/components/staycations/coastal/Chrome';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Coastal Calm's two faces. Next self-hosts both, so nothing is fetched from
+ * Google at run time and the fallbacks below are only for the first paint.
+ */
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-cormorant',
+  display: 'swap',
+  fallback: ['Georgia', 'serif'],
+});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  fallback: ['system-ui', 'Segoe UI', 'sans-serif'],
+});
 
 export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
   const brand = getBrand(params.brand);
@@ -17,7 +37,7 @@ export async function generateMetadata({ params }: { params: { brand: string } }
   return {
     title: { default: brand.name, template: `%s — ${brand.name}` },
     description: brand.description,
-    // Staycations installs as an app that opens on the hotel list.
+    // Staycations installs as an app that opens on Explore.
     ...(isStaycations
       ? {
           manifest: '/manifest.webmanifest',
@@ -34,7 +54,7 @@ export function generateViewport({ params }: { params: { brand: string } }): Vie
     width: 'device-width',
     initialScale: 1,
     viewportFit: 'cover',
-    ...(brand?.slug === 'staycations' ? { themeColor: '#16242E' } : {}),
+    ...(brand?.slug === 'staycations' ? { themeColor: '#164B57' } : {}),
   };
 }
 
@@ -55,6 +75,20 @@ export default async function BrandSiteLayout({
   const isStaycations = brand.slug === 'staycations';
   // Every brand site but Corporate has an Offers page.
   const showOffers = brand.key !== 'corporate';
+
+  // ── Staycations: the Coastal Calm app shell ──────────────────
+  if (isStaycations) {
+    return (
+      <div className={`coastal min-h-screen ${cormorant.variable} ${inter.variable}`}>
+        <ChromeProvider>
+          <CoastalHeader base={base} logo={brand.logo} />
+          <main>{children}</main>
+          <CoastalTabBar base={base} />
+          <PwaSetup base={base} />
+        </ChromeProvider>
+      </div>
+    );
+  }
 
   let destinationGroups: HeaderDestinationGroup[] = [];
   if (isHolidays) {
@@ -77,29 +111,20 @@ export default async function BrandSiteLayout({
         logo={brand.logo}
         logoWhite={brand.logoWhite}
         isHolidays={isHolidays}
-        isStaycations={isStaycations}
+        isStaycations={false}
         showOffers={showOffers}
         destinationGroups={destinationGroups}
       />
       {children}
-      {/* In app mode the marketing footer gives way to the tab bar. */}
-      <div className={isStaycations ? 'pwa-hidden' : undefined}>
-        <BrandFooter
-          showOffers={showOffers}
-          name={brand.name}
-          description={brand.description}
-          logoWhite={brand.logoWhite}
-          base={base}
-          isHolidays={isHolidays}
-          isStaycations={isStaycations}
-        />
-      </div>
-      {isStaycations && (
-        <>
-          <AppTabBar base={base} />
-          <PwaSetup base={base} />
-        </>
-      )}
+      <BrandFooter
+        showOffers={showOffers}
+        name={brand.name}
+        description={brand.description}
+        logoWhite={brand.logoWhite}
+        base={base}
+        isHolidays={isHolidays}
+        isStaycations={false}
+      />
     </>
   );
 }

@@ -44,6 +44,7 @@ export default function BookingPage({
   adults,
   children,
   childrenAges = [],
+  preselectOfferId = '',
   account,
   travellers,
   signInHref,
@@ -59,6 +60,8 @@ export default function BookingPage({
   children: number;
   /** Real ages when the visitor gave them — hotels price children by age. */
   childrenAges?: number[];
+  /** The rate chosen on the stay page, so nobody picks a room twice. */
+  preselectOfferId?: string;
   /** Set when they are signed in — their details fill the form. */
   account: { email: string; fullName: string; phone: string } | null;
   /** Saved travellers, so names are chosen rather than retyped. */
@@ -88,8 +91,13 @@ export default function BookingPage({
     (async () => {
       const res = await roomOffers({ hotelId, checkIn, nights, adults, children, childrenAges });
       if (!live) return;
-      if (res.ok) setOffers(res.offers);
-      else setProblem(res.message ?? 'Nothing came back for those dates.');
+      if (res.ok) {
+        setOffers(res.offers);
+        // Carry the room chosen on the stay page; if that rate has gone, the
+        // list is shown untouched rather than quietly picking another.
+        const chosen = res.offers.find((o) => o.offerId === preselectOfferId);
+        if (chosen) setChosen(chosen);
+      } else setProblem(res.message ?? 'Nothing came back for those dates.');
       setLoaded(true);
       // Let the ring finish before the rooms replace it.
       setTimeout(() => live && setLoading(false), 450);

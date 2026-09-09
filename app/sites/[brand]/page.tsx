@@ -8,6 +8,8 @@ import HeroSlideshow from '@/components/HeroSlideshow';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } from '@/lib/data';
+import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
+import { parseCriteria } from '@/lib/staycations/search-criteria';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,12 +22,23 @@ const CORPORATE_SERVICES = [
   ['Out-of-hours support', 'When plans change mid-trip, your travellers reach a person who can fix it.'],
 ];
 
-export default async function BrandHomePage({ params }: { params: { brand: string } }) {
+export default async function BrandHomePage({
+  params,
+  searchParams,
+}: {
+  params: { brand: string };
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
   const brand = getBrand(params.brand);
   if (!brand || brand.externalUrl) notFound();
   const base = brandBase(brand);
   const isHolidays = brand.slug === 'holidays';
   const isStaycations = brand.slug === 'staycations';
+
+  // Staycations opens on Explore — the app's search screen, not a brochure.
+  if (isStaycations) {
+    return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} heroImage={brand.heroImage} />;
+  }
 
   // Staycations sells hotels, not packages.
   const allBrandPackages = brand.sellsPackages && !isStaycations ? await getPackagesByBrand(brand.key) : [];

@@ -6,7 +6,7 @@
  * hotel page already visited open without a connection. Static chunks and
  * images are cache-first because their URLs never change content.
  */
-const VERSION = 'pcs-2026-09-04a';
+const VERSION = 'pcs-2026-09-10-coastal';
 const STATIC = `static-${VERSION}`;
 const PAGES = `pages-${VERSION}`;
 const IMAGES = `images-${VERSION}`;

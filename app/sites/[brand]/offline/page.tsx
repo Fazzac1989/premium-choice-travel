@@ -29,7 +29,7 @@ export default function OfflinePage({ params }: { params: { brand: string } }) {
           shortlist still work — or call us and we’ll take it from there.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href={`${base}/hotels/saved`} className="btn-primary">Saved hotels</Link>
+          <Link href={`${base}/saved`} className="btn-primary">Saved hotels</Link>
           <a href="tel:+97144206965" className="btn-outline">Call +971 4 420 6965</a>
         </div>
       </div>

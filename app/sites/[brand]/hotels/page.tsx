@@ -1,201 +1,156 @@
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import HotelCard from '@/components/staycations/HotelCard';
+import Icon from '@/components/staycations/coastal/Icon';
+import ResultsControls, { type Facets } from '@/components/staycations/coastal/ResultsControls';
+import StayCard from '@/components/staycations/coastal/StayCard';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels } from '@/lib/data';
-import { toHotelCard } from '@/lib/staycations/hotel-card';
-import { findWeekend, weekendOptions } from '@/lib/weekend';
-import { PRICE_BANDS, PRICE_BASIS } from '@/lib/price-bands';
+import { PRICE_BANDS } from '@/lib/price-bands';
+import { RATES_PREVIEW_COOKIE, ratesVisible, searchStayRates, type StaySearch } from '@/lib/rates';
+import { EMIRATES, MEAL_PLANS, STAY_TAGS, filterHotels, sortHotels } from '@/lib/staycations/filters';
+import {
+  criteriaQuery,
+  missingChildAges,
+  parseCriteria,
+  priceBasis,
+} from '@/lib/staycations/search-criteria';
+import { toStayCard } from '@/lib/staycations/stay-card';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'UAE hotels',
+  title: 'Find your pause',
   description:
-    'The UAE hotels our specialists actually book — filter by emirate, star rating and meal plan, then ask us for a personalised staycation quote.',
+    'The UAE hotels our specialists actually book — search by dates, emirate and budget, and ask us to confirm the stay.',
 };
 
-const EMIRATES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'];
-const MEAL_PLANS = ['Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
-
-type Filters = { when?: string; budget?: string; emirate?: string; stars?: string; meal?: string };
-
-export default async function StaycationHotelsPage({
+export default async function StayResultsPage({
   params,
   searchParams,
 }: {
   params: { brand: string };
-  searchParams: Filters;
+  searchParams: Record<string, string | string[] | undefined>;
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.slug !== 'staycations') notFound();
   const base = brandBase(brand);
 
+  const criteria = parseCriteria(searchParams);
   const all = await getStaycationHotels();
-  const current: Filters = {
-    when: searchParams.when ?? '',
-    budget: searchParams.budget ?? '',
-    emirate: searchParams.emirate ?? '',
-    stars: searchParams.stars ?? '',
-    meal: searchParams.meal ?? '',
+  const filtered = filterHotels(all, criteria);
+
+  // Live totals need a date, a complete party and the price gate open. Until
+  // then the list shows the specialists' guide bands and says so.
+  const canSeeRates = ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+  const agesMissing = missingChildAges(criteria);
+  const wantsRates = canSeeRates && Boolean(criteria.checkIn) && !agesMissing && criteria.rooms === 1;
+
+  let search: StaySearch | null = null;
+  if (wantsRates) {
+    // One supplier call for the whole list — never one per card.
+    search = await searchStayRates({
+      hotels: filtered.map((h) => ({ id: h.id, supplierCode: h.supplierCode ?? null })),
+      checkIn: criteria.checkIn,
+      nights: criteria.nights,
+      adults: criteria.adults,
+      childrenAges: criteria.childrenAges,
+      rooms: criteria.rooms,
+    });
+  }
+
+  const totals = new Map(Array.from(search?.rates.values() ?? []).map((r) => [r.hotelId, r.total]));
+  const ordered = sortHotels(filtered, criteria, totals.size ? totals : undefined);
+  const stays = ordered.map((h) => toStayCard(h, criteria, base, search ?? undefined));
+  const priced = (search?.rates.size ?? 0) > 0;
+
+  const facets: Facets = {
+    emirates: EMIRATES.filter((e) => all.some((h) => h.emirate === e)),
+    bands: PRICE_BANDS.filter((b) => all.some((h) => h.priceBand === b.band)).map((b) => ({ band: b.band, label: b.label })),
+    meals: MEAL_PLANS.filter((m) => all.some((h) => h.mealPlans.some((x: string) => x.toLowerCase() === m.toLowerCase()))),
+    stars: ['5', '4', '3'].filter((s) => all.some((h) => String(h.stars ?? '') === s)),
+    tags: STAY_TAGS.filter((t) => all.some((h) => t.matches(h))).map((t) => ({ key: t.key, label: t.label })),
   };
 
-  const weekend = findWeekend(current.when || undefined);
-
-  const filtered = all.filter(
-    (h) =>
-      (!current.budget || String(h.priceBand ?? '') === current.budget) &&
-      (!current.emirate || h.emirate === current.emirate) &&
-      (!current.stars || String(h.stars ?? '') === current.stars) &&
-      (!current.meal || h.mealPlans.some((m: string) => m.toLowerCase() === current.meal!.toLowerCase()))
-  );
-
-
-  /** Build a URL with one filter changed and the rest kept. */
-  const href = (patch: Filters) => {
-    const next = { ...current, ...patch };
-    const q = new URLSearchParams();
-    for (const [k, v] of Object.entries(next)) if (v) q.set(k, v);
-    const qs = q.toString();
-    return qs ? `${base}/hotels?${qs}` : `${base}/hotels`;
-  };
-
-  // Chosen dates travel to the hotel page and land in the availability form.
-  const dateQuery = weekend ? `?from=${weekend.checkIn}&nights=${weekend.nights}` : '';
-
-  const emirates = EMIRATES.filter((e) => all.some((h) => h.emirate === e));
-  const starOptions = ['5', '4', '3'].filter((s) => all.some((h) => String(h.stars ?? '') === s));
-  // Bands only appear once someone has set them, so the row stays hidden
-  // rather than offering filters that match nothing.
-  const bandOptions = PRICE_BANDS.filter((b) => all.some((h) => h.priceBand === b.band));
-  const mealOptions = MEAL_PLANS.filter((m) => all.some((h) => h.mealPlans.some((x: string) => x.toLowerCase() === m.toLowerCase())));
-
-  const chip = (active: boolean, extra = '') =>
-    `rounded-full px-4 py-2 text-sm font-semibold transition-colors ${active ? 'bg-ink text-white' : 'bg-white text-ink-soft hover:text-ink'} ${extra}`;
-  const smallChip = (active: boolean) =>
-    `rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${active ? 'bg-teal text-white' : 'bg-white text-ink-soft hover:text-ink'}`;
+  const notice = agesMissing
+    ? { tone: 'wait' as const, text: 'Add each child’s age to see prices — hotels price children by age, so we will not guess one.' }
+    : criteria.rooms > 1
+      ? { tone: 'wait' as const, text: 'We confirm one room at a time online. Guide prices are shown; a specialist will price the extra rooms with you.' }
+      : !canSeeRates
+        ? { tone: 'quiet' as const, text: 'Guide prices shown while live rates are in testing. A specialist confirms the exact price for your dates.' }
+        : !criteria.checkIn
+          ? { tone: 'quiet' as const, text: 'Add your dates to see a real total for each stay.' }
+          : search?.problem
+            ? { tone: 'err' as const, text: 'We could not reach our hotel partner just now, so guide prices are shown. Try again in a moment.' }
+            : null;
 
   return (
-    <main>
-      <section className="border-b border-line bg-sand">
-        <div className="container-site py-12 sm:py-14">
-          <p className="eyebrow">{brand.name}</p>
-          <h1 className="mt-2 max-w-2xl font-serif text-4xl leading-tight text-ink sm:text-5xl">
-            Where to this weekend?
-          </h1>
-          <p className="mt-4 max-w-xl text-ink-soft">
-            {all.length} hotels across the seven emirates, all of them ones we would put a
-            family in. Say when you’re thinking and we’ll do the rest.
+    <div className="cc-wrap py-6 lg:py-10">
+      <h1 className="cc-h2 lg:text-[36px] lg:leading-[42px]">Find your pause.</h1>
+
+      <div className="mt-4 lg:max-w-3xl">
+        <ResultsControls base={base} criteria={criteria} facets={facets} count={stays.length} pricedByStay={priced} />
+      </div>
+
+      {notice && (
+        <p
+          className={`mt-4 flex items-start gap-2 rounded-[10px] px-4 py-3 text-[14px] leading-[20px] ${
+            notice.tone === 'err'
+              ? 'bg-err-bg text-err-ink'
+              : notice.tone === 'wait'
+                ? 'bg-wait-bg text-wait-ink'
+                : 'bg-mist text-sea-soft'
+          }`}
+        >
+          <Icon name="info" size={18} className="mt-0.5 shrink-0" />
+          <span>{notice.text}</span>
+        </p>
+      )}
+
+      {stays.length === 0 ? (
+        <div className="mt-8 rounded-[12px] border border-sea-line p-8 text-center">
+          <h2 className="cc-h4">Nothing matches that combination.</h2>
+          <p className="cc-body mx-auto mt-2 max-w-md text-sea-soft">
+            {criteria.emirate || criteria.tag || criteria.budget || criteria.meal || criteria.stars
+              ? 'Try clearing a filter — or tell us what you have in mind and we will find it.'
+              : 'Tell us what you have in mind and we will find it.'}
           </p>
-
-          {/* When — the way the decision actually starts */}
-          <div className="mt-8">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">When</p>
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              {weekendOptions().map((o) => {
-                const active = current.when === o.key;
-                return (
-                  <Link
-                    key={o.key}
-                    href={href({ when: active ? '' : o.key })}
-                    className={`rounded-2xl px-4 py-2.5 text-left transition-colors ${
-                      active ? 'bg-ink text-white' : 'bg-white text-ink hover:text-teal-deep'
-                    }`}
-                  >
-                    <span className="block text-sm font-semibold">{o.label}</span>
-                    <span className={`block text-[11px] ${active ? 'text-white/70' : 'text-ink-soft'}`}>{o.dates}</span>
-                  </Link>
-                );
-              })}
-              <Link
-                href={href({ when: '' })}
-                className={`self-start ${chip(!current.when)}`}
-              >
-                I’m flexible
-              </Link>
-            </div>
-            {weekend && (
-              <p className="mt-2.5 text-xs text-ink-soft">
-                {weekend.dates} · {weekend.nights} night{weekend.nights === 1 ? '' : 's'} — carried
-                through to your enquiry so you don’t type it twice.
-              </p>
-            )}
-          </div>
-
-          {/* Roughly what you want to spend */}
-          {bandOptions.length > 0 && (
-            <div className="mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">Roughly a night</p>
-              <div className="mt-2.5 flex flex-wrap gap-2">
-                <Link href={href({ budget: '' })} className={chip(!current.budget)}>Any budget</Link>
-                {bandOptions.map((b) => (
-                  <Link
-                    key={b.band}
-                    href={href({ budget: String(b.band) })}
-                    className={chip(current.budget === String(b.band))}
-                  >
-                    {b.label}
-                  </Link>
-                ))}
-              </div>
-              <p className="mt-2.5 max-w-lg text-xs text-ink-soft">{PRICE_BASIS}</p>
-            </div>
-          )}
-
-          <div className="mt-6 border-t border-line pt-5">
-            {/* Emirate */}
-            <div className="flex flex-wrap gap-2">
-              <Link href={href({ emirate: '' })} className={smallChip(!current.emirate)}>All emirates</Link>
-              {emirates.map((e) => (
-                <Link key={e} href={href({ emirate: e })} className={smallChip(current.emirate === e)}>{e}</Link>
-              ))}
-            </div>
-            {/* Stars */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link href={href({ stars: '' })} className={smallChip(!current.stars)}>Any rating</Link>
-              {starOptions.map((s) => (
-                <Link key={s} href={href({ stars: s })} className={smallChip(current.stars === s)}>{s}★</Link>
-              ))}
-            </div>
-            {/* Meal plan */}
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link href={href({ meal: '' })} className={smallChip(!current.meal)}>Any meal plan</Link>
-              {mealOptions.map((m) => (
-                <Link key={m} href={href({ meal: m })} className={smallChip(current.meal?.toLowerCase() === m.toLowerCase())}>{m}</Link>
-              ))}
-            </div>
+          <div className="mt-5 flex flex-wrap justify-center gap-2">
+            <Link
+              href={`${base}/hotels${criteriaQuery({ ...criteria, emirate: '', budget: '', meal: '', stars: '', tag: '' })}`}
+              className="cc-btn-quiet"
+            >
+              Clear filters
+            </Link>
+            <Link href={`${base}/concierge`} className="cc-btn-primary">
+              Ask a specialist
+            </Link>
           </div>
         </div>
-      </section>
-
-      <section className="py-12 sm:py-14">
-        <div className="container-site">
-          {filtered.length === 0 ? (
-            <div className="rounded-2xl border border-line p-12 text-center">
-              <p className="font-serif text-2xl text-ink">Nothing matches that combination — yet.</p>
-              <p className="mt-3 text-ink-soft">Tell us what you have in mind and we’ll find it.</p>
-              <Link href={`${base}/enquire`} className="btn-primary mt-6">Plan my staycation</Link>
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-xs text-ink-soft">
-                  {filtered.length} hotel{filtered.length === 1 ? '' : 's'}
-                </p>
-                <Link href={`${base}/hotels/saved`} className="text-xs font-bold text-teal-deep hover:underline">
-                  Saved hotels →
-                </Link>
-              </div>
-              <div className="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filtered.map((h, i) => (
-                  <HotelCard key={h.id} hotel={toHotelCard(h)} base={base} dates={dateQuery} priority={i < 3} />
-                ))}
-              </div>
-            </>
+      ) : (
+        <>
+          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+            {stays.map((stay, i) => (
+              <li key={stay.slug} className="min-w-0">
+                <StayCard stay={stay} basis={priceBasis(criteria)} priority={i < 3} />
+              </li>
+            ))}
+          </ul>
+          {search && search.unavailable.size > 0 && (
+            <p className="cc-support mt-5">
+              {search.unavailable.size} stay{search.unavailable.size === 1 ? ' has' : 's have'} no availability for these
+              dates. They are still listed so you can save them or try other nights.
+            </p>
           )}
-        </div>
-      </section>
-    </main>
+          {priced && (
+            <p className="cc-support mt-2">
+              Totals are for {priceBasis(criteria).toLowerCase()}, from our hotel partner, and are re-checked before
+              anything is confirmed. Taxes and any charge payable at the hotel are shown on each stay.
+            </p>
+          )}
+        </>
+      )}
+    </div>
   );
 }

@@ -11,10 +11,13 @@ export default function SaveHotelButton({
   slug,
   name,
   className = '',
+  savedColor = '#19BAAB',
 }: {
   slug: string;
   name: string;
   className?: string;
+  /** The colour of a saved heart — petrol inside the Staycations app. */
+  savedColor?: string;
 }) {
   const [saved, setSaved] = useState(false);
 
@@ -41,8 +44,8 @@ export default function SaveHotelButton({
         width="18"
         height="18"
         viewBox="0 0 24 24"
-        fill={saved ? '#19BAAB' : 'none'}
-        stroke={saved ? '#19BAAB' : 'currentColor'}
+        fill={saved ? savedColor : 'none'}
+        stroke={saved ? savedColor : 'currentColor'}
         strokeWidth="1.8"
         strokeLinejoin="round"
         aria-hidden="true"

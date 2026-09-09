@@ -44,6 +44,161 @@
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   Coastal Calm — the Premium Choice Staycations app.
+
+   Everything here is scoped under `.coastal`, which only the
+   Staycations brand site wears, so the other five brands keep the
+   teal/ink system exactly as it is. Cormorant Garamond carries the
+   display voice, Inter every control, label and price.
+   ───────────────────────────────────────────────────────────── */
+@layer components {
+  .coastal {
+    @apply bg-white font-ui text-sea-ink;
+  }
+  .coastal ::selection {
+    @apply bg-petrol text-white;
+  }
+  /* Page gutters: 20px normally, 16px on a 360px phone. */
+  .cc-wrap {
+    @apply mx-auto w-full max-w-6xl px-4 min-[375px]:px-5 lg:px-8;
+  }
+  .cc-narrow {
+    @apply mx-auto w-full max-w-2xl px-4 min-[375px]:px-5 lg:px-8;
+  }
+
+  /* Type scale — display sizes are the mobile values from the spec. */
+  .cc-h1 {
+    @apply font-display text-[36px] font-semibold leading-[40px];
+  }
+  .cc-h2 {
+    @apply font-display text-[30px] font-semibold leading-[36px];
+  }
+  .cc-h3 {
+    @apply font-display text-[26px] font-medium leading-[32px];
+  }
+  .cc-h4 {
+    @apply font-display text-[23px] font-medium leading-[29px];
+  }
+  .cc-body {
+    @apply text-[16px] leading-[24px];
+  }
+  .cc-support {
+    @apply text-[13px] leading-[19px] text-sea-soft;
+  }
+  .cc-label {
+    @apply text-[13px] font-medium leading-[19px] text-sea-soft;
+  }
+  .cc-price {
+    @apply text-[19px] font-semibold leading-[25px] tabular-nums text-sea-ink;
+  }
+
+  /* Controls — 48px minimum, 10px radius, 44px icon hit areas. */
+  .cc-btn {
+    @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-[10px] px-5 text-[16px] font-semibold transition-colors disabled:opacity-60;
+  }
+  .cc-btn-primary {
+    @apply cc-btn bg-petrol text-white hover:bg-petrol-deep;
+  }
+  .cc-btn-quiet {
+    @apply cc-btn border border-sea-line bg-white text-sea-ink hover:border-petrol;
+  }
+  .cc-icon-btn {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors;
+  }
+  .cc-chip {
+    @apply inline-flex min-h-[44px] items-center gap-2 rounded-[10px] border border-sea-line bg-white px-4 text-[15px] font-medium text-sea-ink transition-colors hover:border-petrol;
+  }
+  .cc-chip-on {
+    @apply border-petrol bg-petrol text-white hover:border-petrol;
+  }
+  .cc-field {
+    @apply min-h-[48px] w-full rounded-[10px] border border-sea-line bg-white px-4 text-[16px] leading-[24px] text-sea-ink outline-none transition-colors placeholder:text-sea-soft/70 focus:border-petrol;
+  }
+
+  /* Surfaces — 12px cards, 16px search panel, one restrained shadow. */
+  .cc-card {
+    @apply overflow-hidden rounded-[12px] border border-sea-line bg-white shadow-[0_4px_16px_rgba(22,75,87,0.06)];
+  }
+  .cc-panel {
+    @apply rounded-[16px] border border-sea-line bg-white shadow-[0_4px_16px_rgba(22,75,87,0.06)];
+  }
+  .cc-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-semibold;
+  }
+  .cc-badge-ok {
+    @apply cc-badge bg-ok-bg text-ok-ink;
+  }
+  .cc-badge-wait {
+    @apply cc-badge bg-wait-bg text-wait-ink;
+  }
+  .cc-badge-err {
+    @apply cc-badge bg-err-bg text-err-ink;
+  }
+  .cc-badge-quiet {
+    @apply cc-badge bg-mist text-sea-soft;
+  }
+  /* Text over photography always sits on a gradient, never bare. */
+  .cc-scrim {
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-[rgba(16,59,69,0.78)] via-[rgba(16,59,69,0.18)] to-transparent;
+  }
+}
+
+/* The Staycations pages outside the app shell — our story, contact, offers —
+   keep their existing markup. These few mappings pull them into the Coastal
+   Calm palette so one site never shows two colour systems. */
+@layer components {
+  .coastal .font-serif {
+    @apply font-display;
+  }
+  .coastal .eyebrow,
+  .coastal .text-teal-deep,
+  .coastal .text-teal {
+    @apply text-petrol;
+  }
+  .coastal .btn-primary {
+    @apply bg-petrol hover:bg-petrol-deep;
+  }
+  .coastal .btn-outline:hover {
+    @apply border-petrol text-petrol;
+  }
+  .coastal .bg-sand {
+    @apply bg-mist;
+  }
+  .coastal .bg-ink {
+    @apply bg-petrol-deep;
+  }
+  .coastal .border-line {
+    @apply border-sea-line;
+  }
+  .coastal .text-ink {
+    @apply text-sea-ink;
+  }
+  .coastal .text-ink-soft {
+    @apply text-sea-soft;
+  }
+}
+
+.coastal :focus-visible {
+  outline: 2px solid #164b57;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+/* The bottom bar and tab bar clear the home indicator. */
+.cc-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@media (prefers-reduced-motion: reduce) {
+  .coastal *,
+  .coastal *::before,
+  .coastal *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Installed-app mode (Staycations PWA). The website never shows these. */
 .pwa-only {
   display: none;

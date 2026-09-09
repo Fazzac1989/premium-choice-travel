@@ -21,22 +21,22 @@ export function GET(req: NextRequest) {
   const manifest =
     brand?.slug === 'staycations'
       ? {
-          id: '/hotels',
+          id: '/',
           name: 'Premium Choice Staycations',
           short_name: 'Staycations',
           description: 'UAE hotels our specialists actually book — pick a weekend, save favourites, ask for a quote.',
-          start_url: '/hotels?source=app',
+          start_url: '/?source=app',
           scope: '/',
           display: 'standalone',
           orientation: 'portrait',
-          background_color: '#F6F4EF',
-          theme_color: '#16242E',
+          background_color: '#EAF3F4',
+          theme_color: '#164B57',
           lang: 'en',
           icons: ICONS,
           shortcuts: [
-            { name: 'This weekend', url: '/hotels?when=this', description: 'Hotels for the coming weekend' },
-            { name: 'Saved hotels', url: '/hotels/saved' },
-            { name: 'My enquiries', url: '/enquiries' },
+            { name: 'Find a stay', url: '/hotels', description: 'Search UAE hotels for your dates' },
+            { name: 'Saved', url: '/saved' },
+            { name: 'Trips', url: '/trips' },
           ],
         }
       : {

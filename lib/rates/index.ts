@@ -1,9 +1,9 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { liteapi } from './liteapi';
-import { hotelbeds } from './hotelbeds';
+import { hotelbeds, hotelbedsSearchMany } from './hotelbeds';
 import { stub } from './stub';
-import { convertMoney, convertOffers } from './fx';
+import { convertMoney, convertOffers, convertAmount, fxRates, DISPLAY_CURRENCY } from './fx';
 import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
 
 /**
@@ -315,4 +315,164 @@ export async function findCachedOffer(params: {
     .maybeSingle();
   const { list } = unpackOffers(data?.offers as StoredOffers);
   return list.find((o) => o.offerId === params.offerId) ?? null;
+}
+
+// ── Whole-directory search ───────────────────────────────────────
+
+/** The cheapest bookable option for one hotel and one stay. */
+export type StayRate = {
+  hotelId: number;
+  total: number;
+  currency: string;
+  board: string;
+  roomName: string;
+  /** True when it came from our cache rather than a fresh supplier call. */
+  cached: boolean;
+};
+
+export type StaySearch = {
+  /** A rate for every hotel the supplier priced. */
+  rates: Map<number, StayRate>;
+  /** Hotels the supplier answered for with nothing available. */
+  unavailable: Set<number>;
+  /** False when no supplier is configured, or the search could not run. */
+  ok: boolean;
+  /** Set when the supplier refused — shown to the visitor in plain words. */
+  problem?: string;
+};
+
+const EMPTY_SEARCH: StaySearch = { rates: new Map(), unavailable: new Set(), ok: false };
+
+/**
+ * Price a whole list of hotels for one stay, in one supplier call.
+ *
+ * This is the pattern Hotelbeds asks for: as many hotels as possible per
+ * availability request, never one call per card. Anything already cached and
+ * fresh is reused, so a busy results page usually costs the supplier nothing.
+ *
+ * Multi-room stays are deliberately not searched — we confirm one room per
+ * booking today, and a specialist prices anything larger by hand.
+ */
+export async function searchStayRates(params: {
+  hotels: { id: number; supplierCode: string | null }[];
+  checkIn: string;
+  nights: number;
+  adults: number;
+  childrenAges: number[];
+  rooms?: number;
+}): Promise<StaySearch> {
+  const provider = activeProvider();
+  if (!provider || provider.name !== 'hotelbeds' || !isSupabaseConfigured()) return EMPTY_SEARCH;
+  if ((params.rooms ?? 1) > 1) return EMPTY_SEARCH;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(params.checkIn)) return EMPTY_SEARCH;
+
+  const children = params.childrenAges.length;
+  const ages = cleanAges(params.childrenAges, children);
+  const mapped = params.hotels.filter((h) => h.supplierCode && /^\d+$/.test(h.supplierCode));
+  if (!mapped.length) return { ...EMPTY_SEARCH, ok: true };
+
+  const db = createAdminClient();
+  const rates = new Map<number, StayRate>();
+  const unavailable = new Set<number>();
+
+  const { data: cached } = await db
+    .from('rate_cache')
+    .select('hotel_id, amount, currency, board, room_name, fetched_at')
+    .in('hotel_id', mapped.map((h) => h.id))
+    .eq('check_in', params.checkIn)
+    .eq('nights', params.nights)
+    .eq('adults', params.adults)
+    .eq('children', children);
+
+  const fresh = new Set<number>();
+  for (const row of cached ?? []) {
+    if (Date.now() - new Date(row.fetched_at).getTime() > CACHE_HOURS * 3600_000) continue;
+    fresh.add(row.hotel_id);
+    if (row.amount === null) unavailable.add(row.hotel_id);
+    else
+      rates.set(row.hotel_id, {
+        hotelId: row.hotel_id,
+        total: Number(row.amount),
+        currency: row.currency,
+        board: row.board ?? '',
+        roomName: row.room_name ?? '',
+        cached: true,
+      });
+  }
+
+  const missing = mapped.filter((h) => !fresh.has(h.id));
+  if (!missing.length) return { rates, unavailable, ok: true };
+
+  const byCode = new Map(missing.map((h) => [Number(h.supplierCode), h.id]));
+  let found: Map<number, RoomOffer[]>;
+  try {
+    found = await hotelbedsSearchMany(
+      { checkIn: params.checkIn, nights: params.nights, adults: params.adults, children, childrenAges: ages },
+      Array.from(byCode.keys()),
+    );
+  } catch (e: any) {
+    console.error('[stay-search]', e?.message ?? e);
+    // Whatever was cached is still worth showing.
+    return { rates, unavailable, ok: rates.size > 0, problem: String(e?.message ?? e) };
+  }
+
+  // One rate table for the whole batch rather than a lookup per hotel.
+  const fx = await fxRates();
+  const rows: any[] = [];
+  const now = new Date().toISOString();
+
+  for (const [code, hotelId] of Array.from(byCode.entries())) {
+    const cheapest = (found.get(code) ?? [])[0];
+    if (!cheapest) {
+      unavailable.add(hotelId);
+      rows.push({
+        hotel_id: hotelId,
+        check_in: params.checkIn,
+        nights: params.nights,
+        adults: params.adults,
+        children,
+        currency: DISPLAY_CURRENCY,
+        amount: null,
+        board: null,
+        room_name: null,
+        provider: provider.name,
+        fetched_at: now,
+      });
+      continue;
+    }
+    const converted =
+      cheapest.currency.toUpperCase() === DISPLAY_CURRENCY || !fx
+        ? { amount: cheapest.total, currency: cheapest.currency }
+        : {
+            amount: convertAmount(cheapest.total, cheapest.currency, DISPLAY_CURRENCY, fx) ?? cheapest.total,
+            currency: convertAmount(cheapest.total, cheapest.currency, DISPLAY_CURRENCY, fx) === null ? cheapest.currency : DISPLAY_CURRENCY,
+          };
+    rates.set(hotelId, {
+      hotelId,
+      total: converted.amount,
+      currency: converted.currency,
+      board: cheapest.board,
+      roomName: cheapest.roomName,
+      cached: false,
+    });
+    rows.push({
+      hotel_id: hotelId,
+      check_in: params.checkIn,
+      nights: params.nights,
+      adults: params.adults,
+      children,
+      currency: converted.currency,
+      amount: converted.amount,
+      board: cheapest.board || null,
+      room_name: cheapest.roomName || null,
+      provider: provider.name,
+      fetched_at: now,
+    });
+  }
+
+  if (rows.length) {
+    const { error } = await db.from('rate_cache').upsert(rows, { onConflict: 'hotel_id,check_in,nights,adults,children' });
+    if (error) console.error('[stay-search cache]', error.message);
+  }
+  return { rates, unavailable, ok: true };
 }

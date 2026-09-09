@@ -25,7 +25,7 @@ export default async function HotelBookingPage({
   searchParams,
 }: {
   params: { brand: string; slug: string };
-  searchParams: { from?: string; nights?: string; adults?: string; children?: string; ages?: string };
+  searchParams: { from?: string; nights?: string; adults?: string; children?: string; ages?: string; offer?: string };
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.slug !== 'staycations') notFound();
@@ -74,6 +74,7 @@ export default async function HotelBookingPage({
       adults={adults}
       children={children}
       childrenAges={childrenAges}
+      preselectOfferId={searchParams.offer ?? ''}
       account={account ? { email: account.email, fullName: account.fullName, phone: account.phone } : null}
       travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
       signInHref={`/account/sign-in?next=${encodeURIComponent(here)}`}

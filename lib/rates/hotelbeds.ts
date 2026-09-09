@@ -157,8 +157,13 @@ export function childAges(query: Pick<RateQuery, 'children' | 'childrenAges'>) {
   });
 }
 
-/** Availability request body. Children need ages or the supplier rejects the search. */
-function availabilityBody(query: RateQuery) {
+/**
+ * Availability request body. Children need ages or the supplier rejects the
+ * search. `codes` may hold up to 2000 hotels — asking for many properties in
+ * one call is what Hotelbeds' certification expects, and it is the only way
+ * a results list can show real totals without a search per card.
+ */
+function availabilityBody(query: RateQuery, codes: number[]) {
   const ages = childAges(query);
   return {
     stay: { checkIn: query.checkIn, checkOut: addDays(query.checkIn, query.nights) },
@@ -177,11 +182,40 @@ function availabilityBody(query: RateQuery) {
           : {}),
       },
     ],
-    hotels: { hotel: [Number(query.supplierCode)] },
+    hotels: { hotel: codes },
     language: 'ENG',
     // Rates vary by the guest's market; our customers are UAE residents.
     sourceMarket: 'AE',
   };
+}
+
+/** The most hotels Hotelbeds accepts in one availability call. */
+export const HOTELBEDS_MAX_HOTELS_PER_CALL = 2000;
+
+/**
+ * One availability call for many hotels at once → the offers for each.
+ * Hotels the supplier had nothing for are simply absent from the map.
+ */
+export async function hotelbedsSearchMany(
+  query: Omit<RateQuery, 'hotelId' | 'supplierCode'>,
+  codes: number[],
+): Promise<Map<number, RoomOffer[]>> {
+  const out = new Map<number, RoomOffer[]>();
+  const wanted = Array.from(new Set(codes.filter((c) => Number.isFinite(c) && c > 0)));
+  if (!wanted.length) return out;
+
+  for (let i = 0; i < wanted.length; i += HOTELBEDS_MAX_HOTELS_PER_CALL) {
+    const batch = wanted.slice(i, i + HOTELBEDS_MAX_HOTELS_PER_CALL);
+    const json: any = await hotelbedsFetch('/hotel-api/1.0/hotels', {
+      method: 'POST',
+      body: availabilityBody({ ...query, hotelId: 0, supplierCode: '' } as RateQuery, batch),
+    });
+    for (const hotel of json?.hotels?.hotels ?? []) {
+      const offers = toOffers(hotel);
+      if (offers.length) out.set(Number(hotel.code), offers);
+    }
+  }
+  return out;
 }
 
 /** Every room/rate pair the supplier offered for one hotel, as our offer shape. */
@@ -253,7 +287,10 @@ function toOffers(hotel: any): RoomOffer[] {
 export const hotelbedsOffersFromHotel = toOffers;
 
 async function availability(query: RateQuery): Promise<any | null> {
-  const json: any = await hotelbedsFetch('/hotel-api/1.0/hotels', { method: 'POST', body: availabilityBody(query) });
+  const json: any = await hotelbedsFetch('/hotel-api/1.0/hotels', {
+    method: 'POST',
+    body: availabilityBody(query, [Number(query.supplierCode)]),
+  });
   return json?.hotels?.hotels?.[0] ?? null;
 }
 
