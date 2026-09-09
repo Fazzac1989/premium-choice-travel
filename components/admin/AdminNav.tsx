@@ -16,6 +16,7 @@ const GROUP_ITEMS: NavItem[] = [
   { href: '/admin/destinations', label: 'Destinations' },
   { href: '/admin/hotels', label: 'Hotels' },
   { href: '/admin/experiences', label: 'Experiences' },
+  { href: '/admin/offers', label: 'Offers' },
   { href: '/admin/quotes', label: 'Quotes' },
   { href: '/admin/requests', label: 'Booking requests' },
   { href: '/admin/enquiries', label: 'Enquiries' },
@@ -49,6 +50,7 @@ const brandItems = (key: string): NavItem[] => [
   { href: `/admin/brands/${key}/import`, label: 'AI Importer' },
   { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
   { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
+  ...(key === 'corporate' ? [] : [{ href: `/admin/brands/${key}/offers`, label: 'Offers' }]),
   { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
   // Hotel booking requests (Hotelbeds confirmations) only exist for Staycations.
   ...(key === 'staycations' ? [{ href: '/admin/requests', label: 'Booking requests' }] : []),

@@ -23,6 +23,7 @@ export default function BrandHeader({
   logoWhite,
   isHolidays = false,
   isStaycations = false,
+  showOffers = false,
   destinationGroups = [],
 }: {
   base: string;
@@ -31,6 +32,8 @@ export default function BrandHeader({
   logoWhite: string | null;
   isHolidays?: boolean;
   isStaycations?: boolean;
+  /** Offers pages exist on every brand site but Corporate. */
+  showOffers?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
 }) {
   const pathname = usePathname();
@@ -89,6 +92,7 @@ export default function BrandHeader({
   const links = [
     ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/journeys', label: 'Journeys' }]),
     ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
+    ...(showOffers ? [{ href: '/offers', label: 'Offers' }] : []),
     { href: '/about', label: 'Our story' },
     { href: '/enquire', label: 'Contact' },
   ];

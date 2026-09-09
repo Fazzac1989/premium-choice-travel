@@ -8,6 +8,7 @@ export default function BrandFooter({
   base = '',
   isHolidays = false,
   isStaycations = false,
+  showOffers = false,
 }: {
   name: string;
   description: string;
@@ -15,6 +16,7 @@ export default function BrandFooter({
   base?: string;
   isHolidays?: boolean;
   isStaycations?: boolean;
+  showOffers?: boolean;
 }) {
   const masterUrl = 'https://premiumchoicetravel.com';
   const links = [
@@ -25,6 +27,7 @@ export default function BrandFooter({
     ...(isStaycations
       ? [{ href: `${base}/hotels`, label: 'Hotels' }]
       : [{ href: `${base}/journeys`, label: 'Journeys' }]),
+    ...(showOffers ? [{ href: `${base}/offers`, label: 'Offers' }] : []),
     { href: `${base}/about`, label: 'Our story' },
     { href: `${base}/enquire`, label: 'Plan my trip' },
   ];

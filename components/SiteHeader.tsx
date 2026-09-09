@@ -10,6 +10,7 @@ const NAV = [
   { href: '/about', label: 'About' },
   { href: 'https://premiumchoiceholidays.com/destinations', label: 'Destinations', external: true },
   { href: '/ai-inspiration', label: 'AI Inspiration' },
+  { href: '/offers', label: 'Offers' },
   { href: '/contact', label: 'Contact' },
 ];
 

@@ -529,3 +529,35 @@ create index if not exists booking_requests_supplier_ref_idx on booking_requests
 
 alter table profiles drop constraint if exists profiles_role_check;
 alter table profiles add constraint profiles_role_check check (role in ('customer', 'admin', 'reviewer'));
+
+-- Migration 020 — offers: dated deals shown on the Holidays, Staycations, Cruises and Golf sites.
+create table if not exists offers (
+  id           bigserial primary key,
+  brand        text not null default 'all'
+               check (brand in ('all', 'holidays', 'staycations', 'cruises', 'golf')),
+  title        text not null,
+  subtitle     text,
+  description  text,
+  image        text,
+  badge        text,                      -- e.g. "Save 20%" or "Early booking"
+  price_from   numeric,
+  currency     text not null default 'AED',
+  price_note   text,                      -- e.g. "per person, 5 nights"
+  valid_from   date,
+  valid_until  date,
+  cta_label    text,
+  cta_href     text,
+  status       text not null default 'draft' check (status in ('draft', 'published')),
+  sort_order   int not null default 0,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+
+create index if not exists offers_brand_status_idx on offers (brand, status, sort_order);
+
+alter table offers enable row level security;
+
+-- Published offers are public; everything else goes through the service role.
+drop policy if exists "public read published offers" on offers;
+create policy "public read published offers" on offers
+  for select using (status = 'published');

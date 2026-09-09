@@ -53,6 +53,8 @@ export default async function BrandSiteLayout({
   const base = brandBase(brand);
   const isHolidays = brand.slug === 'holidays';
   const isStaycations = brand.slug === 'staycations';
+  // Every brand site but Corporate has an Offers page.
+  const showOffers = brand.key !== 'corporate';
 
   let destinationGroups: HeaderDestinationGroup[] = [];
   if (isHolidays) {
@@ -76,12 +78,14 @@ export default async function BrandSiteLayout({
         logoWhite={brand.logoWhite}
         isHolidays={isHolidays}
         isStaycations={isStaycations}
+        showOffers={showOffers}
         destinationGroups={destinationGroups}
       />
       {children}
       {/* In app mode the marketing footer gives way to the tab bar. */}
       <div className={isStaycations ? 'pwa-hidden' : undefined}>
         <BrandFooter
+          showOffers={showOffers}
           name={brand.name}
           description={brand.description}
           logoWhite={brand.logoWhite}
