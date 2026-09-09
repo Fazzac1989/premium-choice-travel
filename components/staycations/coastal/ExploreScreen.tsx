@@ -42,7 +42,8 @@ export default async function ExploreScreen({
       {/* Hero + search. On a laptop the two sit side by side rather than
           stretching one phone column across the window. */}
       <section className="relative lg:pb-8">
-        <div className="relative h-[420px] w-full sm:h-[460px] lg:h-[520px]">
+        {/* The bar floats over the top of this photograph. */}
+        <div className="relative h-[480px] w-full sm:h-[520px] lg:h-[588px]">
           <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover" />
           <div className="cc-scrim" />
           <div className="cc-wrap absolute inset-x-0 bottom-0 pb-24 lg:pb-16">

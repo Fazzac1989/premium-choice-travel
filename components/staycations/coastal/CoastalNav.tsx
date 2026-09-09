@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import Icon, { type IconName } from './Icon';
 import { useTabsHidden } from './Chrome';
 
@@ -35,21 +36,60 @@ function useRel(base: string) {
   return (base && pathname.startsWith(base) ? pathname.slice(base.length) : pathname) || '/';
 }
 
-export function CoastalHeader({ base, logo }: { base: string; logo: string | null }) {
+export function CoastalHeader({
+  base,
+  logo,
+  logoWhite,
+}: {
+  base: string;
+  logo: string | null;
+  logoWhite: string | null;
+}) {
   const rel = useRel(base);
   const tabs = tabsFor(base);
   const active = activeHref(tabs, rel);
 
+  // Explore opens on a full-bleed photograph, so the bar sits on the picture
+  // until the page moves and then becomes solid white to stay readable.
+  const overHero = rel === '/';
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    if (!overHero) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [overHero]);
+  const solid = !overHero || scrolled;
+
   return (
-    <header className="sticky top-0 z-40 border-b border-sea-line bg-white/95 backdrop-blur">
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-40 border-b transition-colors duration-300 ${
+          solid ? 'border-sea-line bg-white/95 backdrop-blur' : 'border-transparent bg-transparent'
+        }`}
+      >
       <div className="cc-wrap flex h-[60px] items-center justify-between gap-4 lg:h-[68px]">
         <Link href={base || '/'} aria-label="Premium Choice Staycations — Explore" className="shrink-0">
-          {logo ? (
-            <Image src={logo} alt="Premium Choice Staycations" width={524} height={130} priority className="h-8 w-auto lg:h-9" />
+          {(solid ? logo : logoWhite ?? logo) ? (
+            <Image
+              src={(solid ? logo : logoWhite ?? logo)!}
+              alt="Premium Choice Staycations"
+              width={524}
+              height={130}
+              priority
+              className="h-8 w-auto lg:h-9"
+            />
           ) : (
             <span className="flex flex-col leading-none">
-              <span className="font-display text-[19px] font-semibold text-sea-ink">Premium Choice</span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.28em] text-sea-soft">Staycations</span>
+              <span className={`font-display text-[19px] font-semibold ${solid ? 'text-sea-ink' : 'text-white'}`}>
+                Premium Choice
+              </span>
+              <span
+                className={`text-[10px] font-medium uppercase tracking-[0.28em] ${solid ? 'text-sea-soft' : 'text-white/80'}`}
+              >
+                Staycations
+              </span>
             </span>
           )}
         </Link>
@@ -62,7 +102,13 @@ export function CoastalHeader({ base, logo }: { base: string; logo: string | nul
               href={t.href}
               aria-current={active === t.href ? 'page' : undefined}
               className={`inline-flex min-h-[44px] items-center gap-2 rounded-[10px] px-3.5 text-[15px] font-medium transition-colors ${
-                active === t.href ? 'bg-mist text-petrol' : 'text-sea-soft hover:text-sea-ink'
+                solid
+                  ? active === t.href
+                    ? 'bg-mist text-petrol'
+                    : 'text-sea-soft hover:text-sea-ink'
+                  : active === t.href
+                    ? 'bg-white/15 text-white'
+                    : 'text-white/85 hover:text-white'
               }`}
             >
               <Icon name={t.icon} size={18} />
@@ -74,17 +120,27 @@ export function CoastalHeader({ base, logo }: { base: string; logo: string | nul
         <div className="flex items-center gap-1">
           <a
             href="tel:+97144206965"
-            className="hidden min-h-[44px] items-center gap-2 rounded-[10px] px-3 text-[15px] font-medium text-sea-soft hover:text-sea-ink lg:inline-flex"
+            className={`hidden min-h-[44px] items-center gap-2 rounded-[10px] px-3 text-[15px] font-medium lg:inline-flex ${
+              solid ? 'text-sea-soft hover:text-sea-ink' : 'text-white/85 hover:text-white'
+            }`}
           >
             <Icon name="phone" size={18} />
             +971 4 420 6965
           </a>
-          <Link href="/account" aria-label="Your account" className="cc-icon-btn text-sea-ink hover:bg-mist">
+          <Link
+            href="/account"
+            aria-label="Your account"
+            className={`cc-icon-btn ${solid ? 'text-sea-ink hover:bg-mist' : 'text-white hover:bg-white/15'}`}
+          >
             <Icon name="user" size={22} />
           </Link>
         </div>
-      </div>
-    </header>
+        </div>
+      </header>
+      {/* A fixed bar leaves no space behind it. Pages without a full-bleed
+          photograph need that space back; Explore keeps the picture. */}
+      {!overHero && <div className="h-[60px] lg:h-[68px]" aria-hidden="true" />}
+    </>
   );
 }
 

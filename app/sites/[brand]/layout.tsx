@@ -81,7 +81,7 @@ export default async function BrandSiteLayout({
     return (
       <div className={`coastal min-h-screen ${cormorant.variable} ${inter.variable}`}>
         <ChromeProvider>
-          <CoastalHeader base={base} logo={brand.logo} />
+          <CoastalHeader base={base} logo={brand.logo} logoWhite={brand.logoWhite} />
           <main>{children}</main>
           <CoastalTabBar base={base} />
           <PwaSetup base={base} />
