@@ -137,6 +137,38 @@ export default function StBrochureContents({
 
       <div className="mt-4 grid gap-2">
         <Row
+          number="—"
+          title="Style"
+          detail={
+            d.presentation === 'collection'
+              ? 'Collection: a page a teacher browses — hero, filters, a card per trip, and a page for each.'
+              : 'Classic: the deck — a cover, a contents and a sheet per page. This is what the PDF prints.'
+          }
+          right={
+            <div className="flex items-center gap-2">
+              {([
+                ['classic', 'Classic'],
+                ['collection', 'Collection'],
+              ] as const).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  disabled={busy !== null}
+                  onClick={() => setDesign({ presentation: value }, `Style set to ${label.toLowerCase()}.`)}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                    (d.presentation ?? 'classic') === value
+                      ? 'border-teal bg-teal/5 text-teal-deep'
+                      : 'border-line text-ink-soft hover:border-teal'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          }
+        />
+
+        <Row
           number={num()}
           title="Cover"
           detail={`${brochure.title}${brochure.clientName ? ` · prepared for ${brochure.clientName}` : ''}`}
