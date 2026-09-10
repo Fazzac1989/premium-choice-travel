@@ -9,6 +9,7 @@ import {
   updateStBrochureDesign,
 } from '@/lib/admin/st-brochure-actions';
 import type { Brochure, BrochurePage } from '@/lib/brochure/schema';
+import StBrochureLogo from '@/components/admin/StBrochureLogo';
 
 /**
  * What the brochure contains, in the order a reader meets it.
@@ -156,6 +157,15 @@ export default function StBrochureContents({
               ))}
             </div>
           }
+        />
+
+        <StBrochureLogo
+          brochureId={brochure.id}
+          clientLogo={brochure.clientLogo}
+          clientName={brochure.clientName}
+          title={brochure.title}
+          run={run}
+          busy={busy}
         />
 
         {shown.length > 0 && <Row number={num()} title="Contents" detail={`${shown.length} trip${shown.length === 1 ? '' : 's'}, with thumbnails`} />}
