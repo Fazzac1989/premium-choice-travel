@@ -168,6 +168,29 @@ export default function StBrochureContents({
           busy={busy}
         />
 
+        <Row
+          number="—"
+          title="Every page after the cover"
+          detail={`${d.documentTheme === 'dark' ? 'Dark: navy throughout' : 'Light: white pages'} — the cover keeps its own choice above.`}
+          right={
+            <div className="flex gap-2">
+              {(['light', 'dark'] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  disabled={busy !== null}
+                  onClick={() => setDesign({ documentTheme: t }, `Document set to ${t}.`)}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-semibold capitalize transition-colors ${
+                    (t === 'dark') === (d.documentTheme === 'dark') ? 'border-teal bg-teal/5 text-teal-deep' : 'border-line text-ink-soft hover:border-teal'
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          }
+        />
+
         {shown.length > 0 && <Row number={num()} title="Contents" detail={`${shown.length} trip${shown.length === 1 ? '' : 's'}, with thumbnails`} />}
 
         {order.map((id, i) => {

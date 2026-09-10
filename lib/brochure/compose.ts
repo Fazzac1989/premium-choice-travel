@@ -55,7 +55,7 @@ const CONTENT_SCHEMA = {
     highlights: {
       type: 'array',
       description:
-        'The 4–6 most compelling things in this trip, each already present in the source. Fewer is fine. Never pad to reach six.',
+        'The 6–8 most compelling things in this trip, each already present in the source. The brochure shows six, so reach six where the source supports it. Fewer is fine when it does not: never pad, and never invent one to reach a number.',
       items: {
         type: 'object',
         properties: {
@@ -121,11 +121,11 @@ export type TripSource = {
 /** How much the composer is allowed to say, by detail level. */
 const BRIEF: Record<DetailLevel, string> = {
   inspiration:
-    'This is an INSPIRATION brochure: the shortest form. Give at most 4 highlights and keep the intro to two sentences. The reader is browsing, not deciding.',
+    'This is an INSPIRATION brochure: the shortest form. Give up to 6 highlights and keep the intro to two sentences. The reader is browsing, not deciding.',
   standard:
-    'This is a STANDARD brochure. Give 4–6 highlights, a two or three sentence intro, and the learning focus where the source supports one.',
+    'This is a STANDARD brochure. Give 6–8 highlights where the source supports them, a two or three sentence intro, and the learning focus where the source supports one.',
   detailed:
-    'This is a DETAILED brochure. Give 5–6 highlights and a fuller intro, and be thorough with key locations and conditions, because this reader is close to deciding.',
+    'This is a DETAILED brochure. Give 6–8 highlights and a fuller intro, and be thorough with key locations and conditions, because this reader is close to deciding.',
 };
 
 /** Everything the model is allowed to know about the trip. */
