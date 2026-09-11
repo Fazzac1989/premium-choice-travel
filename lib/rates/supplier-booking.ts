@@ -146,6 +146,11 @@ export type ConfirmInput = {
   holder: { name: string; surname: string };
   paxes: SupplierPax[];
   remark: string;
+  /**
+   * Hold the voucher back. Set when the customer is being sent a payment
+   * link instead: the voucher then follows the money, not the booking.
+   */
+  skipVoucher?: boolean;
 };
 
 /** POST the booking to Hotelbeds, store the reply on the request, email the voucher. */
@@ -203,13 +208,17 @@ export async function confirmRequest(db: SupabaseClient, row: any, input: Confir
     rate_comments: comments || null,
   });
 
+  const confirmed = `Confirmed with Hotelbeds — reference ${booking.reference}, status ${booking.status}, net ${money(cost.amount, cost.currency)}.`;
+  // The caller is sending a payment link, so the voucher waits for the money.
+  if (input.skipVoucher) return { ok: true, reference: booking.reference, note: confirmed };
+
   const fresh = await loadRequest(db, row.id);
   const sent = await emailVoucherFor(db, fresh);
   return {
     ok: true,
     reference: booking.reference,
     note:
-      `Confirmed with Hotelbeds — reference ${booking.reference}, status ${booking.status}, net ${money(cost.amount, cost.currency)}.` +
+      confirmed +
       (sent.ok ? ` Voucher emailed to ${row.email}.` : ` Voucher NOT emailed: ${sent.error ?? 'unknown error'} — use "Email voucher" to retry.`),
   };
 }

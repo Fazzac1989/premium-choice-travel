@@ -1,10 +1,15 @@
 import {
   cancelSupplierBooking,
+  checkBookingPayment,
   confirmSupplierBooking,
+  createBookingPaymentLink,
   emailVoucher,
   recheckSupplierRate,
   refreshSupplierOffer,
+  resendPaymentLink,
 } from '@/lib/admin/supplier-booking-actions';
+import type { PaymentLinkRow } from '@/lib/payments/links-core';
+import CopyButton from '@/components/admin/CopyButton';
 
 function when(iso?: string | null) {
   if (!iso) return '';
@@ -21,7 +26,18 @@ function money(n: number | null | undefined, currency: string) {
  * specialist's controls on the request page. Everything here is a form
  * that posts to a server action; nothing books on page load.
  */
-export default function SupplierBookingPanel({ r, note }: { r: any; note?: string }) {
+export default function SupplierBookingPanel({
+  r,
+  note,
+  links = [],
+  paymentsConfigured = false,
+}: {
+  r: any;
+  note?: string;
+  /** Payment links raised against this request, newest first. */
+  links?: PaymentLinkRow[];
+  paymentsConfigured?: boolean;
+}) {
   const confirmed = Boolean(r.supplier_reference);
   const cancelled = Boolean(r.supplier_cancelled_at);
   const recheck = r.supplier_recheck ?? null;
@@ -124,14 +140,34 @@ export default function SupplierBookingPanel({ r, note }: { r: any; note?: strin
               <input type="checkbox" name="agreed" value="yes" required className="mt-1" />
               <span>
                 The customer has agreed the price of <strong>{money(r.amount, r.currency)}</strong>, the cancellation terms and the
-                rate comments, and payment is arranged.
+                rate comments.
               </span>
             </label>
 
+            {paymentsConfigured && (
+              <div className="mt-3 rounded-xl bg-sand p-4">
+                <label className="flex items-start gap-2 text-sm text-ink">
+                  <input type="checkbox" name="take_payment" value="yes" defaultChecked className="mt-1" />
+                  <span>
+                    Email a payment link for <strong>{money(r.amount, r.currency)}</strong> and hold the voucher until it is paid.
+                  </span>
+                </label>
+                <div className="mt-3 flex items-center gap-2">
+                  <label className="text-xs text-ink-soft" htmlFor="link-hours">Link valid for</label>
+                  <input id="link-hours" name="link_hours" type="number" min={1} max={168} defaultValue={72} className="field !w-24 !py-1.5" />
+                  <span className="text-xs text-ink-soft">hours</span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-ink-soft">
+                  Untick to take the money your own way — the voucher then goes out straight away, as it used to.
+                </p>
+              </div>
+            )}
+
             <button type="submit" className="btn-primary mt-4 !px-6">Confirm with Hotelbeds</button>
             <p className="mt-2 text-xs leading-relaxed text-ink-soft">
-              Books the rate key above with a 2% price tolerance, stores Hotelbeds’ reply on this request and emails the voucher
-              to {r.email}. In the live environment this is a real booking with real cancellation terms.
+              Books the rate key above with a 2% price tolerance and stores Hotelbeds’ reply on this request. In the live
+              environment this is a real booking with real cancellation terms, and those terms start now — before the
+              customer has paid.
             </p>
           </form>
         </>
@@ -170,6 +206,77 @@ export default function SupplierBookingPanel({ r, note }: { r: any; note?: strin
             {r.rate_comments && (
               <p className="mt-1 whitespace-pre-line text-xs leading-relaxed text-ink-soft">
                 <strong>On the voucher:</strong> {r.rate_comments}
+              </p>
+            )}
+          </div>
+
+          {/* Money. The voucher follows it, so this sits above the voucher. */}
+          <div className="rounded-xl border border-line p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-ink">Payment</p>
+              <span
+                className={`rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${
+                  r.paid_at ? 'bg-teal text-white' : 'bg-sand text-ink-soft'
+                }`}
+              >
+                {r.paid_at ? 'Paid' : 'Awaiting payment'}
+              </span>
+            </div>
+
+            {r.paid_at ? (
+              <p className="mt-2 text-sm text-ink-soft">
+                Paid {when(r.paid_at)}. The voucher went out automatically.
+              </p>
+            ) : links.length > 0 ? (
+              <div className="mt-3 space-y-3">
+                {links.map((l) => (
+                  <div key={l.id}>
+                    <p className="text-sm text-ink">
+                      {money(l.amount, l.currency)}
+                      <span className="ml-2 text-xs text-ink-soft">
+                        {l.invoiceId} · created {when(l.createdAt)}
+                        {l.expiresAt ? ` · valid until ${when(l.expiresAt)}` : ''}
+                      </span>
+                    </p>
+                    <p className="mt-1 break-all font-mono text-[10px] leading-relaxed text-ink-soft">{l.url}</p>
+                    <div className="mt-2 flex flex-wrap items-center gap-3">
+                      <CopyButton text={l.url} className="text-xs font-bold text-teal-deep hover:underline" />
+                      <form action={resendPaymentLink}>
+                        <input type="hidden" name="id" value={r.id} />
+                        <input type="hidden" name="link_id" value={l.id} />
+                        <button type="submit" className="text-xs font-bold text-teal-deep hover:underline">Email it again</button>
+                      </form>
+                      <form action={checkBookingPayment}>
+                        <input type="hidden" name="id" value={r.id} />
+                        <input type="hidden" name="link_id" value={l.id} />
+                        <button type="submit" className="text-xs font-bold text-teal-deep hover:underline">Check with the gateway</button>
+                      </form>
+                      <span className="text-xs text-ink-soft">
+                        {l.lastCheckedAt ? `Last checked ${when(l.lastCheckedAt)}` : 'Not checked yet'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                <p className="text-xs leading-relaxed text-ink-soft">
+                  The voucher sends itself the moment the gateway confirms this. Nothing a customer sends us can mark it
+                  paid — only the gateway’s own answer does.
+                </p>
+              </div>
+            ) : paymentsConfigured ? (
+              <form action={createBookingPaymentLink} className="mt-3">
+                <input type="hidden" name="id" value={r.id} />
+                <p className="text-sm text-ink-soft">
+                  No payment link yet. Create one for {money(r.amount, r.currency)} and we will email it to {r.email}.
+                </p>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <input name="link_hours" type="number" min={1} max={168} defaultValue={72} className="field !w-24 !py-1.5" />
+                  <span className="text-xs text-ink-soft">hours valid</span>
+                  <button type="submit" className="btn-outline !px-4 !py-2 text-xs">Create and email a payment link</button>
+                </div>
+              </form>
+            ) : (
+              <p className="mt-2 text-sm text-ink-soft">
+                The payment gateway is not configured here, so payment is arranged with the customer directly.
               </p>
             )}
           </div>
@@ -217,3 +324,5 @@ export default function SupplierBookingPanel({ r, note }: { r: any; note?: strin
     </div>
   );
 }
+
+/** Copy a payment link without leaving the request. */

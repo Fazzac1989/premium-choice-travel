@@ -5,6 +5,8 @@ import { requireRequestsStaff } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
 import { getTravellers, passportWarning } from '@/lib/travellers';
 import SupplierBookingPanel from '@/components/admin/SupplierBookingPanel';
+import { listLinksForBooking } from '@/lib/payments/links-core';
+import { mswipeConfigured } from '@/lib/payments/mswipe';
 
 export const dynamic = 'force-dynamic';
 // A Hotelbeds confirmation is allowed to take up to a minute; give the
@@ -128,7 +130,12 @@ export default async function AdminRequestPage({
             </button>
           </form>
 
-          <SupplierBookingPanel r={r} note={searchParams.note} />
+          <SupplierBookingPanel
+            r={r}
+            note={searchParams.note}
+            links={await listLinksForBooking(db, r.id)}
+            paymentsConfigured={mswipeConfigured()}
+          />
         </div>
 
         <aside className="space-y-6">

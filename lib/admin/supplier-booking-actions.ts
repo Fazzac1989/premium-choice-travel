@@ -18,6 +18,8 @@ import {
 } from '@/lib/rates/supplier-booking';
 import type { SupplierPax } from '@/lib/rates/hotelbeds';
 import type { RoomOffer } from '@/lib/rates/types';
+import { createLinkForBooking, emailPaymentRequest, listLinksForBooking, verifyLink } from '@/lib/payments/links-core';
+import { mswipeConfigured } from '@/lib/payments/mswipe';
 
 /**
  * The specialist's half of a Hotelbeds booking, as server actions behind the
@@ -37,11 +39,11 @@ function back(id: number, note: string): never {
 }
 
 async function guarded(formData: FormData) {
-  await requireRequestsStaff();
+  const staff = await requireRequestsStaff();
   const id = Number(formData.get('id'));
   const db = createAdminClient();
   const row = id ? await loadRequest(db, id) : null;
-  return { id, db, row };
+  return { id, db, row, staff };
 }
 
 function sameRoom(a: string, b: string) {
@@ -148,14 +150,26 @@ function paxesFrom(formData: FormData, row: any, holder: { name: string; surname
   return paxes;
 }
 
-/** POST the booking to Hotelbeds, store the reply, send the voucher. */
+function siteUrl() {
+  return process.env.NEXT_PUBLIC_SITE_URL ?? 'https://premiumchoicetravel.com';
+}
+
+/**
+ * Book with Hotelbeds, then ask the customer for the money.
+ *
+ * When a payment link is being sent, the voucher is deliberately held back:
+ * it goes out by itself the moment the gateway confirms the payment. A
+ * specialist taking the money another way unticks the box and the voucher
+ * goes immediately, exactly as it used to.
+ */
 export async function confirmSupplierBooking(formData: FormData) {
-  const { id, db, row } = await guarded(formData);
+  const { id, db, row, staff } = await guarded(formData);
   if (!row) return;
   const blocked = bookingBlocker(row, activeProvider()?.name ?? null);
   if (blocked) back(id, blocked);
   if (String(formData.get('agreed')) !== 'yes') back(id, 'Tick the box to say the customer has agreed the price and terms.');
 
+  const takePayment = String(formData.get('take_payment')) === 'yes' && mswipeConfigured();
   const holder = {
     name: String(formData.get('holder_name') ?? '').trim(),
     surname: String(formData.get('holder_surname') ?? '').trim(),
@@ -164,8 +178,79 @@ export async function confirmSupplierBooking(formData: FormData) {
     holder,
     paxes: paxesFrom(formData, row, holder),
     remark: String(formData.get('remark') ?? '').trim(),
+    skipVoucher: takePayment,
   });
-  back(id, out.note);
+  if (!out.ok || !takePayment) back(id, out.note);
+
+  // Booked. Now ask for the money; the voucher follows it.
+  const fresh = await loadRequest(db, id);
+  const link = await createLinkForBooking(db, {
+    request: fresh,
+    createdBy: staff.email,
+    siteUrl: siteUrl(),
+    validityMinutes: Number(formData.get('link_hours')) * 60 || 72 * 60,
+  });
+  if (!link.ok) {
+    // The stay is booked. Whatever went wrong with the link, the customer
+    // must not be left without a voucher, so it goes out now.
+    const sent = await emailVoucherFor(db, fresh);
+    back(
+      id,
+      `${out.note} No payment link: ${link.error} ` +
+        (sent.ok
+          ? `The voucher was emailed to ${fresh.email} instead — take the money your own way.`
+          : `The voucher could not be emailed either (${sent.error}) — send it from below.`),
+    );
+  }
+  const mail = await emailPaymentRequest(fresh, link.link);
+  back(
+    id,
+    `${out.note} Payment link for ${money(link.link.amount, 'AED')} created` +
+      (mail.ok ? ` and emailed to ${fresh.email}.` : ` but NOT emailed (${mail.error}) — copy it from below.`) +
+      ' The voucher sends itself once the payment clears.',
+  );
+}
+
+/** Create a fresh link — the first one expired, or none was made at booking. */
+export async function createBookingPaymentLink(formData: FormData) {
+  const { id, db, row, staff } = await guarded(formData);
+  if (!row) return;
+  if (!mswipeConfigured()) back(id, 'The payment gateway is not configured on this deployment — see docs/mswipe.md.');
+  if (row.paid_at) back(id, 'This booking is already paid.');
+
+  const link = await createLinkForBooking(db, {
+    request: row,
+    createdBy: staff.email,
+    siteUrl: siteUrl(),
+    validityMinutes: Number(formData.get('link_hours')) * 60 || 72 * 60,
+  });
+  if (!link.ok) back(id, link.error);
+  const mail = await emailPaymentRequest(row, link.link);
+  back(
+    id,
+    `Payment link for ${money(link.link.amount, 'AED')} created` +
+      (mail.ok ? ` and emailed to ${row.email}.` : ` but NOT emailed (${mail.error}) — copy it from below.`),
+  );
+}
+
+/** Send the customer the link again, unchanged. */
+export async function resendPaymentLink(formData: FormData) {
+  const { id, db, row } = await guarded(formData);
+  if (!row) return;
+  const links = await listLinksForBooking(db, id);
+  const link = links.find((l) => String(l.id) === String(formData.get('link_id'))) ?? links[0];
+  if (!link) back(id, 'There is no payment link on this request yet.');
+  const mail = await emailPaymentRequest(row, link);
+  back(id, mail.ok ? `Payment link emailed to ${row.email} again.` : `Not emailed: ${mail.error}`);
+}
+
+/** Ask the gateway whether it has been paid, and send the voucher if it has. */
+export async function checkBookingPayment(formData: FormData) {
+  const { id, db } = await guarded(formData);
+  const linkId = Number(formData.get('link_id'));
+  if (!Number.isFinite(linkId)) back(id, 'Nothing to check.');
+  const result = await verifyLink(db, linkId);
+  back(id, result.detail);
 }
 
 /** Re-send the voucher (after a correction, or because the customer lost it). */

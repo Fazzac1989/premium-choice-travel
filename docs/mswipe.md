@@ -31,9 +31,12 @@ not configured. Nothing else changes.
 
 ## 2. Database
 
-Paste `supabase/migrations/020-payment-links.sql` into the Supabase SQL
-editor (it is also at the end of `RUN-ME.sql`). It adds one table,
-`payment_links`. Until it is run, the panel cannot save a link and says so.
+Paste `supabase/migrations/020-payment-links.sql` and then
+`supabase/migrations/021-booking-payment-links.sql` into the Supabase SQL
+editor (both are also at the end of `RUN-ME.sql`). The first adds the
+`payment_links` table; the second lets a link belong to a booking request and
+records when that booking was paid. Until they are run the admin panels say
+what is missing rather than failing silently.
 
 ## 3. Prove it works
 
@@ -44,7 +47,38 @@ npx tsx scripts/mswipe-check.ts --link 10.00
 Logs in, creates a real test link on the gateway and prints it, plus the
 command to check its status later. Nothing is written to the database.
 
-## Using it
+## A Staycations hotel booking, end to end
+
+For a hotel booked through Hotelbeds the money and the voucher are tied
+together, and the app does the joining up:
+
+1. The customer picks a room in the Staycations app and sends a request.
+2. It arrives in **Admin -> Booking requests**.
+3. The specialist fills in the guest names and presses **Confirm with
+   Hotelbeds**. The box above the button, ticked by default, says to email a
+   payment link and hold the voucher until it is paid.
+4. The stay is booked with the hotel. The customer is emailed a payment link
+   for the full selling price in dirhams. **No voucher yet.**
+5. The link, its amount and its state are shown on the request page. It can be
+   copied, re-sent, or checked against the gateway from there.
+6. When the payment clears, the request is marked paid and **the voucher is
+   emailed automatically**, with the PDF attached as always.
+
+Untick the box to take the money another way; the voucher then goes out the
+moment the booking is confirmed, exactly as it did before. If the link cannot
+be created at all, the voucher is sent immediately rather than leaving a
+paying customer with nothing in their inbox.
+
+**Know this before you use it.** The stay is booked with the hotel before the
+money arrives, so its cancellation terms start at confirmation, not at
+payment. On a non-refundable rate an unpaid link is our exposure. Give the
+link a short validity on those, and watch the payment state on the request.
+
+This flow needs `supabase/migrations/021-booking-payment-links.sql`, which
+ties a payment link to a booking request. Until it is run, confirming falls
+back to the old behaviour and says so on the page.
+
+## Taking payment on a quote
 
 Open a quote in the admin. Under the payment schedule there is a **Payment
 link** panel:
@@ -108,8 +142,10 @@ live domain. Ask them to rotate the UAT password at the same time.
 | Piece | File |
 |---|---|
 | Gateway adapter | `lib/payments/mswipe.ts` |
-| Links, verification, marking instalments paid | `lib/payments/links.ts` |
-| Admin actions | `lib/admin/payment-link-actions.ts` |
-| Admin panel | `components/admin/PaymentLinks.tsx` |
+| Links, verification, marking instalments paid, sending the voucher on payment | `lib/payments/links-core.ts` (wrapped by `links.ts`) |
+| Quote admin actions | `lib/admin/payment-link-actions.ts` |
+| Quote admin panel | `components/admin/PaymentLinks.tsx` |
+| Booking confirm, link and voucher orchestration | `lib/admin/supplier-booking-actions.ts` |
+| Booking request panel | `components/admin/SupplierBookingPanel.tsx` |
 | Callback | `app/api/payments/mswipe/callback/route.ts` |
 | Connectivity check | `scripts/mswipe-check.ts` |

@@ -123,11 +123,22 @@ The site never books on its own. A customer's request lands in
    (optional), children's ages (mandatory), a remark for the hotel, and a
    box confirming the customer has agreed price, terms and rate comments.
    Books with a 2% price tolerance, stores Hotelbeds' full reply on the
-   request, sets the request to *confirmed* and emails the voucher (PDF) to
-   the customer with a copy to `ENQUIRY_NOTIFY_EMAIL`.
-4. After confirmation: **Download voucher**, **Email voucher to customer**
-   (re-send), and **Cancel with Hotelbeds** behind a tick box. Cancelling
-   stores the supplier's reported charge and closes the request.
+   request and sets the request to *confirmed*.
+4. What happens next depends on one tick box on that same form, **email a
+   payment link and send the voucher when it is paid**:
+   - Ticked (the default, when the gateway is configured): the customer is
+     emailed a link to pay the selling price, and the voucher is held. The
+     moment the payment clears, the voucher (PDF) is emailed to them with a
+     copy to `ENQUIRY_NOTIFY_EMAIL`. See `docs/mswipe.md`.
+   - Unticked, or no gateway configured: the voucher is emailed straight
+     away, as it always was, and the money is taken some other way.
+5. After confirmation: **Download voucher**, **Email voucher to customer**
+   (re-send), the payment panel (copy the link, re-send it, ask the gateway
+   whether it is paid), and **Cancel with Hotelbeds** behind a tick box.
+   Cancelling stores the supplier's reported charge and closes the request.
+
+Note the ordering: the room is held with the hotel before the money arrives,
+so the cancellation deadline runs from confirmation, not from payment.
 
 Requires migration `supabase/migrations/018-supplier-bookings.sql` (also in
 `RUN-ME.sql`). Until it is pasted, the panel's actions stop with a message
