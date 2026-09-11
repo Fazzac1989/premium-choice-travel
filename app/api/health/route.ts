@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { activeProvider } from '@/lib/rates';
-import { mswipeConfig } from '@/lib/payments/mswipe';
+import { paymentGateway } from '@/lib/payments/gateway';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,8 +17,8 @@ export async function GET() {
     hotelbeds: Boolean(process.env.HOTELBEDS_API_KEY && process.env.HOTELBEDS_SECRET),
     hotelbedsEnv: process.env.HOTELBEDS_ENV === 'live' ? 'live' : 'test',
     ratesProvider: activeProvider()?.name ?? null,
-    mswipe: Boolean(mswipeConfig()),
-    mswipeEnv: mswipeConfig()?.env ?? null,
+    paymentGateway: paymentGateway()?.name ?? null,
+    paymentGatewayEnv: paymentGateway()?.env ?? null,
     pcstSiteUrl: Boolean(process.env.PCST_SITE_URL),
     pcstRevalidateSecret: Boolean(process.env.PCST_REVALIDATE_SECRET),
     ratesPreviewKey: Boolean(process.env.RATES_PREVIEW_KEY),

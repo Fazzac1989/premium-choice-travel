@@ -1,5 +1,12 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { checkPaymentStatus, createPaymentLink, mswipeConfig } from './mswipe';
+import {
+  NO_GATEWAY,
+  checkPaymentStatus,
+  createPaymentLink,
+  paymentCallbackPath,
+  paymentGateway,
+  paymentMethodLabel,
+} from './gateway';
 import { emailVoucherFor } from '@/lib/rates/supplier-booking';
 import { emailShell, sendEmail } from '@/lib/email-core';
 import { emailBrand } from '@/lib/email-brand-core';
@@ -9,7 +16,7 @@ import { emailBrand } from '@/lib/email-brand-core';
  *
  * A link is a request for money. It becomes a payment only when the gateway
  * tells us so in an answer we asked for — never because something posted to
- * our callback saying it did. Mswipe's callback carries no signature, so it
+ * our callback saying it did. A gateway callback carries no signature, so it
  * is a prompt to go and check, nothing more.
  *
  * The database client is passed in rather than imported, so the admin actions
@@ -28,7 +35,7 @@ export type PaymentLinkRow = {
   customerEmail: string;
   customerMobile: string;
   txnId: string;
-  encryptedId: string;
+  statusId: string;
   url: string;
   expiresAt: string;
   status: string;
@@ -52,7 +59,7 @@ export function map(row: any): PaymentLinkRow {
     customerEmail: row.customer_email ?? '',
     customerMobile: row.customer_mobile ?? '',
     txnId: row.txn_id ?? '',
-    encryptedId: row.encrypted_id ?? '',
+    statusId: row.encrypted_id ?? '',
     url: row.url ?? '',
     expiresAt: row.expires_at ?? '',
     status: row.status ?? 'created',
@@ -112,16 +119,16 @@ export async function createLinkForQuote(
   db: SupabaseClient,
   input: CreateLinkInput,
 ): Promise<{ ok: true; link: PaymentLinkRow } | { ok: false; error: string }> {
-  const cfg = mswipeConfig();
-  if (!cfg) return { ok: false, error: 'Mswipe is not configured on this deployment — see docs/mswipe.md.' };
+  const gateway = paymentGateway();
+  if (!gateway) return { ok: false, error: NO_GATEWAY };
   if (!(input.amount > 0)) return { ok: false, error: 'Enter an amount above zero.' };
   if (!input.customerEmail && !input.customerMobile) {
     return { ok: false, error: 'The gateway needs an email address or a mobile number to send the link to.' };
   }
-  // The gateway prices in dirhams; a quote in another currency would be paid
-  // at a number we never agreed.
-  if ((input.currency || 'AED').toUpperCase() !== 'AED') {
-    return { ok: false, error: `This gateway settles in AED, and the quote is in ${input.currency}. Take this one by transfer.` };
+  // A quote in a currency the gateway does not settle would be paid at a
+  // number nobody agreed.
+  if ((input.currency || gateway.currency).toUpperCase() !== gateway.currency) {
+    return { ok: false, error: `This gateway settles in ${gateway.currency}, and the quote is in ${input.currency}. Take this one by transfer.` };
   }
 
   const invoiceId = invoiceIdFor(`Q${input.quoteId}`);
@@ -133,12 +140,12 @@ export async function createLinkForQuote(
       amount: input.amount,
       customerEmail: input.customerEmail,
       customerMobile: input.customerMobile,
-      callbackUrl: `${input.siteUrl.replace(/\/+$/, '')}/api/payments/mswipe/callback`,
+      callbackUrl: `${input.siteUrl.replace(/\/+$/, '')}${paymentCallbackPath(gateway)}`,
       notes: ['Premium Choice Travel', input.quoteRef, input.customerName.slice(0, 40), ''],
       validityMinutes: input.validityMinutes,
     });
   } catch (e: any) {
-    console.error('[mswipe link]', e?.message ?? e);
+    console.error('[payment link]', e?.message ?? e);
     return { ok: false, error: `The gateway refused: ${String(e?.message ?? e).slice(0, 200)}` };
   }
 
@@ -150,12 +157,12 @@ export async function createLinkForQuote(
       payment_id: input.paymentId,
       invoice_id: invoiceId,
       amount: input.amount,
-      currency: 'AED',
+      currency: gateway.currency,
       customer_name: input.customerName || null,
       customer_email: input.customerEmail || null,
       customer_mobile: input.customerMobile || null,
       txn_id: link.txnId,
-      encrypted_id: link.encryptedId,
+      encrypted_id: link.statusId,
       url: link.url,
       expires_at: link.expiresAt,
       created_by: input.createdBy,
@@ -167,7 +174,7 @@ export async function createLinkForQuote(
   if (error) {
     // The link exists at the gateway; losing our record of it is the worse
     // failure, so say exactly what happened rather than pretending it failed.
-    console.error('[mswipe link store]', error.message);
+    console.error('[payment link store]', error.message);
     return {
       ok: false,
       error: needsMigration(error.message)
@@ -191,13 +198,13 @@ export async function createLinkForBooking(
   input: { request: any; createdBy: string; siteUrl: string; validityMinutes?: number },
 ): Promise<{ ok: true; link: PaymentLinkRow } | { ok: false; error: string }> {
   const r = input.request;
-  const cfg = mswipeConfig();
-  if (!cfg) return { ok: false, error: 'Mswipe is not configured on this deployment.' };
+  const gateway = paymentGateway();
+  if (!gateway) return { ok: false, error: NO_GATEWAY };
 
   const amount = Number(r.amount);
   if (!(amount > 0)) return { ok: false, error: 'This request carries no amount to charge.' };
-  if (String(r.currency ?? 'AED').toUpperCase() !== 'AED') {
-    return { ok: false, error: `The gateway settles in AED and this request is in ${r.currency}. Take it by transfer.` };
+  if (String(r.currency ?? gateway.currency).toUpperCase() !== gateway.currency) {
+    return { ok: false, error: `The gateway settles in ${gateway.currency} and this request is in ${r.currency}. Take it by transfer.` };
   }
   if (!r.email && !r.phone) return { ok: false, error: 'The customer has no email address or mobile number on this request.' };
 
@@ -209,12 +216,12 @@ export async function createLinkForBooking(
       amount,
       customerEmail: r.email ?? '',
       customerMobile: r.phone ?? '',
-      callbackUrl: `${input.siteUrl.replace(/\/+$/, '')}/api/payments/mswipe/callback`,
+      callbackUrl: `${input.siteUrl.replace(/\/+$/, '')}${paymentCallbackPath(gateway)}`,
       notes: ['Premium Choice Staycations', String(r.hotel_name ?? '').slice(0, 40), `PCS-${r.id}`, ''],
       validityMinutes: input.validityMinutes,
     });
   } catch (e: any) {
-    console.error('[mswipe booking link]', e?.message ?? e);
+    console.error('[payment booking link]', e?.message ?? e);
     return { ok: false, error: `The gateway refused: ${String(e?.message ?? e).slice(0, 200)}` };
   }
 
@@ -225,12 +232,12 @@ export async function createLinkForBooking(
       booking_request_id: r.id,
       invoice_id: invoiceId,
       amount,
-      currency: 'AED',
+      currency: gateway.currency,
       customer_name: [r.holder_name, r.holder_surname].filter(Boolean).join(' ') || r.name || null,
       customer_email: r.email || null,
       customer_mobile: r.phone || null,
       txn_id: link.txnId,
-      encrypted_id: link.encryptedId,
+      encrypted_id: link.statusId,
       url: link.url,
       expires_at: link.expiresAt,
       created_by: input.createdBy,
@@ -240,7 +247,7 @@ export async function createLinkForBooking(
     .single();
 
   if (error) {
-    console.error('[mswipe booking link store]', error.message);
+    console.error('[payment booking link store]', error.message);
     return {
       ok: false,
       error: needsMigration(error.message) || /booking_request_id/.test(error.message)
@@ -299,7 +306,7 @@ export async function verifyLink(db: SupabaseClient, id: number): Promise<{ ok: 
   try {
     status = await checkPaymentStatus(row.encrypted_id);
   } catch (e: any) {
-    console.error('[mswipe verify]', e?.message ?? e);
+    console.error('[payment verify]', e?.message ?? e);
     await db.from('payment_links').update({ last_checked_at: new Date().toISOString() }).eq('id', id);
     return { ok: false, status: row.status, detail: `Could not reach the gateway: ${String(e?.message ?? e).slice(0, 160)}` };
   }
@@ -323,7 +330,7 @@ export async function verifyLink(db: SupabaseClient, id: number): Promise<{ ok: 
         .from('quote_payments')
         .update({
           paid_at: now,
-          method: 'Card (Mswipe)',
+          method: paymentMethodLabel(paymentGateway()),
           reference: row.gateway_payment_id || row.txn_id || row.invoice_id,
         })
         .eq('id', row.payment_id);

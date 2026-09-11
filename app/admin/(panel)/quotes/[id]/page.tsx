@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getQuoteById, quoteTotal } from '@/lib/quotes';
 import { getPayments, summarise } from '@/lib/payments';
 import { listPaymentLinks } from '@/lib/payments/links';
-import { mswipeConfig } from '@/lib/payments/mswipe';
+import { paymentGateway } from '@/lib/payments/gateway';
 import QuoteEditor from '@/components/admin/QuoteEditor';
 import PaymentSchedule from '@/components/admin/PaymentSchedule';
 import PaymentLinks from '@/components/admin/PaymentLinks';
@@ -20,7 +20,7 @@ export default async function EditQuotePage({ params }: { params: { id: string }
   const payments = await getPayments(id);
   const total = quoteTotal(quote.lines);
   const links = await listPaymentLinks(id);
-  const gateway = mswipeConfig();
+  const gateway = paymentGateway();
 
   // The schedule is its own form: saving one must not depend on the other
   // being valid, and a specialist recording a received deposit should not have

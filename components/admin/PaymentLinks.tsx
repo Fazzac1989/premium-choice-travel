@@ -75,7 +75,7 @@ export default function PaymentLinks({
   currency: string;
   /** False when the gateway credentials are not set on this deployment. */
   configured: boolean;
-  environment: 'uat' | 'live' | null;
+  environment: string | null;
   links: PaymentLinkRow[];
   /** Unpaid instalments, so a link can be tied to one. */
   payments: Payment[];
@@ -96,7 +96,7 @@ export default function PaymentLinks({
             the gateway confirms it.
           </p>
         </div>
-        {environment === 'uat' && (
+        {environment && environment !== 'live' && (
           <span className="rounded-full bg-amber-100 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-800">
             Test gateway
           </span>
@@ -105,8 +105,8 @@ export default function PaymentLinks({
 
       {!configured ? (
         <p className="mt-4 rounded-lg bg-sand px-4 py-3 text-sm text-ink-soft">
-          The gateway is not configured on this deployment. Add the Mswipe credentials in Vercel — see{' '}
-          <code className="font-mono text-xs">docs/mswipe.md</code>.
+          No payment gateway is configured on this deployment, so links cannot be created. See{' '}
+          <code className="font-mono text-xs">docs/payments.md</code>. Take the money another way for now.
         </p>
       ) : (
         <form action={formAction} className="mt-5">
@@ -241,8 +241,8 @@ export default function PaymentLinks({
           </ul>
           <p className="mt-3 text-xs leading-relaxed text-ink-soft">
             Paid links mark their instalment on the schedule above. If a customer says they have paid and the status
-            here still says otherwise, use “Check with the gateway” — that asks Mswipe directly rather than trusting
-            anything sent to us.
+            here still says otherwise, use “Check with the gateway” — that asks the provider directly rather than
+            trusting anything sent to us.
           </p>
         </div>
       )}

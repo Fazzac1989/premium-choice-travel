@@ -1,14 +1,14 @@
--- Migration 020 — Mswipe pay-by-link.
+-- Migration 020 — pay by link.
 --
 -- A specialist generates a link for an amount owed; the customer pays on the
--- gateway's own hosted page. No card detail ever reaches this application,
--- and nothing here can charge anyone: a row is a request for money, and the
--- money is only recorded once the gateway itself confirms it.
+-- payment provider's own hosted page. No card detail ever reaches this
+-- application, and nothing here can charge anyone: a row is a request for
+-- money, and the money is only recorded once the provider itself confirms it.
 --
--- The callback Mswipe posts carries no signature, so it is treated as a
--- prompt, never as proof. On a callback we look the row up by our own
--- invoice id and then ask the gateway, with our own credentials, whether it
--- was really paid. `verified_at` is only set by that second answer.
+-- A provider's callback carries no signature, so it is treated as a prompt,
+-- never as proof. On a callback we look the row up by our own invoice id and
+-- then ask the provider, with our own credentials, whether it was really
+-- paid. `verified_at` is only set by that second answer.
 --
 -- Run in the Supabase SQL editor. Safe to re-run.
 

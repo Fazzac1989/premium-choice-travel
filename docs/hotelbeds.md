@@ -129,7 +129,7 @@ The site never books on its own. A customer's request lands in
    - Ticked (the default, when the gateway is configured): the customer is
      emailed a link to pay the selling price, and the voucher is held. The
      moment the payment clears, the voucher (PDF) is emailed to them with a
-     copy to `ENQUIRY_NOTIFY_EMAIL`. See `docs/mswipe.md`.
+     copy to `ENQUIRY_NOTIFY_EMAIL`. See `docs/payments.md`.
    - Unticked, or no gateway configured: the voucher is emailed straight
      away, as it always was, and the money is taken some other way.
 5. After confirmation: **Download voucher**, **Email voucher to customer**

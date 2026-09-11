@@ -19,7 +19,7 @@ import {
 import type { SupplierPax } from '@/lib/rates/hotelbeds';
 import type { RoomOffer } from '@/lib/rates/types';
 import { createLinkForBooking, emailPaymentRequest, listLinksForBooking, verifyLink } from '@/lib/payments/links-core';
-import { mswipeConfigured } from '@/lib/payments/mswipe';
+import { NO_GATEWAY, paymentsConfigured } from '@/lib/payments/gateway';
 
 /**
  * The specialist's half of a Hotelbeds booking, as server actions behind the
@@ -169,7 +169,7 @@ export async function confirmSupplierBooking(formData: FormData) {
   if (blocked) back(id, blocked);
   if (String(formData.get('agreed')) !== 'yes') back(id, 'Tick the box to say the customer has agreed the price and terms.');
 
-  const takePayment = String(formData.get('take_payment')) === 'yes' && mswipeConfigured();
+  const takePayment = String(formData.get('take_payment')) === 'yes' && paymentsConfigured();
   const holder = {
     name: String(formData.get('holder_name') ?? '').trim(),
     surname: String(formData.get('holder_surname') ?? '').trim(),
@@ -205,7 +205,7 @@ export async function confirmSupplierBooking(formData: FormData) {
   const mail = await emailPaymentRequest(fresh, link.link);
   back(
     id,
-    `${out.note} Payment link for ${money(link.link.amount, 'AED')} created` +
+    `${out.note} Payment link for ${money(link.link.amount, link.link.currency)} created` +
       (mail.ok ? ` and emailed to ${fresh.email}.` : ` but NOT emailed (${mail.error}) — copy it from below.`) +
       ' The voucher sends itself once the payment clears.',
   );
@@ -215,7 +215,7 @@ export async function confirmSupplierBooking(formData: FormData) {
 export async function createBookingPaymentLink(formData: FormData) {
   const { id, db, row, staff } = await guarded(formData);
   if (!row) return;
-  if (!mswipeConfigured()) back(id, 'The payment gateway is not configured on this deployment — see docs/mswipe.md.');
+  if (!paymentsConfigured()) back(id, NO_GATEWAY);
   if (row.paid_at) back(id, 'This booking is already paid.');
 
   const link = await createLinkForBooking(db, {
@@ -228,7 +228,7 @@ export async function createBookingPaymentLink(formData: FormData) {
   const mail = await emailPaymentRequest(row, link.link);
   back(
     id,
-    `Payment link for ${money(link.link.amount, 'AED')} created` +
+    `Payment link for ${money(link.link.amount, link.link.currency)} created` +
       (mail.ok ? ` and emailed to ${row.email}.` : ` but NOT emailed (${mail.error}) — copy it from below.`),
   );
 }

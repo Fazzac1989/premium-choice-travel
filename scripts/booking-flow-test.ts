@@ -1,6 +1,8 @@
 /**
  * End-to-end test of the Staycations booking flow, against the live database,
- * the Hotelbeds test environment and the Mswipe UAT gateway.
+ * the Hotelbeds test environment and whichever payment gateway is
+ * configured. With no gateway configured the payment steps are skipped and
+ * the voucher goes out at confirmation, which is the fallback behaviour.
  *
  *   npx tsx <this> --search              # availability only, no booking
  *   npx tsx <this> --book                # search, book, link, email
@@ -19,9 +21,9 @@ config({ path: '.env' });
 
 import { hotelbedsSearchMany, hotelbedsWithComments } from '../lib/rates/hotelbeds';
 import { convertOffers } from '../lib/rates/fx';
-import { cancelRequest, confirmRequest, loadRequest, money } from '../lib/rates/supplier-booking';
+import { cancelRequest, confirmRequest, emailVoucherFor, loadRequest, money } from '../lib/rates/supplier-booking';
 import { createLinkForBooking, emailPaymentRequest, listLinksForBooking, verifyLink } from '../lib/payments/links-core';
-import { mswipeConfig } from '../lib/payments/mswipe';
+import { paymentGateway } from '../lib/payments/gateway';
 
 const args = process.argv.slice(2);
 const has = (n: string) => args.includes(n);
@@ -92,7 +94,7 @@ async function doSearch() {
 
 async function doBook() {
   const { hotel, checkIn, offer } = await doSearch();
-  if (offer.currency !== 'AED') throw new Error(`Offer is in ${offer.currency}; the gateway only settles AED.`);
+  if (offer.currency !== 'AED') throw new Error(`Offer is in ${offer.currency}; this test expects the AED display currency.`);
 
   const fees = offer.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
   const { data: inserted, error } = await db
@@ -148,7 +150,16 @@ async function doBook() {
   if (fresh.voucher_sent_at) throw new Error('The voucher was sent despite skipVoucher - that is the bug this flow exists to avoid.');
   line('  voucher_sent_at is empty, as it should be.');
 
-  if (!mswipeConfig()) throw new Error('MSWIPE_* are not set in this shell - pass them inline.');
+  if (!paymentGateway()) {
+    line();
+    line('No payment gateway is configured, so there is no link to create.');
+    line('Sending the voucher instead, which is what the admin does in this case...');
+    const sent = await emailVoucherFor(db, fresh);
+    line(`  ${sent.ok ? `voucher emailed to ${fresh.email}` : `voucher NOT emailed: ${sent.error}`}`);
+    line();
+    line(`When finished:  --cancel ${inserted.id}`);
+    return;
+  }
   line();
   line('Creating the payment link...');
   const link = await createLinkForBooking(db, {
@@ -199,8 +210,8 @@ async function doCancel(id: number) {
 }
 
 async function main() {
-  const cfg = mswipeConfig();
-  line(`Mswipe: ${cfg ? `${cfg.env} (${cfg.baseUrl})` : 'not configured in this shell'}`);
+  const gateway = paymentGateway();
+  line(`Payment gateway: ${gateway ? `${gateway.label} (${gateway.env})` : 'none configured'}`);
   line(`Hotelbeds: ${process.env.HOTELBEDS_ENV ?? 'test'}`);
   line();
   if (has('--cancel')) return doCancel(Number(arg('--cancel')));
