@@ -285,6 +285,7 @@ function toOffers(hotel: any): RoomOffer[] {
 
 /** Exposed for tests: an availability `hotel` object → our offers. */
 export const hotelbedsOffersFromHotel = toOffers;
+export { withComments as hotelbedsWithComments };
 
 async function availability(query: RateQuery): Promise<any | null> {
   const json: any = await hotelbedsFetch('/hotel-api/1.0/hotels', {
@@ -331,7 +332,7 @@ export async function hotelbedsRateComments(commentsId: string, checkIn: string)
 }
 
 /** Fill `comments` for offers that only carry a handle — a few calls at most. */
-async function withComments(offers: RoomOffer[], checkIn: string): Promise<RoomOffer[]> {
+export async function withComments(offers: RoomOffer[], checkIn: string): Promise<RoomOffer[]> {
   const ids = Array.from(new Set(offers.filter((o) => !o.comments && o.commentsId).map((o) => o.commentsId!))).slice(0, 3);
   if (!ids.length) return offers;
   const resolved = new Map<string, string>();

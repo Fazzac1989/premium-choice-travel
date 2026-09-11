@@ -47,6 +47,17 @@ npx tsx scripts/mswipe-check.ts --link 10.00
 Logs in, creates a real test link on the gateway and prints it, plus the
 command to check its status later. Nothing is written to the database.
 
+For the whole booking flow rather than just the gateway:
+
+```bash
+npx tsx scripts/booking-flow-test.ts --search
+```
+
+`--search` only looks; `--book` runs the real thing end to end (a request
+row, a supplier booking, a payment link, the email), and prints `--check`
+and `--cancel` commands for afterwards. It calls the same functions the
+admin buttons call, so a pass there is a pass for the panel.
+
 ## A Staycations hotel booking, end to end
 
 For a hotel booked through Hotelbeds the money and the voucher are tied
