@@ -43,7 +43,14 @@ export async function generateMetadata({ params }: { params: { brand: string } }
       ? {
           manifest: '/manifest.webmanifest',
           appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Staycations' },
-          icons: { apple: '/images/pwa/apple-touch-icon.png' },
+          // Naming any icon here replaces the ones Next derives from
+          // app/icon.png, so the tab icon has to be named too or the site
+          // ends up with no favicon at all. It matches the installed app.
+          icons: {
+            icon: [{ url: '/images/pwa/icon-192.png', sizes: '192x192', type: 'image/png' }],
+            shortcut: ['/images/pwa/icon-192.png'],
+            apple: '/images/pwa/apple-touch-icon.png',
+          },
         }
       : {}),
   };

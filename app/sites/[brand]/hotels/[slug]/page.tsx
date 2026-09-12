@@ -142,10 +142,13 @@ export default async function StayPage({
         {/* The route for anyone we cannot price online: a real person. */}
         <section id="ask" className="mt-10 scroll-mt-20">
           <div className="rounded-[12px] bg-petrol-deep p-5 text-white lg:max-w-lg">
-            <h2 className="cc-h4 text-white">Ask about {hotel.name}</h2>
+            <h2 className="cc-h4 text-white">
+              {offers.length > 0 ? `Can't find what you are looking for at ${hotel.name}?` : `Ask about ${hotel.name}`}
+            </h2>
             <p className="mt-1 text-[14px] leading-[20px] text-white/70">
-              Send your dates and a specialist replies with what is available and what it costs — usually the same
-              working day.
+              {offers.length > 0
+                ? 'Another room type, a longer stay, more than one room, or a date that is not showing — send it over and a specialist replies with what is available and what it costs, usually the same working day.'
+                : 'Send your dates and a specialist replies with what is available and what it costs — usually the same working day.'}
             </p>
             <div className="mt-4">
               <AvailabilityCheck

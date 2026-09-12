@@ -115,7 +115,11 @@ export default function CoastalFooter({
       <div className="border-t border-white/10">
         <div className="cc-wrap flex items-center justify-between gap-4 py-5 text-[13px] text-white/50">
           <p>© {year} Premium Choice Travel JLT. All rights reserved.</p>
-          <p>Licensed UAE travel agency</p>
+          <p className="flex items-center gap-4">
+            <Link href="/terms" className="hover:text-white">Booking terms</Link>
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <span>Licensed UAE travel agency</span>
+          </p>
         </div>
       </div>
     </footer>

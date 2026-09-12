@@ -75,6 +75,11 @@ export default function BookingPage({
   const [problem, setProblem] = useState('');
   const [chosen, setChosen] = useState<PublicRoomOffer | null>(null);
   const [extras, setExtras] = useState<string[]>([]);
+  // Which rooms have their small print open. Several may be, so a customer
+  // can compare two rates' conditions side by side.
+  const [expanded, setExpanded] = useState<string[]>([]);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [marketingOptIn, setMarketingOptIn] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState('');
   const [guest, setGuest] = useState({
@@ -119,6 +124,9 @@ export default function BookingPage({
   checkOut.setUTCDate(checkOut.getUTCDate() + nights);
   const dates = `${stay.format(new Date(`${checkIn}T00:00:00Z`))} – ${stay.format(checkOut)}`;
 
+  const toggleExpanded = (id: string) =>
+    setExpanded((e) => (e.includes(id) ? e.filter((v) => v !== id) : [...e, id]));
+
   const toggleExtra = (x: string) =>
     setExtras((e) => (e.includes(x) ? e.filter((v) => v !== x) : [...e, x]));
 
@@ -126,6 +134,10 @@ export default function BookingPage({
     setError('');
     if (!chosen) {
       setError('Choose a room first.');
+      return;
+    }
+    if (!acceptedTerms) {
+      setError('Please tick the box to accept the booking terms and privacy notice.');
       return;
     }
     startTransition(async () => {
@@ -153,6 +165,8 @@ export default function BookingPage({
         channel: guest.channel,
         notes,
         travellerIds: chosenTravellers,
+        acceptedTerms,
+        marketingOptIn,
       });
       if (res.ok) setDone(res.message);
       else setError(res.message);
@@ -223,14 +237,26 @@ export default function BookingPage({
             <div className="mt-5 space-y-3">
               {offers.map((o) => {
                 const active = chosen?.offerId === o.offerId;
+                // Fees, promotions and the hotel's rate conditions can run to
+                // several paragraphs on every room. Left open, the page is a
+                // scroll to nowhere; the summary above keeps board, price and
+                // cancellation in plain sight either way, and the room you
+                // actually choose repeats its conditions next to the button.
+                const hasSmallPrint =
+                  o.extraFees.length > 0 || (o.promotions?.length ?? 0) > 0 || Boolean(o.comments);
+                const openSmallPrint = expanded.includes(o.offerId);
                 return (
-                  <button
+                  <div
                     key={o.offerId}
-                    type="button"
-                    onClick={() => setChosen(o)}
-                    className={`w-full rounded-2xl border p-5 text-left transition-colors ${
+                    className={`rounded-2xl border transition-colors ${
                       active ? 'border-teal bg-teal/5' : 'border-line hover:border-teal'
                     }`}
+                  >
+                  <button
+                    type="button"
+                    onClick={() => setChosen(o)}
+                    aria-pressed={active}
+                    className="w-full p-5 text-left"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
@@ -246,27 +272,6 @@ export default function BookingPage({
                           </span>
                           {o.refundable === true && o.cancelBy ? ` until ${o.cancelBy.slice(0, 10)}` : ''}
                         </p>
-                        {o.extraFees.length > 0 && (
-                          <p className="mt-1 text-xs text-ink-soft">
-                            Plus {o.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ')},
-                            paid at the hotel
-                          </p>
-                        )}
-                        {o.promotions && o.promotions.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1.5">
-                            {o.promotions.map((p) => (
-                              <span key={p} className="rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold text-teal-deep">
-                                {p}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        {o.comments && (
-                          <p className="mt-2 whitespace-pre-line text-xs leading-relaxed text-ink-soft">
-                            <span className="font-semibold text-ink">Please note: </span>
-                            {o.comments}
-                          </p>
-                        )}
                       </div>
                       <div className="shrink-0 text-right">
                         <p className="font-serif text-xl text-teal-deep">
@@ -278,6 +283,54 @@ export default function BookingPage({
                       </div>
                     </div>
                   </button>
+
+                  {hasSmallPrint && (
+                    <div className="border-t border-line px-5 py-3">
+                      <button
+                        type="button"
+                        onClick={() => toggleExpanded(o.offerId)}
+                        aria-expanded={openSmallPrint}
+                        className="flex w-full items-center justify-between gap-3 text-left text-xs font-semibold text-ink-soft hover:text-ink"
+                      >
+                        <span>
+                          {openSmallPrint ? 'Hide' : 'Show'} what is included and the rate conditions
+                        </span>
+                        <span aria-hidden="true" className={openSmallPrint ? 'rotate-180' : ''}>
+                          ⌄
+                        </span>
+                      </button>
+
+                      {openSmallPrint && (
+                        <div className="mt-3">
+                          {o.promotions && o.promotions.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5">
+                              {o.promotions.map((x) => (
+                                <span
+                                  key={x}
+                                  className="rounded-full bg-teal/10 px-2.5 py-1 text-[11px] font-semibold text-teal-deep"
+                                >
+                                  {x}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {o.extraFees.length > 0 && (
+                            <p className="mt-2 text-xs text-ink-soft">
+                              Plus {o.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ')},
+                              paid at the hotel.
+                            </p>
+                          )}
+                          {o.comments && (
+                            <p className="mt-2 whitespace-pre-line text-xs leading-relaxed text-ink-soft">
+                              <span className="font-semibold text-ink">Please note: </span>
+                              {o.comments}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  </div>
                 );
               })}
             </div>
@@ -436,19 +489,54 @@ export default function BookingPage({
                 />
               </div>
 
+              <div className="mt-5 space-y-3 border-t border-white/10 pt-4">
+                <label className="flex cursor-pointer items-start gap-2.5 text-[12px] leading-relaxed text-white/85">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-teal"
+                  />
+                  <span>
+                    I accept the{' '}
+                    <Link href="/terms" target="_blank" className="font-semibold text-white underline underline-offset-2">
+                      booking terms
+                    </Link>{' '}
+                    and the{' '}
+                    <Link href="/privacy" target="_blank" className="font-semibold text-white underline underline-offset-2">
+                      privacy notice
+                    </Link>
+                    . *
+                  </span>
+                </label>
+                <label className="flex cursor-pointer items-start gap-2.5 text-[12px] leading-relaxed text-white/70">
+                  <input
+                    type="checkbox"
+                    checked={marketingOptIn}
+                    onChange={(e) => setMarketingOptIn(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-teal"
+                  />
+                  <span>
+                    Email me Premium Choice offers now and then. Optional, and you can stop at any time.
+                  </span>
+                </label>
+              </div>
+
               {error && <p className="mt-3 text-sm text-red-300">{error}</p>}
 
               <button
                 type="button"
                 onClick={send}
-                disabled={pending || !chosen}
+                disabled={pending || !chosen || !acceptedTerms}
                 className="btn-primary mt-4 w-full disabled:opacity-50"
               >
                 {pending
                   ? 'Sending…'
-                  : chosen
-                    ? `Send request — ${chosen.currency} ${money(chosen.total)}`
-                    : 'Choose a room to continue'}
+                  : !chosen
+                    ? 'Choose a room to continue'
+                    : !acceptedTerms
+                      ? 'Accept the terms to continue'
+                      : `Send request — ${chosen.currency} ${money(chosen.total)}`}
               </button>
               <p className="mt-3 text-center text-[11px] leading-relaxed text-white/60">
                 This is a request, not a booking. No payment is taken here and no room is held

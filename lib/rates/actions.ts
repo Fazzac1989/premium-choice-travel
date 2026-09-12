@@ -127,11 +127,19 @@ export async function submitBookingRequest(payload: {
   channel: string;
   notes: string;
   travellerIds?: number[];
+  /** They ticked the box agreeing to the booking terms and privacy notice. */
+  acceptedTerms?: boolean;
+  /** Separate, optional, and never assumed from the tick above. */
+  marketingOptIn?: boolean;
 }): Promise<BookingRequestResult> {
   const name = payload.name.trim();
   const email = payload.email.trim();
   if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
+  // Checked on the server too: a tick box in a browser proves nothing.
+  if (!payload.acceptedTerms) {
+    return { ok: false, message: 'Please accept the booking terms and privacy notice to send your request.' };
+  }
   if (!ratesAllowed()) return { ok: false, message: 'Something went wrong — please call us.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Something went wrong — please call us.' };
 
@@ -177,6 +185,7 @@ export async function submitBookingRequest(payload: {
     ownTravellerIds = (mine ?? []).map((t: any) => t.id);
   }
 
+  const now = new Date().toISOString();
   const fees = offer.extraFees.map((f) => `${f.currency} ${f.amount} ${f.description}`).join(', ');
   const row: Record<string, unknown> = {
     hotel_id: hotel.id,
@@ -212,11 +221,24 @@ export async function submitBookingRequest(payload: {
     // children by age, and the comments must be on the voucher.
     children_ages: ages.length ? ages : null,
     rate_comments: offer.comments ?? null,
+    // What they agreed to, and when. Stored separately because they are
+    // separate decisions and only the first one is required.
+    terms_accepted_at: now,
+    marketing_opt_in: Boolean(payload.marketingOptIn),
+    marketing_opt_in_at: payload.marketingOptIn ? now : null,
   };
   let { error } = await db.from('booking_requests').insert(row);
   if (error && /column/i.test(error.message)) {
-    // Migration 018 not run yet — keep the request, lose only the two new fields.
-    const { children_ages: _a, rate_comments: _c, ...legacy } = row;
+    // A migration is not in yet — keep the request, lose only the newer
+    // fields. Never lose a customer's enquiry over a column.
+    const {
+      children_ages: _a,
+      rate_comments: _c,
+      terms_accepted_at: _t,
+      marketing_opt_in: _m,
+      marketing_opt_in_at: _mt,
+      ...legacy
+    } = row;
     ({ error } = await db.from('booking_requests').insert(legacy));
   }
   if (error) {
@@ -238,6 +260,7 @@ export async function submitBookingRequest(payload: {
     '',
     `${name} · ${email}${payload.phone.trim() ? ` · ${payload.phone.trim()}` : ''}`,
     `Reply by: ${payload.channel || 'any'}`,
+    payload.marketingOptIn ? 'Opted in to offers by email.' : 'Did not opt in to offers.',
     payload.notes.trim() ? `Notes: ${payload.notes.trim()}` : null,
     '',
     `Supplier offer id: ${offer.offerId}`,

@@ -72,7 +72,11 @@ export default function BrandFooter({
       <div className="border-t border-white/10">
         <div className="container-site flex flex-col items-center justify-between gap-2 py-5 text-xs text-white/50 sm:flex-row">
           <p>© {new Date().getFullYear()} Premium Choice Travel JLT. All rights reserved.</p>
-          <p>Licensed UAE travel agency</p>
+          <p className="flex flex-wrap items-center justify-center gap-4">
+            <Link href="/terms" className="hover:text-teal">Booking terms</Link>
+            <Link href="/privacy" className="hover:text-teal">Privacy</Link>
+            <span>Licensed UAE travel agency</span>
+          </p>
         </div>
       </div>
     </footer>

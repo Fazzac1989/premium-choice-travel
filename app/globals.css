@@ -168,6 +168,22 @@
   .coastal .bg-ink {
     @apply bg-petrol-deep;
   }
+  /* The accent above maps to petrol, which on the petrol panel this class
+     makes is all but invisible. Inside a dark panel it goes light instead. */
+  .coastal .bg-ink a.text-teal,
+  .coastal .bg-ink a.text-teal-deep {
+    @apply text-white underline decoration-white/40 underline-offset-2 hover:decoration-white;
+  }
+  .coastal .bg-ink .text-teal,
+  .coastal .bg-ink .text-teal-deep {
+    @apply text-mist;
+  }
+  .coastal .bg-ink .bg-teal {
+    @apply bg-petrol;
+  }
+  .coastal .bg-ink .border-teal {
+    @apply border-mist;
+  }
   .coastal .border-line {
     @apply border-sea-line;
   }
