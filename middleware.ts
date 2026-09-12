@@ -32,10 +32,17 @@ export async function middleware(request: NextRequest) {
     // master site: a Supabase session is a cookie, and cookies do not cross
     // domains. Sending someone to premiumchoicetravel.com to sign in would
     // leave them signed out on the brand site they were actually booking from.
+    // Staycations has its own account screens inside the app shell, so its
+    // /account paths are rewritten like the rest of the site. The other
+    // brands still fall through to the master-site versions.
+    //
+    // /auth is never rewritten on any host: the emailed link has to land on
+    // exactly the callback route Supabase was told about.
+    const ownAccountScreens = brand.slug === 'staycations';
     const passthrough =
       pathname.startsWith('/api') ||
       pathname.startsWith('/quotes') ||
-      pathname.startsWith('/account') ||
+      (!ownAccountScreens && pathname.startsWith('/account')) ||
       pathname.startsWith('/auth') ||
       pathname.startsWith('/sites') ||
       pathname.startsWith('/images') ||

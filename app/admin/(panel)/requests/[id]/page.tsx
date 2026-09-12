@@ -5,6 +5,8 @@ import { requireRequestsStaff } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
 import { getTravellers, passportWarning } from '@/lib/travellers';
 import SupplierBookingPanel from '@/components/admin/SupplierBookingPanel';
+import ChangeRequests from '@/components/admin/ChangeRequests';
+import { listChangeRequests } from '@/lib/admin/change-request-actions';
 import { listLinksForBooking } from '@/lib/payments/links-core';
 import { paymentsConfigured } from '@/lib/payments/gateway';
 
@@ -129,6 +131,10 @@ export default async function AdminRequestPage({
               Save
             </button>
           </form>
+
+          {/* What the customer has asked from their own trips page, above the
+              supplier panel so an unread cancellation cannot be missed. */}
+          <ChangeRequests id={r.id} rows={await listChangeRequests(db, r.id)} />
 
           <SupplierBookingPanel
             r={r}

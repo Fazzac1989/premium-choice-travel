@@ -2,12 +2,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Icon from '@/components/staycations/coastal/Icon';
 import LocalTrips from '@/components/staycations/coastal/LocalTrips';
+import TripActions from '@/components/staycations/coastal/TripActions';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getAccount, getAccountActivity } from '@/lib/account';
 import { badgeClass, tripStatus } from '@/lib/staycations/trip-status';
 import { boardLabel, roomLabel } from '@/lib/staycations/format';
 import { addDays, longDateLabel, todayInDubai, ymd } from '@/lib/staycations/search-criteria';
+import { cancellationStanding, changeRequestsFor, tripPayment, type ChangeRequest, type TripPayment } from '@/lib/trips/portal';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,10 +32,20 @@ export default async function TripsPage({ params }: { params: { brand: string } 
   const requests: any[] = activity?.bookings ?? [];
   const today = ymd(todayInDubai());
 
+  // Payment state and past messages for every stay, in two round trips rather
+  // than two per card.
+  const history = await changeRequestsFor(requests.map((r) => r.id));
+  const payments = new Map<number, TripPayment>(
+    await Promise.all(requests.map(async (r) => [r.id, await tripPayment(r)] as [number, TripPayment])),
+  );
+
   const upcoming = requests.filter((r) => !r.supplier_cancelled_at && r.check_in >= today);
   const past = requests.filter((r) => r.supplier_cancelled_at || r.check_in < today);
 
   const card = (r: any) => {
+    const payment = payments.get(r.id)!;
+    const standing = cancellationStanding(r);
+    const past: ChangeRequest[] = history.get(r.id) ?? [];
     const status = tripStatus(r);
     const out = addDays(r.check_in, Number(r.nights) || 1);
     const reference = r.supplier_reference || `PCS-${r.id}`;
@@ -103,22 +115,14 @@ export default async function TripsPage({ params }: { params: { brand: string } 
         {r.extra_fees && <p className="cc-support mt-3">Payable at the hotel: {r.extra_fees}.</p>}
         {r.rate_comments && <p className="cc-support mt-2 whitespace-pre-line">{r.rate_comments}</p>}
 
-        <p className="cc-support mt-3">
-          {r.supplier_reference
-            ? 'Payment is arranged with your specialist — nothing is charged through the app.'
-            : 'No payment has been taken. A specialist agrees the price with you before anything is booked.'}
-        </p>
-
-        <div className="mt-4 flex flex-wrap gap-2 border-t border-sea-line pt-4">
-          <Link href={`${base}/concierge?trip=${encodeURIComponent(reference)}`} className="cc-btn-quiet !min-h-[44px] !px-4 text-[15px]">
-            <Icon name="chat" size={17} />
-            Message us
-          </Link>
-          <a href="tel:+97144206965" className="cc-btn-quiet !min-h-[44px] !px-4 text-[15px]">
-            <Icon name="phone" size={17} />
-            Call
-          </a>
-        </div>
+        <TripActions
+          bookingId={r.id}
+          confirmed={Boolean(r.supplier_reference)}
+          cancelled={Boolean(r.supplier_cancelled_at)}
+          cancellationText={standing.text}
+          payment={payment}
+          history={past}
+        />
       </li>
     );
   };
@@ -126,12 +130,14 @@ export default async function TripsPage({ params }: { params: { brand: string } 
   return (
     <div className="cc-wrap py-6 lg:py-10">
       <h1 className="cc-h2">Trips</h1>
-      <p className="cc-body mt-1 text-sea-soft">Everything you have asked us for, and where it got to.</p>
+      <p className="cc-body mt-1 text-sea-soft">
+        Every stay you have with us: what it costs, what is confirmed, and everything you can do about it.
+      </p>
 
       {!account && (
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-[12px] bg-mist p-4">
           <p className="cc-body text-sea-ink">
-            Sign in to see quotes, confirmations and references for every stay — not just this device.
+            Sign in to open your stays: vouchers, payment, changes and cancellations, and a specialist to ask.
           </p>
           <Link href="/account/sign-in?next=/trips" className="cc-btn-primary !min-h-[44px] !px-5 text-[15px]">
             Sign in
