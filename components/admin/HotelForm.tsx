@@ -1,5 +1,7 @@
 'use client';
 
+import { COUNTRIES } from '@/lib/staycations/places';
+
 import { useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { deleteHotel, saveHotel, type StayActionState } from '@/lib/admin/stay-actions';
@@ -82,11 +84,18 @@ export default function HotelForm({
           </select>
         </div>
         <div>
-          <label className="field-label">Emirate (Staycations directory)</label>
-          <select name="emirate" className="field" defaultValue={hotel?.emirate ?? ''}>
-            <option value="">— not a UAE staycation hotel —</option>
-            {['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'].map((e) => (
-              <option key={e} value={e}>{e}</option>
+          <label className="field-label">Where (Staycations directory)</label>
+          {/* Country and region in one choice: picking a region is what puts
+              a hotel in the directory, and the country comes with it, so the
+              two can never disagree. */}
+          <select name="place" className="field" defaultValue={hotel?.emirate ?? ''}>
+            <option value="">— not a Staycations hotel —</option>
+            {COUNTRIES.map((c) => (
+              <optgroup key={c.code} label={c.name}>
+                {c.regions.map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </div>

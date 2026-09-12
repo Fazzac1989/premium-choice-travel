@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Icon from './Icon';
 import StaySearchForm from './StaySearchForm';
+import { anywhereLabel, type PlaceGroup } from '@/lib/staycations/places';
 import {
   criteriaQuery,
   dateRangeLabel,
@@ -22,6 +23,8 @@ import {
  */
 
 export type Facets = {
+  /** Regions with stays in them, grouped by country. */
+  places: PlaceGroup[];
   emirates: string[];
   bands: { band: number; label: string }[];
   meals: string[];
@@ -84,7 +87,7 @@ export default function ResultsControls({
 
       {open === 'search' && (
         <div className="rounded-[12px] border border-sea-line bg-shell p-3">
-          <StaySearchForm base={base} initial={criteria} variant="sheet" onDone={() => setOpen(null)} />
+          <StaySearchForm base={base} initial={criteria} places={facets.places} variant="sheet" onDone={() => setOpen(null)} />
         </div>
       )}
 
@@ -126,11 +129,20 @@ export default function ResultsControls({
       {open === 'filters' && (
         <div className="space-y-4 rounded-[12px] border border-sea-line bg-shell p-4">
           <div>
-            <p className="cc-label mb-2">Emirate</p>
+            <p className="cc-label mb-2">Where</p>
             <div className="flex flex-wrap gap-2">
-              {chip('All emirates', !criteria.emirate, href({ emirate: '' }))}
-              {facets.emirates.map((e) => chip(e, criteria.emirate === e, href({ emirate: criteria.emirate === e ? '' : e })))}
+              {chip(anywhereLabel(facets.places.map((p) => p.country)), !criteria.emirate, href({ emirate: '' }))}
             </div>
+            {facets.places.map((group) => (
+              <div key={group.country} className="mt-2.5">
+                {facets.places.length > 1 && <p className="cc-support mb-1.5">{group.label}</p>}
+                <div className="flex flex-wrap gap-2">
+                  {group.regions.map((e) =>
+                    chip(e, criteria.emirate === e, href({ emirate: criteria.emirate === e ? '' : e })),
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
 
           {facets.bands.length > 0 && (
@@ -194,7 +206,7 @@ export default function ResultsControls({
               <p className="text-[15px] font-medium text-sea-ink">Map view isn’t available yet</p>
               <p className="cc-support mt-1">
                 We would rather show no map than a made-up one. It arrives with our mapping provider; until then,
-                browse by emirate.
+                browse by area.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {facets.emirates.map((e) => chip(e, criteria.emirate === e, href({ emirate: criteria.emirate === e ? '' : e })))}

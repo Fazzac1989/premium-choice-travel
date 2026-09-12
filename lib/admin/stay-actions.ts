@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireAdmin } from '@/lib/admin/guard';
+import { countryOfRegion } from '@/lib/staycations/places';
 
 export type StayActionState = { ok: boolean; message: string } | null;
 
@@ -21,6 +22,9 @@ export async function saveHotel(_prev: StayActionState, formData: FormData): Pro
       return fallback;
     }
   };
+
+  // The form sends one place; the region is it, and the country follows.
+  const region = String(formData.get('place') ?? formData.get('emirate') ?? '').trim();
 
   const basicRow = {
     name,
@@ -42,7 +46,10 @@ export async function saveHotel(_prev: StayActionState, formData: FormData): Pro
     transfer_duration: String(formData.get('transfer_duration') ?? '').trim() || null,
     gallery: parseJson<string[]>(formData.get('gallery'), []),
     stars: formData.get('stars') ? Number(formData.get('stars')) : null,
-    emirate: String(formData.get('emirate') ?? '').trim() || null,
+    // One control sends the region; the country is looked up from it, so a
+    // hotel can never end up in Muscat and the United Arab Emirates at once.
+    emirate: region || null,
+    country: region ? countryOfRegion(region)?.name ?? null : null,
     best_for: parseJson<string[]>(formData.get('best_for'), []),
     featured: formData.get('featured') === 'on',
     status: formData.get('status') === 'draft' ? 'draft' : 'published',

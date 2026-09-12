@@ -205,6 +205,7 @@ export function mapHotel(row: any) {
     gallery: row.gallery ?? [],
     stars: row.stars ?? null,
     emirate: row.emirate ?? '',
+    country: row.country ?? (row.emirate ? 'United Arab Emirates' : ''),
     bestFor: row.best_for ?? [],
     featured: row.featured ?? false,
     status: row.status ?? 'published',
@@ -248,11 +249,18 @@ export async function getHotels() {
   return (data ?? []).map(mapHotel);
 }
 
-/** Published UAE hotels for the Staycations directory (draft hotels hidden). */
+/**
+ * The Staycations directory: published hotels in a country we sell.
+ *
+ * A country is what makes a hotel part of this directory. It used to be the
+ * emirate, which meant nothing outside the UAE could ever be added — give an
+ * Omani hotel a region and it is not an emirate; leave it blank and it
+ * vanishes. The mapper above fills the country in for older rows.
+ */
 export async function getStaycationHotels() {
   const hotels = await getHotels();
   return hotels
-    .filter((h) => h.status !== 'draft' && h.emirate)
+    .filter((h) => h.status !== 'draft' && h.country)
     .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.stars ?? 0) - (a.stars ?? 0) || a.name.localeCompare(b.name));
 }
 

@@ -20,8 +20,10 @@ export const MAX_CHILD_AGE = 17;
 export type SortKey = 'price' | 'stars' | 'name';
 
 export type SearchCriteria = {
-  /** '' means across the UAE. */
+  /** The region inside the country. '' means anywhere in it. */
   emirate: string;
+  /** '' means every country we sell. */
+  country: string;
   checkIn: string;
   nights: number;
   adults: number;
@@ -85,6 +87,7 @@ export function parseAges(raw: unknown, count?: number): number[] {
 
 export const EMPTY_CRITERIA: SearchCriteria = {
   emirate: '',
+  country: '',
   checkIn: '',
   nights: 2,
   adults: 2,
@@ -122,6 +125,7 @@ export function parseCriteria(params: Params): SearchCriteria {
   const sortRaw = one(params, 'sort');
   return {
     emirate: one(params, 'emirate'),
+    country: one(params, 'country'),
     checkIn,
     nights: clampInt(nightsFromRange || one(params, 'nights'), 1, MAX_NIGHTS, 2),
     adults: clampInt(one(params, 'adults'), 1, MAX_ADULTS, 2),
@@ -141,6 +145,7 @@ export function parseCriteria(params: Params): SearchCriteria {
 export function criteriaQuery(c: Partial<SearchCriteria>, extra: Record<string, string> = {}): string {
   const q = new URLSearchParams();
   if (c.emirate) q.set('emirate', c.emirate);
+  if (c.country) q.set('country', c.country);
   if (c.checkIn) q.set('from', c.checkIn);
   if (c.nights && c.nights !== 2) q.set('nights', String(c.nights));
   if (c.adults && c.adults !== 2) q.set('adults', String(c.adults));

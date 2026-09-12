@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useId, useState, useTransition } from 'react';
 import Icon from './Icon';
-import { EMIRATES } from '@/lib/staycations/filters';
+import { anywhereLabel, type PlaceGroup } from '@/lib/staycations/places';
 import {
   MAX_ADULTS,
   MAX_CHILDREN,
@@ -38,11 +38,18 @@ type Field = 'where' | 'dates' | 'guests' | null;
 export default function StaySearchForm({
   base,
   initial,
+  places,
   variant = 'panel',
   onDone,
 }: {
   base: string;
   initial: SearchCriteria;
+  /**
+   * The countries and regions we have stays in, in the order to show them.
+   * Built from the directory rather than from a list of places we would like
+   * to sell, so the picker can never offer somewhere with nothing in it.
+   */
+  places: PlaceGroup[];
   /** 'panel' is the Explore hero card; 'sheet' is the results editor. */
   variant?: 'panel' | 'sheet';
   onDone?: () => void;
@@ -53,6 +60,8 @@ export default function StaySearchForm({
   const [open, setOpen] = useState<Field>(null);
 
   const [emirate, setEmirate] = useState(initial.emirate);
+  const countries = places.map((p) => p.country);
+  const anywhere = anywhereLabel(countries);
   // Empty until someone chooses. A pre-filled weekend decides the trip for
   // them, and a price for the wrong dates is worse than no price.
   const [checkIn, setCheckIn] = useState(initial.checkIn);
@@ -211,7 +220,7 @@ export default function StaySearchForm({
     <div className={wide ? 'cc-panel p-4 sm:p-5' : ''}>
       <div className={`flex flex-col gap-2.5 ${wide ? 'lg:flex-row lg:flex-wrap lg:items-start lg:gap-3' : ''}`}>
         <div className={wide ? 'lg:min-w-[14rem] lg:flex-[1.4]' : ''}>
-          {fieldBtn('where', 'Where', emirate || 'Across the UAE', 'pin')}
+          {fieldBtn('where', 'Where', emirate || anywhere, 'pin')}
         </div>
 
         <div className={`grid grid-cols-2 gap-2.5 ${wide ? 'lg:contents' : ''}`}>
@@ -238,23 +247,42 @@ export default function StaySearchForm({
 
         {open === 'where' && (
           <div id={`${id}-where`} className="w-full rounded-[10px] border border-sea-line bg-shell p-2">
-            <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
-              {['', ...EMIRATES].map((e) => (
-                <button
-                  key={e || 'all'}
-                  type="button"
-                  onClick={() => {
-                    setEmirate(e);
-                    setOpen(null);
-                  }}
-                  className={`min-h-[44px] rounded-[8px] px-3 text-left text-[15px] transition-colors ${
-                    emirate === e ? 'bg-petrol text-white' : 'bg-white text-sea-ink hover:bg-mist'
-                  }`}
-                >
-                  {e || 'Across the UAE'}
-                </button>
-              ))}
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEmirate('');
+                setOpen(null);
+              }}
+              className={`min-h-[44px] w-full rounded-[8px] px-3 text-left text-[15px] transition-colors ${
+                emirate === '' ? 'bg-petrol text-white' : 'bg-white text-sea-ink hover:bg-mist'
+              }`}
+            >
+              {anywhere}
+            </button>
+            {places.map((group) => (
+              <div key={group.country} className="mt-2">
+                {/* The heading only earns its space once there is more than
+                    one country to tell apart. */}
+                {places.length > 1 && <p className="cc-label px-1 pb-1.5">{group.label}</p>}
+                <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+                  {group.regions.map((e) => (
+                    <button
+                      key={e}
+                      type="button"
+                      onClick={() => {
+                        setEmirate(e);
+                        setOpen(null);
+                      }}
+                      className={`min-h-[44px] rounded-[8px] px-3 text-left text-[15px] transition-colors ${
+                        emirate === e ? 'bg-petrol text-white' : 'bg-white text-sea-ink hover:bg-mist'
+                      }`}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

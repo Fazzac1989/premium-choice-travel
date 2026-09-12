@@ -68,15 +68,9 @@ export function tagByKey(key: string): StayTag | undefined {
   return STAY_TAGS.find((t) => t.key === key);
 }
 
-export const EMIRATES = [
-  'Dubai',
-  'Abu Dhabi',
-  'Sharjah',
-  'Ras Al Khaimah',
-  'Fujairah',
-  'Ajman',
-  'Umm Al Quwain',
-];
+// The places we sell live in one file now; four copies of the emirates used
+// to drift apart between here, the admin form and the seeding script.
+export { ALL_REGIONS, COUNTRIES, EMIRATES } from './places';
 
 export const MEAL_PLANS = ['Room only', 'Bed & breakfast', 'Half board', 'Full board', 'All-inclusive'];
 
@@ -84,6 +78,7 @@ export const MEAL_PLANS = ['Room only', 'Bed & breakfast', 'Half board', 'Full b
 export function filterHotels(hotels: Hotel[], c: SearchCriteria): Hotel[] {
   const tag = c.tag ? tagByKey(c.tag) : undefined;
   return hotels.filter((h) => {
+    if (c.country && h.country !== c.country) return false;
     if (c.emirate && h.emirate !== c.emirate) return false;
     if (c.budget && String(h.priceBand ?? '') !== c.budget) return false;
     if (c.stars && String(h.stars ?? '') !== c.stars) return false;

@@ -9,7 +9,8 @@ import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels } from '@/lib/data';
 import { PRICE_BANDS } from '@/lib/price-bands';
 import { RATES_PREVIEW_COOKIE, ratesVisible, searchStayRates, type StaySearch } from '@/lib/rates';
-import { EMIRATES, MEAL_PLANS, STAY_TAGS, filterHotels, sortHotels } from '@/lib/staycations/filters';
+import { ALL_REGIONS, MEAL_PLANS, STAY_TAGS, filterHotels, sortHotels } from '@/lib/staycations/filters';
+import { placeGroups } from '@/lib/staycations/places';
 import {
   criteriaQuery,
   missingChildAges,
@@ -66,7 +67,8 @@ export default async function StayResultsPage({
   const priced = (search?.rates.size ?? 0) > 0;
 
   const facets: Facets = {
-    emirates: EMIRATES.filter((e) => all.some((h) => h.emirate === e)),
+    places: placeGroups(all.map((h) => h.emirate ?? '')),
+    emirates: ALL_REGIONS.filter((e) => all.some((h) => h.emirate === e)),
     bands: PRICE_BANDS.filter((b) => all.some((h) => h.priceBand === b.band)).map((b) => ({ band: b.band, label: b.label })),
     meals: MEAL_PLANS.filter((m) => all.some((h) => h.mealPlans.some((x: string) => x.toLowerCase() === m.toLowerCase()))),
     stars: ['5', '4', '3'].filter((s) => all.some((h) => String(h.stars ?? '') === s)),

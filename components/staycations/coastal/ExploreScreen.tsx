@@ -8,6 +8,7 @@ import { CATEGORIES } from '@/lib/staycations/filters';
 import { criteriaQuery, type SearchCriteria } from '@/lib/staycations/search-criteria';
 import { toStayCard } from '@/lib/staycations/stay-card';
 import { pickHero } from '@/lib/staycations/hero';
+import { placeGroups } from '@/lib/staycations/places';
 
 /**
  * Explore — the app's first screen.
@@ -31,6 +32,7 @@ export default async function ExploreScreen({
 }) {
   const hero = pickHero();
   const hotels = await getStaycationHotels();
+  const places = placeGroups(hotels.map((h) => h.emirate ?? ''));
 
   // The rule behind "Selected for a slower weekend": a specialist has marked
   // the hotel as a pick, or tagged it as a long-weekend stay. No scoring.
@@ -64,7 +66,7 @@ export default async function ExploreScreen({
         {/* One wide bar across the page rather than a card in the corner:
             on a laptop the fields sit in a row and fill the window. */}
         <div className="cc-wrap relative -mt-16 lg:-mt-20">
-          <StaySearchForm base={base} initial={criteria} />
+          <StaySearchForm base={base} initial={criteria} places={places} />
           {/* The quiet alternative to searching: ask someone. */}
           <p className="mt-3.5 text-center text-[15px] leading-[22px] text-sea-soft">
             Not sure where to go?{' '}

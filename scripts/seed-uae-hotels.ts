@@ -35,7 +35,9 @@ type ResearchHotel = {
   note?: string | null;
 };
 
-const EMIRATES = ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'];
+// The places we sell live in one file; this script used to keep its own copy
+// of the seven emirates and quietly reject anything else.
+import { ALL_REGIONS, countryOfRegion, regionRank } from '../lib/staycations/places';
 
 async function main() {
   const path =
@@ -50,7 +52,12 @@ async function main() {
   const { hotels } = JSON.parse(readFileSync(path, 'utf8').replace(/^﻿/, '')) as { hotels: ResearchHotel[] };
   console.log(`${hotels.length} hotels in ${path}`);
 
-  const { data: uaeDest } = await db.from('destinations').select('id').eq('slug', 'united-arab-emirates').maybeSingle();
+  // One destination row per country, where we have one. A hotel without a
+  // matching destination still seeds; it simply has no journey to sit under.
+  const { data: destRows } = await db.from('destinations').select('id, slug');
+  const destBySlug = new Map((destRows ?? []).map((d: any) => [String(d.slug), d.id]));
+  const destFor = (name: string) =>
+    destBySlug.get(name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')) ?? null;
 
   const { data: existingRows, error } = await db.from('hotels').select('id, name');
   if (error) throw new Error(error.message);
@@ -60,24 +67,26 @@ async function main() {
   const perEmirate: Record<string, number> = {};
 
   for (const h of hotels) {
-    if (!h.name?.trim() || !EMIRATES.includes(h.emirate)) {
+    if (!h.name?.trim() || !ALL_REGIONS.some((r) => r.toLowerCase() === String(h.emirate ?? '').toLowerCase())) {
       skipped++;
-      console.warn(`⚠ skipped: ${h.name ?? '(no name)'} — invalid emirate "${h.emirate}"`);
+      console.warn(`⚠ skipped: ${h.name ?? '(no name)'} — "${h.emirate}" is not a region we sell`);
       continue;
     }
+    const country = countryOfRegion(h.emirate)!;
     const key = h.name.trim().toLowerCase();
     const id = existingByName.get(key);
 
     const basicRow = {
       name: h.name.trim(),
-      destination_id: uaeDest?.id ?? null,
+      destination_id: destFor(country.name),
       area: h.area?.trim() || null,
       style: h.style?.trim() || null,
       description: h.note?.trim() || null,
-      sort_order: EMIRATES.indexOf(h.emirate) * 100,
+      sort_order: regionRank(h.emirate) * 100,
     };
     const fullRow = {
       ...basicRow,
+      country: country.name,
       features: (h.keyFeatures ?? []).filter(Boolean),
       meal_plans: (h.mealPlans ?? []).filter(Boolean),
       stars: h.stars ?? null,
@@ -105,7 +114,7 @@ async function main() {
   }
 
   console.log('\n────────── HOTEL DIRECTORY REPORT ──────────');
-  for (const e of EMIRATES) if (perEmirate[e]) console.log(`${e}: ${perEmirate[e]}`);
+  for (const e of ALL_REGIONS) if (perEmirate[e]) console.log(`${e}: ${perEmirate[e]}`);
   console.log(`Created: ${created} · Updated: ${updated} · Skipped: ${skipped}`);
   if (columnsMissing) {
     console.warn('\n⚠ Directory columns missing — paste supabase/RUN-ME.sql (migration 008) into the Supabase SQL editor, then re-run this script.');

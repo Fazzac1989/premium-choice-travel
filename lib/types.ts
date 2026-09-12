@@ -107,8 +107,10 @@ export type Hotel = {
   gallery: string[];
   /** Official star rating (5, 4, 3) — null when unverified. */
   stars?: number | null;
-  /** UAE emirate for the Staycations directory. */
+  /** The region inside `country` — an emirate in the UAE, an area elsewhere. */
   emirate?: string;
+  /** Set on every hotel in the Staycations directory, and on nothing else. */
+  country?: string;
   /** Filter tags, e.g. family, couples, beach, desert. */
   bestFor?: string[];
   featured?: boolean;
