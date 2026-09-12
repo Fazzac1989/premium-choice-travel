@@ -45,10 +45,13 @@ export async function generateMetadata({ params }: { params: { brand: string } }
           appleWebApp: { capable: true, statusBarStyle: 'default', title: 'Staycations' },
           // Naming any icon here replaces the ones Next derives from
           // app/icon.png, so the tab icon has to be named too or the site
-          // ends up with no favicon at all. It matches the installed app.
+          // ends up with no favicon at all. It is the green Premium Choice
+          // mark, the same one every other brand shows. The Apple icon is a
+          // different thing — the installed app's home-screen icon — and
+          // keeps the Staycations artwork.
           icons: {
-            icon: [{ url: '/images/pwa/icon-192.png', sizes: '192x192', type: 'image/png' }],
-            shortcut: ['/images/pwa/icon-192.png'],
+            icon: [{ url: '/icon.png', type: 'image/png' }],
+            shortcut: ['/icon.png'],
             apple: '/images/pwa/apple-touch-icon.png',
           },
         }
