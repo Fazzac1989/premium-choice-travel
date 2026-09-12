@@ -13,7 +13,6 @@ import {
   addDays,
   criteriaQuery,
   dateRangeLabel,
-  defaultCheckIn,
   guestSummary,
   todayInDubai,
   ymd,
@@ -54,18 +53,23 @@ export default function StaySearchForm({
   const [open, setOpen] = useState<Field>(null);
 
   const [emirate, setEmirate] = useState(initial.emirate);
-  const [checkIn, setCheckIn] = useState(initial.checkIn || defaultCheckIn());
-  const [checkOut, setCheckOut] = useState(addDays(initial.checkIn || defaultCheckIn(), initial.nights));
+  // Empty until someone chooses. A pre-filled weekend decides the trip for
+  // them, and a price for the wrong dates is worse than no price.
+  const [checkIn, setCheckIn] = useState(initial.checkIn);
+  const [checkOut, setCheckOut] = useState(initial.checkIn ? addDays(initial.checkIn, initial.nights) : '');
   const [adults, setAdults] = useState(initial.adults);
   const [ages, setAges] = useState<(number | '')[]>(initial.childrenAges.map((a) => (a >= 0 ? a : '')));
   const [rooms, setRooms] = useState(initial.rooms);
   const [error, setError] = useState('');
 
   const today = ymd(todayInDubai());
-  const nights = Math.max(
-    1,
-    Math.round((Date.parse(`${checkOut}T00:00:00Z`) - Date.parse(`${checkIn}T00:00:00Z`)) / 86_400_000) || 1,
-  );
+  const dated = Boolean(checkIn && checkOut);
+  const nights = dated
+    ? Math.max(
+        1,
+        Math.round((Date.parse(`${checkOut}T00:00:00Z`) - Date.parse(`${checkIn}T00:00:00Z`)) / 86_400_000) || 1,
+      )
+    : initial.nights;
 
   const criteria: SearchCriteria = {
     ...initial,
@@ -87,12 +91,22 @@ export default function StaySearchForm({
     setAges((prev) => Array.from({ length: count }, (_, i) => prev[i] ?? ''));
   };
 
+  const flexible = () => {
+    setCheckIn('');
+    setCheckOut('');
+    setError('');
+    setOpen(null);
+  };
+
   const submit = () => {
     setError('');
-    if (!checkIn) return setError('Add a check-in date.');
-    if (checkIn < today) return setError('Check-in cannot be in the past.');
-    if (!checkOut || checkOut <= checkIn) return setError('Check-out must be after check-in.');
-    if (nights > MAX_NIGHTS) return setError(`We search up to ${MAX_NIGHTS} nights — send us longer stays and we will price them by hand.`);
+    // No dates is allowed: the results then show the specialists' guide bands
+    // and ask for dates before quoting a real total.
+    if (checkIn) {
+      if (checkIn < today) return setError('Check-in cannot be in the past.');
+      if (!checkOut || checkOut <= checkIn) return setError('Check-out must be after check-in.');
+      if (nights > MAX_NIGHTS) return setError(`We search up to ${MAX_NIGHTS} nights — send us longer stays and we will price them by hand.`);
+    }
     if (ages.some((a) => a === '')) {
       setOpen('guests');
       return setError('Add each child’s age — hotels price children by age.');
@@ -218,7 +232,7 @@ export default function StaySearchForm({
             wide ? 'lg:order-none lg:min-h-[56px] lg:w-auto lg:shrink-0 lg:px-7' : ''
           }`}
         >
-          {pending ? 'Searching…' : 'Explore stays'}
+          {pending ? 'Searching…' : 'Find stays'}
           {!pending && <Icon name="chevron-right" size={18} />}
         </button>
 
@@ -268,8 +282,30 @@ export default function StaySearchForm({
                 />
               </label>
             </div>
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-sea-line pt-3">
+              <p className="cc-support">
+                {dated ? (
+                  <>
+                    {nights} night{nights === 1 ? '' : 's'} · dates are UAE local time.
+                  </>
+                ) : (
+                  'Dates are UAE local time.'
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={flexible}
+                aria-pressed={!dated}
+                className={`min-h-[40px] rounded-[8px] border px-3 text-[14px] font-medium transition-colors ${
+                  dated ? 'border-sea-line bg-white text-petrol hover:border-petrol' : 'border-petrol bg-petrol text-white'
+                }`}
+              >
+                I’m flexible
+              </button>
+            </div>
             <p className="cc-support mt-2">
-              {nights} night{nights === 1 ? '' : 's'} · dates are UAE local time.
+              Flexible means we browse without dates: you see each hotel’s guide price, and a specialist prices the
+              dates you settle on.
             </p>
           </div>
         )}

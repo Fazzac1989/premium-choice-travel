@@ -37,7 +37,7 @@ export default async function BrandHomePage({
 
   // Staycations opens on Explore — the app's search screen, not a brochure.
   if (isStaycations) {
-    return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} heroImage="/images/brands/staycations-hero-coastal.jpg" />;
+    return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} />;
   }
 
   // Staycations sells hotels, not packages.

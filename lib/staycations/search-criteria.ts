@@ -179,7 +179,7 @@ const withYear = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numer
 
 /** "16 – 18 Oct", the way the approved design writes a stay. */
 export function dateRangeLabel(c: SearchCriteria): string {
-  if (!c.checkIn) return 'Add dates';
+  if (!c.checkIn) return 'Choose dates';
   const from = new Date(`${c.checkIn}T00:00:00Z`);
   const to = new Date(`${checkOutOf(c)}T00:00:00Z`);
   const sameMonth = from.getUTCMonth() === to.getUTCMonth() && from.getUTCFullYear() === to.getUTCFullYear();

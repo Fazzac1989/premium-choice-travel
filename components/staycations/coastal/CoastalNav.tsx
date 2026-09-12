@@ -49,8 +49,12 @@ export function CoastalHeader({
   const tabs = tabsFor(base);
   const active = activeHref(tabs, rel);
 
-  // Explore opens on a full-bleed photograph, so the bar sits on the picture
-  // until the page moves and then becomes solid white to stay readable.
+  // Explore opens on a full-bleed photograph. The bar still floats on the
+  // picture, but never transparently: a sunrise sky is near-white, and white
+  // text on it fails WCAG 1.4.3 outright. A flat petrol overlay at 85% sits
+  // behind the bar instead, which holds white text at about 7.7:1 even over
+  // the brightest pixel the image could contain, and the scroll state then
+  // hands over to solid white.
   const overHero = rel === '/';
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -66,9 +70,16 @@ export function CoastalHeader({
     <>
       <header
         className={`fixed inset-x-0 top-0 z-40 border-b transition-colors duration-300 ${
-          solid ? 'border-sea-line bg-white/95 backdrop-blur' : 'border-transparent bg-transparent'
+          solid ? 'border-sea-line bg-white/95 backdrop-blur' : 'border-white/10 bg-petrol-deep/85 backdrop-blur-[2px]'
         }`}
       >
+        {/* Softens the edge of the overlay into the picture below it. */}
+        {!solid && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-full h-8 bg-gradient-to-b from-[rgba(16,59,69,0.85)] to-transparent"
+          />
+        )}
       <div className="cc-wrap flex h-[64px] items-center justify-between gap-4 lg:h-[80px]">
         <Link href={base || '/'} aria-label="Premium Choice Staycations — Explore" className="shrink-0">
           {(solid ? logo : logoWhite ?? logo) ? (

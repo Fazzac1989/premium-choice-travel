@@ -7,13 +7,17 @@ import { getStaycationHotels } from '@/lib/data';
 import { CATEGORIES } from '@/lib/staycations/filters';
 import { criteriaQuery, type SearchCriteria } from '@/lib/staycations/search-criteria';
 import { toStayCard } from '@/lib/staycations/stay-card';
+import { pickHero } from '@/lib/staycations/hero';
 
 /**
  * Explore — the app's first screen.
  *
- * A photograph, one sentence, and the search. Nothing here asks the supplier
+ * A photograph, what this is, and the search. Nothing here asks the supplier
  * for anything: prices arrive once someone has said when they are going,
  * which keeps the screen instant and the search budget for real intent.
+ *
+ * Dates start empty on purpose. A pre-filled weekend looks like an answer to
+ * a question nobody asked, and it quietly decides when someone is travelling.
  */
 
 const CATEGORY_ICON = { wave: 'wave', dune: 'dune', spa: 'spa', family: 'family' } as const;
@@ -21,12 +25,11 @@ const CATEGORY_ICON = { wave: 'wave', dune: 'dune', spa: 'spa', family: 'family'
 export default async function ExploreScreen({
   base,
   criteria,
-  heroImage,
 }: {
   base: string;
   criteria: SearchCriteria;
-  heroImage: string;
 }) {
+  const hero = pickHero();
   const hotels = await getStaycationHotels();
 
   // The rule behind "Selected for a slower weekend": a specialist has marked
@@ -44,12 +47,16 @@ export default async function ExploreScreen({
       <section className="relative lg:pb-8">
         {/* The bar floats over the top of this photograph. */}
         <div className="relative h-[480px] w-full sm:h-[520px] lg:h-[588px]">
-          <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover" />
+          <Image src={hero.src} alt={hero.alt} fill priority sizes="100vw" className="object-cover" />
           <div className="cc-scrim" />
           <div className="cc-wrap absolute inset-x-0 bottom-0 pb-24 lg:pb-32">
-            <div className="max-w-xl text-white">
-              <h1 className="cc-h1 lg:text-[44px] lg:leading-[48px]">Somewhere to slow down.</h1>
-              <p className="mt-2 text-[16px] leading-[24px] text-white/85">Sea air. Slow mornings.</p>
+            <div className="max-w-2xl text-white">
+              <h1 className="cc-h1 text-balance lg:text-[44px] lg:leading-[50px]">
+                A better weekend is closer than you think.
+              </h1>
+              <p className="mt-3 max-w-xl text-[16px] leading-[24px] text-white/90 lg:text-[18px] lg:leading-[27px]">
+                Handpicked UAE stays, with a local travel specialist when you need one.
+              </p>
             </div>
           </div>
         </div>
@@ -58,13 +65,23 @@ export default async function ExploreScreen({
             on a laptop the fields sit in a row and fill the window. */}
         <div className="cc-wrap relative -mt-16 lg:-mt-20">
           <StaySearchForm base={base} initial={criteria} />
+          {/* The quiet alternative to searching: ask someone. */}
+          <p className="mt-3.5 text-center text-[15px] leading-[22px] text-sea-soft">
+            Not sure where to go?{' '}
+            <Link
+              href={`${base}/concierge`}
+              className="font-semibold text-petrol underline decoration-petrol/30 underline-offset-4 hover:decoration-petrol"
+            >
+              Ask our Dubai-based team.
+            </Link>
+          </p>
         </div>
       </section>
 
       {/* Four ways in — each one a real filter, not a mood board. */}
-      <section className="cc-wrap mt-7">
-        <h2 className="sr-only">Browse by kind of stay</h2>
-        <ul className="grid grid-cols-4 gap-2 sm:gap-4">
+      <section className="cc-wrap mt-9">
+        <h2 className="cc-h4">What kind of escape do you need?</h2>
+        <ul className="mt-4 grid grid-cols-4 gap-2 sm:gap-4">
           {CATEGORIES.map((c) => (
             <li key={c.key}>
               <Link
