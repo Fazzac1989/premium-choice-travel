@@ -186,7 +186,8 @@ workflow above (search → optional re-check → specialist confirms → voucher
 cancellation from the admin), the certification URL
 (https://premiumchoicestaycations.com, rates behind the preview cookie —
 give them the preview link), an admin login for the request page, and the
-commercial notes: UAE hotels only, opaque rates excluded, `sourceMarket` AE,
+commercial notes: UAE hotels (Oman and Saudi Arabia pending the scope change
+in `docs/hotelbeds-scope-change.md`), opaque rates excluded, `sourceMarket` AE,
 prices converted to AED, no multi-room bookings.
 
 ## Where the code lives

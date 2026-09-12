@@ -56,7 +56,10 @@ Technical: every request carries `Api-key` and a per-request `X-Signature`,
 coordinates) is stored on our side and refreshed on demand.
 
 **Commercial decisions.**
-- UAE hotels only (destinations AE1, AUH, DXB, FJR, RKT, SHJ, UMM, AAN).
+- UAE hotels (destinations AE1, AUH, DXB, FJR, RKT, SHJ, UMM, AAN).
+  Oman and Saudi Arabia are being added; see `docs/hotelbeds-scope-change.md`
+  for the notification that has to go before anything outside the UAE is
+  published.
 - Opaque/package rates are not shown.
 - One room per booking (no multi-room bookings at present).
 - Prices are shown in AED; supplier currency is converted at ECB rates until
