@@ -6,6 +6,11 @@
  * default; pass a `title` when an icon is the only label a control has.
  */
 export type IconName =
+  | 'city'
+  | 'golf'
+  | 'ship'
+  | 'briefcase'
+  | 'plane'
   | 'explore'
   | 'heart'
   | 'heart-filled'
@@ -43,6 +48,32 @@ export type IconName =
   | 'document';
 
 const PATHS: Record<IconName, JSX.Element> = {
+  city: (
+    <>
+      <path d="M3 21h18M5 21V9l5-3v15M14 21V11l5-2.5V21" />
+      <path d="M8 12h0M8 15.5h0M17 14h0M17 17.5h0" />
+    </>
+  ),
+  golf: (
+    <>
+      <path d="M11 21V4l7 3.5-7 3.5" />
+      <path d="M6.5 20.5c1.3-.9 2.9-1.4 4.5-1.4s3.2.5 4.5 1.4" />
+    </>
+  ),
+  ship: (
+    <>
+      <path d="M4 18l1.6-5.2a1 1 0 0 1 .96-.8h10.88a1 1 0 0 1 .96.8L20 18" />
+      <path d="M8 12V7h8v5M12 4v3" />
+      <path d="M3 18c1.5 0 1.5 1.6 3 1.6S7.5 18 9 18s1.5 1.6 3 1.6S13.5 18 15 18s1.5 1.6 3 1.6S19.5 18 21 18" />
+    </>
+  ),
+  briefcase: (
+    <>
+      <rect x="3" y="7.5" width="18" height="12" rx="2" />
+      <path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5M3 12.5h18" />
+    </>
+  ),
+  plane: <path d="M10.5 20.5l1.5-5 7.5-2.2a1.6 1.6 0 0 0 0-3.1L12 8 10.5 3l-1.7.5.6 4.9-4.4-1.2-.6-2.2-1.4.4.6 3.6 3.4 2.1-3.4 2.1-.6 3.6 1.4.4.6-2.2 4.4-1.2-.6 4.9z" />,
   explore: (
     <>
       <path d="M3 21V9.5L12 3l9 6.5V21" />

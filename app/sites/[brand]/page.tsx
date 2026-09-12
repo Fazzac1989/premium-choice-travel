@@ -9,6 +9,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } from '@/lib/data';
 import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
+import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
 
 export const dynamic = 'force-dynamic';
@@ -95,6 +96,8 @@ export default async function BrandHomePage({
             </Link>
           </div>
         </section>
+
+        <ServiceCircles base={base} services={brand.services} heading="What kind of trip are you after?" />
 
         {/* Where to go now */}
         <section className="py-16 sm:py-20">
@@ -283,6 +286,8 @@ export default async function BrandHomePage({
           </div>
         </div>
       </section>
+
+      <ServiceCircles base={base} services={brand.services} heading="What kind of trip are you after?" />
 
       {/* Intro + services */}
       <section className="py-16 sm:py-20">
