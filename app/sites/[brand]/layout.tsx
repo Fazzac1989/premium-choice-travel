@@ -6,6 +6,7 @@ import BrandFooter from '@/components/brand-site/BrandFooter';
 import PwaSetup from '@/components/brand-site/PwaSetup';
 import { CoastalHeader, CoastalTabBar } from '@/components/staycations/coastal/CoastalNav';
 import { ChromeProvider } from '@/components/staycations/coastal/Chrome';
+import CoastalFooter from '@/components/staycations/coastal/CoastalFooter';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations } from '@/lib/data';
@@ -83,6 +84,7 @@ export default async function BrandSiteLayout({
         <ChromeProvider>
           <CoastalHeader base={base} logo={brand.logo} logoWhite={brand.logoWhite} />
           <main>{children}</main>
+          <CoastalFooter base={base} logoWhite={brand.logoWhite} description={brand.description} />
           <CoastalTabBar base={base} />
           <PwaSetup base={base} />
         </ChromeProvider>

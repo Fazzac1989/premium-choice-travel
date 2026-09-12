@@ -46,7 +46,7 @@ export default async function ExploreScreen({
         <div className="relative h-[480px] w-full sm:h-[520px] lg:h-[588px]">
           <Image src={heroImage} alt="" fill priority sizes="100vw" className="object-cover" />
           <div className="cc-scrim" />
-          <div className="cc-wrap absolute inset-x-0 bottom-0 pb-24 lg:pb-16">
+          <div className="cc-wrap absolute inset-x-0 bottom-0 pb-24 lg:pb-32">
             <div className="max-w-xl text-white">
               <h1 className="cc-h1 lg:text-[44px] lg:leading-[48px]">Somewhere to slow down.</h1>
               <p className="mt-2 text-[16px] leading-[24px] text-white/85">Sea air. Slow mornings.</p>
@@ -54,11 +54,10 @@ export default async function ExploreScreen({
           </div>
         </div>
 
-        <div className="cc-wrap relative -mt-16 lg:-mt-24">
-          <div className="lg:grid lg:grid-cols-[1fr_400px] lg:items-end lg:gap-10">
-            <div className="hidden lg:block" />
-            <StaySearchForm base={base} initial={criteria} />
-          </div>
+        {/* One wide bar across the page rather than a card in the corner:
+            on a laptop the fields sit in a row and fill the window. */}
+        <div className="cc-wrap relative -mt-16 lg:-mt-20">
+          <StaySearchForm base={base} initial={criteria} />
         </div>
       </section>
 

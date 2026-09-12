@@ -103,10 +103,15 @@ export default function StaySearchForm({
     });
   };
 
+  // On Explore the panel becomes one wide bar from `lg` up, so the fields
+  // sit in a row and fill the page rather than stacking in a narrow column.
+  const wide = variant === 'panel';
+
   /**
    * `compact` is the half-width pair. They lose the chevron and tighten the
    * gap, because "2 adults · 1 room" has to fit beside a date range on a
-   * 360px phone without being cut in half.
+   * 360px phone without being cut in half. In the wide bar there is room for
+   * the full treatment again, so it comes back at `lg`.
    */
   const fieldBtn = (
     name: Exclude<Field, null>,
@@ -121,18 +126,30 @@ export default function StaySearchForm({
       aria-controls={`${id}-${name}`}
       onClick={() => setOpen(open === name ? null : name)}
       className={`flex min-h-[56px] w-full items-center rounded-[10px] border text-left transition-colors ${
-        compact ? 'gap-2 px-2.5' : 'gap-3 px-3.5'
+        compact ? (wide ? 'gap-2 px-2.5 lg:gap-3 lg:px-3.5' : 'gap-2 px-2.5') : 'gap-3 px-3.5'
       } ${open === name ? 'border-petrol bg-mist/50' : 'border-sea-line bg-white hover:border-petrol'}`}
     >
       <Icon name={icon} size={compact ? 18 : 20} className="shrink-0 text-petrol" />
       <span className="min-w-0 flex-1">
         <span className="block text-[12px] leading-[16px] text-sea-soft">{label}</span>
-        <span className={`block truncate font-medium text-sea-ink ${compact ? 'text-[13px] leading-[18px]' : 'text-[15px] leading-[20px]'}`}>
+        <span
+          className={`block truncate font-medium text-sea-ink ${
+            compact
+              ? wide
+                ? 'text-[13px] leading-[18px] lg:text-[15px] lg:leading-[20px]'
+                : 'text-[13px] leading-[18px]'
+              : 'text-[15px] leading-[20px]'
+          }`}
+        >
           {value}
         </span>
       </span>
-      {!compact && (
-        <Icon name={open === name ? 'chevron-down' : 'chevron-right'} size={18} className="shrink-0 text-sea-soft" />
+      {(!compact || wide) && (
+        <Icon
+          name={open === name ? 'chevron-down' : 'chevron-right'}
+          size={18}
+          className={`shrink-0 text-sea-soft ${compact ? 'hidden lg:block' : ''}`}
+        />
       )}
     </button>
   );
@@ -177,12 +194,37 @@ export default function StaySearchForm({
   );
 
   return (
-    <div className={variant === 'panel' ? 'cc-panel p-4 sm:p-5' : ''}>
-      <div className="grid gap-2.5">
-        {fieldBtn('where', 'Where', emirate || 'Across the UAE', 'pin')}
+    <div className={wide ? 'cc-panel p-4 sm:p-5' : ''}>
+      <div className={`flex flex-col gap-2.5 ${wide ? 'lg:flex-row lg:flex-wrap lg:items-start lg:gap-3' : ''}`}>
+        <div className={wide ? 'lg:min-w-[14rem] lg:flex-[1.4]' : ''}>
+          {fieldBtn('where', 'Where', emirate || 'Across the UAE', 'pin')}
+        </div>
+
+        <div className={`grid grid-cols-2 gap-2.5 ${wide ? 'lg:contents' : ''}`}>
+          <div className={wide ? 'lg:min-w-[11rem] lg:flex-1' : ''}>
+            {fieldBtn('dates', 'When', dateRangeLabel({ ...criteria }), 'calendar', true)}
+          </div>
+          <div className={wide ? 'lg:min-w-[11rem] lg:flex-1' : ''}>
+            {fieldBtn('guests', 'Who', guestSummary(criteria), 'guests', true)}
+          </div>
+        </div>
+
+        {/* Last on a phone, where it closes the card; in the row on a laptop. */}
+        <button
+          type="button"
+          onClick={submit}
+          disabled={pending}
+          className={`cc-btn-primary order-last w-full ${
+            wide ? 'lg:order-none lg:min-h-[56px] lg:w-auto lg:shrink-0 lg:px-7' : ''
+          }`}
+        >
+          {pending ? 'Searching…' : 'Explore stays'}
+          {!pending && <Icon name="chevron-right" size={18} />}
+        </button>
+
         {open === 'where' && (
-          <div id={`${id}-where`} className="rounded-[10px] border border-sea-line bg-shell p-2">
-            <div className="grid grid-cols-2 gap-2">
+          <div id={`${id}-where`} className="w-full rounded-[10px] border border-sea-line bg-shell p-2">
+            <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
               {['', ...EMIRATES].map((e) => (
                 <button
                   key={e || 'all'}
@@ -202,14 +244,9 @@ export default function StaySearchForm({
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-2.5">
-          {fieldBtn('dates', 'When', dateRangeLabel({ ...criteria }), 'calendar', true)}
-          {fieldBtn('guests', 'Who', guestSummary(criteria), 'guests', true)}
-        </div>
-
         {open === 'dates' && (
-          <div id={`${id}-dates`} className="rounded-[10px] border border-sea-line bg-shell p-3">
-            <div className="grid gap-3 sm:grid-cols-2">
+          <div id={`${id}-dates`} className="w-full rounded-[10px] border border-sea-line bg-shell p-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:max-w-2xl">
               <label className="block">
                 <span className="cc-label">Check-in</span>
                 <input
@@ -238,7 +275,7 @@ export default function StaySearchForm({
         )}
 
         {open === 'guests' && (
-          <div id={`${id}-guests`} className="rounded-[10px] border border-sea-line bg-shell p-3">
+          <div id={`${id}-guests`} className="w-full rounded-[10px] border border-sea-line bg-shell p-3">
             {stepper('Adults', '18 and over', adults, setAdults, 1, MAX_ADULTS)}
             {stepper('Children', 'Ages 0–17 at check-in', ages.length, setChildCount, 0, MAX_CHILDREN)}
             {ages.length > 0 && (
@@ -276,15 +313,11 @@ export default function StaySearchForm({
         )}
 
         {error && (
-          <p role="alert" className="rounded-[8px] bg-err-bg px-3 py-2 text-[14px] text-err-ink">
+          <p role="alert" className="w-full rounded-[8px] bg-err-bg px-3 py-2 text-[14px] text-err-ink">
             {error}
           </p>
         )}
 
-        <button type="button" onClick={submit} disabled={pending} className="cc-btn-primary mt-1 w-full">
-          {pending ? 'Searching…' : 'Explore stays'}
-          {!pending && <Icon name="chevron-right" size={18} />}
-        </button>
       </div>
     </div>
   );

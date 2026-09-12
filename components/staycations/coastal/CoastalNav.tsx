@@ -69,7 +69,7 @@ export function CoastalHeader({
           solid ? 'border-sea-line bg-white/95 backdrop-blur' : 'border-transparent bg-transparent'
         }`}
       >
-      <div className="cc-wrap flex h-[60px] items-center justify-between gap-4 lg:h-[68px]">
+      <div className="cc-wrap flex h-[64px] items-center justify-between gap-4 lg:h-[80px]">
         <Link href={base || '/'} aria-label="Premium Choice Staycations — Explore" className="shrink-0">
           {(solid ? logo : logoWhite ?? logo) ? (
             <Image
@@ -78,15 +78,15 @@ export function CoastalHeader({
               width={524}
               height={130}
               priority
-              className="h-8 w-auto lg:h-9"
+              className="h-10 w-auto lg:h-14"
             />
           ) : (
             <span className="flex flex-col leading-none">
-              <span className={`font-display text-[19px] font-semibold ${solid ? 'text-sea-ink' : 'text-white'}`}>
+              <span className={`font-display text-[21px] font-semibold lg:text-[26px] ${solid ? 'text-sea-ink' : 'text-white'}`}>
                 Premium Choice
               </span>
               <span
-                className={`text-[10px] font-medium uppercase tracking-[0.28em] ${solid ? 'text-sea-soft' : 'text-white/80'}`}
+                className={`text-[10px] font-medium uppercase tracking-[0.28em] lg:text-[11px] ${solid ? 'text-sea-soft' : 'text-white/80'}`}
               >
                 Staycations
               </span>
@@ -139,7 +139,7 @@ export function CoastalHeader({
       </header>
       {/* A fixed bar leaves no space behind it. Pages without a full-bleed
           photograph need that space back; Explore keeps the picture. */}
-      {!overHero && <div className="h-[60px] lg:h-[68px]" aria-hidden="true" />}
+      {!overHero && <div className="h-[64px] lg:h-[80px]" aria-hidden="true" />}
     </>
   );
 }
