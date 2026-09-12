@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
+import BookingGate from '@/components/BookingGate';
 import BrandLoader from '@/components/BrandLoader';
 import { roomOffers, submitBookingRequest } from '@/lib/rates/actions';
 import type { PublicRoomOffer } from '@/lib/rates/types';
@@ -47,7 +48,8 @@ export default function BookingPage({
   preselectOfferId = '',
   account,
   travellers,
-  signInHref,
+  profileComplete,
+  here,
 }: {
   hotelId: number;
   hotelName: string;
@@ -66,7 +68,10 @@ export default function BookingPage({
   account: { email: string; fullName: string; phone: string } | null;
   /** Saved travellers, so names are chosen rather than retyped. */
   travellers: { id: number; fullName: string; label: string }[];
-  signInHref: string;
+  /** Their name and date of birth are on file, so nothing more is needed. */
+  profileComplete: boolean;
+  /** This page's own URL — where a sign-in link brings them back to. */
+  here: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [loading, setLoading] = useState(true);
@@ -123,6 +128,10 @@ export default function BookingPage({
   const checkOut = new Date(`${checkIn}T00:00:00Z`);
   checkOut.setUTCDate(checkOut.getUTCDate() + nights);
   const dates = `${stay.format(new Date(`${checkIn}T00:00:00Z`))} – ${stay.format(checkOut)}`;
+
+  // Signed in, and the name and date of birth a hotel checks people in
+  // against are on file.
+  const ready = Boolean(account) && profileComplete;
 
   const toggleExpanded = (id: string) =>
     setExpanded((e) => (e.includes(id) ? e.filter((v) => v !== id) : [...e, id]));
@@ -384,10 +393,16 @@ export default function BookingPage({
                 </p>
               </div>
 
-              {/* Signed in: choose from saved travellers. Signed out: an offer,
-                  never a gate — sending someone to their inbox at the moment
-                  they want to book loses the booking. */}
-              {account ? (
+              {/* A booking belongs to someone. Until we know who, and have the
+                  name a hotel will check them in against, the form below is
+                  not the right question to ask. */}
+              {!ready ? (
+                <div className="mt-5 border-t border-white/10 pt-5">
+                  <BookingGate account={account} needsDetails={Boolean(account)} here={here} />
+                </div>
+              ) : (
+                <>
+              {account && (
                 travellers.length > 0 && (
                   <div className="mt-5">
                     <label className={`${label} !text-white/60`}>Who is travelling?</label>
@@ -422,38 +437,19 @@ export default function BookingPage({
                     </p>
                   </div>
                 )
-              ) : (
-                <div className="mt-5 rounded-lg bg-white/10 p-3">
-                  <p className="text-sm text-white/85">
-                    <Link href={signInHref} className="font-semibold text-teal hover:underline">
-                      Sign in
-                    </Link>{' '}
-                    and we will fill this in — and use the passport spellings you have saved.
-                  </p>
-                  <p className="mt-1 text-[11px] leading-relaxed text-white/50">
-                    Not required. Carry on below and everything will be waiting in your account
-                    the first time you do sign in.
-                  </p>
-                </div>
               )}
 
               <div className="mt-5 space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <input
-                    required
-                    value={guest.name}
-                    onChange={(e) => setGuest({ ...guest, name: e.target.value })}
-                    placeholder="Your name *"
-                    className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40"
-                  />
-                  <input
-                    required
-                    type="email"
-                    value={guest.email}
-                    onChange={(e) => setGuest({ ...guest, email: e.target.value })}
-                    placeholder="Email *"
-                    className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white placeholder:text-white/40"
-                  />
+                <div className="rounded-lg bg-white/10 px-3 py-2.5">
+                  <p className="text-sm text-white">
+                    Booking as <strong>{guest.name || account?.fullName}</strong>
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-white/60">
+                    {guest.email} ·{' '}
+                    <Link href="/account/travellers" className="font-semibold text-teal hover:underline">
+                      edit your details
+                    </Link>
+                  </p>
                 </div>
                 <input
                   value={guest.phone}
@@ -542,6 +538,8 @@ export default function BookingPage({
                 This is a request, not a booking. No payment is taken here and no room is held
                 until a specialist confirms it with {hotelName}.
               </p>
+                </>
+              )}
             </div>
           </div>
         </div>

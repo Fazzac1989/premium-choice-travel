@@ -132,8 +132,15 @@ export async function submitBookingRequest(payload: {
   /** Separate, optional, and never assumed from the tick above. */
   marketingOptIn?: boolean;
 }): Promise<BookingRequestResult> {
-  const name = payload.name.trim();
-  const email = payload.email.trim();
+  // A booking request belongs to an account: that is what makes the voucher,
+  // the payment and any later change reachable by the person who sent it.
+  // Checked here rather than only in the browser.
+  const signedIn = await getAccount();
+  if (!signedIn) {
+    return { ok: false, message: 'Please sign in again — your session has expired. Your room is still here.' };
+  }
+  const name = (payload.name || signedIn.fullName).trim();
+  const email = signedIn.email.trim();
   if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
   // Checked on the server too: a tick box in a browser proves nothing.
@@ -174,7 +181,7 @@ export async function submitBookingRequest(payload: {
   // Travellers are re-read against the signed-in account rather than trusted
   // from the browser, so a crafted request cannot attach — or reveal —
   // someone else's traveller by guessing an id.
-  const account = await getAccount();
+  const account = signedIn;
   let ownTravellerIds: number[] = [];
   if (account && payload.travellerIds?.length) {
     const { data: mine } = await db

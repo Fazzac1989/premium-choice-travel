@@ -51,12 +51,13 @@ export default async function HotelBookingPage({
     .map((n) => Math.max(0, Math.min(17, Number(n))))
     .slice(0, children);
 
-  // Signed in, we already know who they are and who they travel with, so
-  // nobody retypes a name they have given us before. Signed out, the page
-  // offers a sign-in rather than demanding one — asking someone to leave for
-  // their inbox at the moment they want to book loses the booking.
+  // A booking belongs to an account now. The page asks for an email it can
+  // prove, then for the name and date of birth a hotel will check them in
+  // against — once, and never again. The sign-in link returns to this URL, so
+  // the room and price they chose survive the round trip to their inbox.
   const account = await getAccount();
   const travellers = account ? await getTravellers(account.id) : [];
+  const profileComplete = Boolean(account?.fullName) && travellers.some((t) => Boolean(t.dateOfBirth));
 
   const here =
     `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}` +
@@ -77,7 +78,8 @@ export default async function HotelBookingPage({
       preselectOfferId={searchParams.offer ?? ''}
       account={account ? { email: account.email, fullName: account.fullName, phone: account.phone } : null}
       travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
-      signInHref={`/account/sign-in?next=${encodeURIComponent(here)}`}
+      profileComplete={profileComplete}
+      here={here}
     />
   );
 }
