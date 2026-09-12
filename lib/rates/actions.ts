@@ -8,6 +8,7 @@ import { emailRows, emailShell, sendEmail } from '@/lib/email';
 
 import { emailBrand } from '@/lib/email-brand';
 import { getAccount } from '@/lib/account';
+import { getTravellers, leadTraveller } from '@/lib/travellers';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
 
 /**
@@ -139,9 +140,17 @@ export async function submitBookingRequest(payload: {
   if (!signedIn) {
     return { ok: false, message: 'Please sign in again — your session has expired. Your room is still here.' };
   }
-  const name = (payload.name || signedIn.fullName).trim();
+  // The profile's name is often blank — a customer can build their traveller
+  // list without ever filling it in — so the saved traveller is the fallback.
+  let name = (payload.name || signedIn.fullName).trim();
   const email = signedIn.email.trim();
-  if (!name || !email) return { ok: false, message: 'Please add your name and email.' };
+  if (!name) {
+    const saved = await getTravellers(signedIn.id);
+    name = leadTraveller(saved)?.fullName ?? '';
+  }
+  if (!name || !email) {
+    return { ok: false, message: 'Add the name your booking should be in — your passport name.' };
+  }
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok: false, message: 'That email address doesn’t look right.' };
   // Checked on the server too: a tick box in a browser proves nothing.
   if (!payload.acceptedTerms) {

@@ -35,6 +35,33 @@ export function mapTraveller(row: any): Traveller {
   };
 }
 
+/**
+ * The person whose name goes on the booking.
+ *
+ * Their own record first, then whoever was saved first. A customer who built
+ * their list on the travellers screen never chose a "Me" label, so falling
+ * back matters more than the label does.
+ */
+export function leadTraveller(travellers: Traveller[]): Traveller | null {
+  return (
+    travellers.find((x) => x.label.toLowerCase() === 'me' && x.fullName) ??
+    travellers.find((x) => x.fullName) ??
+    null
+  );
+}
+
+/**
+ * Whether we already know what a hotel will check this customer in against.
+ *
+ * One saved traveller with a name and a date of birth is the whole test. It
+ * deliberately does not look at the profile's own name: someone who added
+ * their family on the travellers screen has given us everything, and being
+ * asked for it again is the bug this replaces.
+ */
+export function travelDetailsOnFile(travellers: Traveller[]): boolean {
+  return travellers.some((x) => Boolean(x.fullName) && Boolean(x.dateOfBirth));
+}
+
 export async function getTravellers(customerId: string): Promise<Traveller[]> {
   if (!isSupabaseConfigured()) return [];
   const db = createAdminClient();

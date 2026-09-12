@@ -61,10 +61,15 @@ export async function saveBookingProfile(_prev: ProfileState, formData: FormData
   const db = createAdminClient();
   const now = new Date().toISOString();
 
+  // Upsert, not update: a profile row can be missing for a moment after
+  // signup, and an update against nothing returns no error while saving
+  // nothing, which is how a customer ends up asked for this twice.
   const { error: profileError } = await db
     .from('profiles')
-    .update({ full_name: fullName, ...(phone ? { phone } : {}) })
-    .eq('id', account.id);
+    .upsert(
+      { id: account.id, email: account.email, full_name: fullName, ...(phone ? { phone } : {}) },
+      { onConflict: 'id' },
+    );
   if (profileError) {
     console.error('[profile] save failed', profileError.message);
     return { ok: false, message: 'Something went wrong — please try again.' };

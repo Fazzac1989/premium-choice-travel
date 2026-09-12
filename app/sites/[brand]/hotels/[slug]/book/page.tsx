@@ -6,7 +6,7 @@ import { getStaycationHotels, hotelSlug } from '@/lib/data';
 import { RATES_PREVIEW_COOKIE, ratesVisible } from '@/lib/rates';
 import { cookies } from 'next/headers';
 import { getAccount } from '@/lib/account';
-import { getTravellers } from '@/lib/travellers';
+import { getTravellers, leadTraveller, travelDetailsOnFile } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,7 +57,12 @@ export default async function HotelBookingPage({
   // the room and price they chose survive the round trip to their inbox.
   const account = await getAccount();
   const travellers = account ? await getTravellers(account.id) : [];
-  const profileComplete = Boolean(account?.fullName) && travellers.some((t) => Boolean(t.dateOfBirth));
+  // One saved traveller with a name and a date of birth is enough. Requiring
+  // the profile's own name as well asked people who had added their family on
+  // the travellers screen to type it all again.
+  const profileComplete = travelDetailsOnFile(travellers);
+  const lead = leadTraveller(travellers);
+  const bookingName = account?.fullName || lead?.fullName || '';
 
   const here =
     `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}` +
@@ -76,7 +81,7 @@ export default async function HotelBookingPage({
       children={children}
       childrenAges={childrenAges}
       preselectOfferId={searchParams.offer ?? ''}
-      account={account ? { email: account.email, fullName: account.fullName, phone: account.phone } : null}
+      account={account ? { email: account.email, fullName: bookingName, phone: account.phone } : null}
       travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
       profileComplete={profileComplete}
       here={here}
