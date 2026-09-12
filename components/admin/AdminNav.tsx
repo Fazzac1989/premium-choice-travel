@@ -44,18 +44,32 @@ const ST_ITEMS: NavEntry[] = [
   { href: '/admin/school-trips/analytics', label: 'Analytics' },
 ];
 
-const brandItems = (key: string): NavItem[] => [
-  { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
-  { href: `/admin/brands/${key}/packages`, label: 'Journeys' },
-  { href: `/admin/brands/${key}/import`, label: 'AI Importer' },
-  { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
-  { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
-  ...(key === 'corporate' ? [] : [{ href: `/admin/brands/${key}/offers`, label: 'Offers' }]),
-  { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
-  // Hotel booking requests (Hotelbeds confirmations) only exist for Staycations.
-  ...(key === 'staycations' ? [{ href: '/admin/requests', label: 'Booking requests' }] : []),
-  { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
-];
+/**
+ * Staycations sells hotels and nothing else. Journeys, the importer that
+ * makes them, destinations, quotes and enquiries all belong to the brands
+ * that sell trips, and a sidebar full of sections nobody opens is how a
+ * specialist loses the one they need.
+ */
+const HOTELS_ONLY = new Set(['staycations']);
+
+const brandItems = (key: string): NavItem[] =>
+  HOTELS_ONLY.has(key)
+    ? [
+        { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
+        { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
+        { href: `/admin/brands/${key}/offers`, label: 'Offers' },
+        { href: '/admin/requests', label: 'Booking requests' },
+      ]
+    : [
+        { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
+        { href: `/admin/brands/${key}/packages`, label: 'Journeys' },
+        { href: `/admin/brands/${key}/import`, label: 'AI Importer' },
+        { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
+        { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
+        ...(key === 'corporate' ? [] : [{ href: `/admin/brands/${key}/offers`, label: 'Offers' }]),
+        { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
+        { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
+      ];
 
 export default function AdminNav({ role = 'admin' }: { role?: 'admin' | 'reviewer' | 'customer' }) {
   const pathname = usePathname();
