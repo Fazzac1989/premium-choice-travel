@@ -6,6 +6,7 @@ import TripActions from '@/components/staycations/coastal/TripActions';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getAccount, getAccountActivity } from '@/lib/account';
+import { signOutAccount } from '@/lib/account-actions';
 import { badgeClass, tripStatus } from '@/lib/staycations/trip-status';
 import { boardLabel, roomLabel } from '@/lib/staycations/format';
 import { addDays, longDateLabel, todayInDubai, ymd } from '@/lib/staycations/search-criteria';
@@ -133,6 +134,26 @@ export default async function TripsPage({ params }: { params: { brand: string } 
       <p className="cc-body mt-1 text-sea-soft">
         Every stay you have with us: what it costs, what is confirmed, and everything you can do about it.
       </p>
+
+      {/* Who this is, and the way out. Without it there is no way to leave an
+          account on a shared phone, or to come back as somebody else. */}
+      {account && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 rounded-[10px] border border-sea-line px-4 py-3">
+          <p className="cc-support">
+            Signed in as <span className="font-medium text-sea-ink">{account.email}</span>
+          </p>
+          <div className="flex items-center gap-4">
+            <Link href="/account/travellers" className="text-[15px] font-semibold text-petrol">
+              Saved travellers
+            </Link>
+            <form action={signOutAccount}>
+              <button type="submit" className="min-h-[44px] text-[15px] font-semibold text-sea-soft hover:text-petrol">
+                Sign out
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {!account && (
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-[12px] bg-mist p-4">

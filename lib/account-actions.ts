@@ -80,10 +80,15 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
 const SENT = (email: string) =>
   `If we can reach you at ${email}, a sign-in link is on its way. It works once and lasts an hour.`;
 
-export async function signOutAccount() {
+export async function signOutAccount(formData?: FormData) {
   const supabase = createClient();
   await supabase.auth.signOut();
-  redirect('/');
+  // Back to where they were, when the form said so. Only ever a path on this
+  // site: an open redirect here would be handed to anyone who could get a
+  // form in front of a signed-in customer.
+  const next = String(formData?.get('next') ?? '');
+  const safe = next.startsWith('/') && !next.startsWith('//') ? next : '/';
+  redirect(safe);
 }
 
 /** Name and phone, kept so a customer does not retype them on every request. */

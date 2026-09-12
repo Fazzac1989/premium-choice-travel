@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
 import BookingGate from '@/components/BookingGate';
+import { signOutAccount } from '@/lib/account-actions';
 import BrandLoader from '@/components/BrandLoader';
 import { roomOffers, submitBookingRequest } from '@/lib/rates/actions';
 import type { PublicRoomOffer } from '@/lib/rates/types';
@@ -398,7 +399,7 @@ export default function BookingPage({
                   not the right question to ask. */}
               {!ready ? (
                 <div className="mt-5 border-t border-white/10 pt-5">
-                  <BookingGate account={account} needsDetails={Boolean(account)} here={here} />
+                  <BookingGate account={account} here={here} />
                 </div>
               ) : (
                 <>
@@ -450,6 +451,12 @@ export default function BookingPage({
                       edit your details
                     </Link>
                   </p>
+                  <form action={signOutAccount} className="mt-1">
+                    <input type="hidden" name="next" value={here} />
+                    <button type="submit" className="text-[11px] font-semibold text-white/60 underline underline-offset-2 hover:text-white">
+                      Not you? Sign out
+                    </button>
+                  </form>
                 </div>
                 <input
                   value={guest.phone}

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import GuardFields, { type GuardValues } from '@/components/GuardFields';
-import { requestSignInLink, type AccountState } from '@/lib/account-actions';
+import { requestSignInLink, signOutAccount, type AccountState } from '@/lib/account-actions';
 import { saveBookingProfile, type ProfileState } from '@/lib/account-profile-actions';
 
 /**
@@ -92,11 +92,6 @@ function DetailsStep({ email, fullName, phone }: { email: string; fullName: stri
 
   return (
     <form action={formAction} className="mt-4 space-y-3">
-      <p className="text-sm leading-relaxed text-white/80">
-        Signed in as <strong className="text-white">{email}</strong>. Two things a hotel needs, and
-        then we are done with forms.
-      </p>
-
       <div>
         <label htmlFor="gate-name" className={label}>
           Your full name, as in your passport *
@@ -180,11 +175,9 @@ function DetailsStep({ email, fullName, phone }: { email: string; fullName: stri
 
 export default function BookingGate({
   account,
-  needsDetails,
   here,
 }: {
   account: { email: string; fullName: string; phone: string } | null;
-  needsDetails: boolean;
   here: string;
 }) {
   return (
@@ -202,11 +195,27 @@ export default function BookingGate({
         </p>
       )}
       {account ? (
-        <DetailsStep email={account.email} fullName={account.fullName} phone={account.phone} />
+        <>
+          <p className="mt-1.5 text-sm leading-relaxed text-white/70">
+            Signed in as <strong className="text-white">{account.email}</strong>. Two things a hotel
+            needs, and then we are done with forms.
+          </p>
+          {/* Its own form: a submit button inside the one below would be held
+              up by the required fields, and forms cannot nest. */}
+          <form action={signOutAccount} className="mt-1">
+            <input type="hidden" name="next" value={here} />
+            <button
+              type="submit"
+              className="text-[11px] font-semibold text-white/60 underline underline-offset-2 hover:text-white"
+            >
+              Not you? Sign out
+            </button>
+          </form>
+          <DetailsStep email={account.email} fullName={account.fullName} phone={account.phone} />
+        </>
       ) : (
         <SignInStep here={here} />
       )}
-      {needsDetails && null}
     </div>
   );
 }
