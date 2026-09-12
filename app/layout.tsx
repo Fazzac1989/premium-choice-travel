@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Archivo, Fraunces, Great_Vibes } from 'next/font/google';
+import { Archivo, Cormorant_Garamond, Fraunces, Great_Vibes, Inter } from 'next/font/google';
 import './globals.css';
 
 const archivo = Archivo({
@@ -20,6 +20,25 @@ const greatVibes = Great_Vibes({
   subsets: ['latin'],
   variable: '--font-script',
   display: 'swap',
+});
+
+/**
+ * Coastal Calm's two faces, self-hosted by Next so nothing is fetched from
+ * Google at run time. They live here rather than in one brand's layout
+ * because every site but School Trips wears this design now.
+ */
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-cormorant',
+  display: 'swap',
+  fallback: ['Georgia', 'serif'],
+});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+  fallback: ['system-ui', 'Segoe UI', 'sans-serif'],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -60,7 +79,10 @@ const orgSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${fraunces.variable} ${greatVibes.variable}`}>
+    <html
+      lang="en"
+      className={`${archivo.variable} ${fraunces.variable} ${greatVibes.variable} ${cormorant.variable} ${inter.variable}`}
+    >
       <body className="font-sans">
         {children}
         <script

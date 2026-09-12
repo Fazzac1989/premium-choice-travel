@@ -52,9 +52,35 @@
    teal/ink system exactly as it is. Cormorant Garamond carries the
    display voice, Inter every control, label and price.
    ───────────────────────────────────────────────────────────── */
+:root {
+  /* The original brand palette. Everything outside .coastal uses these. */
+  --c-ink: 22 36 46;
+  --c-ink-soft: 66 89 100;
+  --c-teal: 25 186 171;
+  --c-teal-deep: 18 137 126;
+  --c-teal-hover: 20 163 150;
+  --c-sand: 246 244 239;
+  --c-line: 219 222 224;
+}
+
 @layer components {
   .coastal {
     @apply bg-white font-ui text-sea-ink;
+
+    /*
+     * Coastal Calm, stated once. Every `text-teal`, `bg-sand`, `border-line`
+     * and `bg-teal/10` inside this scope resolves to the values below, so a
+     * brand site written in the old palette renders in the new one without a
+     * line of its markup changing. That is what "same design, same content"
+     * means here.
+     */
+    --c-ink: 24 59 70;        /* sea-ink   #183B46 */
+    --c-ink-soft: 89 109 116; /* sea-soft  #596D74 */
+    --c-teal: 22 75 87;       /* petrol    #164B57 */
+    --c-teal-deep: 16 59 69;  /* petrol-deep #103B45 */
+    --c-teal-hover: 16 59 69;
+    --c-sand: 234 243 244;    /* mist      #EAF3F4 */
+    --c-line: 218 228 229;    /* sea-line  #DAE4E5 */
   }
   .coastal ::selection {
     @apply bg-petrol text-white;

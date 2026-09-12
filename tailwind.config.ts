@@ -11,13 +11,17 @@ const config: Config = {
       transparent: 'transparent',
       current: 'currentColor',
       white: '#FFFFFF',
-      ink: '#16242E',
-      'ink-soft': '#425964',
-      teal: '#19BAAB',
-      'teal-deep': '#12897E',
-      'teal-hover': '#14A396',
-      sand: '#F6F4EF',
-      line: 'rgba(22,36,46,.14)',
+      // Defined as channels so a section of the site can restate them and
+      // every use follows, `bg-teal/10` included. The values live in
+      // globals.css: :root holds the originals, .coastal the Coastal Calm
+      // equivalents. The admin sits outside .coastal and never moves.
+      ink: 'rgb(var(--c-ink) / <alpha-value>)',
+      'ink-soft': 'rgb(var(--c-ink-soft) / <alpha-value>)',
+      teal: 'rgb(var(--c-teal) / <alpha-value>)',
+      'teal-deep': 'rgb(var(--c-teal-deep) / <alpha-value>)',
+      'teal-hover': 'rgb(var(--c-teal-hover) / <alpha-value>)',
+      sand: 'rgb(var(--c-sand) / <alpha-value>)',
+      line: 'rgb(var(--c-line) / <alpha-value>)',
       danger: '#B4423C',
 
       // ── Coastal Calm — Premium Choice Staycations only ──────────

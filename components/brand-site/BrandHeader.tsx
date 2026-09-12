@@ -101,13 +101,20 @@ export default function BrandHeader({
     <>
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-          isSolid ? 'border-b border-line bg-white/95 backdrop-blur' : 'bg-transparent'
+          isSolid
+            ? 'border-b border-line bg-white/95 backdrop-blur'
+            : 'border-b border-white/10 bg-petrol-deep/85 backdrop-blur-[2px]'
         }`}
       >
+        {/* Softens the edge of the overlay into the picture below it. */}
+        {!isSolid && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-full h-8 bg-gradient-to-b from-[rgba(16,59,69,0.85)] to-transparent"
+          />
+        )}
         <div
-          className={`container-site flex items-center justify-between gap-6 transition-[height] duration-300 ${
-            isSolid ? 'h-[84px]' : 'h-[104px]'
-          }`}
+          className="container-site flex h-[72px] items-center justify-between gap-6"
         >
           <Link href={home} aria-label={`${name} — home`} className="shrink-0">
             {(isSolid ? logo : logoWhite) ? (
@@ -117,7 +124,7 @@ export default function BrandHeader({
                 width={524}
                 height={130}
                 priority
-                className={`h-auto transition-[width] duration-300 ${isSolid ? 'w-[240px] max-w-[48vw]' : 'w-[300px] max-w-[55vw]'}`}
+                className="h-10 w-auto max-w-[52vw] lg:h-12"
               />
             ) : (
               <span className={`font-serif text-xl ${isSolid ? 'text-ink' : 'text-white'}`}>{name}</span>

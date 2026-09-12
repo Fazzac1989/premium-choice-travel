@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Inter } from 'next/font/google';
 import BrandHeader, { type HeaderDestinationGroup } from '@/components/brand-site/BrandHeader';
 import BrandFooter from '@/components/brand-site/BrandFooter';
 import PwaSetup from '@/components/brand-site/PwaSetup';
@@ -12,24 +11,6 @@ import { brandBase } from '@/lib/brand-site';
 import { getDestinations } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
-
-/**
- * Coastal Calm's two faces. Next self-hosts both, so nothing is fetched from
- * Google at run time and the fallbacks below are only for the first paint.
- */
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['500', '600'],
-  variable: '--font-cormorant',
-  display: 'swap',
-  fallback: ['Georgia', 'serif'],
-});
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-  fallback: ['system-ui', 'Segoe UI', 'sans-serif'],
-});
 
 export async function generateMetadata({ params }: { params: { brand: string } }): Promise<Metadata> {
   const brand = getBrand(params.brand);
@@ -90,7 +71,7 @@ export default async function BrandSiteLayout({
   // ── Staycations: the Coastal Calm app shell ──────────────────
   if (isStaycations) {
     return (
-      <div className={`coastal min-h-screen ${cormorant.variable} ${inter.variable}`}>
+      <div className="coastal min-h-screen">
         <ChromeProvider>
           <CoastalHeader base={base} logo={brand.logo} logoWhite={brand.logoWhite} />
           <main>{children}</main>
@@ -116,7 +97,7 @@ export default async function BrandSiteLayout({
   }
 
   return (
-    <>
+    <div className="coastal min-h-screen">
       <BrandHeader
         base={base}
         name={brand.name}
@@ -137,6 +118,6 @@ export default async function BrandSiteLayout({
         isHolidays={isHolidays}
         isStaycations={false}
       />
-    </>
+    </div>
   );
 }

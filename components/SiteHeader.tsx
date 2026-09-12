@@ -46,7 +46,9 @@ export default function SiteHeader({ solid = false }: { solid?: boolean }) {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        isSolid ? 'border-b border-line bg-white/95 backdrop-blur' : 'bg-transparent'
+        isSolid
+          ? 'border-b border-line bg-white/95 backdrop-blur'
+          : 'border-b border-white/10 bg-petrol-deep/85 backdrop-blur-[2px]'
       }`}
     >
       <div className="container-site flex h-[72px] items-center justify-between gap-6">
