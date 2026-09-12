@@ -1,0 +1,7012 @@
+[
+  {
+    "code": 635407,
+    "name": "Boudl Abha Apartment",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "APTH4",
+    "latitude": 18.2338895,
+    "longitude": 42.435681812,
+    "address": "Near Abha Mall Complex, 6455"
+  },
+  {
+    "code": 635415,
+    "name": "Boudl Mahayel Aseer",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "APTH4",
+    "latitude": 18.539639,
+    "longitude": 42.069547,
+    "address": "Aldhers District; Mahayel; Asir"
+  },
+  {
+    "code": 666332,
+    "name": "beautat hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.245433,
+    "longitude": 42.496864,
+    "address": "King Faisal Road"
+  },
+  {
+    "code": 772651,
+    "name": "Msharef Al Moden Suites",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.187963,
+    "longitude": 42.663274,
+    "address": "King Abdullah Road Airport Interchange"
+  },
+  {
+    "code": 773123,
+    "name": "Aber 106 Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.230047343161388,
+    "longitude": 42.5088980312065,
+    "address": "Ibrahim Al Hadithi Street"
+  },
+  {
+    "code": 792023,
+    "name": "Blue Inn",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.214461,
+    "longitude": 42.500985,
+    "address": "King Saud Street"
+  },
+  {
+    "code": 807842,
+    "name": "Almuhaidb Residence Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.20576,
+    "longitude": 42.49214,
+    "address": "6705 King Abdul Aziz Rd Al Shifa"
+  },
+  {
+    "code": 841592,
+    "name": "Bayat Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 18.288374,
+    "longitude": 42.725015,
+    "address": "King Faisal Road"
+  },
+  {
+    "code": 860957,
+    "name": "Al Azhar Palace Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 19.132146,
+    "longitude": 41.074372,
+    "address": "King Fahad Ibn Abdul Aziz Rd"
+  },
+  {
+    "code": 923846,
+    "name": "Citadines Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "APTH4",
+    "latitude": 18.2410998,
+    "longitude": 42.5997038,
+    "address": "King Fahed road"
+  },
+  {
+    "code": 950559,
+    "name": "Blue Inn Hotel ",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.214345,
+    "longitude": 42.501031,
+    "address": "King Saud"
+  },
+  {
+    "code": 954815,
+    "name": "Nivel Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.280361,
+    "longitude": 42.672145,
+    "address": "King Fahad Road, Khamis Mushait 62434, Saudi Arabi"
+  },
+  {
+    "code": 970267,
+    "name": "South Hotel Suites",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.2843044524197,
+    "longitude": 42.7284479385452,
+    "address": "King Faysal Road"
+  },
+  {
+    "code": 993213,
+    "name": "Golden Andalus Hotel Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.2156524,
+    "longitude": 42.5154685,
+    "address": "Prince Sultan, Al Nuzha, 7790"
+  },
+  {
+    "code": 993214,
+    "name": "Golden Alareen",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.2277253,
+    "longitude": 42.5166139,
+    "address": "King Abdulaziz Road, Rabwah"
+  },
+  {
+    "code": 993249,
+    "name": "Basma Plaza",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.2268296,
+    "longitude": 42.5030551,
+    "address": "King Abdulaziz Road, Rabwah"
+  },
+  {
+    "code": 993315,
+    "name": "Golden Gewan Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.2179685,
+    "longitude": 42.5227492,
+    "address": "King Abdul Aziz Road, 19"
+  },
+  {
+    "code": 993319,
+    "name": "Golden Balcony Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.1994287,
+    "longitude": 42.4990952,
+    "address": "King Abdulaziz Road, Rabwah"
+  },
+  {
+    "code": 997666,
+    "name": "Abha AlMudiyaf AlThahabiya Serviced Apartments",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.2087069,
+    "longitude": 42.5108339,
+    "address": "Prince Sultan, Al Nuzha"
+  },
+  {
+    "code": 1006298,
+    "name": "Golden Tulip Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.23083556536809,
+    "longitude": 42.49351932887079,
+    "address": "King Abdul Aziz Rd, Al Wardatain, 62521"
+  },
+  {
+    "code": 1008738,
+    "name": "Diyar Al Basateen Hotel Apartment",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.22347,
+    "longitude": 42.55673,
+    "address": "Al Mansak District, 62527"
+  },
+  {
+    "code": 1009358,
+    "name": "Golden Al Souda",
+    "destinationCode": "AHB",
+    "zoneCode": 5,
+    "categoryCode": "APTH3",
+    "latitude": 18.42327,
+    "longitude": 41.5945,
+    "address": "Al Soudah Rd, 62515"
+  },
+  {
+    "code": 1038326,
+    "name": "Best Western Plus Danat Almansak Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 18.23316,
+    "longitude": 42.556157,
+    "address": "King Fahd Road, Al Areen Street"
+  },
+  {
+    "code": 1052116,
+    "name": "Beauty Rose",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.2267378,
+    "longitude": 42.54327,
+    "address": "King Fahd Road"
+  },
+  {
+    "code": 1074749,
+    "name": "Goldn Almdyaf",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.244635,
+    "longitude": 42.6137095,
+    "address": "Saudi Arabia, 0504439155"
+  },
+  {
+    "code": 1086186,
+    "name": "Garden Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 18.2262177,
+    "longitude": 42.4879998,
+    "address": "Sird Bin Abdullah Al Azdi Road 1"
+  },
+  {
+    "code": 1090265,
+    "name": "Midtown Majestic Garden",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.1756481,
+    "longitude": 42.6108545,
+    "address": "Aseer Abha 62585"
+  },
+  {
+    "code": 1091505,
+    "name": "Al Qasr Albadie",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 18.2464685,
+    "longitude": 42.5117238,
+    "address": "Al-badi' District"
+  },
+  {
+    "code": 1091507,
+    "name": "Al Qasr Mansak",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.2714468,
+    "longitude": 42.4826885,
+    "address": "40th Street, Alqasr, 62217"
+  },
+  {
+    "code": 1100539,
+    "name": "Sarwat Park Hotel",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.199682,
+    "longitude": 42.497401,
+    "address": "King Abdul Aziz Road 4 5007"
+  },
+  {
+    "code": 1101332,
+    "name": "Sarwat Park Hotel Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 18.199747,
+    "longitude": 42.497366,
+    "address": "King Abdul Aziz Rd Al Shifa"
+  },
+  {
+    "code": 1106075,
+    "name": "Golden Tulip Abha Hotel ***",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 18.230967314327,
+    "longitude": 42.50091382737,
+    "address": "King Abdul Aziz Road, 62521 Abha, Saudi Arabia"
+  },
+  {
+    "code": 1121355,
+    "name": "Al Qasr Al Rabwah",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 18.203812,
+    "longitude": 42.490739,
+    "address": "Al-raya Street Abha, Asir 62523"
+  },
+  {
+    "code": 1126963,
+    "name": "Ewaa Express Hotel - Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "3",
+    "latitude": 18.220999971585,
+    "longitude": 42.476239157819,
+    "address": "6453 Al Soudah Road"
+  },
+  {
+    "code": 1140145,
+    "name": "Qimam Park Hotel 1",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 18.274344,
+    "longitude": 42.592285,
+    "address": "2230 Almahalah"
+  },
+  {
+    "code": 1155555,
+    "name": "Al Qasr Hotel Suites Albadie District",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.221543,
+    "longitude": 42.585711,
+    "address": "Al Mozvin"
+  },
+  {
+    "code": 1180164,
+    "name": "Golden Al Areen Hotel Abha",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.227720233613,
+    "longitude": 42.518802434206,
+    "address": "King Abdul Aziz Road 5606 62524 Abha Saudi Arabia"
+  },
+  {
+    "code": 1181162,
+    "name": "Golden Balcony Hotel***",
+    "destinationCode": "AHB",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 18.1994705200195,
+    "longitude": 42.5012702941895,
+    "address": "King Abdul Aziz Road 21 Abha 62511 Asir Province S"
+  },
+  {
+    "code": 91260,
+    "name": "Swiss International Al Hamra Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.438600540161133,
+    "longitude": 50.10612106323242,
+    "address": "KING KHALED STREET, Near Passport Office, 4440"
+  },
+  {
+    "code": 94416,
+    "name": "Dammam Palace Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.428724,
+    "longitude": 50.10356,
+    "address": "King Fahed Street"
+  },
+  {
+    "code": 94417,
+    "name": "Sheraton Dammam Hotel & Towers",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.452589,
+    "longitude": 50.119888,
+    "address": "1St Street - Po Box 5397"
+  },
+  {
+    "code": 94418,
+    "name": "Eastyard Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.45943324016473,
+    "longitude": 50.09118255344242,
+    "address": "Cornish Al-Dammam-Gulf Road,Dammam, 36530"
+  },
+  {
+    "code": 129901,
+    "name": "Boudl Corniche",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 26.45246696,
+    "longitude": 50.11920166,
+    "address": "Al-Shatea District"
+  },
+  {
+    "code": 129905,
+    "name": "Boudl Shatea Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 26.453914,
+    "longitude": 50.1194043,
+    "address": "Al Shatea neighbourhood, 31932 Dammam"
+  },
+  {
+    "code": 163314,
+    "name": "Intercontinental Al Ahsa",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.387617,
+    "longitude": 49.581798,
+    "address": "Al Malik Khalid Street, Al Hofuf"
+  },
+  {
+    "code": 163315,
+    "name": "Intercontinental Jubail",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 27.0980011,
+    "longitude": 49.5782321,
+    "address": "Tareeq 101 Madinat P.O. Box 10167, Al Jubail"
+  },
+  {
+    "code": 196482,
+    "name": "Novotel Dammam Business Park",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.407396,
+    "longitude": 50.138549,
+    "address": "All Khobar Dammam Highway"
+  },
+  {
+    "code": 363284,
+    "name": "DoubleTree by Hilton Dhahran",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.3040288666832,
+    "longitude": 50.1746052504132,
+    "address": "Al Qashla Street, Dhahran Al Khobar"
+  },
+  {
+    "code": 409606,
+    "name": "Golden Tulip Dammam Corniche Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.457605,
+    "longitude": 50.096298,
+    "address": "Seashell Roundabout, 18 Street"
+  },
+  {
+    "code": 409671,
+    "name": "Park Inn by Radisson Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.453089,
+    "longitude": 50.130729,
+    "address": "King Abdullah Bin Abdulaziz Rd, 31413 Dammam, Saud"
+  },
+  {
+    "code": 433398,
+    "name": "Howard Johnson By Wyndham Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.471399,
+    "longitude": 50.0923526,
+    "address": "Corniche Street Of Al Hamra"
+  },
+  {
+    "code": 442146,
+    "name": "Tulip Inn",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.45325559679918,
+    "longitude": 50.13083517551422,
+    "address": "Al Shatea Dist. King Abdallah Bin Abdul Aziz Road"
+  },
+  {
+    "code": 545482,
+    "name": "Aloft Dhahran",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "5EST",
+    "latitude": 26.304713,
+    "longitude": 50.174329,
+    "address": "King Saud Branch Road Crossing 21st Street, na"
+  },
+  {
+    "code": 557589,
+    "name": "Mena Holiday Beach Resort Half Moon Bay",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.174543,
+    "longitude": 50.065627,
+    "address": "Azizzia Area Half Moon Bay Al Khobar, 39246"
+  },
+  {
+    "code": 590122,
+    "name": "Al Ahsa Grand Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.3461003,
+    "longitude": 49.5879305,
+    "address": "prince nayef bin abdulazizi road"
+  },
+  {
+    "code": 640114,
+    "name": "Braira Dammam Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.470044,
+    "longitude": 50.123952,
+    "address": "Prince Mohamed Bin Fahd Road, 5"
+  },
+  {
+    "code": 643993,
+    "name": "SAS  Residence Dhahran",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.3032,
+    "longitude": 50.1742,
+    "address": "Jamaluddin Al Afaghani and 18 B Street, Al Olaya D"
+  },
+  {
+    "code": 644123,
+    "name": "Radisson Hotel & Apartments Dammam Industry City",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.2334371,
+    "longitude": 49.987261200000034,
+    "address": "Intersect Highway 615, Makkah Road 67th Street"
+  },
+  {
+    "code": 644124,
+    "name": "Radisson Blu Resort, Al Khobar Half Moon Bay",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.039577,
+    "longitude": 49.993927,
+    "address": "Half Moon Bay, Salwa Coastal Road"
+  },
+  {
+    "code": 653804,
+    "name": "Wyndham Garden Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.427632,
+    "longitude": 50.097594,
+    "address": "21st Street"
+  },
+  {
+    "code": 658527,
+    "name": "Al Eairy Hotel Apartments Dammam 8",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 26.43552,
+    "longitude": 50.066558,
+    "address": "Prince Nayef Bin Abdulaziz Rd, Al Jalawiyah"
+  },
+  {
+    "code": 658530,
+    "name": "Al Eairy Hotel Apartments Dammam 7",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 26.441824,
+    "longitude": 50.064111,
+    "address": "Prince Nayef Bin Abdulaziz Rd, Al Muhamma"
+  },
+  {
+    "code": 662342,
+    "name": "Sendan Residence",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.43592386,
+    "longitude": 50.08772068,
+    "address": "King Khaled Street Suite An Nakhil Dammam 32244"
+  },
+  {
+    "code": 680762,
+    "name": "Braira Al Azizia Hotel & Resort",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.47,
+    "longitude": 50.1242,
+    "address": "King Fahad Road"
+  },
+  {
+    "code": 682926,
+    "name": "Palms Lily Hotel Suites",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "3EST",
+    "latitude": 25.3854627,
+    "longitude": 49.5790352,
+    "address": "Talal Bin Abdulaziz Street"
+  },
+  {
+    "code": 693857,
+    "name": "AFAM Dammam Residence",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.453662,
+    "longitude": 50.117083,
+    "address": "Hilal bin Alhamra St"
+  },
+  {
+    "code": 694878,
+    "name": "Watheer Lily Hotel Suites",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.4528,
+    "longitude": 50.126,
+    "address": "Al Ashriah Street"
+  },
+  {
+    "code": 695293,
+    "name": "Somewhere Bliss Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 25.405329,
+    "longitude": 49.567941,
+    "address": "King Saud Road"
+  },
+  {
+    "code": 704175,
+    "name": "Garden Plaza Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "4EST",
+    "latitude": 25.38860533356167,
+    "longitude": 49.581112079298464,
+    "address": "Prince Talal Bin Abdul Aziz Street - Hofuf, 2"
+  },
+  {
+    "code": 708127,
+    "name": "Grand Lily Hotel Suites",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 25.4213,
+    "longitude": 49.5736,
+    "address": "Dahran Street Grand Lily Hotel Suites"
+  },
+  {
+    "code": 708473,
+    "name": "Lily Hotel Suites Mubarraz",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 25.4179,
+    "longitude": 49.5756,
+    "address": "Mubarraz Dahran Strett"
+  },
+  {
+    "code": 718351,
+    "name": "Rotana Corniche",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.4541549,
+    "longitude": 50.11607,
+    "address": "Al Ashriah Street, Al-Badi District"
+  },
+  {
+    "code": 728883,
+    "name": "Arwa Alqosor",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 18.23123,
+    "longitude": 42.5080331,
+    "address": "Abdullah Bin Jaber Street, Shamasan, 7892"
+  },
+  {
+    "code": 772644,
+    "name": "Maskan Al Dyafah Hotel Apartments 2",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.37889,
+    "longitude": 50.05903,
+    "address": "83 Abu Bakr Alsiddiq St Al Faisaliyah 31473"
+  },
+  {
+    "code": 772645,
+    "name": "Maskan Al Dyafah Apartment",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.396258,
+    "longitude": 50.039345,
+    "address": "Al Faysaliah King Fahad Road"
+  },
+  {
+    "code": 791999,
+    "name": "Swat Furnished Apartment",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.369383,
+    "longitude": 50.066692,
+    "address": "Abu Bakr Alsiddiq Street"
+  },
+  {
+    "code": 792083,
+    "name": "Naviti Warwick Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.4665,
+    "longitude": 50.0878,
+    "address": "32422 Al Khaleej Road Al Hamra"
+  },
+  {
+    "code": 827277,
+    "name": "Garden Plaza Hotel Sefah",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 25.388451,
+    "longitude": 49.581226,
+    "address": "Prince Talal Bin Abdulaziz St Al Hofuf"
+  },
+  {
+    "code": 827311,
+    "name": "Al Eairy Furnished Apartments Dammam 4",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.428017,
+    "longitude": 50.069267,
+    "address": "Ahmed Alkatib Street Al Athir"
+  },
+  {
+    "code": 841594,
+    "name": "Al Muhaidb Residence Al Ahsa",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 25.361821,
+    "longitude": 49.553328,
+    "address": "King Saud Road"
+  },
+  {
+    "code": 865900,
+    "name": "Al Eairy Furnished Apartments Dammam 3",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 26.448867,
+    "longitude": 50.096055,
+    "address": "King Abdulaziz Street Az Zuhur"
+  },
+  {
+    "code": 906813,
+    "name": "The Gate Hotel and Apartments",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.3704329440435,
+    "longitude": 50.0562224974095,
+    "address": "KING ABDULLA ROAD, TEIBA DISTRICT, DAMMAM"
+  },
+  {
+    "code": 922324,
+    "name": "Rawabi Alkhobar Suites",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "3EST",
+    "latitude": 26.30419292736644,
+    "longitude": 50.20626870000001,
+    "address": "Prince Faisal Bin Fahd Street"
+  },
+  {
+    "code": 945968,
+    "name": "Taleen Al Hasa",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "SPC",
+    "latitude": 25.358162,
+    "longitude": 49.545989,
+    "address": "Al Gharbi Riyadh Road"
+  },
+  {
+    "code": 954652,
+    "name": "Tripper Inn",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.485044,
+    "longitude": 50.128171,
+    "address": "7342 Prince Mohammed Bin Fahd Road"
+  },
+  {
+    "code": 954841,
+    "name": "Meerut Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.303921,
+    "longitude": 50.039371,
+    "address": "Aziziah St, Dhahran"
+  },
+  {
+    "code": 996894,
+    "name": "Terrace View 2 serviced apartments",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.28849190165619,
+    "longitude": 50.1906663495165,
+    "address": "10th Street"
+  },
+  {
+    "code": 996897,
+    "name": "\t Terrace View 3 serviced apartments",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.45100278905605,
+    "longitude": 50.07964196496093,
+    "address": "King Abdulaziz"
+  },
+  {
+    "code": 997318,
+    "name": "Staybridge Suites Al Khobar City",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.288229,
+    "longitude": 50.187836,
+    "address": "6633 1 St Olaya"
+  },
+  {
+    "code": 997353,
+    "name": "Holiday Inn & Suites - Al Khobar by IHG",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "5EST",
+    "latitude": 26.2949,
+    "longitude": 50.1704,
+    "address": "2532 Khadim Al Haramain Ash Sharifain Rd Al Olay"
+  },
+  {
+    "code": 997410,
+    "name": "Fakhamat Al Dyafa - Serviced Apartment",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.286886116513536,
+    "longitude": 50.18258045462492,
+    "address": "Custodian Of The Two Holy Mosques"
+  },
+  {
+    "code": 1001621,
+    "name": "Triple Tree",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "SPC",
+    "latitude": 25.390522852824162,
+    "longitude": 49.546105477201976,
+    "address": "Khalid Ibn Al Walid Road Al Mubarraz Al Ahsa Hofuf"
+  },
+  {
+    "code": 1001635,
+    "name": "Al Diyafa Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "SPC",
+    "latitude": 25.3902,
+    "longitude": 49.5493,
+    "address": "Khalid Ibn Al Walid Road Al Mubarraz Al Ahsa Hofuf"
+  },
+  {
+    "code": 1002578,
+    "name": "Mabeet Al-khobar Hotel Suites",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "APTH3",
+    "latitude": 26.29988836849747,
+    "longitude": 50.173521928610405,
+    "address": "Bashar Ibn Burd Street"
+  },
+  {
+    "code": 1004241,
+    "name": "Al Diyafa Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 6,
+    "categoryCode": "3EST",
+    "latitude": 25.39023246649928,
+    "longitude": 49.54927579998399,
+    "address": "Khalid Ibn Al Walid Road"
+  },
+  {
+    "code": 1034167,
+    "name": "Residence Inn By Marriott Dammam",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.45186,
+    "longitude": 50.11887,
+    "address": "Prince Muhammed Bin Fahd Rd"
+  },
+  {
+    "code": 1038291,
+    "name": "Taskeen Served Apartment",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.457006,
+    "longitude": 50.1263445,
+    "address": "8230 Fadala Bin Obayd - Ash Shati Ash Sharqi Dist., 8230"
+  },
+  {
+    "code": 1043856,
+    "name": "Safwat Al Khobar Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "3EST",
+    "latitude": 26.2968803,
+    "longitude": 50.1787466,
+    "address": "Zaid Bin Al Khatab Street, 8003"
+  },
+  {
+    "code": 1044137,
+    "name": "Tamaya",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "APTH",
+    "latitude": 26.2955138,
+    "longitude": 50.1961209,
+    "address": "Al Aqrabiyah, Al Khobar/ Al Mashrouh Street"
+  },
+  {
+    "code": 1046279,
+    "name": "Beata Garden",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.298444,
+    "longitude": 50.177038,
+    "address": "3206 Bashar Bin Bard"
+  },
+  {
+    "code": 1049849,
+    "name": "Sumou Alkhobar Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 7,
+    "categoryCode": "4EST",
+    "latitude": 26.3923299,
+    "longitude": 50.1720821,
+    "address": "Alhussam, Alkhobar Saudi Arabia"
+  },
+  {
+    "code": 1051686,
+    "name": "Swat Olaya Hotel Apartments",
+    "destinationCode": "DMM",
+    "zoneCode": 7,
+    "categoryCode": "SPC",
+    "latitude": 26.293989,
+    "longitude": 50.180302,
+    "address": "Madan Ibn Aws St"
+  },
+  {
+    "code": 1053393,
+    "name": "Golden Elite Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.303202,
+    "longitude": 50.176315,
+    "address": "Zaid Ibn Elkhtab St. Olaya"
+  },
+  {
+    "code": 1054059,
+    "name": "Dream Residence",
+    "destinationCode": "DMM",
+    "zoneCode": 7,
+    "categoryCode": "SPC",
+    "latitude": 26.305158,
+    "longitude": 50.17428,
+    "address": "King Saud Rd"
+  },
+  {
+    "code": 1055021,
+    "name": "Jadeel Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.2969868,
+    "longitude": 50.1788694,
+    "address": "Zaid Bin Al Khatab Street"
+  },
+  {
+    "code": 1078315,
+    "name": "Dar Rayhaan By Rotana Al Khobar",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.284164901722,
+    "longitude": 50.200051859744,
+    "address": "Madinat Al Ummal Dist.- Al Khobar"
+  },
+  {
+    "code": 1101935,
+    "name": "Holiday Inn Suites Al Khobar An Ihg Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.286018,
+    "longitude": 50.190207,
+    "address": "2532 Khadim Al Haramain Ash Sharifain Rd"
+  },
+  {
+    "code": 1104090,
+    "name": "Sunset Beach Resort Marina Spa",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.157037,
+    "longitude": 50.192259,
+    "address": "Aziziah Sunset Boulevard Al Tahliah District"
+  },
+  {
+    "code": 1105863,
+    "name": "Mora Hotel Al Khobar",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.2355839,
+    "longitude": 50.2163023,
+    "address": "2303 8159 Al Khor District Beach"
+  },
+  {
+    "code": 1112560,
+    "name": "Dar Rayhaan By Rotana Al Khobar",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.284166,
+    "longitude": 50.200115,
+    "address": "4046 Khadim Al Haramain Ash Sharifain Rd"
+  },
+  {
+    "code": 1129069,
+    "name": "Aros Alfaisaliah Furnished Units",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.3773326939936,
+    "longitude": 50.0603145338284,
+    "address": "Abu Baker Alsdiddiq St"
+  },
+  {
+    "code": 1144895,
+    "name": "Holiday Al Khaleej Hotel Al Khobar",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.23343108,
+    "longitude": 50.19441033,
+    "address": "King Khalid Road Al Tahliyah"
+  },
+  {
+    "code": 1150631,
+    "name": "Al Muhaidab Residence Al Ahsa",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 25.3616,
+    "longitude": 49.5539,
+    "address": "Riyadh Road 11911 Al Ahsa Saudi Arabia, Al Ahsa"
+  },
+  {
+    "code": 1155141,
+    "name": "Lily Hotel Suite Hofuf",
+    "destinationCode": "DMM",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 25.34978,
+    "longitude": 49.60733,
+    "address": "Al Khalij Rd Qatar Rd"
+  },
+  {
+    "code": 1173409,
+    "name": "Novotel Dhahran Hotel & Residences",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "4EST",
+    "latitude": 26.316329,
+    "longitude": 50.143276,
+    "address": "3917, 7443, King Fahad Universit"
+  },
+  {
+    "code": 1177013,
+    "name": "Lian Park Hotel",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.285,
+    "longitude": 50.182,
+    "address": "Aseer Street Al Thuqbah"
+  },
+  {
+    "code": 1177069,
+    "name": "Terrace View 2",
+    "destinationCode": "DMM",
+    "zoneCode": 4,
+    "categoryCode": "SPC",
+    "latitude": 26.288255,
+    "longitude": 50.188931,
+    "address": "6665 10th St Al Aqrabeyah 34446 Al Khobar Saudi Ar"
+  },
+  {
+    "code": 59380,
+    "name": "InterContinental Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.51550965,
+    "longitude": 39.15602089,
+    "address": "Al Hamra Corniche Road Jeddah 21531 Sea Front"
+  },
+  {
+    "code": 62345,
+    "name": "Move Inn Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.535046,
+    "longitude": 39.178541,
+    "address": "Al-Madinah Al-Munawarah Rd,adj. Mohammed AlTaweel"
+  },
+  {
+    "code": 94402,
+    "name": "Casablanca Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.585084283409795,
+    "longitude": 39.16143672577289,
+    "address": "Po Box 3655, El Salama District Saqr Quraish St."
+  },
+  {
+    "code": 94404,
+    "name": "Jeddah Hilton",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.605221,
+    "longitude": 39.109397,
+    "address": "North Corniche Road"
+  },
+  {
+    "code": 94408,
+    "name": "Jeddah Grand Hotel (Ex The Trident Jeddah)",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.4733523,
+    "longitude": 39.18240279999998,
+    "address": "Mina Road Po Box 17466"
+  },
+  {
+    "code": 94410,
+    "name": "Al Hayatt Jeddah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5287695,
+    "longitude": 39.1920503,
+    "address": "Intersection Sitten St & Plastine St.Op Samba Bank"
+  },
+  {
+    "code": 94411,
+    "name": "Swissotel Jeddah Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.517312,
+    "longitude": 39.155595,
+    "address": "Al-Corniche-Al Maadi Rd,Po Box 10924"
+  },
+  {
+    "code": 107038,
+    "name": "Issham",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.56646,
+    "longitude": 39.118137,
+    "address": "Po Box 52773, Jeddah 21573 Saudi Arabia"
+  },
+  {
+    "code": 110239,
+    "name": "Rosewood Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.576645,
+    "longitude": 39.110268,
+    "address": "Corniche Street, Al Shatie District, Jeddah 21453, 21572"
+  },
+  {
+    "code": 119379,
+    "name": "Waldorf Astoria Qasr Al Sharq",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.6035,
+    "longitude": 39.1092,
+    "address": "North Corniche Road, Al Shate'e, Jeddah"
+  },
+  {
+    "code": 129898,
+    "name": "Boudl Al Tahlia Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5LUX",
+    "latitude": 21.5583191932196,
+    "longitude": 39.1805195251312,
+    "address": "Prince Mohamed Bin Abdul Aziz Street , City Center"
+  },
+  {
+    "code": 142406,
+    "name": "Sheraton Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.614168,
+    "longitude": 39.108583,
+    "address": "The North Comiche P.O. Box 14315 Jeddah 21424"
+  },
+  {
+    "code": 145619,
+    "name": "Ramada by Wyndham Continental Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.529494,
+    "longitude": 39.18109,
+    "address": "Palestine St.Corner Madinah Rd"
+  },
+  {
+    "code": 151939,
+    "name": "Park Hyatt Jeddah - Marina, Club and Spa",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.51396095,
+    "longitude": 39.15493322,
+    "address": "P.O.Box 5863"
+  },
+  {
+    "code": 162819,
+    "name": "Joudyan Jeddah Red Sea mall",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.627727,
+    "longitude": 39.109455,
+    "address": "King Abdul-Aziz Street"
+  },
+  {
+    "code": 237429,
+    "name": "Al Nawras Island Resort",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.587831,
+    "longitude": 39.105803,
+    "address": "Western Province, 21424 Jeddah"
+  },
+  {
+    "code": 307683,
+    "name": "Royal Casablanca",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.51302,
+    "longitude": 39.1847,
+    "address": "Uthman Ibn Afan Road, 6273"
+  },
+  {
+    "code": 307750,
+    "name": "Al Azhar Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.548232,
+    "longitude": 39.190975,
+    "address": "Madina road"
+  },
+  {
+    "code": 389717,
+    "name": "Habitat Hotel All Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.578106,
+    "longitude": 39.166762699999936,
+    "address": "Al Salamah 2, Madina Road"
+  },
+  {
+    "code": 391118,
+    "name": "Odst Jeddah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SUP",
+    "latitude": 21.515061,
+    "longitude": 39.193414,
+    "address": "Sharifiyah, King Fahad Street"
+  },
+  {
+    "code": 391140,
+    "name": "Mercure Jeddah Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.515684,
+    "longitude": 39.159441,
+    "address": "Alexandria Street, Al Hamra District,, Al Hamra"
+  },
+  {
+    "code": 409562,
+    "name": "Casablanca Grand Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.632394,
+    "longitude": 39.150655,
+    "address": "Medina Road, Jeddah 21481"
+  },
+  {
+    "code": 418678,
+    "name": "Spectrums Tahlia Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5545342,
+    "longitude": 39.1709787,
+    "address": "Prince Mohammed Bin Abdul Aziz Street, 0"
+  },
+  {
+    "code": 419939,
+    "name": "Radisson Blu Hotel, Jeddah Plaza",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.511169,
+    "longitude": 39.2275821,
+    "address": "King Abdullah Road"
+  },
+  {
+    "code": 472821,
+    "name": "The Venue Jeddah Corniche",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.6017735,
+    "longitude": 39.1081456,
+    "address": "7295 Corniche Road,Ash Shati District,Jeddah 23511"
+  },
+  {
+    "code": 475545,
+    "name": "Holiday Inn Jeddah Gateway",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.626094,
+    "longitude": 39.154541,
+    "address": "Madinah Road An Nuzha District"
+  },
+  {
+    "code": 499201,
+    "name": "Movenpick Hotel City Star Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.60546477407287,
+    "longitude": 39.15779042217764,
+    "address": "Madinah Road, -"
+  },
+  {
+    "code": 505041,
+    "name": "Centro Shaheen Jeddah by Rotana",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.526165,
+    "longitude": 39.1803381,
+    "address": "Madinah Road"
+  },
+  {
+    "code": 516743,
+    "name": "Novotel Jeddah Tahlia Street",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.55482151313469,
+    "longitude": 39.172431812425806,
+    "address": "Prince Mohammed Bin Abdulaziz"
+  },
+  {
+    "code": 578482,
+    "name": "Assila, a Luxury Collection Hotel, Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5LUX",
+    "latitude": 21.551633,
+    "longitude": 39.162481,
+    "address": "Prince Mohammed Bin Abdulaziz St, Al Andalus 9134, 9134"
+  },
+  {
+    "code": 585744,
+    "name": "Crown Town",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.519721,
+    "longitude": 39.158819,
+    "address": "Kurnaish Rd., Al Uqsur St., SN"
+  },
+  {
+    "code": 589867,
+    "name": "Rahhal Al Bahr Hotel Apartment",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.518437,
+    "longitude": 39.155108,
+    "address": "Al Hamra Distrect-Muhiddin Street, P.O. 14055"
+  },
+  {
+    "code": 594324,
+    "name": "The Ritz-Carlton Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.524811,
+    "longitude": 39.151729,
+    "address": "Al Hamara District, Al Corniche Road Sn, ."
+  },
+  {
+    "code": 604901,
+    "name": "AlMuhaidb Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.5268254,
+    "longitude": 39.1598627,
+    "address": "Andalus Street - Al Hamra'a, Al Hamra, N/A"
+  },
+  {
+    "code": 605521,
+    "name": "Grand Park Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5958933,
+    "longitude": 39.1537408,
+    "address": "Quraysh St, As Salamah District, 3519"
+  },
+  {
+    "code": 609144,
+    "name": "Prime Hotel - Jeddah Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.51530304,
+    "longitude": 39.15946305,
+    "address": "Alexandria Street, Al Hamra -, -"
+  },
+  {
+    "code": 613790,
+    "name": "DoubleTree by Hilton Jeddah Al Andalus Mall",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5076528,
+    "longitude": 39.2158583,
+    "address": "8829 Prince Majid Rd. Al Faiha District"
+  },
+  {
+    "code": 617363,
+    "name": "Radisson Blu Hotel Jeddah Al Salam",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.59444274102381,
+    "longitude": 39.14969628472522,
+    "address": "Quraysh Street, Al Salamah District, 7"
+  },
+  {
+    "code": 624412,
+    "name": "Radisson Blu Hotel, Jeddah Corniche",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.6354,
+    "longitude": 39.1039,
+    "address": "Jeddah's Corniche Road Obhur Jeddah, S/N"
+  },
+  {
+    "code": 624575,
+    "name": "The Hotel Galleria Jeddah, Curio Collection by Hil",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.5514962,
+    "longitude": 39.1633866,
+    "address": "Muhammad Ibn Abdul Aziz. Al Andalus, 3077, 3131"
+  },
+  {
+    "code": 625692,
+    "name": "Warwick hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5102959,
+    "longitude": 39.2371596,
+    "address": "4025 King Abdullah Road, An Naseem Dist."
+  },
+  {
+    "code": 627860,
+    "name": "Centro Salama Jeddah by Rotana",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5854101,
+    "longitude": 39.163486,
+    "address": "Al Madinah Road, 127202"
+  },
+  {
+    "code": 627926,
+    "name": "Narcissus Resort and Spa Obhur Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.722545,
+    "longitude": 39.078954,
+    "address": "Prince Abdullah Al Faisal Street. P.O. Box 3270"
+  },
+  {
+    "code": 628973,
+    "name": "Velvet Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.55300844,
+    "longitude": 39.18800611,
+    "address": "King Fagd Road with Baladya street Jeddah KSA"
+  },
+  {
+    "code": 629948,
+    "name": "Hayat Heraa Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.607574,
+    "longitude": 39.139459,
+    "address": "Fahd Bin Zair Street, Al Zahera Distr"
+  },
+  {
+    "code": 637896,
+    "name": "Palm Boutique Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.62,
+    "longitude": 39.148,
+    "address": "Ahmed Bin Usayb Street, Behind Danu"
+  },
+  {
+    "code": 637897,
+    "name": "Platinum Suites Hotel Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4LL",
+    "latitude": 21.553,
+    "longitude": 39.204,
+    "address": "Prince Majid Road, Opposite of Flam"
+  },
+  {
+    "code": 638177,
+    "name": "Platinum Seventy Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.552327,
+    "longitude": 39.204321,
+    "address": "Prince Majed"
+  },
+  {
+    "code": 640214,
+    "name": "Movenpick Hotel Tahlia Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.547831,
+    "longitude": 39.1566,
+    "address": "Abdul Rahman At Tubayshi"
+  },
+  {
+    "code": 645887,
+    "name": "Hawadah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5178458,
+    "longitude": 39.15938719999997,
+    "address": "Hussain Basalamah, Al Hamra District"
+  },
+  {
+    "code": 647228,
+    "name": "Boudl Quraish",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "APTH",
+    "latitude": 21.598183,
+    "longitude": 39.1590053,
+    "address": "Quraysh Street"
+  },
+  {
+    "code": 653444,
+    "name": "Ruve Jeddah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5605835,
+    "longitude": 39.19349999999997,
+    "address": "Prince Mohamed Bin Abdul Aziz Road (Tahliya Road)"
+  },
+  {
+    "code": 655345,
+    "name": "Adagio Aparthotel Jeddah Malik Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.6027322,
+    "longitude": 39.1212688,
+    "address": "Malik Road Jeddah 21352 Besides Arab National Bank"
+  },
+  {
+    "code": 655373,
+    "name": "ibis Jeddah Malik Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.60339,
+    "longitude": 39.121506,
+    "address": "Malik Road Beside Anb Bank 126001"
+  },
+  {
+    "code": 655423,
+    "name": "Iridium 70 Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.559881,
+    "longitude": 39.203203,
+    "address": "As Siyuti"
+  },
+  {
+    "code": 657442,
+    "name": "Hyatt House Jeddah Sari Street",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.577830984202162,
+    "longitude": 39.15320398836059,
+    "address": "Sari Street West, 11"
+  },
+  {
+    "code": 659263,
+    "name": "Diwan Residence Hotel - Alnaeem",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.617889,
+    "longitude": 39.13949,
+    "address": "thalatheen st. Naeem Dist., Ebn Odays"
+  },
+  {
+    "code": 659968,
+    "name": "Areen Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.680163,
+    "longitude": 39.120015,
+    "address": "8175 Prince Sultan Road-Muhammadiyah, 2444"
+  },
+  {
+    "code": 660640,
+    "name": "Views Hotel & Residences",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 22.402215,
+    "longitude": 39.078395,
+    "address": "7281 Yasmeen Street"
+  },
+  {
+    "code": 664291,
+    "name": "Lahoya Hotel Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.605158,
+    "longitude": 39.116403,
+    "address": "Hira Street"
+  },
+  {
+    "code": 665384,
+    "name": "City View Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.51572,
+    "longitude": 39.2391,
+    "address": "6691 Um Al Momeneen Habeeba st, Al Naseem ,Jeddah"
+  },
+  {
+    "code": 668702,
+    "name": "Carawan Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.618562,
+    "longitude": 39.15286,
+    "address": "Mohammed Zaydan Road"
+  },
+  {
+    "code": 668704,
+    "name": "Wow Boutique Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.618745,
+    "longitude": 39.150899,
+    "address": "Mohamed Zidan"
+  },
+  {
+    "code": 675967,
+    "name": "Three Points Al Salama Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.579844,
+    "longitude": 39.151422,
+    "address": "2835 Sulayyman Al Halabi"
+  },
+  {
+    "code": 688231,
+    "name": "Vivid Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.518507,
+    "longitude": 39.157255,
+    "address": "Hussain Basalmah Street"
+  },
+  {
+    "code": 689131,
+    "name": "Aquila Hotel Jeddah Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.520201675863905,
+    "longitude": 39.159296655086564,
+    "address": "Muhyi Ad Din An Nadhir, 315"
+  },
+  {
+    "code": 689211,
+    "name": "Jiwar Almasi Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.51419,
+    "longitude": 39.225217,
+    "address": "Al Naseem"
+  },
+  {
+    "code": 692698,
+    "name": "Holiday Inn Jeddah Corniche",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.506775,
+    "longitude": 39.165917,
+    "address": "Al Jazira, 2748"
+  },
+  {
+    "code": 695032,
+    "name": "Taj Al Worood Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.517942,
+    "longitude": 39.204947,
+    "address": "Abdullah Al Sulayman"
+  },
+  {
+    "code": 702048,
+    "name": "Loren Suites Corniche",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.559208,
+    "longitude": 39.113876,
+    "address": "Al Kurnaysh Road"
+  },
+  {
+    "code": 704241,
+    "name": "Park Inn By Radisson Jeddah Madinah Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.646441,
+    "longitude": 39.141881,
+    "address": "8654 Mohammed al Hout street"
+  },
+  {
+    "code": 708077,
+    "name": "TOP Rosemond Al-Hamra Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5172,
+    "longitude": 39.1627,
+    "address": "Al Uqsur"
+  },
+  {
+    "code": 709901,
+    "name": "Dara Salam",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.605281383699328,
+    "longitude": 39.15690299663851,
+    "address": "Salama District 2, West of Madina Road"
+  },
+  {
+    "code": 709902,
+    "name": "Dara Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.514473736717186,
+    "longitude": 39.16213335261347,
+    "address": "Hamra Street"
+  },
+  {
+    "code": 710186,
+    "name": "Dara Al Yammamah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.593158,
+    "longitude": 39.160579,
+    "address": "Al-Madinah Al-Munawarah Road"
+  },
+  {
+    "code": 712567,
+    "name": "Al Shahba Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.438,
+    "longitude": 39.2864,
+    "address": "Al Falah Street Beside Event Mall"
+  },
+  {
+    "code": 718361,
+    "name": "Adagio Jeddah City Center",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.552222,
+    "longitude": 39.173815,
+    "address": "P O Box 43356 Madinah Branch Road Al Andalus"
+  },
+  {
+    "code": 718701,
+    "name": "ibis Jeddah City Center",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.552862,
+    "longitude": 39.173867,
+    "address": "P O Box 43356 Madinah Branch Road Al Andalus"
+  },
+  {
+    "code": 738661,
+    "name": "Sunday Harbour Gateway Jeddah Beach",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.518,
+    "longitude": 39.16382,
+    "address": "Hussain Basalmah Street"
+  },
+  {
+    "code": 745402,
+    "name": "Bram Hotel & Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.586078,
+    "longitude": 39.206518,
+    "address": "Prince Mutaib bin Abdulaziz Road, Al Safa District"
+  },
+  {
+    "code": 772652,
+    "name": "Gardenia Park Quraish hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.59909,
+    "longitude": 39.16548,
+    "address": "2593 Quraysh"
+  },
+  {
+    "code": 773865,
+    "name": "Crowne Plaza Jeddah Al Salam",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5080326,
+    "longitude": 39.2233382,
+    "address": "Prince Sultan Road, Al-Muhammadiyah District 12731, 7755 9 4"
+  },
+  {
+    "code": 780619,
+    "name": "Dar Al Wedad Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.61935,
+    "longitude": 39.16438,
+    "address": "3311 Sultan Ibn Salman An Nuzhah District"
+  },
+  {
+    "code": 780654,
+    "name": "Donatello Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.665449,
+    "longitude": 39.204582,
+    "address": "Al Rahmaniya Al Harameen Street"
+  },
+  {
+    "code": 815578,
+    "name": "Ewaa Express Hotel Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.514384,
+    "longitude": 39.162616,
+    "address": "Al Maadi Al Hamra A"
+  },
+  {
+    "code": 815664,
+    "name": "Almuhaidb Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.523102,
+    "longitude": 39.162825,
+    "address": "Andalus Street Al Hamra"
+  },
+  {
+    "code": 827247,
+    "name": "Taj Jeddah Hotel Apartment",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.505929,
+    "longitude": 39.168308,
+    "address": "Al Hamra District Tabuk Street Facing The Saudi Fl"
+  },
+  {
+    "code": 841573,
+    "name": "Rabigh Park Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 22.775753,
+    "longitude": 39.03763,
+    "address": "King Faisal Road"
+  },
+  {
+    "code": 877928,
+    "name": "Al Tamayoz Al Raqi Al Salamah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.582044,
+    "longitude": 39.157918,
+    "address": "6809 Ibn Nufay, As Salamah District, NA"
+  },
+  {
+    "code": 886949,
+    "name": "Al Tamayoz Al Raqi Hira",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.615566,
+    "longitude": 39.164965,
+    "address": "Hira Street, Al Bawadi, NA"
+  },
+  {
+    "code": 887718,
+    "name": "Joudyan King Road Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.601587,
+    "longitude": 39.121501,
+    "address": "King Abdul Aziz Road 11193 Jeddah 21453"
+  },
+  {
+    "code": 887932,
+    "name": "Sunday Red Sea Fountain Alhamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.51714837246853,
+    "longitude": 39.1607656966133,
+    "address": "Al Watan Al Arabi"
+  },
+  {
+    "code": 890572,
+    "name": "Areen Al Naeem",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.61556,
+    "longitude": 39.143916,
+    "address": "Al Naeem - Mohamed Zedan Street- Jeddah"
+  },
+  {
+    "code": 895291,
+    "name": "Shangri-La Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5LUX",
+    "latitude": 21.62307,
+    "longitude": 39.108374,
+    "address": "Burj Assila, Corniche Road"
+  },
+  {
+    "code": 895981,
+    "name": "Orans Suites 2",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.596653,
+    "longitude": 39.156656,
+    "address": "Al Salamah. Quraish St. Opp. Thamer International"
+  },
+  {
+    "code": 898427,
+    "name": "City Center Plaza Aparthotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.51203,
+    "longitude": 39.22785,
+    "address": "Abi alabbas Alhadithi Street Alnaseem District"
+  },
+  {
+    "code": 903716,
+    "name": "Emerald Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5324823,
+    "longitude": 39.1842742,
+    "address": "Saeed Ibn Zaqr"
+  },
+  {
+    "code": 907458,
+    "name": "Signature Guest Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6216953,
+    "longitude": 39.1750787,
+    "address": "Sultan Ibn Salman building No.2589, 48"
+  },
+  {
+    "code": 910488,
+    "name": "Alertiqaa Palace",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.624425,
+    "longitude": 39.209329,
+    "address": "Hira St. Almarwah"
+  },
+  {
+    "code": 911044,
+    "name": "Clarion Hotel Jeddah Airport",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.628835,
+    "longitude": 39.183371,
+    "address": "Prince Majid Road, Al Marwah Dist., 9195"
+  },
+  {
+    "code": 911054,
+    "name": "Mora Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5159267,
+    "longitude": 39.1589102,
+    "address": "Al Iskandariyyah, Al Hamra District, 066"
+  },
+  {
+    "code": 911214,
+    "name": "Areen Airport Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.621839,
+    "longitude": 39.175522,
+    "address": "4432-4471 Sultan Ibn Salman, An Nuzhah, Jeddah"
+  },
+  {
+    "code": 911219,
+    "name": "Comfort Hotel Jeddah King Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6036,
+    "longitude": 39.12147,
+    "address": "King Road, Al Al Zahra Dist., 9195 6"
+  },
+  {
+    "code": 911595,
+    "name": "Happy Beach Basateen",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6850643,
+    "longitude": 39.1213493,
+    "address": "Al Basatin district"
+  },
+  {
+    "code": 912354,
+    "name": "Grand Park Al Zahraa Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.59112,
+    "longitude": 39.14195,
+    "address": "Arid Ibn Mahshi, Al Zahra"
+  },
+  {
+    "code": 916611,
+    "name": "Blue Diamond Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5154195,
+    "longitude": 39.1600863,
+    "address": "Al Bahar Al Arabi Al Hamra"
+  },
+  {
+    "code": 923777,
+    "name": "Al Tamayoz Al Raqi",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.533432497593,
+    "longitude": 39.2169944196939,
+    "address": "Prince Mutaib bin Abdulaziz Rd,Bani Malik"
+  },
+  {
+    "code": 932779,
+    "name": "Swiss Blue Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.58895,
+    "longitude": 39.14318,
+    "address": "3971, Abdullah Kadhim"
+  },
+  {
+    "code": 933415,
+    "name": "Lavent Park",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.528333,
+    "longitude": 39.236781,
+    "address": "Bani Malik"
+  },
+  {
+    "code": 933421,
+    "name": "Qamar Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.607945,
+    "longitude": 39.129019,
+    "address": "3143 Hira St, Al Zahraa"
+  },
+  {
+    "code": 944272,
+    "name": "Atana Park jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.5684485818521,
+    "longitude": 39.2487696041214,
+    "address": "Jeddah Saudi Arabia, 9174"
+  },
+  {
+    "code": 945281,
+    "name": "Prime Al Corniche Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.6037333,
+    "longitude": 39.1114524,
+    "address": "Al Amir Fisal Bn Fahad St , Al Shati, 2"
+  },
+  {
+    "code": 946052,
+    "name": "Kyona Gold-Obhur",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.743316,
+    "longitude": 39.135051,
+    "address": "Abhur Al Junoobiyah District Al Hasan Ibn Muslim"
+  },
+  {
+    "code": 954058,
+    "name": "Mirnian Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5361,
+    "longitude": 39.2058,
+    "address": "Palestine, Mishrifah, Jeddah 23341, Saudi Arabia"
+  },
+  {
+    "code": 956852,
+    "name": "Sunset Jeddah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5636,
+    "longitude": 39.1694,
+    "address": "Prince Saud Al Faisal"
+  },
+  {
+    "code": 961428,
+    "name": "Shada Hotel Shatea",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.60485907,
+    "longitude": 39.11678685,
+    "address": "633 Hira Street, Ash Shati District"
+  },
+  {
+    "code": 963756,
+    "name": "Touq Balad",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.477828,
+    "longitude": 39.185228,
+    "address": "Aldeman 6133"
+  },
+  {
+    "code": 966518,
+    "name": "Friesian Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.59445,
+    "longitude": 39.14586,
+    "address": "Al Yamama Street 2891"
+  },
+  {
+    "code": 966560,
+    "name": "Golden New Quraish Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.600714,
+    "longitude": 39.169679,
+    "address": "Korish Albwady"
+  },
+  {
+    "code": 969587,
+    "name": "The Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.515119,
+    "longitude": 39.155363,
+    "address": "Al Hamra Corniche"
+  },
+  {
+    "code": 969678,
+    "name": "Eva Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.618101,
+    "longitude": 39.140659,
+    "address": "An Naeem St Al Naeem Dist"
+  },
+  {
+    "code": 972099,
+    "name": "Rovotel Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.5241448,
+    "longitude": 39.1846623,
+    "address": "Zo Al-norian - Jeddah - Al Sharafiah"
+  },
+  {
+    "code": 973168,
+    "name": "Swissotel Living Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.5582392,
+    "longitude": 39.1488004,
+    "address": "Building, 2652 Prince Saud Al Faisal"
+  },
+  {
+    "code": 977390,
+    "name": "Rawasi Hotel Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5680998252146,
+    "longitude": 39.150032937232,
+    "address": "8183 Abdul Maqsud Khuja St"
+  },
+  {
+    "code": 987944,
+    "name": "Palm Boutique Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6164479,
+    "longitude": 39.1494516,
+    "address": "Ahmad Ibn Osaib, Al Naeem, Jeddah 23526, Saudi ..., 31"
+  },
+  {
+    "code": 988068,
+    "name": "Shirvan Hotel City Yard Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.5728558,
+    "longitude": 39.1490672,
+    "address": "Abdul Maqsud Khojah Street - Al Rawdah"
+  },
+  {
+    "code": 988145,
+    "name": "Glamour Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5947,
+    "longitude": 39.1487,
+    "address": "Quraish Street, Al Salama District, Al Salamah"
+  },
+  {
+    "code": 992514,
+    "name": "Celine Al Motamaiza Furnished Apartment",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6032964567255,
+    "longitude": 39.1421689637355,
+    "address": "Prince Sultan Street, Behind Electro"
+  },
+  {
+    "code": 992524,
+    "name": "EKONO by LEVA Jeddah Airport Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.673998,
+    "longitude": 39.12694,
+    "address": "7586 Ismail Ibn Kathir"
+  },
+  {
+    "code": 993948,
+    "name": "Continent Al Ertiqaa Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.624382,
+    "longitude": 39.208782,
+    "address": "Hera Street District"
+  },
+  {
+    "code": 994777,
+    "name": "Areen Alnaeem",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 21.6213081,
+    "longitude": 39.1465637,
+    "address": "Https://maps.app.goo.gl/tqx5dqsyaijmjorb9?g_st=ic"
+  },
+  {
+    "code": 1000215,
+    "name": "Golden New  Al Safa",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.5757597,
+    "longitude": 39.1433826,
+    "address": "Prince Mutaib Bin Abdulaziz Rd, Al-safa"
+  },
+  {
+    "code": 1000396,
+    "name": "Jasmine Garden Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5678976,
+    "longitude": 39.1839744,
+    "address": "Muhammad Zaidan, Al Naeem, Jeddah"
+  },
+  {
+    "code": 1001577,
+    "name": "Warwick Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.51043,
+    "longitude": 39.237359,
+    "address": "Al Naseem King Abdullah Road"
+  },
+  {
+    "code": 1001589,
+    "name": "Sarwat Park Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.61147,
+    "longitude": 39.17175,
+    "address": "Faisal Bin Fahad Street Ash Shati District Jeddah"
+  },
+  {
+    "code": 1002108,
+    "name": "Jeddah Marriott Hotel Madinah Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.6063,
+    "longitude": 39.1575,
+    "address": "6939 Al Madinah Al-monawarah Rd Albawadi Dist"
+  },
+  {
+    "code": 1002645,
+    "name": "Narcissus 88 Boutique Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.5119,
+    "longitude": 39.1625001,
+    "address": "Al Kurnaysh Branch Road Al-hamra"
+  },
+  {
+    "code": 1006853,
+    "name": "Aerotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.6896906,
+    "longitude": 39.1429444,
+    "address": "King Abdulaziz International Airport T1"
+  },
+  {
+    "code": 1007415,
+    "name": "Ewaa Express Hotel - Alrawda",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.562728,
+    "longitude": 39.16565,
+    "address": "Ar Rawdah"
+  },
+  {
+    "code": 1008742,
+    "name": "Golden New Umu Alquraa Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.58821,
+    "longitude": 39.21668,
+    "address": "Umm Al Qoura, Al-safa, Jeddah, 23455"
+  },
+  {
+    "code": 1008939,
+    "name": "Level Nine Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.616565266088216,
+    "longitude": 39.123077626990295,
+    "address": "Abdulrhman Aldakhel"
+  },
+  {
+    "code": 1008996,
+    "name": "Yan Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.587405,
+    "longitude": 39.150487,
+    "address": "33 Shogaa Bin Wahb, Al Salamah District"
+  },
+  {
+    "code": 1009002,
+    "name": "Vital House For Hotel Apartment",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.566107,
+    "longitude": 39.193011,
+    "address": "Almakarona Street"
+  },
+  {
+    "code": 1020014,
+    "name": "Marlo Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.518348049977753,
+    "longitude": 39.231290269310115,
+    "address": "Um Almoumenneen Soudah"
+  },
+  {
+    "code": 1021963,
+    "name": "Seafront Luxury Suites Jeddah Corniche",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5972189,
+    "longitude": 39.1455521,
+    "address": "Zarqaa Al Yamama"
+  },
+  {
+    "code": 1023822,
+    "name": "Milana Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.61688137681235,
+    "longitude": 39.1678170846433,
+    "address": "Hira St, An Nuzhah, 23534 5"
+  },
+  {
+    "code": 1024497,
+    "name": "Wa Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5661873,
+    "longitude": 39.222603,
+    "address": "Prince Mohammed Bin Abdulaziz"
+  },
+  {
+    "code": 1026689,
+    "name": "Golden New Heraa",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.625289273781338,
+    "longitude": 39.20698261179574,
+    "address": "Hira St, 23544"
+  },
+  {
+    "code": 1030989,
+    "name": "Millennium Al Masar",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.5173477,
+    "longitude": 39.1707875,
+    "address": "Al Madi Street, 23211"
+  },
+  {
+    "code": 1033988,
+    "name": "Ewaa Express Hotel Al Shati",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.634007,
+    "longitude": 39.106853,
+    "address": "Prince Faisal Ibn Fahd"
+  },
+  {
+    "code": 1038997,
+    "name": "Qamar Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 23.424076,
+    "longitude": 53.847818,
+    "address": "Herra Street, Jeddah, Saudi Arabia"
+  },
+  {
+    "code": 1046475,
+    "name": "Blue Diamond Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.515177,
+    "longitude": 39.162196,
+    "address": "Bahr Al Arab"
+  },
+  {
+    "code": 1048559,
+    "name": "Lotaz Hotel Suites - Al Salamah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.590133,
+    "longitude": 39.144945,
+    "address": "Box 7695 2185 Al-tamkroti, Al-salama"
+  },
+  {
+    "code": 1048571,
+    "name": "V Boutique Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.573,
+    "longitude": 39.14315,
+    "address": "Sari Street Prince Sultan Intersection"
+  },
+  {
+    "code": 1048575,
+    "name": "Jasmine Garden Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.6185,
+    "longitude": 39.1532,
+    "address": "Al Naeem District Muhammad Zaidan Street"
+  },
+  {
+    "code": 1048576,
+    "name": "Ocean View Al Zahra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.591027,
+    "longitude": 39.142069,
+    "address": "3853 Arid Ibn Mahshi"
+  },
+  {
+    "code": 1048577,
+    "name": "The Jeddah Edition",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.650726,
+    "longitude": 39.101467,
+    "address": "7044 Al Kurnaysh Br Rd, Ash Shati"
+  },
+  {
+    "code": 1048727,
+    "name": "Best Western Plus Jeddah Hotel Madinah Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.64326,
+    "longitude": 39.14396,
+    "address": "Madinah Road, Abi Hatham Al Ansari Street"
+  },
+  {
+    "code": 1051787,
+    "name": "Areen Hotels Group",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.6207073,
+    "longitude": 39.1698794,
+    "address": "Sultan Ibn Salman"
+  },
+  {
+    "code": 1052869,
+    "name": "Arabian Palm Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 22.7997922530801,
+    "longitude": 39.034241437912,
+    "address": "King Abdullah Road"
+  },
+  {
+    "code": 1053065,
+    "name": "Jumeirah Jabal Omar Makkah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.416103,
+    "longitude": 39.822772,
+    "address": "Ibrahim Al Khalil Road"
+  },
+  {
+    "code": 1053295,
+    "name": "DoubleTree by Hilton Makkah Aziziyah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.4010259,
+    "longitude": 39.8724999,
+    "address": "King Khalid Rd, Al Jamiah Dist., Building No. 8113"
+  },
+  {
+    "code": 1053529,
+    "name": "Loren Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5784189,
+    "longitude": 39.1933733,
+    "address": ", Al Salamah, 23447 Jeddah, Saudi Arabia"
+  },
+  {
+    "code": 1053536,
+    "name": "voco Jeddah Gate",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.50583,
+    "longitude": 39.20639,
+    "address": "Plot No.16 Al Fayha District"
+  },
+  {
+    "code": 1053538,
+    "name": "Palm Boutique Alzahra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5849786,
+    "longitude": 39.1329722,
+    "address": "Abdullah Jasir, 2914"
+  },
+  {
+    "code": 1053829,
+    "name": "Merya Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.590852,
+    "longitude": 39.131502,
+    "address": "Ahmad Al Attas"
+  },
+  {
+    "code": 1054248,
+    "name": "Mirada Purple Al Waha",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.56434,
+    "longitude": 39.24843,
+    "address": "Al Hajjaj Bin Masoud Street"
+  },
+  {
+    "code": 1057679,
+    "name": "Karam Al Balad Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5004,
+    "longitude": 39.185,
+    "address": "Jeddah .madina Road."
+  },
+  {
+    "code": 1059866,
+    "name": "Obhur Home Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.705209,
+    "longitude": 39.105203,
+    "address": "Mutamem Ibn Nwayrah"
+  },
+  {
+    "code": 1060130,
+    "name": "Primotel Suites Al Salamah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.58595,
+    "longitude": 39.155695,
+    "address": "Mawakeb Al Nasr"
+  },
+  {
+    "code": 1060400,
+    "name": "Cloud Dream",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.626028,
+    "longitude": 39.135661,
+    "address": "Prince Sultan Road Al Nahda District"
+  },
+  {
+    "code": 1061133,
+    "name": "Palm Boutique Al Zahra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.584417,
+    "longitude": 39.137437,
+    "address": "Abdullah Jasir Jeddah 23425"
+  },
+  {
+    "code": 1061353,
+    "name": "Carwan Altahliya",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.558582,
+    "longitude": 39.182419,
+    "address": "Prince Mohmaed Bin Abdelaziz St"
+  },
+  {
+    "code": 1061747,
+    "name": "Nars Plus Al Basateen",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.623507,
+    "longitude": 39.159299,
+    "address": "Fuad Shaker St 8115"
+  },
+  {
+    "code": 1063052,
+    "name": "Vivienda Hotel Villas Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.58598,
+    "longitude": 39.18212,
+    "address": "Sari Branch Road Shatiee Area"
+  },
+  {
+    "code": 1063706,
+    "name": "Odst Jed",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.529486,
+    "longitude": 39.180756,
+    "address": "Falsteen Rd"
+  },
+  {
+    "code": 1063969,
+    "name": "Sweet Home Serviced Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.40449,
+    "longitude": 39.269654,
+    "address": "7671 Al Sanabel"
+  },
+  {
+    "code": 1064555,
+    "name": "Ghima Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.610991,
+    "longitude": 39.167887,
+    "address": "King Fahd Br Rd"
+  },
+  {
+    "code": 1064957,
+    "name": "Aluya Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.522156,
+    "longitude": 39.163511,
+    "address": "Al Maghrib Al Arabi Al Hamra Dist"
+  },
+  {
+    "code": 1065531,
+    "name": "Tu Jardin Al Harmain",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.618611,
+    "longitude": 39.215171,
+    "address": "Hay Al Marwah Road Abu Katadah Al Ansari"
+  },
+  {
+    "code": 1066099,
+    "name": "Hikayet Abeer Hotel Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.610809,
+    "longitude": 39.218052,
+    "address": "Abu Qatada Al Ansari"
+  },
+  {
+    "code": 1066252,
+    "name": "White Diamond Hotel Sari",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.58276,
+    "longitude": 39.170385,
+    "address": "Sari Br Rd"
+  },
+  {
+    "code": 1066460,
+    "name": "Wow Diamond White Diamond Hotel Al Nuzha",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.619811,
+    "longitude": 39.164064,
+    "address": "Sultan Ibn Salman An Nuzhah"
+  },
+  {
+    "code": 1066911,
+    "name": "Vasa Plus Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.6008,
+    "longitude": 39.213797,
+    "address": "Um Elqora 12"
+  },
+  {
+    "code": 1074811,
+    "name": "New Laries Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.6042045,
+    "longitude": 39.1424397,
+    "address": "Prince Sultan Road, 1"
+  },
+  {
+    "code": 1077173,
+    "name": "Rixos Obhur Jeddah Resort & Villas ALL INCLUSIVE",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.75988,
+    "longitude": 39.1267,
+    "address": "Abdullah Al Faisal Street Abhur Ash Shamaliyah Dis, 23817"
+  },
+  {
+    "code": 1084216,
+    "name": "Rosemond Alhamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5174,
+    "longitude": 39.1625,
+    "address": "Al Aquser"
+  },
+  {
+    "code": 1084534,
+    "name": "Emmar Al Dyar",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.399539,
+    "longitude": 39.264482,
+    "address": "Al Sanabel - Jeddah"
+  },
+  {
+    "code": 1086019,
+    "name": "Landmark Hotels & Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.57838,
+    "longitude": 39.1539,
+    "address": "Al Zahraa Dist, 3143"
+  },
+  {
+    "code": 1086189,
+    "name": "Garden Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 21.5842491,
+    "longitude": 39.1537144,
+    "address": "7078, Ramy Garden, Al Salama District"
+  },
+  {
+    "code": 1087599,
+    "name": "Dara Al Salam",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.605228,
+    "longitude": 39.156696,
+    "address": "Al Salama North Madina Road"
+  },
+  {
+    "code": 1091647,
+    "name": "Taj Celine Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.513155143295545,
+    "longitude": 39.18472240249265,
+    "address": "6273 Othman Ibn Affan, 6273"
+  },
+  {
+    "code": 1092623,
+    "name": "Four Points By Sheraton Jeddah King Fahd Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.588556993524733,
+    "longitude": 39.17631327116375,
+    "address": "King Fahd Road, Al-rabwa Zone, 9"
+  },
+  {
+    "code": 1094790,
+    "name": "Raffles Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.57497,
+    "longitude": 39.11034,
+    "address": "6279 Corniche Branch Road 2535 Ash Shati District"
+  },
+  {
+    "code": 1094792,
+    "name": "Rixos Murjana - Ultra All Inclusive",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 22.4474462,
+    "longitude": 39.0945124,
+    "address": "Al Sahel Rd, Al Murooj District King Abdullah"
+  },
+  {
+    "code": 1095325,
+    "name": "Casa Di Ora Al Rawda",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "HS4",
+    "latitude": 21.5765766,
+    "longitude": 39.1571295,
+    "address": "Hamad Al Jaser, Al Rawda"
+  },
+  {
+    "code": 1096085,
+    "name": "Palette Luxury MAS Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.625291,
+    "longitude": 39.135704,
+    "address": "7120 Prince Sultan Road, 23615, Saudi Arabia"
+  },
+  {
+    "code": 1096086,
+    "name": "Sunday Jeddah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.566471,
+    "longitude": 39.226205,
+    "address": "Prince Mohammed Bin Abdulaziz Street Al Rehab"
+  },
+  {
+    "code": 1096087,
+    "name": "Sunday Gateway Jeddah Formerly Beach Garden Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.623738,
+    "longitude": 39.161563,
+    "address": "Fuad Shaker St، An Nuzha District, Jeddah"
+  },
+  {
+    "code": 1096801,
+    "name": "Sunday Pearl Suites",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 21.48253367,
+    "longitude": 39.26132645,
+    "address": "Ar Rawabi District, Janub Bin Ladin"
+  },
+  {
+    "code": 1099049,
+    "name": "Cornett Al Nawras Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5291545,
+    "longitude": 39.1610863,
+    "address": "Ahmed Al Attas St. Al Zahraa Dist."
+  },
+  {
+    "code": 1099659,
+    "name": " Hotel Al Shahba Al Faiha Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.512533,
+    "longitude": 39.182453,
+    "address": "6300, 6300"
+  },
+  {
+    "code": 1107072,
+    "name": "Gladiolus Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.6103,
+    "longitude": 39.148,
+    "address": "Ali Afandi Jamil"
+  },
+  {
+    "code": 1107129,
+    "name": "Al Andalus Mall Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5076528,
+    "longitude": 39.2158583,
+    "address": "8829 Prince Majid Rd. Al Faiha District"
+  },
+  {
+    "code": 1107534,
+    "name": "Makarim Palm Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 22.782882,
+    "longitude": 39.034271,
+    "address": "As Samad, 2103"
+  },
+  {
+    "code": 1111992,
+    "name": "Casa Diora Hotel Al Naseem",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.5108,
+    "longitude": 39.2327,
+    "address": "Street King Abdullah"
+  },
+  {
+    "code": 1113333,
+    "name": "Makarem Annakheel Hotel Resort",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3",
+    "latitude": 21.75925,
+    "longitude": 39.12668,
+    "address": "North Abhor Bay 23817, null"
+  },
+  {
+    "code": 1113778,
+    "name": "Paradise Nice Naseem",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.51036073731,
+    "longitude": 39.237815004911,
+    "address": "An Nassim District"
+  },
+  {
+    "code": 1113797,
+    "name": "Millennium Al Masar Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.51504,
+    "longitude": 39.16546,
+    "address": "Al Madi Street Al Ruwais District Building No 3353"
+  },
+  {
+    "code": 1114736,
+    "name": "Gardenia Park Al Rawabi",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 21.482107,
+    "longitude": 39.255928,
+    "address": "Aj Bin Hajj Al Rawabi Jeddah, 22345"
+  },
+  {
+    "code": 1115742,
+    "name": "Aquila Aldiafah Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5206,
+    "longitude": 39.1602,
+    "address": "Al Hamra A District 966"
+  },
+  {
+    "code": 1115817,
+    "name": "Gardenia Park Al Zaharaa",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 21.609726,
+    "longitude": 39.138283,
+    "address": "Al Zhraa, 23522"
+  },
+  {
+    "code": 1115976,
+    "name": "La Terrasse Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "1LL",
+    "latitude": 21.616,
+    "longitude": 39.15,
+    "address": "Hira Street Al Naeem J, 23526"
+  },
+  {
+    "code": 1118611,
+    "name": "Casa Diora Hotel Al Rawdah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.57,
+    "longitude": 39.15,
+    "address": "Hamad Al Jaser Street"
+  },
+  {
+    "code": 1123939,
+    "name": "Al Rayan Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.661704,
+    "longitude": 39.131607,
+    "address": "Abi Haitham Al Ansari Al Mohammadiyyah, M46J"
+  },
+  {
+    "code": 1124934,
+    "name": "Mirada Purple - Obhur",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.75895,
+    "longitude": 39.13815,
+    "address": "King Abdul Aziz Road, Jeddah, Sa"
+  },
+  {
+    "code": 1126424,
+    "name": "Hampton by Hilton Jeddah Souq7",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.481559,
+    "longitude": 39.258847,
+    "address": "Souq 7, Janoub Ibn Laden Street"
+  },
+  {
+    "code": 1139906,
+    "name": "Garden Millennium Hotel Al Salamah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.584254,
+    "longitude": 39.153577,
+    "address": "Jeddah Hadiqat Rami As Salamah Jeddah"
+  },
+  {
+    "code": 1139907,
+    "name": "Four Points By Sheraton Jeddah King Fahd Road",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.715111,
+    "longitude": 39.09968,
+    "address": "6953 King Fahad Branch Road"
+  },
+  {
+    "code": 1139943,
+    "name": "Savoye Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.574257,
+    "longitude": 39.175013,
+    "address": "Almaahad Alsenaie Street Al Faisaliyyah"
+  },
+  {
+    "code": 1140554,
+    "name": "Crowne Plaza Jeddah An Ihg Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.564271,
+    "longitude": 39.177461,
+    "address": "Al Ma Adi Road Al Corniche Po Box 10924 21443"
+  },
+  {
+    "code": 1145298,
+    "name": "Asal Serviced Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.62252,
+    "longitude": 39.199697,
+    "address": "3820 Hira Street"
+  },
+  {
+    "code": 1155185,
+    "name": "Paradise In Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3",
+    "latitude": 21.512063,
+    "longitude": 39.175372,
+    "address": "Haiel St Jeddah Makkah Province Sa 23214"
+  },
+  {
+    "code": 1155492,
+    "name": "Skoop Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.536755,
+    "longitude": 39.216174,
+    "address": "Palestine 3424 Near The Intersection"
+  },
+  {
+    "code": 1155503,
+    "name": "Holiday Inn Jeddah Corniche By Ihg",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.50636,
+    "longitude": 39.165995,
+    "address": "2748 Al Jazirah"
+  },
+  {
+    "code": 1174284,
+    "name": "Amco Serviced Apartments",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.60337,
+    "longitude": 39.18374,
+    "address": "Jdba7839 1, Al Rabwah, Jeddah, Saudi Arabia, 7839"
+  },
+  {
+    "code": 1174319,
+    "name": "Paradise Nice Hotel Jeddah",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.5105594,
+    "longitude": 39.231138,
+    "address": "An Nassim Districtking Abdullah Road 23233 Jedd"
+  },
+  {
+    "code": 1175190,
+    "name": "Narcissus Boutique Hotel Al Hamra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.50402,
+    "longitude": 39.16456,
+    "address": "P O Box 75 Jeddah The Kingdom"
+  },
+  {
+    "code": 1175298,
+    "name": "Mirada Purple Zahra",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.587007,
+    "longitude": 39.131311,
+    "address": "Ahmad Al Attas Al Zahra Jeddah 23425 Saudi Arabia"
+  },
+  {
+    "code": 1175640,
+    "name": "Narcissus Al Hamra Boutique Hotel",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.556,
+    "longitude": 39.1689,
+    "address": "7933 Corniche Road Al Ruwais District Jeddah"
+  },
+  {
+    "code": 1175763,
+    "name": "White Diamond 2 Sari",
+    "destinationCode": "JED",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.58284,
+    "longitude": 39.1659,
+    "address": "6344 Sari Street Al Bawadi Dis"
+  },
+  {
+    "code": 1027820,
+    "name": "Six Senses Southern Dunes",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.3797259,
+    "longitude": 37.3334273,
+    "address": "The Red Sea Development, 48321"
+  },
+  {
+    "code": 1096530,
+    "name": "Miraval The Red Sea",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.457871,
+    "longitude": 36.948316,
+    "address": "Building No 7007, King Faisal Road, 2177"
+  },
+  {
+    "code": 1119311,
+    "name": "Shebara Resort",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.3642685135392,
+    "longitude": 36.9058224172608,
+    "address": "Red Sea Destination"
+  },
+  {
+    "code": 1119313,
+    "name": "Daraah Resort",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.726285,
+    "longitude": 36.1271632,
+    "address": "Triple Bay Amaala, Daraah Resort, Amaala"
+  },
+  {
+    "code": 1125464,
+    "name": "Turtle Bay Resort",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.50274,
+    "longitude": 36.9999,
+    "address": "Redsea"
+  },
+  {
+    "code": 1128754,
+    "name": "Desert Rock",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.7168838499106,
+    "longitude": 37.2393591934571,
+    "address": "Redsea"
+  },
+  {
+    "code": 1188174,
+    "name": "Fairmont The Red Sea",
+    "destinationCode": "RTD",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.50023,
+    "longitude": 36.94262,
+    "address": "West Side Of Shura Island True Tabuk Province"
+  },
+  {
+    "code": 59385,
+    "name": "Four Seasons Riyadh At kingdom Centre",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.711367,
+    "longitude": 46.674395,
+    "address": "11321 Riyadh Business District P.O. Box 231000"
+  },
+  {
+    "code": 59388,
+    "name": "Radisson Blu Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.6694528,
+    "longitude": 46.7164905,
+    "address": "Al Mubarakiah Plaza King Abdulaziz Street"
+  },
+  {
+    "code": 61290,
+    "name": "Sheraton Riyadh Hotel & Towers",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.727636,
+    "longitude": 46.66564,
+    "address": "Olaya And Mecca Road 11623, P.O.Box 90807"
+  },
+  {
+    "code": 94393,
+    "name": "Mandarin Oriental Al Faisaliah, Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.689604,
+    "longitude": 46.684899,
+    "address": "King Fahd Road, Olaya, Riyadh 11484, Ksa., 0"
+  },
+  {
+    "code": 94394,
+    "name": "Intercontinental Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.66663378097371,
+    "longitude": 46.69121140221214,
+    "address": "King Saud Road Riyadh 3636"
+  },
+  {
+    "code": 94395,
+    "name": "Riyadh Marriott Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.686,
+    "longitude": 46.7126,
+    "address": "King Saud Road Al Wazarat District, S/N"
+  },
+  {
+    "code": 94696,
+    "name": "Al Mutlaq Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7001926,
+    "longitude": 46.7182831,
+    "address": "King Abdul Aziz Road, Old Airport Road,P.B.3525"
+  },
+  {
+    "code": 114743,
+    "name": "Crowne Plaza Riyadh Palace, an IHG Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.674068,
+    "longitude": 46.6756827,
+    "address": "Prince Abdulrahman Bin Abdulaziz St, P.O. BOX 2691"
+  },
+  {
+    "code": 120642,
+    "name": "Executives Hotel Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.70874405,
+    "longitude": 46.67795181,
+    "address": "Po Box 7347 Riyad, Main Olaya Rd, 2299"
+  },
+  {
+    "code": 120645,
+    "name": "Holiday Inn Olaya Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.68009676,
+    "longitude": 46.69059814,
+    "address": "Olaya Street P.O. Box 69112"
+  },
+  {
+    "code": 128408,
+    "name": "Al Waha Palace Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.680945,
+    "longitude": 46.689333,
+    "address": "Wadi Al Dawassir Street, 6 - Olaya Main Road"
+  },
+  {
+    "code": 129884,
+    "name": "Boudl Khurais Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 24.6796873125305,
+    "longitude": 46.6927206516266,
+    "address": "Olaya Main Road"
+  },
+  {
+    "code": 129887,
+    "name": "Boudl Al Fayha'A Apartment",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.67834282,
+    "longitude": 46.80103683,
+    "address": "Haroun Al-Rasheed Street (Exit 15)"
+  },
+  {
+    "code": 129888,
+    "name": "Boudl Al Malaz Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 24.68640518,
+    "longitude": 46.73506546,
+    "address": "Al-Ihssa Street"
+  },
+  {
+    "code": 129891,
+    "name": "Boudl Al Qasr",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.598669,
+    "longitude": 46.6964637,
+    "address": "Behind AlQasr Mall, AlSweedi Str With AlSultana St"
+  },
+  {
+    "code": 129896,
+    "name": "Boudl Al Woroud",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 24.772155,
+    "longitude": 46.677233,
+    "address": "Infront of Carfour"
+  },
+  {
+    "code": 131452,
+    "name": "Holiday Inn Riyadh Izdihar",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7679338,
+    "longitude": 46.71491289999999,
+    "address": "Northern Ring Road,Izdihar District, Exit 7, 289 2"
+  },
+  {
+    "code": 145617,
+    "name": "Holiday Inn Al Qasr",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.683876799294662,
+    "longitude": 46.68761461967733,
+    "address": "Olaya District, King Fahd Road"
+  },
+  {
+    "code": 163442,
+    "name": "Business Avenue Formerly Rand Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.70672558064063,
+    "longitude": 46.68744644907383,
+    "address": "Mousa Bin Nusair Street, Po Box: 33554"
+  },
+  {
+    "code": 183417,
+    "name": "Carawan Al Fahad Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.710938341638347,
+    "longitude": 46.67043980236656,
+    "address": "Al Urubah Rd, Al Olaya, Riyadh 12333"
+  },
+  {
+    "code": 188029,
+    "name": "Ibis Riyadh Olaya Street",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.711903,
+    "longitude": 46.676266,
+    "address": "Olaya Street Opposite Kingdom Tower"
+  },
+  {
+    "code": 212336,
+    "name": "Rose Garden Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.68510023,
+    "longitude": 46.71846361,
+    "address": "King Abdel Aziz Road Malaz District"
+  },
+  {
+    "code": 224086,
+    "name": "Meral Crown Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.790399,
+    "longitude": 46.737701,
+    "address": "Abi Jaafar Al Mansouri Street Exit 9 Geranada Dist, s/n"
+  },
+  {
+    "code": 228408,
+    "name": "Novotel Suites Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.684311,
+    "longitude": 46.690333,
+    "address": "Olaya Main StreetPO Box 2689Olaya Main Street"
+  },
+  {
+    "code": 237211,
+    "name": "The Ritz-Carlton, Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.666056,
+    "longitude": 46.630528,
+    "address": "Mekkah Road, AlHada Area. Al hada"
+  },
+  {
+    "code": 237347,
+    "name": "Mira Business Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7027935,
+    "longitude": 46.6940063,
+    "address": "Prince Muhammad Ibn Abdulaziz, Olaya"
+  },
+  {
+    "code": 237593,
+    "name": "Dabab Hotel By Warwick",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.676977,
+    "longitude": 46.703206,
+    "address": "Uyun Al Yamamah, Sulaimaniyah Riyadh, 99999"
+  },
+  {
+    "code": 254427,
+    "name": "Obaer Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6885462,
+    "longitude": 46.6869057,
+    "address": "Olaya St, Al Olaya, Riyadh 11492, 8685"
+  },
+  {
+    "code": 254890,
+    "name": "Haven Plaza",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.682552,
+    "longitude": 46.69126,
+    "address": "Al Olya Street, 11663"
+  },
+  {
+    "code": 254891,
+    "name": "Crowne Plaza Riyadh Al Waha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.742201,
+    "longitude": 46.725289,
+    "address": "8430 Uthman Ibn Affan road,Alwahah"
+  },
+  {
+    "code": 334120,
+    "name": "Almuhaidb Al Diwan -Alolaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7000568,
+    "longitude": 46.6803582,
+    "address": "King Fahad Road,Behind Black Box"
+  },
+  {
+    "code": 335882,
+    "name": "Comfort Inn Suites Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.77004,
+    "longitude": 46.69008,
+    "address": "Al Hassan Bin Ali"
+  },
+  {
+    "code": 336879,
+    "name": "Holiday Inn Riyadh - Meydan",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6783,
+    "longitude": 46.69146,
+    "address": "King Fahd Rd Al Olaya At The Crossing With Khurais"
+  },
+  {
+    "code": 337133,
+    "name": "Riyadh Airport Marriott Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.92506,
+    "longitude": 46.713,
+    "address": "Airport Road, King Khalid International"
+  },
+  {
+    "code": 337184,
+    "name": "Almuhaidb Down Town",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 24.661683,
+    "longitude": 46.702039,
+    "address": "King Faisal Road"
+  },
+  {
+    "code": 338927,
+    "name": "JW Marriott Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.792637749731448,
+    "longitude": 46.63231972883547,
+    "address": "King Fahad Road Unit 1, 7647"
+  },
+  {
+    "code": 363919,
+    "name": "Ramada by Wyndham Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6740886,
+    "longitude": 46.7160579,
+    "address": "King Abdul Aziz Road Ministry Area South, 11443"
+  },
+  {
+    "code": 368354,
+    "name": "Sunday Millennia Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7099404,
+    "longitude": 46.6756721,
+    "address": "Alwadi Alawsat ST, Olaya Riyadh"
+  },
+  {
+    "code": 369947,
+    "name": "Courtyard Riyadh Diplomatic Quarter",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.666923,
+    "longitude": 46.623149,
+    "address": "Al-Hada District, Abdullah Bin Huzafah"
+  },
+  {
+    "code": 388637,
+    "name": "Four Points By Sheraton Riyadh Khaldia",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.637286,
+    "longitude": 46.712033,
+    "address": "Imam Faisal Bin Turki Street"
+  },
+  {
+    "code": 389077,
+    "name": "Madareem Crown Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.800932,
+    "longitude": 46.717003,
+    "address": "King Khalid International Airport Road, P.O.Box 10"
+  },
+  {
+    "code": 391103,
+    "name": "Radisson Blu Hotel and Convention Center",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.689213,
+    "longitude": 46.717536,
+    "address": "King Abdulaziz Road"
+  },
+  {
+    "code": 391125,
+    "name": "Ewaa Express Hotel-Petal",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SUP",
+    "latitude": 24.692914,
+    "longitude": 46.685321,
+    "address": "Al Riyadh- Al Olya Dst. - Al Olya General Street"
+  },
+  {
+    "code": 391741,
+    "name": "Narcissus Hotel And Spa Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.695887,
+    "longitude": 46.683561,
+    "address": "Tahlia street, conjuction with Olaya Street"
+  },
+  {
+    "code": 408126,
+    "name": "voco Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.6666516,
+    "longitude": 46.69674699999999,
+    "address": "king fahad road, 1300"
+  },
+  {
+    "code": 411042,
+    "name": "DoubleTree by Hilton Riyadh - Al Muroj Business Ga",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.76466359381,
+    "longitude": 46.65715970812,
+    "address": "3083 Northern Ring Branch Rd"
+  },
+  {
+    "code": 421760,
+    "name": "Marriott Executive Apartments Riyadh Center",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.68795404,
+    "longitude": 46.71348543,
+    "address": "King Saud Road Al Wazarat District"
+  },
+  {
+    "code": 428099,
+    "name": "Novotel Suites Riyadh Dyar",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7077723,
+    "longitude": 46.6766012,
+    "address": ",90Th Street, Off Olaya Street Riyadh, 11361"
+  },
+  {
+    "code": 428239,
+    "name": "Novotel Riyadh Al Anoud",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.4226,
+    "longitude": 46.4034,
+    "address": "9033 King Fahad Road, Olaya , Al Anoud Tower, 1"
+  },
+  {
+    "code": 459061,
+    "name": "Grand Plaza Al Dhabab",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6639932,
+    "longitude": 46.7058098,
+    "address": "Prince Faisal Ibn Turki Ibn Abdul Aziz"
+  },
+  {
+    "code": 459081,
+    "name": "Grand Plaza Gulf",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6797783,
+    "longitude": 46.6776024,
+    "address": "8235 King Abdul Aziz Road, Ad Dhubbat"
+  },
+  {
+    "code": 459641,
+    "name": "Grand Plaza Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6802,
+    "longitude": 46.677361,
+    "address": "Al Takhasossy Street"
+  },
+  {
+    "code": 460761,
+    "name": "Executives Hotel KAFD",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.773433,
+    "longitude": 46.639847,
+    "address": "King Fahad road"
+  },
+  {
+    "code": 464621,
+    "name": "Rosh Rayhaan by Rotana",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7003613,
+    "longitude": 46.6799594,
+    "address": "Olaya Street"
+  },
+  {
+    "code": 470542,
+    "name": "Awfad Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.700643,
+    "longitude": 46.678218,
+    "address": "King Fahd Road Riyadh 8427, 8427 0"
+  },
+  {
+    "code": 519802,
+    "name": "Almuhaidb Nadwa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "STD",
+    "latitude": 24.794292891165608,
+    "longitude": 46.86793327331543,
+    "address": "Khorais Street - Nadwaa Area, ext. 36"
+  },
+  {
+    "code": 521321,
+    "name": "Aloft Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.6790926,
+    "longitude": 46.6930479,
+    "address": "Olaya Street, 2385"
+  },
+  {
+    "code": 526481,
+    "name": "Ascott Rafal Olaya Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8093084,
+    "longitude": 46.657,
+    "address": "7706, Sahafa Olaya Street, P.O.Box 2396"
+  },
+  {
+    "code": 544441,
+    "name": "Braira Al Olaya Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6853025,
+    "longitude": 46.6865945,
+    "address": "Olaya St, Al Olaya, Riyadh 12211"
+  },
+  {
+    "code": 552841,
+    "name": "Gloria Inn Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6307422,
+    "longitude": 46.7175022,
+    "address": "Ad Dirah , AlBatha street, Riyadh, 300"
+  },
+  {
+    "code": 552861,
+    "name": "Hyatt Regency Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.698417861862502,
+    "longitude": 46.68231946197659,
+    "address": "Olaya Riyadh 552861, 552861"
+  },
+  {
+    "code": 572781,
+    "name": "Swiss Flora Royal Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8054834,
+    "longitude": 46.6256446,
+    "address": "King Fahad Road, Al Sahafa District, 17"
+  },
+  {
+    "code": 589784,
+    "name": "Al Mashreq Boutique Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7041698,
+    "longitude": 46.6556219,
+    "address": "2163 Al Urubah Road – North Mathar Dist."
+  },
+  {
+    "code": 592941,
+    "name": "InterContinental Durrat Al Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 25.0002359,
+    "longitude": 46.5077233,
+    "address": "Qassim Freeway Road"
+  },
+  {
+    "code": 593202,
+    "name": "Mena Hotel Nasiriah Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.659181,
+    "longitude": 46.6808313,
+    "address": "Al Mather St. - Al Nasiriah, NA"
+  },
+  {
+    "code": 593503,
+    "name": "Intour Al Sahafa Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8168705330376,
+    "longitude": 46.6453608870506,
+    "address": "Intersection Of King Abdulaziz St. And Imam, na"
+  },
+  {
+    "code": 593881,
+    "name": "InTour Qurtobah hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8030475,
+    "longitude": 46.7426527,
+    "address": "Al-Dammam sub road , Khalid Ibn Al-Walid ., ."
+  },
+  {
+    "code": 595741,
+    "name": "Vivienda Hotel Villas Al Hada",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.650157,
+    "longitude": 46.647741,
+    "address": "Prince Faisal Bin Fahd Bin Abdulaziz Rd ., ."
+  },
+  {
+    "code": 599881,
+    "name": "Almuhaidb Takhasosi Residence",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 24.6880393378015,
+    "longitude": 46.6740310192108,
+    "address": "Al Takhassusi Street , Al Olaya, N/A"
+  },
+  {
+    "code": 604542,
+    "name": "Best Plus Aurora Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.729596659369587,
+    "longitude": 46.7532549825562,
+    "address": "Eastern Ring Road Exit 12 Airport Road, 2"
+  },
+  {
+    "code": 604882,
+    "name": "Almuhaidb Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6817376,
+    "longitude": 46.6915986,
+    "address": "Al Ulaya RD, Bld 12221, Al Olaya, 1"
+  },
+  {
+    "code": 604923,
+    "name": "Almuhaidb Takhasosi 5",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "AT3",
+    "latitude": 24.6891884,
+    "longitude": 46.6727355,
+    "address": "l Takhassusi Street, infront of Abaqrino 0, 0"
+  },
+  {
+    "code": 604986,
+    "name": "DAR NEYAARA SERVICED APARTMENTS",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.72895,
+    "longitude": 46.8141493,
+    "address": "Kanshalila Area"
+  },
+  {
+    "code": 605002,
+    "name": "Almuhaidb Alnarges",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8267932,
+    "longitude": 46.6828199,
+    "address": "Exit 6 ,Othamn Bin Affan St"
+  },
+  {
+    "code": 605122,
+    "name": "Almuhaidb Jarir",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6716933,
+    "longitude": 46.7369127,
+    "address": "Al-Ehssaa Street"
+  },
+  {
+    "code": 605141,
+    "name": "Almuhaidb Khoris",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6803137,
+    "longitude": 46.6935307,
+    "address": "Intersection of Olaya and Khorais Road, S/N"
+  },
+  {
+    "code": 605201,
+    "name": "Al Muhaidb Residence Al Malaz 4",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.663469,
+    "longitude": 46.730062,
+    "address": "Al Malaz, King Saud University, Al Malaz -, -"
+  },
+  {
+    "code": 606221,
+    "name": "Centro Waha Riyadh Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.756094,
+    "longitude": 46.653349,
+    "address": "Al Olaya, Al Olaya"
+  },
+  {
+    "code": 608022,
+    "name": "Courtyard Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7021833333333,
+    "longitude": 46.6786666666667,
+    "address": "2759 Olaya District, Moussa Bin Nussair"
+  },
+  {
+    "code": 608779,
+    "name": "Swiss Flora Inn Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8070585,
+    "longitude": 46.625536,
+    "address": "RASB7437، وادي بيشه، 2324, As Sahafah, 19"
+  },
+  {
+    "code": 609903,
+    "name": "Hilton Riyadh Hotel & Residences",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.785183,
+    "longitude": 46.7282,
+    "address": "p.o.box 86230 al shohadaa"
+  },
+  {
+    "code": 615141,
+    "name": "Crowne Plaza Riyadh RDC Hotel and Convention",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.739085895178803,
+    "longitude": 46.635341963059986,
+    "address": "Imam Saud Ibn Abdul Aziz Road"
+  },
+  {
+    "code": 617830,
+    "name": "Fraser Suites Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH5",
+    "latitude": 24.679186,
+    "longitude": 46.691717,
+    "address": "Intersection Olaya Street and Khurais Road, 15 2"
+  },
+  {
+    "code": 624423,
+    "name": "Al Hamra Palace By Warwick",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.730469279119408,
+    "longitude": 46.668952523031635,
+    "address": "King Abdullah Road"
+  },
+  {
+    "code": 624574,
+    "name": "Melissa Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.79171,
+    "longitude": 46.740879,
+    "address": "Abu Jafar Al Mansur, Riyadh"
+  },
+  {
+    "code": 624655,
+    "name": "Mandarin Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.753788,
+    "longitude": 46.6788295,
+    "address": "Imam Saud nin A.Rd(Exit9)-Intersection With King A"
+  },
+  {
+    "code": 625003,
+    "name": "Seven Garden AL wadi",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.798698,
+    "longitude": 46.697262,
+    "address": "riyadh othman bin affan road-hai-al-wadi"
+  },
+  {
+    "code": 625015,
+    "name": "Myan Al urubah Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6979767,
+    "longitude": 46.6399328,
+    "address": "3021 Al Urubah Branch Rd, Umm Al Hamam Al Gharbi"
+  },
+  {
+    "code": 625018,
+    "name": "Revan Palace",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.7795046,
+    "longitude": 46.829314321,
+    "address": "Shikh Jaber al Subah"
+  },
+  {
+    "code": 625019,
+    "name": "Sama Inn Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8210926,
+    "longitude": 46.649279221,
+    "address": "Yasmen, anas bin malik road"
+  },
+  {
+    "code": 626538,
+    "name": "Boudl Al Munsiyah ",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8541553378834,
+    "longitude": 46.7762546986341,
+    "address": "Riyadh -Al Munsiyah Destreict - Al Thomama"
+  },
+  {
+    "code": 627816,
+    "name": "Braira Qurtubah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8178678,
+    "longitude": 46.7408284,
+    "address": "Al Rushd Street from Khaled Ben Walid St. Qurtubah"
+  },
+  {
+    "code": 627821,
+    "name": "Braira Al Wezarat",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.67403423,
+    "longitude": 46.71817617,
+    "address": "King Abdulaziz Road infront of Ministry of Defence"
+  },
+  {
+    "code": 627833,
+    "name": "Boudl Al Majmaah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 25.9078917218291,
+    "longitude": 45.3595393896103,
+    "address": "King Abdulaziz Rd, Al Andalus, Al Majma'ah, 15362"
+  },
+  {
+    "code": 627865,
+    "name": "Boudl Al Masif ",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 24.77258331,
+    "longitude": 46.6763404,
+    "address": "Riyadh Between Exits 5 And 6 On The Northern Ring"
+  },
+  {
+    "code": 627866,
+    "name": "Shatha Alrabi3 Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.782617,
+    "longitude": 46.649378,
+    "address": "Al Quz, Ar Rabi"
+  },
+  {
+    "code": 627922,
+    "name": "Voyage Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.699297,
+    "longitude": 46.6434649,
+    "address": "Al Urubah Rd, Umm Al Hamam Al Gharbi"
+  },
+  {
+    "code": 628121,
+    "name": "Almuhaidb University Hospital",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH4",
+    "latitude": 24.660328,
+    "longitude": 46.7185412,
+    "address": "King Abdul Aziz Rd – Behind Hospital King Abdul Az"
+  },
+  {
+    "code": 628163,
+    "name": "Olian Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.805397117667496,
+    "longitude": 46.656997691693114,
+    "address": "Imam Saud Bin Faisal Road - Al Yasmin, 3386 4 4"
+  },
+  {
+    "code": 628912,
+    "name": "Aswar Hotel Suites Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH5",
+    "latitude": 24.7960972,
+    "longitude": 46.726768617,
+    "address": "Exit 8 Dammam Road, Service Road, Qurtubah Distric, 3"
+  },
+  {
+    "code": 630007,
+    "name": "Executives Hotel Azizia",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.5967643,
+    "longitude": 46.7432098,
+    "address": "South ring road , Azizia district"
+  },
+  {
+    "code": 637605,
+    "name": "Manazel Aldiafah Serviced Apartments Sulaymaniyah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "AT2",
+    "latitude": 24.6844483,
+    "longitude": 46.70382910000001,
+    "address": "SA, SAUDI ARABIA,ALSOLYMANIA DISTRICT .RIYADH, CL"
+  },
+  {
+    "code": 641145,
+    "name": "Intercity Hotel Riyadh Malaz",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.671823,
+    "longitude": 46.736116,
+    "address": "Jarir Street, Al Ihsa Interchange 2976"
+  },
+  {
+    "code": 641625,
+    "name": "Hyatt Place Riyadh Sulaimani",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7073,
+    "longitude": 46.7081,
+    "address": "turki ibn abdullah al saud"
+  },
+  {
+    "code": 644502,
+    "name": "Centro Olaya by Rotana",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6929776,
+    "longitude": 46.6818428,
+    "address": "Olaya Street 7590 Wadi Al Artwi - Al Olaya"
+  },
+  {
+    "code": 645670,
+    "name": "Manazel Aldiafah serviced apartment",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 24.7043445239575,
+    "longitude": 46.6784057021141,
+    "address": "Street 74 Olaya Main street,Near Suliman El Habib, 74"
+  },
+  {
+    "code": 647231,
+    "name": "Boudl Gaber",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "AT1",
+    "latitude": 24.5936445,
+    "longitude": 46.4914542,
+    "address": "Shaikh Jaber Al Sabah Street, Al Khaleej, S/N"
+  },
+  {
+    "code": 648902,
+    "name": "Tilal Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7103626,
+    "longitude": 46.7113949,
+    "address": "7001 Eastern Ring Road – Al Jazirah District, Eastern"
+  },
+  {
+    "code": 651287,
+    "name": "Marriott Riyadh Diplomatic Quarter",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6743027,
+    "longitude": 46.6212871,
+    "address": "6781 Abdullah Alsahmi Street, Diplomatic Quarter"
+  },
+  {
+    "code": 654277,
+    "name": "Almuhaidb Takhasosi Value",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.685602,
+    "longitude": 46.675419,
+    "address": "Takhassusi Street"
+  },
+  {
+    "code": 654367,
+    "name": "Almuhaidb Almalaz 7",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.661499,
+    "longitude": 46.726429,
+    "address": "Malaz District, Conjuction Malaz"
+  },
+  {
+    "code": 654374,
+    "name": "Almuhaidb Sudair",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 25.593571,
+    "longitude": 45.622521,
+    "address": "King Abdulaziz Road"
+  },
+  {
+    "code": 658162,
+    "name": "Fairmont Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.8082207,
+    "longitude": 46.7182893,
+    "address": "Business Gate Qurtubah Area Airport Road, 6"
+  },
+  {
+    "code": 660761,
+    "name": "123 Dome El Nozha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 24.7585501263389,
+    "longitude": 46.7151030153036,
+    "address": "Prince Muqrin Ibn Abdulaziz Cross Uthman Ibn Affan"
+  },
+  {
+    "code": 660768,
+    "name": "Al Hamra Palace Al Aswaq",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 24.64593,
+    "longitude": 46.716445,
+    "address": "Al Hamra Aswaq, 7739 Al Batha, Al Amal"
+  },
+  {
+    "code": 661065,
+    "name": "Radisson Blu Hotel & Residence, Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.68442,
+    "longitude": 46.625375,
+    "address": "umro adhamry street – as safarat 7826"
+  },
+  {
+    "code": 662339,
+    "name": "Brzeen Hotel Riyad",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.69900798,
+    "longitude": 46.64029755,
+    "address": "Al Urubah Branch Rd Ar Raid, 120"
+  },
+  {
+    "code": 667188,
+    "name": "Cristal Amaken Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.5591938,
+    "longitude": 46.8929492,
+    "address": "Industrial City 2"
+  },
+  {
+    "code": 683604,
+    "name": "Braira Hettin Resort and Villas",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5LUX",
+    "latitude": 24.7548543,
+    "longitude": 46.5866084,
+    "address": "Prince Saud Bin Mohammed Bin Muqrin Road, 0 0 0"
+  },
+  {
+    "code": 684475,
+    "name": "Aber 102",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.818781,
+    "longitude": 46.641316,
+    "address": "Anas Bin Malik Road"
+  },
+  {
+    "code": 689105,
+    "name": "Comfort Inn Yarmukh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.81495,
+    "longitude": 46.79562,
+    "address": "2488 Al Hussain Ibn Ali, At Taawun"
+  },
+  {
+    "code": 694892,
+    "name": "Viola Gardens",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.80349,
+    "longitude": 46.70424,
+    "address": "2813 Prince Saud Ibn Muh Ibn Muqrin"
+  },
+  {
+    "code": 698375,
+    "name": "Rest Night Hotel Suites Al Nafal",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.781497,
+    "longitude": 46.6728209,
+    "address": "Mohamed Al Miqdami Street"
+  },
+  {
+    "code": 698468,
+    "name": "Boudl Sahafa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.810595685671785,
+    "longitude": 46.64738424022827,
+    "address": "King Adulaziz Road Al Sahafa Beside Al Mamlakah Ho"
+  },
+  {
+    "code": 702182,
+    "name": "Al Muhaidb Residence Ghranta",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.666836,
+    "longitude": 46.730377,
+    "address": "Shurahabil Ibn Hasanah"
+  },
+  {
+    "code": 702329,
+    "name": "Aber Alyasmin",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.82053,
+    "longitude": 46.648506,
+    "address": "Anas Ibn Malik Road"
+  },
+  {
+    "code": 708696,
+    "name": "Rest Night Hotel Suites Al Hamra",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7766339,
+    "longitude": 46.75832279999999,
+    "address": "Emma Saudi Road , Bahar St"
+  },
+  {
+    "code": 712562,
+    "name": "BURJ AL HAYAH HOTEL SUITES AL FALAH",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8011,
+    "longitude": 46.6989,
+    "address": "PRINCE SAUD IBN MUHAMMAD IBN MUQRIN EXIT7 ALFALAH"
+  },
+  {
+    "code": 712563,
+    "name": "MERFAL HOTEL APARTMENTS AL FALAH",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8027,
+    "longitude": 46.7024,
+    "address": "PRINCE SAUD IBN MUHAMMAD IBN MUQRIN AL FALAH DISTR"
+  },
+  {
+    "code": 714988,
+    "name": "TALEEN ALQUDS 2 HOTEL APARTMENTS",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.761932,
+    "longitude": 46.762073,
+    "address": "PRINCE SAUD IBN ABDUL AZIZ"
+  },
+  {
+    "code": 714990,
+    "name": "Hyatt Buyutat Apartment",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4LL",
+    "latitude": 24.67444233,
+    "longitude": 46.69243097,
+    "address": "Olaya Street"
+  },
+  {
+    "code": 715326,
+    "name": "Park Inn By Radisson Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.690784,
+    "longitude": 46.732093,
+    "address": "Al Ahsa Street"
+  },
+  {
+    "code": 737382,
+    "name": "Damac Towers Arjaan By Rotana Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.709434,
+    "longitude": 46.672541,
+    "address": "King Fahd, 8444"
+  },
+  {
+    "code": 739984,
+    "name": "Ayan Furnished Units and Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.798388,
+    "longitude": 46.632781,
+    "address": "6667 Olaya St, As Sahafah\\"
+  },
+  {
+    "code": 742972,
+    "name": "Crown Rose Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7092399,
+    "longitude": 46.67779609999999,
+    "address": "Wadi Taraj As Sahafah, 13313"
+  },
+  {
+    "code": 745133,
+    "name": "Vittori Palace Hotel & Residence",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7187463,
+    "longitude": 46.6873416,
+    "address": "King Abdullah Dt., Riyadh 12423"
+  },
+  {
+    "code": 746117,
+    "name": "Myrtle Al Shohadaa Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.784487,
+    "longitude": 46.735782,
+    "address": "6968-6922 Doha St, Ghirnatah"
+  },
+  {
+    "code": 770072,
+    "name": "Art View - Riyadh Convention and Exhibition Center",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7575178,
+    "longitude": 46.7333242,
+    "address": "king Abdullah Road ,Al Mughrizat District"
+  },
+  {
+    "code": 772640,
+    "name": "Duset Hotel Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.754755,
+    "longitude": 46.706864,
+    "address": "Prince Muqrin Ibn Abdulaziz Street"
+  },
+  {
+    "code": 772641,
+    "name": "Comfort Inn Al Yarmouk",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.814945,
+    "longitude": 46.796209,
+    "address": "2488 Al Hussain Ibn Ali At Taawun"
+  },
+  {
+    "code": 773447,
+    "name": "Braira Al Nakheel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.770946470472115,
+    "longitude": 46.714924969311525,
+    "address": "Al Imam Saud Ibn Abdul Aziz Branch Rd"
+  },
+  {
+    "code": 773448,
+    "name": "Braira Al Yarmouk Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.795689797932788,
+    "longitude": 46.77514831046789,
+    "address": "Al Imam Abdullah Ibn Saoud road"
+  },
+  {
+    "code": 774541,
+    "name": "IRIS Boutique Granada",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 24.7876061,
+    "longitude": 46.7311063,
+    "address": "2898, Abi Jaafar Almansour St"
+  },
+  {
+    "code": 776737,
+    "name": "Riyadh Diplomatic Quarter - Marriott Executive Apa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.674044,
+    "longitude": 46.622822,
+    "address": "6781 Abdullah Alsahmi Street Diplomatic Quarter"
+  },
+  {
+    "code": 777831,
+    "name": "Le Méridien Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.728691,
+    "longitude": 46.667882,
+    "address": "2081 King Abdullah Ibn Abdula"
+  },
+  {
+    "code": 791955,
+    "name": "Baron Al Masif",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.763555,
+    "longitude": 46.683832,
+    "address": "Dhabiyat Bent Al Barra Street Al Masif District"
+  },
+  {
+    "code": 791971,
+    "name": "Taleen Alsulaimanyah Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.691076,
+    "longitude": 46.709034,
+    "address": "Abu Bakr Al Razi Street Al Sulaimanyah"
+  },
+  {
+    "code": 791975,
+    "name": "Courtyard By Marriott Riyadh Northern Ring Road",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.761517,
+    "longitude": 46.651622,
+    "address": "Olaya Street, Al Murooj District"
+  },
+  {
+    "code": 792089,
+    "name": "Aber Al Mounisya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.845659,
+    "longitude": 46.758174,
+    "address": "Ath Thumamah Road Al Munsiyah"
+  },
+  {
+    "code": 796991,
+    "name": "DoubleTree by Hilton Riyadh Financial District",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7656809983,
+    "longitude": 46.6546841143,
+    "address": "3606 Northern Ring Road, Unit 3369 Al Ghadeer Dis"
+  },
+  {
+    "code": 796992,
+    "name": "Hilton Garden Inn Riyadh Financial District",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7656009408,
+    "longitude": 46.6544289911,
+    "address": "3606 Northern Ring Rd Al Ghadeer District"
+  },
+  {
+    "code": 807833,
+    "name": "Taleen Almasif Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.763555,
+    "longitude": 46.683832,
+    "address": "Dhabiyat Bent Al Barra Street Al Masif District"
+  },
+  {
+    "code": 807834,
+    "name": "Taleen Durrat Al Nakhil",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.744278,
+    "longitude": 46.654407,
+    "address": "Al Imam Saud Ibn Abdul Aziz Al Olaya"
+  },
+  {
+    "code": 815525,
+    "name": "Dorar Darea Hotel Apartments Al Nafl",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.779458,
+    "longitude": 46.66515,
+    "address": "Mohammed Al Maqdmi Street Al Nafel District"
+  },
+  {
+    "code": 827020,
+    "name": "Al Muhaidb Al Takhassusi Abaqrino",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.689275,
+    "longitude": 46.673052,
+    "address": "Al Takhassusi Street In Front Of Abaqrino"
+  },
+  {
+    "code": 827293,
+    "name": "Boudl Al Wurood",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.772379,
+    "longitude": 46.676807,
+    "address": "Northern Ring Road Between Exits 5 And 6 Opposite"
+  },
+  {
+    "code": 827321,
+    "name": "Almuhaidb  Al Takhasosi Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.683079,
+    "longitude": 46.676144,
+    "address": "Takhassusi St 537 Al Mathar Ash Shamali"
+  },
+  {
+    "code": 827325,
+    "name": "Almuhaidb Al Takhasosi Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.682687,
+    "longitude": 46.675081,
+    "address": "3189 Abdulsamad At Tanukhi Al Mathar Ash Shamali"
+  },
+  {
+    "code": 854326,
+    "name": "Boudl Alolaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.692237,
+    "longitude": 46.686009,
+    "address": "Olaya Main Road Front Of Faisalya Tour"
+  },
+  {
+    "code": 865898,
+    "name": "Dorar Darea Hotel Apartments - Al Malqa 2",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.801049,
+    "longitude": 46.622128,
+    "address": "Nawar Valley Street Al Malqa District Al Aqiq"
+  },
+  {
+    "code": 865904,
+    "name": "Almuhaidb Furnished Units King Abdulaziz",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.660206,
+    "longitude": 46.71853,
+    "address": "Near King Abdlaziz University Hospital Al Malaz"
+  },
+  {
+    "code": 876041,
+    "name": "Radisson Blu Hotel Riyadh Qurtuba",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.835851,
+    "longitude": 46.739359,
+    "address": "Al Thumamah Road"
+  },
+  {
+    "code": 895314,
+    "name": "Mansard Riyadh a Radisson Collection Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.783478,
+    "longitude": 46.652411,
+    "address": "4304 Prince Mohammed Bin Salman Road, Al Rabea"
+  },
+  {
+    "code": 895978,
+    "name": "AlMuhaidb Hotel Apartments Askary",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.692247,
+    "longitude": 46.710946,
+    "address": "Sulimaniya Area"
+  },
+  {
+    "code": 898424,
+    "name": "Asoul 6 Hotel Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 24.66515,
+    "longitude": 46.74135,
+    "address": "6489 Al Ameen Abdullah Al Ali Al Naeem Street,Al"
+  },
+  {
+    "code": 898428,
+    "name": "Burj Al Hayah Tower - Al Malaz",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.66005,
+    "longitude": 46.72445,
+    "address": "Jameah St. Facing Ministry of Justice Al Malaz"
+  },
+  {
+    "code": 901520,
+    "name": "Zahrat Rozah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 24.812221,
+    "longitude": 46.790387,
+    "address": "3461 Abi Jafar Al Mansour St Al Yarmuk"
+  },
+  {
+    "code": 906784,
+    "name": "Executive Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.6938,
+    "longitude": 46.6764,
+    "address": "Prince Mohammed Bin Abdulaziz Street Al Aliyah Di"
+  },
+  {
+    "code": 906785,
+    "name": "Celine Home Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.796833,
+    "longitude": 46.625699,
+    "address": "Al Umrah St Al Malga District"
+  },
+  {
+    "code": 906786,
+    "name": "Ewaa Express Hotel - Gaber",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.791695,
+    "longitude": 46.820413,
+    "address": "Ashaikh Jaber Alahmed Alsabah"
+  },
+  {
+    "code": 906791,
+    "name": "Silent Room 3",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.811905,
+    "longitude": 46.789408,
+    "address": "Abi Jafar Al Mansur St. Al Yarmouk District"
+  },
+  {
+    "code": 907834,
+    "name": "Radisson Hotel  Riyadh Airport",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.9142655,
+    "longitude": 46.6890969,
+    "address": "Muhammad Ibn Farj, Road 5333"
+  },
+  {
+    "code": 910480,
+    "name": "Ewaa Express Hotel - Khorais",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.676707,
+    "longitude": 46.684672,
+    "address": "Makkah Al Mukarramah Branch Road"
+  },
+  {
+    "code": 910481,
+    "name": "Aber Al Takhasussi",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.665871,
+    "longitude": 46.683357,
+    "address": "Al Takhasussi Street, Po Box 75 Riyadh, Saudi Ara"
+  },
+  {
+    "code": 910486,
+    "name": "Hayat Alriyadh Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.660156,
+    "longitude": 46.709673,
+    "address": "Abdulaziz Musaed Bin Jalawi Street"
+  },
+  {
+    "code": 912417,
+    "name": "Rokn Al Omor Apartments - Al Falah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 24.8024471,
+    "longitude": 46.706503,
+    "address": "Al Barakah St Al Falah, 7879"
+  },
+  {
+    "code": 912600,
+    "name": "Golden Tulip Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7709282,
+    "longitude": 46.7508412,
+    "address": "King Faisal District Exit 10 Al Fudul Street"
+  },
+  {
+    "code": 913960,
+    "name": "Movenpick Hotel And Residences Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7641137,
+    "longitude": 46.6534873,
+    "address": "3478 North Ring Road Exit 4 Al Ghadeer District"
+  },
+  {
+    "code": 914294,
+    "name": "Anan Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.811178,
+    "longitude": 46.622282,
+    "address": "7401 King Fahd Branch Road"
+  },
+  {
+    "code": 920967,
+    "name": "Sarwat Park Hotel Riyadh-Diplomatic Quarter",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.66638,
+    "longitude": 46.621838,
+    "address": "Makkah Al Mukarramah Br Rd"
+  },
+  {
+    "code": 926269,
+    "name": "Talah Resort",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7998,
+    "longitude": 46.41366,
+    "address": "Al Amaaria Road"
+  },
+  {
+    "code": 929195,
+    "name": "Najd Peak Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.81119,
+    "longitude": 46.73714,
+    "address": "Al Sabah Street, Al Munsiyah District"
+  },
+  {
+    "code": 929207,
+    "name": "Al Amoria Furnished Apartments 1",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.6300567092324,
+    "longitude": 46.6904783248901,
+    "address": "Alimam Abdulaziz Ibn Muhammed Ibn Saud Street"
+  },
+  {
+    "code": 939545,
+    "name": "Golden Ship Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7862939,
+    "longitude": 46.7309546,
+    "address": "Exit 9 Eastern Ring Road, 131313 3 1234"
+  },
+  {
+    "code": 941788,
+    "name": "Gardino Hotel Residence",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.72699,
+    "longitude": 46.65203,
+    "address": "Takhassusi Street Al Mohammadiyyah Riyadh 12362"
+  },
+  {
+    "code": 944256,
+    "name": "Elian AlSahafa  Tower Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.8076889,
+    "longitude": 46.626645,
+    "address": "RJ5G+4M, As Sahafah"
+  },
+  {
+    "code": 945786,
+    "name": "Hayat AL Riyadh Washam Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.652277345032108,
+    "longitude": 46.70810530060413,
+    "address": "Al Washam Street"
+  },
+  {
+    "code": 948283,
+    "name": "Admire Apart' Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6833038,
+    "longitude": 46.6716589,
+    "address": "Prince Sultan Bin Abdulaziz Rd"
+  },
+  {
+    "code": 950352,
+    "name": "Raoum Inn Majmaa",
+    "destinationCode": "RUH",
+    "zoneCode": 2,
+    "categoryCode": "SPC",
+    "latitude": 25.9029264,
+    "longitude": 45.34060299,
+    "address": "King Abdullah Road, Al Majma'ah"
+  },
+  {
+    "code": 954024,
+    "name": "Al Malqa Elite Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.806027,
+    "longitude": 46.625949,
+    "address": "As Sahafah"
+  },
+  {
+    "code": 954934,
+    "name": "Raoum Inn Buraydah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.4030907282972,
+    "longitude": 43.9307856559753,
+    "address": "Othman Bin Affan Rd. Al Nahdah Dist. Buraidah"
+  },
+  {
+    "code": 963517,
+    "name": "Quiet Rooms Apartment",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.816739,
+    "longitude": 46.802549,
+    "address": "Sheikh Jaber Al Ahmad Al Sobah Al Yarmouk District"
+  },
+  {
+    "code": 973129,
+    "name": "Moments Living Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8155683,
+    "longitude": 46.7236663,
+    "address": "Prince Mohammed Ibn Salman Ibn Abdulaziz,qurtubah"
+  },
+  {
+    "code": 978455,
+    "name": "Rukon Buotat 15",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.6746080717341,
+    "longitude": 46.6919347643852,
+    "address": "Alolaya District Alhur Ibn Qays Street"
+  },
+  {
+    "code": 987826,
+    "name": "Holiday Al Khaleej Al Najah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.820111835485676,
+    "longitude": 46.7946891256256,
+    "address": "Najah Street, 3"
+  },
+  {
+    "code": 988062,
+    "name": "Fairmont Ramla Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.809596,
+    "longitude": 46.624826,
+    "address": "King Fahad Rd Al Sahafah District Additional 2172"
+  },
+  {
+    "code": 989581,
+    "name": "Joudyan Olaya Riyadh By Elaf",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.70010589687291,
+    "longitude": 46.682839230691044,
+    "address": "Al Olaya, Riyadh 12241"
+  },
+  {
+    "code": 989980,
+    "name": "Warwick Riyadh Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6962901,
+    "longitude": 46.6585139,
+    "address": "King Abdul Aziz Road Al Malaz"
+  },
+  {
+    "code": 990036,
+    "name": "Continent Hotel Al Waha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6823136,
+    "longitude": 46.6881245,
+    "address": "Wadi Aldawasir Street, Al Olaya"
+  },
+  {
+    "code": 990399,
+    "name": "Ramada Riyadh King Fahd Road",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6602536,
+    "longitude": 46.7003703,
+    "address": "King Fahd Rd, An Namudhajiyah"
+  },
+  {
+    "code": 990423,
+    "name": "Al Muteb Suites Al Tawon",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7670476,
+    "longitude": 46.705949,
+    "address": "Al Imam Saud Ibn Abdul Aziz Branch Rd"
+  },
+  {
+    "code": 991463,
+    "name": "Al Muteb Suites Heritage Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8113582,
+    "longitude": 46.7664325,
+    "address": "11331 Dammam Rd"
+  },
+  {
+    "code": 991464,
+    "name": "Malath Fakher",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8106962,
+    "longitude": 46.7651331,
+    "address": "Dammam Rd, Al Yarmouk"
+  },
+  {
+    "code": 991466,
+    "name": "Malaz Raqi",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8032958,
+    "longitude": 46.7816175,
+    "address": "AL MUTAB SUITES AL SAHABA RD AL YARMOUK"
+  },
+  {
+    "code": 991467,
+    "name": "XYZ Hotel Al Yasmin",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8246368,
+    "longitude": 46.6361117,
+    "address": "Al Khayalah, Alyasmin"
+  },
+  {
+    "code": 991468,
+    "name": "Al Muteb Suites Al Falah 3",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7898724,
+    "longitude": 46.7025275,
+    "address": "Uthman Ibn Affan Rd, Al Falah"
+  },
+  {
+    "code": 991469,
+    "name": "Al Muteb Suites Al Munsiyah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.815077,
+    "longitude": 46.7715798,
+    "address": "Asir, Al Munsiyah"
+  },
+  {
+    "code": 992506,
+    "name": "Dara Hotel Qurtuba",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.821506,
+    "longitude": 46.7351856,
+    "address": "Baisan Mountain, Qurtubah"
+  },
+  {
+    "code": 992507,
+    "name": "Dara Hotel Rayyan",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.718312642574134,
+    "longitude": 46.7718613594162,
+    "address": "Ar Rayyan"
+  },
+  {
+    "code": 992906,
+    "name": "Comfort Hotel Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.706898,
+    "longitude": 46.677238,
+    "address": "Al-thumamah Valley St"
+  },
+  {
+    "code": 992910,
+    "name": "Al Rahden Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.823546265694972,
+    "longitude": 46.797238052958924,
+    "address": "Al Yarmuk, Riyadh Saudi Arabia, yes"
+  },
+  {
+    "code": 994883,
+    "name": "Le Park Concord Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 2,
+    "categoryCode": "SPC",
+    "latitude": 25.895305,
+    "longitude": 45.351803,
+    "address": "8465 King Fahd Rd Al Faiha Al Majmaah Al Majmaah"
+  },
+  {
+    "code": 997103,
+    "name": "Tura Hotel Al Nuzha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.75496434464732,
+    "longitude": 46.706250000022024,
+    "address": "Prince Mugrin Bin Abdul Aziz"
+  },
+  {
+    "code": 997497,
+    "name": "Burj Al Hayat Hotel Suites-al Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6753459,
+    "longitude": 46.6916765,
+    "address": "Al Wara, Al Olaya, Riyadh, Saudi Arabia, 80"
+  },
+  {
+    "code": 998487,
+    "name": "Jareed Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7504421,
+    "longitude": 46.6106219,
+    "address": "Prince Turki Alawal"
+  },
+  {
+    "code": 999460,
+    "name": "Hdb Sahafa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.795862,
+    "longitude": 46.6323143,
+    "address": "Al-maghmous Street"
+  },
+  {
+    "code": 1001644,
+    "name": "Boudl Al Wadi",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.79655,
+    "longitude": 46.69794,
+    "address": "Othman Bin Affan Road Al Wadi Riyadh"
+  },
+  {
+    "code": 1002675,
+    "name": "Boudl Al Sulimanyah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.69173,
+    "longitude": 46.71041,
+    "address": "Abu Bakr Alrazi Street Abu Bakr Alrazi Street"
+  },
+  {
+    "code": 1005863,
+    "name": "Ross Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7000545,
+    "longitude": 46.644285,
+    "address": "Al Urubah Road"
+  },
+  {
+    "code": 1006334,
+    "name": "Rafa Al Nuzhah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7548819649049,
+    "longitude": 46.7063900269568,
+    "address": "3176 Prince Meqrin Bin Abdulaziz St"
+  },
+  {
+    "code": 1006537,
+    "name": "Smayah Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8260713,
+    "longitude": 46.6814201,
+    "address": "Dhalam, An Narjis"
+  },
+  {
+    "code": 1006538,
+    "name": "Smayah Suites And Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH2",
+    "latitude": 24.8487585,
+    "longitude": 46.8238841,
+    "address": "Ali Al-bajadi Street, Al-rimal District"
+  },
+  {
+    "code": 1020915,
+    "name": "Erfad Alrabie Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.72411,
+    "longitude": 46.65583,
+    "address": "Abdelaziz King Road, Alrabie District"
+  },
+  {
+    "code": 1022270,
+    "name": "Hilton Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.70977529995,
+    "longitude": 46.67247073719,
+    "address": "8508 King Fahd Rd Al Olaya District"
+  },
+  {
+    "code": 1023148,
+    "name": "Lavera Inn Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7901357,
+    "longitude": 46.7646396,
+    "address": "Imam Abdullah Ibn Saud Ibn Abdulaziz Rd"
+  },
+  {
+    "code": 1023152,
+    "name": "Smayah Residence",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "HS4",
+    "latitude": 24.762491,
+    "longitude": 46.725884,
+    "address": "Prince Muqrin Ibn Abdulaziz St, Al Mughrizat"
+  },
+  {
+    "code": 1023169,
+    "name": "Narcissus The Royal",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.6921307,
+    "longitude": 46.6862443,
+    "address": "7359 Olaya Street"
+  },
+  {
+    "code": 1023577,
+    "name": "Rest Night Hotel Apartment- Alhamra",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "HS3",
+    "latitude": 24.7766339,
+    "longitude": 46.75832279999999,
+    "address": "Imam Saud Bin Abdulaziz Bin Mohammed Road, 2879"
+  },
+  {
+    "code": 1025535,
+    "name": "Hdb Financial District Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.786488,
+    "longitude": 46.6338731,
+    "address": "Al Aqeeq Sulaymaniyah Street King Fahad, 4108"
+  },
+  {
+    "code": 1025625,
+    "name": "Seiba Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6684981,
+    "longitude": 46.7293288,
+    "address": "Al Malaz, Riyadh, 12627"
+  },
+  {
+    "code": 1026187,
+    "name": "Holiday Inn Riyadh The Business District",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.874583,
+    "longitude": 46.731223,
+    "address": "King Khaled International Airport Road Business Di"
+  },
+  {
+    "code": 1028973,
+    "name": "Burj Alhayah Hotel Suites Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.6770453532,
+    "longitude": 46.6914144158,
+    "address": "King Fahad Street, North Ministry Of Interior"
+  },
+  {
+    "code": 1029254,
+    "name": "Novotel Riyadh Sahafa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.80694,
+    "longitude": 46.6272,
+    "address": "13321 Olaya St As Sahafa District Riyadh"
+  },
+  {
+    "code": 1029677,
+    "name": "Q Resort",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.90482,
+    "longitude": 46.81,
+    "address": "Al Thoumamah Rd, Ar Rimal, 13434"
+  },
+  {
+    "code": 1031122,
+    "name": "Enala Resort",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.9110217,
+    "longitude": 46.819282,
+    "address": "Alrayyan Riyadh, 1106"
+  },
+  {
+    "code": 1034272,
+    "name": "The St Regis Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.666891,
+    "longitude": 46.62626,
+    "address": "2941 Makkah Al Mukarramah Road"
+  },
+  {
+    "code": 1037112,
+    "name": "Nofa Riyadh, A Radisson Collection Resort",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7327,
+    "longitude": 46.715199,
+    "address": "Exit 857, Riyadh Makkah Highway"
+  },
+  {
+    "code": 1037177,
+    "name": "Radisson Hotel & Residence Riyadh Olaya",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.8174,
+    "longitude": 46.6219,
+    "address": "Olaya Street North, P.o. Box 320"
+  },
+  {
+    "code": 1038395,
+    "name": "Innyar Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.7135517,
+    "longitude": 46.6752957,
+    "address": "Oubay Ibn Mouaz Al Ansari - Riyadh - Saudi Arabia, 7275"
+  },
+  {
+    "code": 1039974,
+    "name": "Samt Inn King Fahad",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 24.6568153,
+    "longitude": 46.7012206,
+    "address": "Al Murabba, Riyadh Saudi Arabia"
+  },
+  {
+    "code": 1046441,
+    "name": "Towlan Grnada Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 24.7135517,
+    "longitude": 46.6752957,
+    "address": "Ash Shamlul, Ghirnatah"
+  },
+  {
+    "code": 1046998,
+    "name": "Msharef Almoden Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7998226,
+    "longitude": 46.6275241,
+    "address": "King Fahd Road, 13326 13"
+  },
+  {
+    "code": 1047245,
+    "name": "Sixty Three Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 2,
+    "categoryCode": "SPC",
+    "latitude": 24.682941,
+    "longitude": 46.696575,
+    "address": "Al Olaya"
+  },
+  {
+    "code": 1047587,
+    "name": "Golden Heights(جولدن هايتس)",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7135517,
+    "longitude": 46.6752957,
+    "address": "Saudi Arabia, +966"
+  },
+  {
+    "code": 1048584,
+    "name": "Towlan Alfalah Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.8204416,
+    "longitude": 46.7408985,
+    "address": "Prince Mohammed Ibn Salman Ibn Abdulaziz Road, 0535006453"
+  },
+  {
+    "code": 1048854,
+    "name": "Grand Safir Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH4",
+    "latitude": 24.7528884,
+    "longitude": 46.67554699999999,
+    "address": "Imam Saud Bin Abdulaziz Bin Mohammed Rd"
+  },
+  {
+    "code": 1049368,
+    "name": "The Leaf",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7962642,
+    "longitude": 46.7067607,
+    "address": "13667 Riyadh"
+  },
+  {
+    "code": 1049507,
+    "name": "Alma Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.726807,
+    "longitude": 46.6628247,
+    "address": "12343 King Abdullah Road Al Rahmanian District"
+  },
+  {
+    "code": 1050187,
+    "name": "Mercure Riyadh Al Anoud",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.66416,
+    "longitude": 46.70143,
+    "address": "Rcra3298 Build No 3298 Street Al Balsam Al Murabba"
+  },
+  {
+    "code": 1051315,
+    "name": "Seven Gardens Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.831867,
+    "longitude": 46.692585,
+    "address": "Prince Faisal Ibn Bandar Rd"
+  },
+  {
+    "code": 1051319,
+    "name": "Iris Inn Narjis",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 24.826744,
+    "longitude": 46.682459,
+    "address": "Dalam Street"
+  },
+  {
+    "code": 1051439,
+    "name": "Deyala Hotel Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.781583,
+    "longitude": 46.669854,
+    "address": "Muhammad Al Maqdimi"
+  },
+  {
+    "code": 1051584,
+    "name": "Granada Palace Inn",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.78813,
+    "longitude": 46.736327,
+    "address": "7344 Abdul Rahman Bin Azaz Street"
+  },
+  {
+    "code": 1054061,
+    "name": "Ahlin Suites 2",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.63061,
+    "longitude": 46.744743,
+    "address": "Al Najah Street"
+  },
+  {
+    "code": 1054908,
+    "name": "Holiday Inn Riyadh Ai Malaz",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6844,
+    "longitude": 46.71851,
+    "address": "Street 8071 King Abdel Aziz, Al Malaz"
+  },
+  {
+    "code": 1058763,
+    "name": "Tilal Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.6762146,
+    "longitude": 46.7792798,
+    "address": "7025 Eastern Ring Road Unit No 10"
+  },
+  {
+    "code": 1067384,
+    "name": "Four Points By Sheraton King Abdulaziz",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.702413,
+    "longitude": 46.718084,
+    "address": "King Abdulaziz Road 8141"
+  },
+  {
+    "code": 1067459,
+    "name": "Bab Samhan A Luxury Collection Hotel Diriyah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.739815,
+    "longitude": 46.572569,
+    "address": "7628 King Faisal Ibn Abd Al Aziz Road"
+  },
+  {
+    "code": 1076118,
+    "name": "Sofitel Riyadh Hotel & Convention Centre",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7065428,
+    "longitude": 46.655617,
+    "address": "6218 Al Urubah Road"
+  },
+  {
+    "code": 1078630,
+    "name": "Nova M Edge By Rotana",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7199749,
+    "longitude": 46.6722131,
+    "address": "Al Olaya, Riyadh, Al Warood"
+  },
+  {
+    "code": 1080033,
+    "name": "Towlan Al Rawdah Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.7301514,
+    "longitude": 46.7695083,
+    "address": "Hafsah Bint Umar,al Rawdah"
+  },
+  {
+    "code": 1080041,
+    "name": "Towlan Khurais Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.6315912,
+    "longitude": 46.6925181,
+    "address": "Al Malzilah District, Alfunun Street"
+  },
+  {
+    "code": 1080042,
+    "name": "Towlan Qurtaba 2 Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.8044946,
+    "longitude": 46.6601092,
+    "address": "Raya Street, Qurtuba"
+  },
+  {
+    "code": 1080043,
+    "name": "Towlan Qurtaba 1 Serviced Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.8068281,
+    "longitude": 46.6688963,
+    "address": "Dammam Road Mahdah district 6746"
+  },
+  {
+    "code": 1081678,
+    "name": "DAMAC Riyadh Residential apartments by SELSAL",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.706094,
+    "longitude": 46.6748877,
+    "address": "King Fahd Road 3817 Al Olaya Dist. 12333, 8508"
+  },
+  {
+    "code": 1086049,
+    "name": "Rhenium Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7955086,
+    "longitude": 46.777934,
+    "address": "Imam Abdullah Ibn Saud Ibn Abdulaziz Rd"
+  },
+  {
+    "code": 1086055,
+    "name": "Samt Inn Al Fayha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.6881667,
+    "longitude": 46.8119722,
+    "address": "3602 Al Imam Al Shafei"
+  },
+  {
+    "code": 1087498,
+    "name": "Dabab Hotel By Warwick",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.679762,
+    "longitude": 46.702049,
+    "address": "Dabab Street"
+  },
+  {
+    "code": 1088690,
+    "name": "Al-shurfah Loft Al Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.7734264,
+    "longitude": 46.6839908,
+    "address": "Al-masane’ Street, Al-hamra District, Riyadh, 3192"
+  },
+  {
+    "code": 1088977,
+    "name": "Kimpton KAFD Riyadh by IHG",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.7658673,
+    "longitude": 46.6433869,
+    "address": "7422 Innovation Street 2 2921 Al Aqeeq District"
+  },
+  {
+    "code": 1089682,
+    "name": "Oroba Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.6416,
+    "longitude": 46.7176,
+    "address": "7297-7322 ???????"
+  },
+  {
+    "code": 1093116,
+    "name": "Cantonal Hotel By Warwick",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.7065625,
+    "longitude": 46.6774375,
+    "address": "Olaya Street 84 Riyadh, 84"
+  },
+  {
+    "code": 1094314,
+    "name": "Celine Home Hotel Al Sahafa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "APTH3",
+    "latitude": 24.78875,
+    "longitude": 46.6366742,
+    "address": "Olaya Street Al Sahafa District"
+  },
+  {
+    "code": 1095813,
+    "name": "Aw Hotel Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.690539,
+    "longitude": 46.724249,
+    "address": "Salah Al-din Al-ayyubi Road, Al-zahra, Riyadh"
+  },
+  {
+    "code": 1096088,
+    "name": "Palette Luxury Credi Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.770218,
+    "longitude": 46.690373,
+    "address": "11990, Saudi Arabia"
+  },
+  {
+    "code": 1096089,
+    "name": "Sunday Riyadh Central Near Kingdom Tower",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.706259,
+    "longitude": 46.6763532,
+    "address": "Al `ulayya, Riyadh, Riyadh Governorate"
+  },
+  {
+    "code": 1096090,
+    "name": "Sunday Luxury Central formerly Anan hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8064249,
+    "longitude": 46.6249673,
+    "address": "2256 King Fahd Branch Rd, As Sahafah, 7401"
+  },
+  {
+    "code": 1096734,
+    "name": "Visit Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 24.8057472,
+    "longitude": 46.6269773,
+    "address": "Wadi Haqil, Al-sahafa"
+  },
+  {
+    "code": 1097519,
+    "name": "Best Western Premier Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.683905,
+    "longitude": 46.709654,
+    "address": "King Saud Road Al Wizarat"
+  },
+  {
+    "code": 1099454,
+    "name": "Crowne Plaza Riyadh Al Takhassusi by IHG",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.6763536,
+    "longitude": 46.6789741,
+    "address": "3554 Al Takhasasi Street, 6134 Al Olaya District"
+  },
+  {
+    "code": 1103542,
+    "name": "Grand Plaza Hotel Kafd Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.783438,
+    "longitude": 46.635425,
+    "address": "7520 King Fahad Branch Rd"
+  },
+  {
+    "code": 1105846,
+    "name": "Clowzer Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7934,
+    "longitude": 46.7002,
+    "address": "Uthman Ibn Affan Road 13313"
+  },
+  {
+    "code": 1105849,
+    "name": "Rio Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.692419,
+    "longitude": 46.684594,
+    "address": "7504 Artawi Olaya 3297"
+  },
+  {
+    "code": 1105864,
+    "name": "Celine Home Apartment Tuwaiq",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.563065,
+    "longitude": 46.51688,
+    "address": "Ahmad Ibn Alkhattab 3 14929 Riyadh Saudi Arabia"
+  },
+  {
+    "code": 1107536,
+    "name": "Vivienda Hada Residence",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "2EST",
+    "latitude": 24.652238,
+    "longitude": 46.651631,
+    "address": "Al Foursan"
+  },
+  {
+    "code": 1110442,
+    "name": "Topaz Al Malqa Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.795735,
+    "longitude": 46.6127,
+    "address": "Mohammed Bin Abdulaziz Al Daghther Stree"
+  },
+  {
+    "code": 1110777,
+    "name": "Liora Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.820649,
+    "longitude": 46.622637,
+    "address": "Al Faraa, Yasmin District"
+  },
+  {
+    "code": 1111608,
+    "name": "Towlan Alfalah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.803208,
+    "longitude": 46.704024,
+    "address": "Prince Saud Bin Mohammed Bin Muqrin Road"
+  },
+  {
+    "code": 1111897,
+    "name": "Edge Riyadh Al Rabie",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.792643,
+    "longitude": 46.649762,
+    "address": "7691 Al Thoumamah Road, Riyadh"
+  },
+  {
+    "code": 1113110,
+    "name": "Sunday Signature Riyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.751493,
+    "longitude": 46.7205545,
+    "address": "King Abdullah Road, P.o. Box 610, Al Olaya"
+  },
+  {
+    "code": 1114890,
+    "name": "Radisson Blu Hotel Riyadh Al Sahafa",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7883,
+    "longitude": 46.6362,
+    "address": "Street 16 Al Sahafa 2574"
+  },
+  {
+    "code": 1116678,
+    "name": "Ramada By Wyndham Riyadh King Fahd Road",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.660232,
+    "longitude": 46.700445,
+    "address": "King Fahd, Riyadh, Riyadh, Sa, 12734"
+  },
+  {
+    "code": 1124432,
+    "name": "Stella Stays Al Malqa",
+    "destinationCode": "RUH",
+    "zoneCode": 6,
+    "categoryCode": "4LL",
+    "latitude": 24.797607,
+    "longitude": 46.626577,
+    "address": "Al Oumra Al Malqa, 123"
+  },
+  {
+    "code": 1124470,
+    "name": "Ayan Hotel & Suites",
+    "destinationCode": "RUH",
+    "zoneCode": 6,
+    "categoryCode": "4EST",
+    "latitude": 24.81,
+    "longitude": 46.62,
+    "address": "Olaya St, As Sahafah, Riyadh"
+  },
+  {
+    "code": 1124720,
+    "name": "Madareem Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.799616,
+    "longitude": 46.718113,
+    "address": "Airport Road, Riyadh, Riyadh, Sa, 11695"
+  },
+  {
+    "code": 1125818,
+    "name": "Mira Business Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.702793,
+    "longitude": 46.694008,
+    "address": "Olaya Street Riyadh Riyadh Sa 11721"
+  },
+  {
+    "code": 1125821,
+    "name": "Freesia Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 6,
+    "categoryCode": "SPC",
+    "latitude": 24.8046672488251,
+    "longitude": 46.626884365182,
+    "address": "7215 No 36 Al Sahafa District Rasa2458 2458"
+  },
+  {
+    "code": 1126227,
+    "name": "Manazel Al Diafah Serviced Apartment",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6848,
+    "longitude": 46.7041,
+    "address": "Olaya Street Near Soliman El Habib Hospital"
+  },
+  {
+    "code": 1126318,
+    "name": "Stella Stays Olaya Tower1",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 24.796471,
+    "longitude": 46.633167,
+    "address": "Building No 6286, Al Olaya Street, 6286"
+  },
+  {
+    "code": 1126319,
+    "name": "Stella Stays Riyadh King Fahd",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4LL",
+    "latitude": 24.801838,
+    "longitude": 46.62352,
+    "address": "King Fahd Branch Rd, 7736"
+  },
+  {
+    "code": 1126320,
+    "name": "Stella Stays Olaya Tower 2",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "3LL",
+    "latitude": 24.8059,
+    "longitude": 46.62552,
+    "address": "Al Olaya Street, 7344"
+  },
+  {
+    "code": 1126539,
+    "name": "Hotel Vivian Park El Raed",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.683086,
+    "longitude": 46.786958,
+    "address": "Abdulaziz Ibn Ahmad As Sudairi"
+  },
+  {
+    "code": 1128265,
+    "name": "Rihanna Inn Hotel Apartement",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.789182,
+    "longitude": 46.641883,
+    "address": "3131 Prince Salman Bin Muhammed Bin Saud"
+  },
+  {
+    "code": 1128287,
+    "name": "Rafa Homes Al Falah",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7953709,
+    "longitude": 46.7095879,
+    "address": "Alfalah District Al Barakah Street"
+  },
+  {
+    "code": 1128289,
+    "name": "Pestana Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7882328,
+    "longitude": 46.6299553,
+    "address": "Al Aqeeq Muhammad Ibn Dakhil 11461 Riyadh"
+  },
+  {
+    "code": 1136864,
+    "name": "Riyadh Inn Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 6,
+    "categoryCode": "3EST",
+    "latitude": 24.81502,
+    "longitude": 46.609669,
+    "address": "Abi Bakr As Siddiq Branch, 8126"
+  },
+  {
+    "code": 1147494,
+    "name": "Azha Alriyadh",
+    "destinationCode": "RUH",
+    "zoneCode": 6,
+    "categoryCode": "1EST",
+    "latitude": 24.879062,
+    "longitude": 46.640889,
+    "address": "Prince Khaled Ben Bandar, 14581"
+  },
+  {
+    "code": 1149232,
+    "name": "Palette Luxury Credi Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.770487,
+    "longitude": 46.690506,
+    "address": "Qmcr 35 At Taawun"
+  },
+  {
+    "code": 1149763,
+    "name": "Su Casa Hostel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.700011,
+    "longitude": 46.647903,
+    "address": "Pj2x 254 Umm Al Hamam Al Gharbi"
+  },
+  {
+    "code": 1150081,
+    "name": "Sunbus Hotel Service Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.777121,
+    "longitude": 46.831068,
+    "address": "8962 Al Sheikh Jaber Al Ahmad Al Sabah"
+  },
+  {
+    "code": 1151122,
+    "name": "Crowne Plaza Riyadh Al Waha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.742341,
+    "longitude": 46.725072,
+    "address": "8430 Uthman Bin Affan Road,al Wahah District,riya"
+  },
+  {
+    "code": 1155003,
+    "name": "Al Farhan Suites Ishbillia",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.7902468,
+    "longitude": 46.7767844,
+    "address": "7535qubbah St Ishbillia Riyadh Qubbah St Ishbilli"
+  },
+  {
+    "code": 1155501,
+    "name": "Al Janadriyah Suites 7",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.67535,
+    "longitude": 46.693813,
+    "address": "Al Olaya Stree"
+  },
+  {
+    "code": 1155511,
+    "name": "Dar Ayar Hotel Apartments",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.780588,
+    "longitude": 46.668576,
+    "address": "Muhammed Almuqdammi Street Al Nafl Disrict"
+  },
+  {
+    "code": 1155544,
+    "name": "Arjan Park Azizia",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.593318,
+    "longitude": 46.758047,
+    "address": "Al Shabab"
+  },
+  {
+    "code": 1155548,
+    "name": "Karam Suite",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.674461,
+    "longitude": 46.692667,
+    "address": "Al Hurr Bin Qais"
+  },
+  {
+    "code": 1155702,
+    "name": "Land Walk Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.774827,
+    "longitude": 46.706682,
+    "address": "Abass Ben Abdelmutalib"
+  },
+  {
+    "code": 1171359,
+    "name": "Comfort Inn Taawn",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 24.770689,
+    "longitude": 46.691128,
+    "address": "Abu Bakr Siddiq Rd Hussein Bin Ali St Opposite Pan"
+  },
+  {
+    "code": 1174590,
+    "name": "Braira Al Yarmouk Hotel",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.794554,
+    "longitude": 46.774214,
+    "address": "Imam Abdullah Ibn Saud Ibn Abdulaziz Rd Imam Abdu"
+  },
+  {
+    "code": 1176070,
+    "name": "Almuhaidib Dowally",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 28.360565,
+    "longitude": 45.941969,
+    "address": "King Fahad Road Faysalia District Hafr Al Batin"
+  },
+  {
+    "code": 1182666,
+    "name": "Conrad Riyadh Laysen Valley",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 24.694737,
+    "longitude": 46.633401,
+    "address": "Salim Ibn Abi Bakr Shaikan Street, Building 2328"
+  },
+  {
+    "code": 1192834,
+    "name": "Le Diyar Hotel Alwaha",
+    "destinationCode": "RUH",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 24.6896,
+    "longitude": 46.6853,
+    "address": "Wadi Aldawasir Street, Al Olaya"
+  },
+  {
+    "code": 128405,
+    "name": "Intercontinental Taif",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.361815,
+    "longitude": 40.4568583,
+    "address": "Airport Road P.O.Box 827"
+  },
+  {
+    "code": 224079,
+    "name": "Awaliv International Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 21.288212236634,
+    "longitude": 40.4193949699948,
+    "address": "Abu Bakr As Siddiq, Shubra P.O Box 9933"
+  },
+  {
+    "code": 348291,
+    "name": "Platinum Park Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.29569,
+    "longitude": 40.42932,
+    "address": "Wadi Waj Rd, Alfaisaliyyah"
+  },
+  {
+    "code": 635341,
+    "name": "Boudl Taif",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "APTH",
+    "latitude": 21.2339881,
+    "longitude": 40.4110088,
+    "address": "Al Taif Steen Street"
+  },
+  {
+    "code": 639644,
+    "name": "Platinum 50",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.278122,
+    "longitude": 40.4327425,
+    "address": "fc.platinum.albiea@hand.sa"
+  },
+  {
+    "code": 660806,
+    "name": "Iridium Hotel Taif",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.2611896,
+    "longitude": 40.4261636,
+    "address": "Wady Wej"
+  },
+  {
+    "code": 695167,
+    "name": "Palace Lazurd",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.321161,
+    "longitude": 40.434078,
+    "address": "Taif Larg Maintenance Air Port Road Taif"
+  },
+  {
+    "code": 774542,
+    "name": "IRIS Boutique Taif Heart",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.2828555,
+    "longitude": 40.4156491,
+    "address": "Taif City, Shubra District"
+  },
+  {
+    "code": 792085,
+    "name": "Almuhaidb Resort Alhada",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.361462,
+    "longitude": 40.272493,
+    "address": "Al Hada Rd"
+  },
+  {
+    "code": 840358,
+    "name": "Meral Oasis Resort Taif",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "3EST",
+    "latitude": 21.217502,
+    "longitude": 40.412901,
+    "address": "Alshifa Road Alneqaa District"
+  },
+  {
+    "code": 897197,
+    "name": "Gardens View Aparthotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.24376,
+    "longitude": 40.45053,
+    "address": "6251 Osama Ben Zayed"
+  },
+  {
+    "code": 898422,
+    "name": "Fakhamet Al Taif Hotel Apartments 1",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.31964,
+    "longitude": 40.42847,
+    "address": "Al Mutamarat Road Al Keem District"
+  },
+  {
+    "code": 1039153,
+    "name": "Swiss International Taif Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.2306617,
+    "longitude": 40.3786542,
+    "address": "King Fahad Ring Road, Al Akhbab"
+  },
+  {
+    "code": 1039661,
+    "name": "Warwick Taif Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 21.3300498,
+    "longitude": 40.4359761,
+    "address": "Airport Road, Alqayam Al Aala"
+  },
+  {
+    "code": 1050063,
+    "name": "Vender Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "4LUX",
+    "latitude": 21.287694,
+    "longitude": 40.4363527,
+    "address": "Taif Saudi Arabia, 0591258941"
+  },
+  {
+    "code": 1054335,
+    "name": "Velar Inn Hotel",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 21.450957,
+    "longitude": 40.504725,
+    "address": "Airport Road, Al Hawiyah"
+  },
+  {
+    "code": 1123941,
+    "name": "Al Qasr Hotel Taif",
+    "destinationCode": "TIF",
+    "zoneCode": 1,
+    "categoryCode": "1EST",
+    "latitude": 21.534735,
+    "longitude": 40.612853,
+    "address": "Hoziafa Ebn Omaya, TFGA7392"
+  },
+  {
+    "code": 949836,
+    "name": "Shaden Resort",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.659161,
+    "longitude": 37.965141,
+    "address": "Hail Street Alula 43515 Ksa"
+  },
+  {
+    "code": 995793,
+    "name": "Cloud7 Alula Residences",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "4EST",
+    "latitude": 26.55047826,
+    "longitude": 37.9432006,
+    "address": "7188, Aziziyeh District"
+  },
+  {
+    "code": 1000447,
+    "name": "Banyan Tree Alula",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.74370403280177,
+    "longitude": 37.84932023114222,
+    "address": "Wadi Ashar, Tabuk Road, Alula 43 Saq District"
+  },
+  {
+    "code": 1006526,
+    "name": "Our Habitas AlUla",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.76223,
+    "longitude": 37.85161,
+    "address": "Ashar Valley Al Aula, 43511"
+  },
+  {
+    "code": 1020174,
+    "name": "Caravan AlUla by Habitas",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "5EST",
+    "latitude": 26.75636,
+    "longitude": 37.87713,
+    "address": "Ashar Valley Al Aula, 43511"
+  },
+  {
+    "code": 1105838,
+    "name": "Our Habitas Alula",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.7619624,
+    "longitude": 37.8622806,
+    "address": "Ashar Valley"
+  },
+  {
+    "code": 1139745,
+    "name": "Dar Tantora The House Hotel",
+    "destinationCode": "U1L",
+    "zoneCode": 1,
+    "categoryCode": "SPC",
+    "latitude": 26.62436,
+    "longitude": 37.91638,
+    "address": "375 Old Town Alula Saudi Arabia"
+  }
+]

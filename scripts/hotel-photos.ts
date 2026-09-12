@@ -1,5 +1,5 @@
 /**
- * Attach real photography to every UAE hotel — and to every restaurant we
+ * Attach real photography to every hotel in the directory — and to every restaurant we
  * list inside it — using the Google Places API.
  *
  * Each hotel gets its Google place id (kept indefinitely, as Google allows)
@@ -23,6 +23,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { findPlace, getPlacePhotos, hasPlacesKey } from '../lib/images/google-places';
+import { countryByName } from '../lib/staycations/places';
 
 config({ path: '.env.local' });
 config({ path: '.env' });
@@ -64,14 +65,16 @@ async function photosFor(hotel: any) {
     const photos = await getPlacePhotos(hotel.place_id);
     return { placeId: hotel.place_id, photos, name: hotel.name };
   }
-  const bias = `${hotel.area ? `${hotel.area}, ` : ''}${hotel.emirate}, United Arab Emirates`;
+  const country = hotel.country || 'United Arab Emirates';
+  const code = countryByName(country)?.code ?? 'AE';
+  const bias = `${hotel.area ? `${hotel.area}, ` : ''}${hotel.emirate}, ${country}`;
   // Directory names carry brand suffixes — "Bab Al Shams, A Rare Finds Desert
   // Resort" — that Google's text search reads too literally and misses on.
   // Falling back to the name before the first comma finds them.
   // A narrow area bias can also miss — "Al Qudra desert" is not how Google
   // files it — so the last attempt drops back to just the emirate.
   const short = hotel.name.split(',')[0].trim();
-  const wide = `${hotel.emirate}, United Arab Emirates`;
+  const wide = `${hotel.emirate}, ${country}`;
   const attempts: [string, string][] = [
     [hotel.name, bias],
     ...(short !== hotel.name ? ([[short, bias]] as [string, string][]) : []),
@@ -97,7 +100,11 @@ async function restaurantPhotos(hotel: any) {
       continue;
     }
     try {
-      const match = await findPlace(`${v.heading} restaurant ${hotel.name}`, `${hotel.emirate}, United Arab Emirates`);
+      const match = await findPlace(
+        `${v.heading} restaurant ${hotel.name}`,
+        `${hotel.emirate}, ${hotel.country || 'United Arab Emirates'}`,
+        countryByName(hotel.country || 'United Arab Emirates')?.code ?? 'AE',
+      );
       const best = match?.photos?.[0];
       // Only keep a photo if Google matched a place inside the right hotel —
       // a same-name venue in another emirate is worse than no photo at all.
@@ -115,7 +122,8 @@ async function restaurantPhotos(hotel: any) {
 }
 
 async function main() {
-  const { data: rows, error } = await db.from('hotels').select('*').not('emirate', 'is', null);
+  // The country is what makes a hotel part of the directory now.
+  const { data: rows, error } = await db.from('hotels').select('*').not('country', 'is', null);
   if (error) throw new Error(error.message);
 
   let queue = (rows ?? []).sort((a: any, b: any) => a.name.localeCompare(b.name));

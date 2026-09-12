@@ -33,6 +33,8 @@ type ResearchHotel = {
   keyFeatures?: string[];
   bestFor?: string[];
   note?: string | null;
+  /** 'draft' keeps a hotel off the website until someone publishes it. */
+  status?: 'draft' | 'published';
 };
 
 // The places we sell live in one file; this script used to keep its own copy
@@ -92,7 +94,9 @@ async function main() {
       stars: h.stars ?? null,
       emirate: h.emirate,
       best_for: (h.bestFor ?? []).filter(Boolean),
-      status: 'published',
+      // Only ever set on a hotel being created. Re-seeding must not
+      // republish something a specialist deliberately took down.
+      ...(id ? {} : { status: h.status ?? 'published' }),
     };
 
     let res = await (id

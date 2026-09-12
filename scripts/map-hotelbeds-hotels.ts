@@ -20,6 +20,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
+import { COUNTRIES, placeWords } from '../lib/staycations/places';
 import {
   hotelbedsCredentials,
   hotelbedsDestinations,
@@ -41,8 +42,26 @@ const db = createClient(url, serviceKey, { auth: { persistSession: false } });
 const apply = process.argv.includes('--apply');
 const refresh = process.argv.includes('--refresh');
 
+/**
+ * Which country to map. The catalogue is downloaded and cached per country,
+ * and only for the destinations we actually sell — Saudi Arabia alone lists
+ * 31, and the test key allows 50 requests a day in total.
+ */
+const countryArg = (() => {
+  const i = process.argv.indexOf('--country');
+  return i === -1 ? 'AE' : String(process.argv[i + 1] ?? 'AE').toUpperCase();
+})();
+const found = COUNTRIES.find((c) => c.code === countryArg);
+if (!found) {
+  console.error(`--country must be one of ${COUNTRIES.map((c) => c.code).join(', ')}`);
+  process.exit(1);
+}
+const COUNTRY = found;
+
 const GEN = 'lib/generated';
-const CATALOGUE = `${GEN}/hotelbeds-uae-hotels.json`;
+// The UAE file keeps its original name so nothing that reads it breaks.
+const CATALOGUE =
+  COUNTRY.code === 'AE' ? `${GEN}/hotelbeds-uae-hotels.json` : `${GEN}/hotelbeds-${COUNTRY.code.toLowerCase()}-hotels.json`;
 const COORDS = `${GEN}/hotel-coords.json`;
 const REPORT = `${GEN}/hotelbeds-codes.json`;
 
@@ -86,16 +105,25 @@ async function catalogue(): Promise<HotelbedsHotel[]> {
   if (!refresh) {
     const cached = readJson<HotelbedsHotel[]>(CATALOGUE, []);
     if (cached.length) {
-      console.log(`Catalogue: ${cached.length} UAE hotels from ${CATALOGUE} (pass --refresh to re-download)`);
+      console.log(`Catalogue: ${cached.length} ${COUNTRY.name} hotels from ${CATALOGUE} (pass --refresh to re-download)`);
       return cached;
     }
   }
   // Each destination is cached the moment it arrives, so a rate-limit
   // failure halfway through costs one request on the re-run, not ten.
-  const PARTIAL = `${GEN}/hotelbeds-uae-hotels.partial.json`;
+  const PARTIAL = `${CATALOGUE.replace(/\.json$/, '')}.partial.json`;
   const partial = refresh ? {} : readJson<Record<string, HotelbedsHotel[]>>(PARTIAL, {});
-  const destinations = await hotelbedsDestinations('AE');
-  console.log(`Hotelbeds lists ${destinations.length} UAE destination(s): ${destinations.map((d) => `${d.name} [${d.code}]`).join(', ')}`);
+  const listed = await hotelbedsDestinations(COUNTRY.code);
+  // Only the destinations we sell. Everything else is somebody else's market
+  // and a request we do not have to spend.
+  const wanted = new Set(COUNTRY.destinationCodes);
+  const destinations = listed.filter((d) => wanted.has(d.code));
+  const missing = COUNTRY.destinationCodes.filter((c) => !listed.some((d) => d.code === c));
+  console.log(
+    `Hotelbeds lists ${listed.length} ${COUNTRY.name} destination(s); downloading the ${destinations.length} we sell: ` +
+      destinations.map((d) => `${d.name} [${d.code}]`).join(', '),
+  );
+  if (missing.length) console.warn(`⚠ destination codes not in the supplier's list: ${missing.join(', ')}`);
   const all: HotelbedsHotel[] = [];
   for (const d of destinations) {
     const wasCached = Boolean(partial[d.code]);
@@ -111,7 +139,7 @@ async function catalogue(): Promise<HotelbedsHotel[]> {
     all.push(...rows);
   }
   writeJson(CATALOGUE, all);
-  console.log(`Catalogue: ${all.length} UAE hotels, cached in ${CATALOGUE}`);
+  console.log(`Catalogue: ${all.length} ${COUNTRY.name} hotels, cached in ${CATALOGUE}`);
   return all;
 }
 
@@ -126,8 +154,10 @@ function metresBetween(aLat: number, aLng: number, bLat: number, bLng: number) {
 
 const NOISE = new Set([
   'the', 'a', 'an', 'and', 'hotel', 'hotels', 'resort', 'resorts', 'spa', 'by', 'at', 'collection',
-  'luxury', 'suites', 'villas', 'beach', 'island', 'city', 'dubai', 'abu', 'dhabi', 'sharjah',
-  'ajman', 'fujairah', 'ras', 'al', 'khaimah', 'umm', 'quwain', 'uae', 'inclusive', 'all',
+  'luxury', 'suites', 'villas', 'beach', 'island', 'city', 'inclusive', 'all',
+  // Every place name in the country being mapped: shared geography is not
+  // evidence that two listings are the same property.
+  ...placeWords(COUNTRY),
 ]);
 
 function words(s: string) {
@@ -162,8 +192,8 @@ async function main() {
 
   const { data: ours, error } = await db
     .from('hotels')
-    .select('id,name,emirate,place_id,supplier_code')
-    .not('emirate', 'is', null)
+    .select('id,name,emirate,country,place_id,supplier_code')
+    .eq('country', COUNTRY.name)
     .order('name');
   if (error) throw new Error(error.message);
 

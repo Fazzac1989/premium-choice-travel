@@ -87,3 +87,44 @@ means paying for it twice.
 specialists have been to. Until someone has, the honest line for a new
 country is that these are chosen rather than visited, and the profiles should
 be written that way.
+
+---
+
+## Where this got to — 12 September 2026
+
+All 24 are seeded, photographed and hidden. They are drafts, so nothing is on
+the website until Hotelbeds confirm the scope change.
+
+| | |
+|---|---|
+| Seeded as drafts | 24 |
+| Google place matched, verified inside the right country | 24 of 24 |
+| Photographs attached | 24, ten each |
+| Mapped to a Hotelbeds code | 22 of 24 |
+
+**Two need a decision, and both are findings rather than failures.**
+
+**Shangri-La Barr Al Jissah, Muscat** is no longer one hotel. The supplier
+carries the complex as three separately branded properties: Al Husn, which we
+already list and which mapped cleanly, plus *Hilton Muscat Al Bandar* and
+*DoubleTree by Hilton Muscat Al Waha*. The row as written cannot be booked.
+Either delete it, since Al Husn is the flagship and is already in, or replace
+it with one of the two Hiltons.
+
+**The St. Regis Red Sea Resort** is not in the supplier's Red Sea catalogue
+at all. They carry seven properties there: Six Senses Southern Dunes, which
+we already have, plus *Shebara Resort*, *Desert Rock*, *Miraval The Red Sea*,
+*Fairmont The Red Sea*, *Turtle Bay Resort* and *Daraah Resort*. Shebara and
+Desert Rock are the two people ask for by name.
+
+Three others needed a manual code because the automatic rule was right to be
+cautious, and all three are certain:
+
+- *Al Baleed Resort Salalah* carries no coordinates in the supplier's data.
+- *Six Senses Zighy Bay* is pinned at its mountain arrival point, 1.5km from
+  the bay.
+- *Habitas AlUla* is filed as "Our Habitas Alula".
+
+**Still to run:** the profile and price-band research, which is the step that
+spends Claude web search credit. Worth settling the Saudi price-band question
+above first.

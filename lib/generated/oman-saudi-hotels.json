@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-09-12",
+  "note": "Approved from docs/oman-saudi-shortlist.md. Seeded as drafts: nothing outside the UAE is published until Hotelbeds confirm the scope change. Profiles, price bands and photographs are researched per hotel by the scripts, not written here.",
+  "hotels": [
+    { "name": "Shangri-La Al Husn, Muscat", "emirate": "Muscat", "area": "Barr Al Jissah", "stars": 5, "status": "draft", "bestFor": ["couples", "luxury", "long weekend"] },
+    { "name": "Shangri-La Barr Al Jissah, Muscat", "emirate": "Muscat", "area": "Barr Al Jissah", "stars": 5, "status": "draft", "bestFor": ["family", "beach", "long weekend"] },
+    { "name": "The Chedi Muscat", "emirate": "Muscat", "area": "Al Ghubrah", "stars": 5, "status": "draft", "bestFor": ["couples", "luxury", "spa"] },
+    { "name": "Al Bustan Palace, a Ritz-Carlton Hotel", "emirate": "Muscat", "area": "Al Bustan", "stars": 5, "status": "draft", "bestFor": ["luxury", "beach", "family"] },
+    { "name": "Kempinski Hotel Muscat", "emirate": "Muscat", "area": "Al Mouj", "stars": 5, "status": "draft", "bestFor": ["family", "beach"] },
+    { "name": "W Muscat", "emirate": "Muscat", "area": "Shatti Al Qurum", "stars": 5, "status": "draft", "bestFor": ["couples", "long weekend"] },
+    { "name": "JW Marriott Muscat", "emirate": "Muscat", "area": "Madinat Al Irfan", "stars": 5, "status": "draft", "bestFor": ["value", "family"] },
+    { "name": "Alila Jabal Akhdar", "emirate": "Nizwa", "area": "Jabal Akhdar", "stars": 5, "status": "draft", "bestFor": ["couples", "desert", "luxury"] },
+    { "name": "Anantara Al Jabal Al Akhdar Resort", "emirate": "Nizwa", "area": "Jabal Akhdar", "stars": 5, "status": "draft", "bestFor": ["couples", "desert", "spa"] },
+    { "name": "Six Senses Zighy Bay", "emirate": "Musandam", "area": "Zighy Bay", "stars": 5, "status": "draft", "bestFor": ["couples", "luxury", "beach"] },
+    { "name": "Atana Khasab", "emirate": "Musandam", "area": "Khasab", "stars": 4, "status": "draft", "bestFor": ["value", "long weekend"] },
+    { "name": "Al Baleed Resort Salalah by Anantara", "emirate": "Salalah", "area": "Al Baleed", "stars": 5, "status": "draft", "bestFor": ["family", "beach", "luxury"] },
+
+    { "name": "Four Seasons Hotel Riyadh at Kingdom Centre", "emirate": "Riyadh", "area": "Olaya", "stars": 5, "status": "draft", "bestFor": ["luxury", "family"] },
+    { "name": "The Ritz-Carlton, Riyadh", "emirate": "Riyadh", "area": "Diplomatic Quarter", "stars": 5, "status": "draft", "bestFor": ["luxury", "family"] },
+    { "name": "Mandarin Oriental Al Faisaliah, Riyadh", "emirate": "Riyadh", "area": "Olaya", "stars": 5, "status": "draft", "bestFor": ["luxury", "spa"] },
+    { "name": "Hyatt Regency Riyadh Olaya", "emirate": "Riyadh", "area": "Olaya", "stars": 5, "status": "draft", "bestFor": ["value", "family"] },
+    { "name": "Waldorf Astoria Jeddah Qasr Al Sharq", "emirate": "Jeddah", "area": "Corniche", "stars": 5, "status": "draft", "bestFor": ["luxury", "beach"] },
+    { "name": "The Ritz-Carlton, Jeddah", "emirate": "Jeddah", "area": "Corniche", "stars": 5, "status": "draft", "bestFor": ["luxury", "family"] },
+    { "name": "Rosewood Jeddah", "emirate": "Jeddah", "area": "Corniche", "stars": 5, "status": "draft", "bestFor": ["luxury", "couples"] },
+    { "name": "Park Hyatt Jeddah Marina Club and Spa", "emirate": "Jeddah", "area": "Corniche", "stars": 5, "status": "draft", "bestFor": ["spa", "couples"] },
+    { "name": "Banyan Tree AlUla", "emirate": "AlUla", "area": "Ashar Valley", "stars": 5, "status": "draft", "bestFor": ["desert", "couples", "luxury"] },
+    { "name": "Habitas AlUla", "emirate": "AlUla", "area": "Ashar Valley", "stars": 4, "status": "draft", "bestFor": ["desert", "couples"] },
+    { "name": "Six Senses Southern Dunes, The Red Sea", "emirate": "The Red Sea", "area": "Southern Dunes", "stars": 5, "status": "draft", "bestFor": ["desert", "luxury", "spa"] },
+    { "name": "The St. Regis Red Sea Resort", "emirate": "The Red Sea", "area": "Ummahat Island", "stars": 5, "status": "draft", "bestFor": ["beach", "luxury", "couples"] }
+  ]
+}

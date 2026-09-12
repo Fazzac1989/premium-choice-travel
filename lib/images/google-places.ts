@@ -66,10 +66,17 @@ function mapPhotos(photos: any[]): PlacePhoto[] {
 }
 
 /**
- * Find one place by name. `bias` narrows the search — pass the emirate so
- * "Ritz-Carlton" doesn't come back from Riyadh.
+ * Find one place by name. `bias` narrows the search — pass the region and
+ * country, because "Ritz-Carlton" exists in most of them.
+ *
+ * `region` is the ISO code Google biases towards. It has to follow the hotel
+ * rather than stay AE, or a Jeddah search is answered from Dubai.
  */
-export async function findPlace(query: string, bias = 'United Arab Emirates'): Promise<PlaceMatch | null> {
+export async function findPlace(
+  query: string,
+  bias = 'United Arab Emirates',
+  region = 'AE',
+): Promise<PlaceMatch | null> {
   const res = await fetch(`${PLACES}/places:searchText`, {
     method: 'POST',
     headers: {
@@ -80,7 +87,7 @@ export async function findPlace(query: string, bias = 'United Arab Emirates'): P
     body: JSON.stringify({
       textQuery: `${query}, ${bias}`,
       languageCode: 'en',
-      regionCode: 'AE',
+      regionCode: region,
       maxResultCount: 1,
     }),
     cache: 'no-store',

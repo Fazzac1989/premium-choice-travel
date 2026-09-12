@@ -1,0 +1,2284 @@
+{
+  "DQM": [
+    {
+      "code": 216833,
+      "name": "Crowne Plaza Duqm",
+      "destinationCode": "DQM",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 19.5692287,
+      "longitude": 57.7014711,
+      "address": "P.O. Box 6, Haima, Sultanate Of Oman"
+    },
+    {
+      "code": 429139,
+      "name": "Park Inn By Radisson Hotel & Residence Duqm",
+      "destinationCode": "DQM",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 19.565244,
+      "longitude": 57.696555,
+      "address": "Wadi Say, Al Wusta"
+    },
+    {
+      "code": 654476,
+      "name": "City Hotel Duqm",
+      "destinationCode": "DQM",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 19.6179,
+      "longitude": 57.6394,
+      "address": "Po Box 85"
+    },
+    {
+      "code": 1059023,
+      "name": "Duqm Suites",
+      "destinationCode": "DQM",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 19.6206,
+      "longitude": 57.6973,
+      "address": "55 Duqm Street New Duqm City"
+    }
+  ],
+  "KHS": [
+    {
+      "code": 136031,
+      "name": "Six Senses Zighy Bay",
+      "destinationCode": "KHS",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 25.7096857,
+      "longitude": 56.272123,
+      "address": "Po Box 212, Postal Code 800"
+    },
+    {
+      "code": 175386,
+      "name": "Atana Khasab Hotel",
+      "destinationCode": "KHS",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 26.1833333,
+      "longitude": 56.25,
+      "address": "P.O.Box 434, Pc 811.Khasab.Sultanate Of Oman"
+    },
+    {
+      "code": 395559,
+      "name": "Atana Musandam",
+      "destinationCode": "KHS",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 26.1159,
+      "longitude": 56.1504,
+      "address": "P.O Box 169, Postal Code 811, Khasab"
+    },
+    {
+      "code": 1100497,
+      "name": "Atana",
+      "destinationCode": "KHS",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 26.212553,
+      "longitude": 56.233308,
+      "address": "Khasab Khasab Om"
+    }
+  ],
+  "MCT": [
+    {
+      "code": 72006,
+      "name": "Al Falaj Hotel (Muscat)",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.60634,
+      "longitude": 58.538825,
+      "address": "PO Box 1692 PC 131 Al Hamriya"
+    },
+    {
+      "code": 72009,
+      "name": "Sheraton Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.597281519248,
+      "longitude": 58.552161455154,
+      "address": "Sultanate Of Oman"
+    },
+    {
+      "code": 85410,
+      "name": "Muscat Holiday",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5943959,
+      "longitude": 58.4186357,
+      "address": "Al Khuwair - PO Box 1185, 113 Mascate, 6"
+    },
+    {
+      "code": 85411,
+      "name": "Intercontinental Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.615959,
+      "longitude": 58.465053,
+      "address": "Al Kharjiya Street, Al Shati Area, Muscat 114, 398 6"
+    },
+    {
+      "code": 85412,
+      "name": "Al Madinah Holiday",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.57474,
+      "longitude": 58.37572,
+      "address": "Ghala"
+    },
+    {
+      "code": 85413,
+      "name": "Grand Hyatt Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.608141,
+      "longitude": 58.444762,
+      "address": "Shatti Al Qurm, Po Box 951"
+    },
+    {
+      "code": 97394,
+      "name": "Ramada Qurum Beach",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.609164,
+      "longitude": 58.454708,
+      "address": "Sarooj St Shatti Alqurum"
+    },
+    {
+      "code": 99673,
+      "name": "Radisson Blu Hotel, Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.587375,
+      "longitude": 58.429668,
+      "address": "Al Khuleiah Street, Muscat, 133, 209"
+    },
+    {
+      "code": 99674,
+      "name": "The Chedi Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.601824,
+      "longitude": 58.399018,
+      "address": "North Ghubra, Way nº3215 Street N 46, 32"
+    },
+    {
+      "code": 99676,
+      "name": "Crowne Plaza Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6286452166622,
+      "longitude": 58.48213041154787,
+      "address": "Bldg. 1730, Qurum Street"
+    },
+    {
+      "code": 110277,
+      "name": "Al Bustan Palace, A Ritz-Carlton Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.566577,
+      "longitude": 58.616089,
+      "address": "Po Box 1998 Muttrah 114"
+    },
+    {
+      "code": 113637,
+      "name": "Doubletree by Hilton Muscat Al Waha",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5478685,
+      "longitude": 58.6631069,
+      "address": "Al Jissah St. P.O BOX 644 AL Waha"
+    },
+    {
+      "code": 113639,
+      "name": "Al Husn Hotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.5521545,
+      "longitude": 58.6590833,
+      "address": "Al Jissah St , P.O BOX 644 Al Husn"
+    },
+    {
+      "code": 119255,
+      "name": "Ramee Guestline Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.627696,
+      "longitude": 58.486456,
+      "address": "Al Qurum Street - PO Box 594, 1622"
+    },
+    {
+      "code": 119256,
+      "name": "Park Inn by Radisson Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.594147,
+      "longitude": 58.413945,
+      "address": "Sultan Qaboos Street Al Khuwair"
+    },
+    {
+      "code": 134012,
+      "name": "AL MAHA INTERNATIONAL HOTE",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.601299,
+      "longitude": 58.36906099999999,
+      "address": "AL GUBRAH"
+    },
+    {
+      "code": 134013,
+      "name": "Ibis Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59339,
+      "longitude": 58.419401,
+      "address": "Dohat Aladab Road Al Khuwair"
+    },
+    {
+      "code": 140928,
+      "name": "Desert Nights Camp",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.3990461,
+      "longitude": 58.7220737,
+      "address": "Al Wasil"
+    },
+    {
+      "code": 151759,
+      "name": "La Rosa Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.630528,
+      "longitude": 58.4833,
+      "address": "3519 Way"
+    },
+    {
+      "code": 155701,
+      "name": "Barcelo Mussanah Resort, Sultanate of Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.80538920820923,
+      "longitude": 57.56849780000002,
+      "address": "Wudam Al Sahil PO Box 82 Mussanah, 82"
+    },
+    {
+      "code": 161182,
+      "name": "City Seasons Hotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5880307,
+      "longitude": 58.3828717,
+      "address": "Sultan Qaboos Road, Al Khuwair, 3513 Way"
+    },
+    {
+      "code": 164483,
+      "name": "Sifawy Boutique Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.41555481185766,
+      "longitude": 58.79011491003416,
+      "address": "Jebel Sifah, 130, 130"
+    },
+    {
+      "code": 175397,
+      "name": "Safeer International",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.586404,
+      "longitude": 58.423149,
+      "address": "Al Kuleiah Street, P.O.Box 121"
+    },
+    {
+      "code": 175399,
+      "name": "Safeer Continental",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.584441,
+      "longitude": 58.427022,
+      "address": "Al Maha Street, P.O.Box 121"
+    },
+    {
+      "code": 175400,
+      "name": "Safeer Hotel Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.596633,
+      "longitude": 58.447818,
+      "address": "AL-KHUWAIR ROUND ABOUT P. O. Box – 121."
+    },
+    {
+      "code": 178680,
+      "name": "Haffa House",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.595887658766017,
+      "longitude": 58.54003639907842,
+      "address": "P.O.BOX 1498,-Jibroo Sultanate of Oman"
+    },
+    {
+      "code": 224536,
+      "name": "Best Western Premier Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.595331,
+      "longitude": 58.439277,
+      "address": "Way 3341 Off Dowhat Al Adab Street Al Khuwair"
+    },
+    {
+      "code": 317458,
+      "name": "Samara Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59514,
+      "longitude": 58.42141,
+      "address": "P.O. Box 525; 133 Al-Khuwair; Muscat"
+    },
+    {
+      "code": 317709,
+      "name": "OYO 142 Al Sharqiya Sands Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 22.65203,
+      "longitude": 58.60265,
+      "address": "P.O.Box: 585; Postal Code 413; Ibra; Sultanate of"
+    },
+    {
+      "code": 318143,
+      "name": "Centara Life Muscat Dunes Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.57331,
+      "longitude": 58.41576,
+      "address": "Al Maha Street"
+    },
+    {
+      "code": 318670,
+      "name": "Waves International",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.59354,
+      "longitude": 58.42351,
+      "address": "Dohat Aladab Road"
+    },
+    {
+      "code": 320927,
+      "name": "The Platinum Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59246,
+      "longitude": 58.42782,
+      "address": "Souq Al Khuwair Street, 133 Mascate, N/A"
+    },
+    {
+      "code": 321658,
+      "name": "Bowshar International Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59035,
+      "longitude": 58.40759,
+      "address": "Sultan Qaboos Street, PO Box 1842 Ruwi"
+    },
+    {
+      "code": 322194,
+      "name": "Amouage Al Hail Hotel managed by Centara",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.65646,
+      "longitude": 58.2216,
+      "address": "Al Hail North, Near Al Maha Petrol Station, Seeb"
+    },
+    {
+      "code": 386427,
+      "name": "Holiday Inn Muscat Al Seeb",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.611265,
+      "longitude": 58.243911,
+      "address": "P.O. Box 1916 Al Mawaleh South Al Seeb"
+    },
+    {
+      "code": 395060,
+      "name": "A Radisson Collection Hotel, Hormuz Grand Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.576604,
+      "longitude": 58.291997,
+      "address": "Al Matar Street, PO BOX 128, PC 111, SEEB, 4"
+    },
+    {
+      "code": 404998,
+      "name": "Mutrah Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.609252,
+      "longitude": 58.552206,
+      "address": "Jabrooh, 114"
+    },
+    {
+      "code": 441903,
+      "name": "Ramee Dream Resort",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.688871,
+      "longitude": 58.168713,
+      "address": "P.O Box 609"
+    },
+    {
+      "code": 446506,
+      "name": "Levatio Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.582097,
+      "longitude": 58.40807,
+      "address": "Al Ghubrah Al Janubiyyah"
+    },
+    {
+      "code": 458321,
+      "name": "Alila Jabal Akhdar",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.143433,
+      "longitude": 57.531788,
+      "address": "P.O. Box 88, Plot No.4, Al Roose"
+    },
+    {
+      "code": 468881,
+      "name": "Grand Millennium Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.5912874,
+      "longitude": 58.4129012,
+      "address": "PO Box 157 Al Khuwair, na"
+    },
+    {
+      "code": 572761,
+      "name": "Al Bahjah Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.660498,
+      "longitude": 58.181618,
+      "address": "Wadi Bahayis St, Seeb 121, - 3"
+    },
+    {
+      "code": 583726,
+      "name": "Centara Muscat Hotel Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.586903,
+      "longitude": 58.3682303,
+      "address": "P.O Box 3564, Way No. 5003, Wilayat Bausher, 250"
+    },
+    {
+      "code": 596849,
+      "name": "Novotel Muscat Airport",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.58522022,
+      "longitude": 58.300606459,
+      "address": "Al Maardih Street Sn"
+    },
+    {
+      "code": 602240,
+      "name": "Alshorouq Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.6015616,
+      "longitude": 58.5368268,
+      "address": "Ruwi St , Darsait"
+    },
+    {
+      "code": 613816,
+      "name": "Crowne Plaza Muscat OCEC",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.57211,
+      "longitude": 58.326845,
+      "address": "Al Jamah Al Akbar Street, Adjacent to Oman Convent"
+    },
+    {
+      "code": 629078,
+      "name": "Kempinski Hotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.627423,
+      "longitude": 58.27203215,
+      "address": "AL Mouj Street, 335"
+    },
+    {
+      "code": 629489,
+      "name": "Golden Tulip Headington Ruwi",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5914166667,
+      "longitude": 58.5461111111,
+      "address": "Souq Ruwi Street"
+    },
+    {
+      "code": 631143,
+      "name": "Levatio Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5835,
+      "longitude": 58.409333,
+      "address": "PC 133,Muscat, Sultanate of Oman, 133"
+    },
+    {
+      "code": 631146,
+      "name": "Mysk Al Mouj Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6306223403809,
+      "longitude": 58.2671517135896,
+      "address": "Al Mouj, 335 Street - Bld 3410, 3410 7"
+    },
+    {
+      "code": 645378,
+      "name": "Hilton Garden Inn Muscat Al Khuwair",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59133,
+      "longitude": 58.44695,
+      "address": "Dohat al Adab Street Al Khuwair District"
+    },
+    {
+      "code": 645581,
+      "name": "The Secure Inn Hotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5862614,
+      "longitude": 58.3709561,
+      "address": "AZAIBA PO BOX 123, PC 118"
+    },
+    {
+      "code": 647605,
+      "name": "City Park Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "AT1",
+      "latitude": 23.5960727,
+      "longitude": 58.415637,
+      "address": "SULTAN QABOOS STREET"
+    },
+    {
+      "code": 651283,
+      "name": "W Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.6125696,
+      "longitude": 58.4624167,
+      "address": "Al Kharjiya Street,Shatti Al Qurum, PO BOX 248, PC"
+    },
+    {
+      "code": 653266,
+      "name": "Fraser Suites Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "APTH5",
+      "latitude": 23.578963,
+      "longitude": 58.411522,
+      "address": "23rd July Street"
+    },
+    {
+      "code": 664709,
+      "name": "Aerotel Muscat - Airport Transit Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6012088,
+      "longitude": 58.2881429,
+      "address": "International Airport"
+    },
+    {
+      "code": 664786,
+      "name": "Al Murooj Grand Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5787973,
+      "longitude": 58.416841,
+      "address": "2562, P.C.133, Al Khuwair, 6 6"
+    },
+    {
+      "code": 669782,
+      "name": "MUSCAT GATE HOTEL",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.58120601856358,
+      "longitude": 58.33491862204596,
+      "address": "Way 99 Al Jami Akbar Street Ghala 111 Muscat Oman"
+    },
+    {
+      "code": 681937,
+      "name": "Carnelian Glory Bower Hotels",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.59409,
+      "longitude": 58.34945,
+      "address": "48 Way"
+    },
+    {
+      "code": 688102,
+      "name": "Sama Al Wasil Desert Camp",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 22.341,
+      "longitude": 58.65257,
+      "address": "Al Wasil Village Wahiba Sands Sama Al Wasil Desert"
+    },
+    {
+      "code": 692488,
+      "name": "Al Murooj Grand Hotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.578747,
+      "longitude": 58.416841,
+      "address": "Unnamed Road"
+    },
+    {
+      "code": 697109,
+      "name": "Muscat International Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.594772,
+      "longitude": 58.436554,
+      "address": "No 3920 Dohat Al Adab St Way Al Khuwair"
+    },
+    {
+      "code": 697113,
+      "name": "Le Sifah Resort Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.416027,
+      "longitude": 58.790161,
+      "address": "Jebel Sifah Marina"
+    },
+    {
+      "code": 700541,
+      "name": "Qurum Beach Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.627825,
+      "longitude": 58.485889,
+      "address": "Al Qurum Heights 112 Muscat"
+    },
+    {
+      "code": 707060,
+      "name": "Pioneer Hotel Apartments Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "1LL",
+      "latitude": 23.5748873,
+      "longitude": 58.5758103,
+      "address": "Wadi Kabir 63 An Nuzhah St, 6"
+    },
+    {
+      "code": 707365,
+      "name": "Savoy Grand Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "1EST",
+      "latitude": 23.5878,
+      "longitude": 58.364,
+      "address": "Ghala Heights Near Al Nahda Towers Vachas Hypermar"
+    },
+    {
+      "code": 737388,
+      "name": "Wyndham Garden Muscat Al Khuwair",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5931614,
+      "longitude": 58.42849210000001,
+      "address": "Dohat Al Adab Street"
+    },
+    {
+      "code": 738631,
+      "name": "Ramada Encore By Wyndham Muscat Al-Ghubrah",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5906671,
+      "longitude": 58.4108345,
+      "address": "Sultan Qaboos Highway Building 374, 4011"
+    },
+    {
+      "code": 740098,
+      "name": "Royal Tulip Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5921208,
+      "longitude": 58.4035197,
+      "address": "Al Marafah Street, Way No. 238, Al Ghubrah North"
+    },
+    {
+      "code": 764657,
+      "name": "A'Sinamar Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.580583,
+      "longitude": 58.343816,
+      "address": "198 Street 196 Al Jami Al Akbar Road Ghala Heights"
+    },
+    {
+      "code": 767739,
+      "name": "Remas Hotel Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.6455,
+      "longitude": 58.192775,
+      "address": "As Salaam Street"
+    },
+    {
+      "code": 775756,
+      "name": "TOP Be inn hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.602095,
+      "longitude": 58.15905,
+      "address": "Rd 53, Al Khoudh, Opposite Sultan Qaboos Universit, 53"
+    },
+    {
+      "code": 777834,
+      "name": "Jw Marriott Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.569429,
+      "longitude": 58.328185,
+      "address": "Madinat Al Irfan Airport Heights"
+    },
+    {
+      "code": 780669,
+      "name": "122 Savoy Inn Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.587833,
+      "longitude": 58.372079,
+      "address": "126 An Noor Street Way 5005 B 684 Ghala Service Ro"
+    },
+    {
+      "code": 792108,
+      "name": "Muscat Hills Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.578848,
+      "longitude": 58.337826,
+      "address": "Ghala Heights"
+    },
+    {
+      "code": 792144,
+      "name": "Sands Dream Tourism Camp",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "H2_5",
+      "latitude": 22.3826,
+      "longitude": 58.717115,
+      "address": "Al Wasil Bidiya 0421"
+    },
+    {
+      "code": 807861,
+      "name": "Muscat Inn Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.583472,
+      "longitude": 58.40121,
+      "address": "Ash Shira Street North Ghubrah Bawshar"
+    },
+    {
+      "code": 807864,
+      "name": "Muscat Plaza Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.596521,
+      "longitude": 58.43211,
+      "address": "Al Khuwair St"
+    },
+    {
+      "code": 831969,
+      "name": "OYO 137 Marina Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.624916,
+      "longitude": 58.561468,
+      "address": "Mutrah Muscat Muscat Governorate"
+    },
+    {
+      "code": 840359,
+      "name": "Seasons Hotel Barka",
+      "destinationCode": "MCT",
+      "zoneCode": 3,
+      "categoryCode": "3EST",
+      "latitude": 23.668298,
+      "longitude": 57.881132,
+      "address": "Pc 320 Po Box 539"
+    },
+    {
+      "code": 854417,
+      "name": "The Muscat Plaza Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.59496,
+      "longitude": 58.427215,
+      "address": "3501 Al Alam Street Al Khuwair"
+    },
+    {
+      "code": 906702,
+      "name": "Swiss-Belinn Muscat Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.596327,
+      "longitude": 58.347806,
+      "address": "Al Anwar Street"
+    },
+    {
+      "code": 906705,
+      "name": "Parkside Plaza Hotel - Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.586452,
+      "longitude": 58.359317,
+      "address": "Sultan Qaboos St"
+    },
+    {
+      "code": 907035,
+      "name": "Avani Muscat Hotel & Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.655444,
+      "longitude": 58.180555,
+      "address": "Seeb, Building No. 8949, Complex No. 361, 6194 3"
+    },
+    {
+      "code": 907754,
+      "name": "OYO 106 Muscat Grand Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.59128,
+      "longitude": 58.21805,
+      "address": "4796, 411,Seeb, 4796"
+    },
+    {
+      "code": 907800,
+      "name": "Jumeirah Muscat Bay",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.550146,
+      "longitude": 58.643387,
+      "address": "Saraya Bandar Jissah, Wadi Al Kabeer"
+    },
+    {
+      "code": 910397,
+      "name": "Grand Tourist Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.578664,
+      "longitude": 58.417087,
+      "address": "Musca, Bousher,131"
+    },
+    {
+      "code": 913583,
+      "name": "Citadines Al Ghubrah Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.580453,
+      "longitude": 58.397698,
+      "address": "Way 3709, Building 631 South Al Ghubrah Bousher"
+    },
+    {
+      "code": 934024,
+      "name": "IntercityHotel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.60022,
+      "longitude": 58.42451,
+      "address": "Al Thaqafa St. Ministries area Al Khuwair"
+    },
+    {
+      "code": 942098,
+      "name": "Royal Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.5599,
+      "longitude": 58.4033,
+      "address": "Way No 5706 Bousher Muscat Building 410"
+    },
+    {
+      "code": 945616,
+      "name": "Caesar Hotel Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.59354,
+      "longitude": 58.42351,
+      "address": "Al Khuwair Street, 133"
+    },
+    {
+      "code": 947984,
+      "name": "Muscat Express Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.5928506,
+      "longitude": 58.3997267,
+      "address": "Al Ghubrah Street Building No2365, Way3204, 7"
+    },
+    {
+      "code": 954311,
+      "name": "Home Station Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.587305,
+      "longitude": 58.365154,
+      "address": "Behind 360 Cafe, Al Nahda Towers Gala"
+    },
+    {
+      "code": 961999,
+      "name": "Gulf Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.59367,
+      "longitude": 58.40292,
+      "address": "Al Ghubra North"
+    },
+    {
+      "code": 969076,
+      "name": "Alrayyan Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.650101,
+      "longitude": 58.12186,
+      "address": "Al Khair Street Building 773"
+    },
+    {
+      "code": 970798,
+      "name": "Diamond Star Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.63743757,
+      "longitude": 58.13742015,
+      "address": "121 Noor Street"
+    },
+    {
+      "code": 970986,
+      "name": "Rozana Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.5619626,
+      "longitude": 58.4094165,
+      "address": "Al Maha St, 133 yes"
+    },
+    {
+      "code": 972318,
+      "name": "Capital O 141 Golden Rays Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 22.724521,
+      "longitude": 58.524342,
+      "address": "Airport Road, Near Ibra Airport, 23"
+    },
+    {
+      "code": 972757,
+      "name": "Oyo 138 Gulf Sand Motel",
+      "destinationCode": "MCT",
+      "zoneCode": 3,
+      "categoryCode": "2EST",
+      "latitude": 23.7632365348464,
+      "longitude": 57.5782250426709,
+      "address": "Al Batinah South Governorate"
+    },
+    {
+      "code": 972996,
+      "name": "Luxury Desert Camp",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4LUX",
+      "latitude": 22.332811148515013,
+      "longitude": 58.68010513310244,
+      "address": "Bidiyah, Oman, 4"
+    },
+    {
+      "code": 973295,
+      "name": "Sama Al Areesh",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 22.4081,
+      "longitude": 58.7994,
+      "address": "Al Qabil Bidiyah"
+    },
+    {
+      "code": 974342,
+      "name": "City Park Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.596138,
+      "longitude": 58.417855,
+      "address": "P O Box 2455 Pc 133"
+    },
+    {
+      "code": 987823,
+      "name": "Oyo 139 Al Ghadeer Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 4,
+      "categoryCode": "2EST",
+      "latitude": 23.75733,
+      "longitude": 57.589829,
+      "address": "Al Batinah South Governorate"
+    },
+    {
+      "code": 989600,
+      "name": "Doubletree By Hilton Muscat Qurum",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.610393,
+      "longitude": 58.497275,
+      "address": "Al Nahdah Street Qurum, 7"
+    },
+    {
+      "code": 995190,
+      "name": "Centra By Centara Muscat Dunes Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.5733,
+      "longitude": 58.4158,
+      "address": "Po Box 2061 Building 533 Al Maha Street Al Khuwair"
+    },
+    {
+      "code": 998495,
+      "name": "Boulevard Oman Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4LUX",
+      "latitude": 23.656721527359494,
+      "longitude": 58.180654597949214,
+      "address": "Street 34, 22845900 6"
+    },
+    {
+      "code": 1006516,
+      "name": "Mandarin Oriental Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5LUX",
+      "latitude": 23.6136325,
+      "longitude": 58.456971,
+      "address": "Way 2827, Shatti Al Qurum"
+    },
+    {
+      "code": 1021808,
+      "name": "Intercityhotel Bawshar Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5680503,
+      "longitude": 58.39769339999999,
+      "address": "Near Mall of Oman, Express Highway, 6"
+    },
+    {
+      "code": 1026747,
+      "name": "Movenpick Hotel And Apartments Ghala Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.5908819,
+      "longitude": 58.3731684,
+      "address": "Al Maaridh Street Ghala Heights Complex"
+    },
+    {
+      "code": 1027468,
+      "name": "Golden Tulip Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.59480685991975,
+      "longitude": 58.413431442308465,
+      "address": "Sultan Qaboos Street, Al Khuwair, Muscat"
+    },
+    {
+      "code": 1030208,
+      "name": "Caesar Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.5932,
+      "longitude": 58.4236,
+      "address": "Dohat Al Adab Street Al Khuwair"
+    },
+    {
+      "code": 1030802,
+      "name": "Super Oyo 151 Manam 2 Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.595537,
+      "longitude": 58.52062353,
+      "address": "Honda Showroom Road, Wattaya"
+    },
+    {
+      "code": 1030803,
+      "name": "Super Oyo 152 Manam 1 Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.59615644,
+      "longitude": 58.5191966,
+      "address": "Honda Showroom Road, Wattaya"
+    },
+    {
+      "code": 1030804,
+      "name": "Oyo Townhouse 156 Rose Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.63451114,
+      "longitude": 58.14001489,
+      "address": "حي التجاري, Mabelah, Seeb, Muscat Governorate,oman"
+    },
+    {
+      "code": 1030810,
+      "name": "Oyo 157 Dream Barka Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 3,
+      "categoryCode": "2EST",
+      "latitude": 23.70354382,
+      "longitude": 57.94187307,
+      "address": "Haradi, Barka, Al Batinah South Governorate"
+    },
+    {
+      "code": 1034047,
+      "name": "Aloft Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.585574810822,
+      "longitude": 58.357464261353,
+      "address": "396 Ghala Al Azaiba South"
+    },
+    {
+      "code": 1034574,
+      "name": "Hotel Muscat Holiday",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.594527138857,
+      "longitude": 58.418785597553,
+      "address": "Bldg 1854 Dawhat Al Adab St"
+    },
+    {
+      "code": 1040866,
+      "name": "The St. Regis Al Mouj Muscat Resort",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.622094,
+      "longitude": 58.273491,
+      "address": "Al Mouj"
+    },
+    {
+      "code": 1046826,
+      "name": "Mercure Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.58883,
+      "longitude": 58.416443,
+      "address": "Po Box 65 Dohat Al Adab Street Al Khuwair Dist"
+    },
+    {
+      "code": 1050869,
+      "name": "Alfeyhaa Resthouse",
+      "destinationCode": "MCT",
+      "zoneCode": 11,
+      "categoryCode": "BOU",
+      "latitude": 23.2968896,
+      "longitude": 57.97308199999999,
+      "address": "Samail, Oman, 2001"
+    },
+    {
+      "code": 1052510,
+      "name": "Airport Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.5402489,
+      "longitude": 58.3802473,
+      "address": "Ghala, Muscat, Oman, 79992963"
+    },
+    {
+      "code": 1063219,
+      "name": "Weekdays Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.581133,
+      "longitude": 58.395711,
+      "address": "122 Al Ghubrah St"
+    },
+    {
+      "code": 1065875,
+      "name": "Kyriad Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.594434,
+      "longitude": 58.349295,
+      "address": "Way 6802 Azaiba North"
+    },
+    {
+      "code": 1085664,
+      "name": "Thousand Nights Camp",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "CAMP1",
+      "latitude": 22.10334424725191,
+      "longitude": 58.75923755766997,
+      "address": "P.O. Box 9 Mandinat Al Sultan Qaboos"
+    },
+    {
+      "code": 1090002,
+      "name": "Ramada Encore By Wyndham Muscat Al Ghubra",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.5864,
+      "longitude": 58.4063,
+      "address": "Sultan Qaboos Highway Muscat"
+    },
+    {
+      "code": 1090066,
+      "name": "Regency Inn Hotel Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.5375946,
+      "longitude": 58.3930786,
+      "address": "Bousher Next To Muhammadal-aminboshermosque,muscat, 024033009 6"
+    },
+    {
+      "code": 1091408,
+      "name": "Sahara Hotel Apartments",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "APTH2",
+      "latitude": 23.5968007,
+      "longitude": 58.4340332,
+      "address": "Al Khuwair Street"
+    },
+    {
+      "code": 1091502,
+      "name": "Parkside Plaza Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.5998311,
+      "longitude": 58.5451166,
+      "address": "Ghala, Muscat, Oman"
+    },
+    {
+      "code": 1093022,
+      "name": "Boulevard Hotel Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6564265,
+      "longitude": 58.1834345,
+      "address": "Near Al Araimi Boulevard Mall Seeb"
+    },
+    {
+      "code": 1096520,
+      "name": "Studio M Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.62218,
+      "longitude": 58.24069,
+      "address": "Block 314, Way 63, 136/1"
+    },
+    {
+      "code": 1097203,
+      "name": "Hilton Muscat Al Bandar",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5508802,
+      "longitude": 58.6594603,
+      "address": "Al Jissah St , P.o Box 644 Al Bandar"
+    },
+    {
+      "code": 1097305,
+      "name": "voco Muscat Al Mouj by IHG",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.629772,
+      "longitude": 58.272844,
+      "address": "809 Al Mouj Street 6 Po Box 138 Al Mouj"
+    },
+    {
+      "code": 1098844,
+      "name": "Luxury Desert Camp Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 22.5031581,
+      "longitude": 58.7459477,
+      "address": "Bidiyah, Oman, 0 1"
+    },
+    {
+      "code": 1105584,
+      "name": "Radisson Panorama Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5837,
+      "longitude": 58.4093,
+      "address": "Al Ghubrah St 133 Muscat Om"
+    },
+    {
+      "code": 1105756,
+      "name": "Muscat Express Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.5994696,
+      "longitude": 58.389928,
+      "address": "Blg No 2365 Way 3204 Po Box 111 Pc 112"
+    },
+    {
+      "code": 1106802,
+      "name": "Swiss Belinn Airport Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.601299,
+      "longitude": 58.369061,
+      "address": "Al Anwar Street Azaiba Muscat Sultanate Of Oman"
+    },
+    {
+      "code": 1111507,
+      "name": "Oyo 140 Al Musafeer Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 4,
+      "categoryCode": "SPC",
+      "latitude": 23.747425,
+      "longitude": 57.632572,
+      "address": "Rd 1 Near Musanaa Primary Court"
+    },
+    {
+      "code": 1113329,
+      "name": "Sahara Hotel Apartment",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3",
+      "latitude": 23.58798,
+      "longitude": 58.43034,
+      "address": "Al Kuleiah Street 133, null"
+    },
+    {
+      "code": 1115064,
+      "name": "Boulevard Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.656963,
+      "longitude": 58.180936,
+      "address": "Seeb Street Muscat 130"
+    },
+    {
+      "code": 1115866,
+      "name": "Maani Muscat Hotel And Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6827366,
+      "longitude": 58.1775346,
+      "address": "Seeb, 111"
+    },
+    {
+      "code": 1118138,
+      "name": "Oyo 137 Marina Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.6264,
+      "longitude": 58.5605,
+      "address": "Harat A Shamal St 120"
+    },
+    {
+      "code": 1118181,
+      "name": "Parkside Plaza Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3",
+      "latitude": 23.5865115192385,
+      "longitude": 58.3590595805816,
+      "address": "Ghala Plot No:400 Om, Sultan Qaboos St, 112, null"
+    },
+    {
+      "code": 1124151,
+      "name": "Royal Crown Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.5948217,
+      "longitude": 58.4216455,
+      "address": "3519 way"
+    },
+    {
+      "code": 1124451,
+      "name": "Remas Hotel Suites",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "APTH3",
+      "latitude": 23.6451145,
+      "longitude": 58.1930202,
+      "address": "Remas Hotel Suites, 1"
+    },
+    {
+      "code": 1127404,
+      "name": "Boulevard Hotel Oman",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.6730646,
+      "longitude": 58.10219180000001,
+      "address": "Al Seeb - Halban Road, 6194"
+    },
+    {
+      "code": 1127776,
+      "name": "The Secure Inn Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.58641,
+      "longitude": 58.37311,
+      "address": "Ghala Heights 118 Muscat Om"
+    },
+    {
+      "code": 1127935,
+      "name": "Top Be Inn Hotel - Al Khoud Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "3",
+      "latitude": 23.6027,
+      "longitude": 58.1588,
+      "address": "Rd 53, Al Khoudh, Opp Sultan Qaboos University"
+    },
+    {
+      "code": 1140482,
+      "name": "Crowne Plaza Muscat Oman Convention & Exhibition ",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.568281,
+      "longitude": 58.324215,
+      "address": "Al Jamah Al Akbar Street, Madinat Al Irfan Muscat"
+    },
+    {
+      "code": 1145173,
+      "name": "Wave View Hotel",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.62392044,
+      "longitude": 58.26124191,
+      "address": "Al Mouj St"
+    },
+    {
+      "code": 1145803,
+      "name": "Heritage Hostel Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.591413,
+      "longitude": 58.383132,
+      "address": "Azaiba Villa 1371 A"
+    },
+    {
+      "code": 1150649,
+      "name": "Wyndham Garden Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.5933,
+      "longitude": 58.4694,
+      "address": "Dohat Al Adab Street"
+    },
+    {
+      "code": 1175617,
+      "name": "Tulip Residences Muscat The Village",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.638272,
+      "longitude": 58.242426,
+      "address": "Al Hail North Al Seeb 211 Muscat Oman"
+    },
+    {
+      "code": 1176321,
+      "name": "Studiom Muscat",
+      "destinationCode": "MCT",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.622258,
+      "longitude": 58.240142,
+      "address": "Building No 7801 Plot No 2327 North Al Hail"
+    }
+  ],
+  "OM1": [
+    {
+      "code": 177353,
+      "name": "Golden Tulip Nizwa",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 22.924692,
+      "longitude": 57.618723,
+      "address": "P.O Box 1000"
+    },
+    {
+      "code": 372677,
+      "name": "Nizwa Hotel Apartments",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 22.9042,
+      "longitude": 57.5828,
+      "address": "P.O Box-365, Hay Al Tourath, Next To Nizwa Stadium, 21 3"
+    },
+    {
+      "code": 472801,
+      "name": "Anantara Al Jabal Al Akhdar Resort",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 23.067211,
+      "longitude": 57.669029,
+      "address": "PO 110, Al Jabal Al Akhdar"
+    },
+    {
+      "code": 696927,
+      "name": "IntercityHotel Nizwa",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 22.9171031,
+      "longitude": 57.536292,
+      "address": "Farq Street, Central District – Farq Area, 31"
+    },
+    {
+      "code": 697155,
+      "name": "Shorfet Al Alamin Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.16663,
+      "longitude": 57.412811,
+      "address": "Al Hamra Jabal Sharqe Sharqe Mountain"
+    },
+    {
+      "code": 707690,
+      "name": "Jabal Akhdar Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 23.0672,
+      "longitude": 57.6302,
+      "address": "PO Box 26, Al Jabel Al Akhdar"
+    },
+    {
+      "code": 709110,
+      "name": "Jebel Shams Resort",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.2081,
+      "longitude": 57.1975,
+      "address": "PO Box 344, Al Hamra"
+    },
+    {
+      "code": 768947,
+      "name": "Sama Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.072198,
+      "longitude": 57.668882,
+      "address": "Pc 26 Jabal Al Akhdhar"
+    },
+    {
+      "code": 792132,
+      "name": "Jabal Al Akhdar Grand Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.18561,
+      "longitude": 57.37139,
+      "address": "Al Sheif Al Hamra"
+    },
+    {
+      "code": 870492,
+      "name": "Sama Wakan Heritage Home",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.13926,
+      "longitude": 57.73479,
+      "address": "Wakan Village"
+    },
+    {
+      "code": 929904,
+      "name": "SAMA Heritage Home - Al Khutaim",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.217712,
+      "longitude": 57.206877,
+      "address": "Jabel Shams Al Khutaim"
+    },
+    {
+      "code": 934569,
+      "name": "dusitD2 Naseem Resort Jabal Akhdar",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.089062,
+      "longitude": 57.685188,
+      "address": "Po Box 10 Sayq"
+    },
+    {
+      "code": 947253,
+      "name": "The View Oman",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.1025508,
+      "longitude": 57.28750969999999,
+      "address": "Al Hamra, 612 1 1"
+    },
+    {
+      "code": 975519,
+      "name": "Aldiyar Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 22.924457,
+      "longitude": 57.519472,
+      "address": "Firq Nizwa 1166"
+    },
+    {
+      "code": 988906,
+      "name": "Sama Hotel ( Al Jabal Al Akhdhar )",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.072210961005425,
+      "longitude": 57.66916868563232,
+      "address": "Al Dakhiliyah Po Box 20, 621"
+    },
+    {
+      "code": 1028768,
+      "name": "The View",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.15875,
+      "longitude": 57.27037,
+      "address": "Hail Al Shas"
+    },
+    {
+      "code": 1046366,
+      "name": "Bustan Inn",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 22.92990598961748,
+      "longitude": 57.531996511858765,
+      "address": "Nizwa, Oman, 465"
+    },
+    {
+      "code": 1052309,
+      "name": "Hotel Indigo Jabal Akhdar Resort & Spa",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 23.0660768711,
+      "longitude": 57.6737873,
+      "address": "Al Jabal Al Akhdar, 7"
+    },
+    {
+      "code": 1074864,
+      "name": "Al Smou Hotel Apartement",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "APTH4",
+      "latitude": 22.9171031,
+      "longitude": 57.536292,
+      "address": "Nizwa, Oman, 111"
+    },
+    {
+      "code": 1084834,
+      "name": "Green View Hotel",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 23.075961,
+      "longitude": 57.669212,
+      "address": "Al Jabal Akhdar, Saiq"
+    },
+    {
+      "code": 1095863,
+      "name": "Mahalli Balad Sayt Heritage Inn",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "CHUES",
+      "latitude": 23.1903712,
+      "longitude": 57.3877986,
+      "address": "Bald Sayt, Oman, 110"
+    },
+    {
+      "code": 1100221,
+      "name": "Sama Heights Resort",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 23.2276,
+      "longitude": 57.20227,
+      "address": "Jabal Shams Road 111 Dar Sawda Oman"
+    },
+    {
+      "code": 1127930,
+      "name": "Hotel Indigo Jabal Akhdar Resort & Spa",
+      "destinationCode": "OM1",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 23.066,
+      "longitude": 57.6736,
+      "address": "Sayk Street, Ad Dakhiliya"
+    }
+  ],
+  "SLL": [
+    {
+      "code": 111664,
+      "name": "Hilton Salalah Resort",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 16.981592,
+      "longitude": 54.01507,
+      "address": "As Sultan Qaboos St,P.O. BOX 699"
+    },
+    {
+      "code": 178212,
+      "name": "Crowne Plaza Resort Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 17.00897611,
+      "longitude": 54.15124835,
+      "address": "P.O.Box 870 Al Khandaq St. South Dhareez"
+    },
+    {
+      "code": 195532,
+      "name": "Juweira Boutique Hotel (Adults Only)",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 17.031429,
+      "longitude": 54.299713,
+      "address": "Salalah Beach, Marina Town. Taqa"
+    },
+    {
+      "code": 341203,
+      "name": "Salalah Rotana Resort",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 17.030819,
+      "longitude": 54.296417,
+      "address": "Pc 215, Al Saadah, Hawana Salalah, 215"
+    },
+    {
+      "code": 341507,
+      "name": "Hamdan Plaza Hotel",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.01914,
+      "longitude": 54.06105,
+      "address": "PO Box 2498, Ar Rubat Street"
+    },
+    {
+      "code": 342861,
+      "name": "Salalah Gardens Hotel by Safir Hotels and Resorts",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 16.9835496,
+      "longitude": 54.0180864,
+      "address": "P.O. Box 2312, 211 Salalah, 3"
+    },
+    {
+      "code": 401518,
+      "name": "Samahram Tourist Village",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 16.9937207,
+      "longitude": 54.05202650000001,
+      "address": "Awqad Area, PO Box 427"
+    },
+    {
+      "code": 494721,
+      "name": "IntercityHotel Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.020512,
+      "longitude": 54.093773,
+      "address": "A' Tatawoor Street 21009, Central Business, 21009"
+    },
+    {
+      "code": 517507,
+      "name": "Al Baleed Resort Salalah by Anantara",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5LUX",
+      "latitude": null,
+      "longitude": null,
+      "address": "PO Box 360, Al Mansurah St. Dahariz South"
+    },
+    {
+      "code": 557584,
+      "name": "Fanar Hotel & Residences",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 17.031381,
+      "longitude": 54.302792,
+      "address": "Marina Town"
+    },
+    {
+      "code": 637331,
+      "name": "Millennium Resort Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 17.0371383,
+      "longitude": 54.1697649,
+      "address": "Al Rubat Street"
+    },
+    {
+      "code": 645329,
+      "name": "Beach Resort - Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.0089,
+      "longitude": 54.1577,
+      "address": "Al Dahariz, PO Box 20"
+    },
+    {
+      "code": 645330,
+      "name": "Al Dyafa Hotel Suites",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 17.01844,
+      "longitude": 54.0992644,
+      "address": "Salalah central market"
+    },
+    {
+      "code": 701420,
+      "name": "Muscat International Hotel Plaza Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.014746,
+      "longitude": 54.091827,
+      "address": "23Rd July Street Opp Sultan Qaboos Grand Mosque"
+    },
+    {
+      "code": 807865,
+      "name": "City Hotel Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 17.019417,
+      "longitude": 54.095344,
+      "address": "Al Nahda Street Central Business District"
+    },
+    {
+      "code": 815700,
+      "name": "Salalah Beach Resort Villas",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.008952,
+      "longitude": 54.15821,
+      "address": "Aldahariz Po Box 20"
+    },
+    {
+      "code": 854353,
+      "name": "Atana Stay Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.05067,
+      "longitude": 54.10659,
+      "address": "Salalah Salalah 991"
+    },
+    {
+      "code": 856382,
+      "name": "Al Nile Hotel",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 17.050574,
+      "longitude": 54.152789,
+      "address": "Al Saadah Commercial Area"
+    },
+    {
+      "code": 888914,
+      "name": "Alila Hinu Bay",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 16.9625816,
+      "longitude": 54.77352519999999,
+      "address": "Salalah OM, 211"
+    },
+    {
+      "code": 898366,
+      "name": "Today House Suites",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "H2_5",
+      "latitude": 17.01446,
+      "longitude": 54.08642,
+      "address": "Al Najah Street, New Salalah"
+    },
+    {
+      "code": 939228,
+      "name": "Tulip Inn Majan Hotel",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 17.0193843,
+      "longitude": 54.11075049999999,
+      "address": "Al Awqadain, Industrial area, 7"
+    },
+    {
+      "code": 948810,
+      "name": "Wyndham Garden Salalah Mirbat",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 16.9804749,
+      "longitude": 54.7073079,
+      "address": "Al Fath Street"
+    },
+    {
+      "code": 958652,
+      "name": "Belad Bont Resort Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4LUX",
+      "latitude": 16.9985399,
+      "longitude": 54.0280623,
+      "address": "Al Imam Ali Bin Abi Talib Street, 23230000"
+    },
+    {
+      "code": 1000932,
+      "name": "Kyriad Hotel Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 17.0193843,
+      "longitude": 54.11075049999999,
+      "address": "24C2+8GV, Salalah, 9"
+    },
+    {
+      "code": 1006217,
+      "name": "The Plaza Hotel And Resort",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "4EST",
+      "latitude": 17.0522112,
+      "longitude": 54.1490927,
+      "address": "Al Saadah, 18, November Street, Salalah, 801"
+    },
+    {
+      "code": 1009691,
+      "name": "Salalah International Hotel",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.05436276667406,
+      "longitude": 54.157521799946295,
+      "address": "83 Way Mirbat St, 39 D Al Wadi"
+    },
+    {
+      "code": 1030594,
+      "name": "Super Oyo 144 Al Tawasi Furnished Apartments",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "2EST",
+      "latitude": 17.01615785,
+      "longitude": 54.09988752,
+      "address": "Durra Street, Salah"
+    },
+    {
+      "code": 1034900,
+      "name": "Al Nile Hotel 3",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 17.013134,
+      "longitude": 54.085262,
+      "address": "23rd July Street"
+    },
+    {
+      "code": 1077997,
+      "name": "Belad Bont Resort",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 16.9919,
+      "longitude": 54.0192,
+      "address": "P O Box 25 P C 217"
+    },
+    {
+      "code": 1099346,
+      "name": "Rixos Salalah",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "5EST",
+      "latitude": 16.98287,
+      "longitude": 54.01676,
+      "address": "Wadi Adhan Sultan Qaboos Street"
+    },
+    {
+      "code": 1100502,
+      "name": "Atana Stay",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 17.101131,
+      "longitude": 54.152051,
+      "address": "Thumrayt Street P O Box 13991 Salalah"
+    },
+    {
+      "code": 1126833,
+      "name": "Al Shatti Villas",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 16.999389,
+      "longitude": 54.084917,
+      "address": "Western Hay Al Shatti Salalah Oman Salalah Oman"
+    },
+    {
+      "code": 1172649,
+      "name": "Mazaya Salalah Hotel",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 17.015422,
+      "longitude": 54.080939,
+      "address": "Al Ghubayra Street 114 Al Gobyira St"
+    },
+    {
+      "code": 1173115,
+      "name": "The Club By Fanar",
+      "destinationCode": "SLL",
+      "zoneCode": 1,
+      "categoryCode": "SPC",
+      "latitude": 17.031492,
+      "longitude": 54.302723,
+      "address": "Taqa Road"
+    }
+  ],
+  "SR3": [
+    {
+      "code": 134014,
+      "name": "Best Western Sur",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.567786,
+      "longitude": 59.526639,
+      "address": "23 Al Aise Street"
+    },
+    {
+      "code": 187693,
+      "name": "Resort Sur Beach Holiday",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.595386,
+      "longitude": 59.493505,
+      "address": "411 Sur, Sherkiya, 0"
+    },
+    {
+      "code": 342409,
+      "name": "Ras Al Jinz Turtle Reserve",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.4301432,
+      "longitude": 59.8254466,
+      "address": "Post Box No. 296; 411 Sur; Ras Al Jinz"
+    },
+    {
+      "code": 344374,
+      "name": "Al Ayjah Plaza Hotel",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.56112,
+      "longitude": 59.54105,
+      "address": "Al Ayjah"
+    },
+    {
+      "code": 699256,
+      "name": "Zaki Hotel Apartment",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "3EST",
+      "latitude": 22.575865,
+      "longitude": 59.521458,
+      "address": "Jebel Id"
+    },
+    {
+      "code": 831973,
+      "name": "Sama Ras Al Jinz",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "H2_5",
+      "latitude": 22.436709,
+      "longitude": 59.796195,
+      "address": "Ras Al Jinz 411"
+    },
+    {
+      "code": 856384,
+      "name": "Surgrand Hotel",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "H3_5",
+      "latitude": 22.600803,
+      "longitude": 59.481348,
+      "address": "Unnamed Rd Po Box 111"
+    },
+    {
+      "code": 905249,
+      "name": "Atana Stay Al Ashkarah",
+      "destinationCode": "SR3",
+      "zoneCode": 3,
+      "categoryCode": "3EST",
+      "latitude": 21.8235,
+      "longitude": 59.5506,
+      "address": "Jalan Bani Bu Ali"
+    },
+    {
+      "code": 997382,
+      "name": "Sur Hotel",
+      "destinationCode": "SR3",
+      "zoneCode": 1,
+      "categoryCode": "1EST",
+      "latitude": 22.5652759,
+      "longitude": 59.5066376,
+      "address": "Sur, Souq, Sur, South Sharqiya, Oman"
+    }
+  ]
+}

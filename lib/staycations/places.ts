@@ -18,6 +18,12 @@ export type Country = {
   regions: string[];
   /** The collective noun for a search across the whole country. */
   regionLabel: string;
+  /**
+   * The supplier's destination codes for the regions above, in the same
+   * order. Only the ones we sell: the catalogue download walks this list, and
+   * Saudi alone has 31 destinations we have no intention of carrying.
+   */
+  destinationCodes: string[];
 };
 
 export const COUNTRIES: Country[] = [
@@ -26,18 +32,21 @@ export const COUNTRIES: Country[] = [
     code: 'AE',
     regionLabel: 'emirate',
     regions: ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ras Al Khaimah', 'Fujairah', 'Ajman', 'Umm Al Quwain'],
+    destinationCodes: ['DXB', 'AUH', 'SHJ', 'RKT', 'FJR', 'AJM', 'UMM', 'AE1', 'AAN'],
   },
   {
     name: 'Oman',
     code: 'OM',
     regionLabel: 'area',
     regions: ['Muscat', 'Musandam', 'Salalah', 'Nizwa', 'Sur', 'Duqm'],
+    destinationCodes: ['MCT', 'KHS', 'SLL', 'OM1', 'SR3', 'DQM'],
   },
   {
     name: 'Saudi Arabia',
     code: 'SA',
     regionLabel: 'area',
     regions: ['Riyadh', 'Jeddah', 'AlUla', 'The Red Sea', 'Dammam and the East Coast', 'Abha', 'Taif'],
+    destinationCodes: ['RUH', 'JED', 'U1L', 'RTD', 'DMM', 'AHB', 'TIF'],
   },
 ];
 
@@ -76,6 +85,19 @@ export const ALL_REGIONS: string[] = COUNTRIES.flatMap((c) => c.regions);
  * to a customer who would find "region" odd.
  */
 export const EMIRATES: string[] = COUNTRIES[0].regions;
+
+/**
+ * Place words to ignore when matching a hotel name against the supplier's.
+ * "Muscat" in both names is not evidence that they are the same hotel.
+ */
+export function placeWords(country?: Country): string[] {
+  const all = country ? [country] : COUNTRIES;
+  return all
+    .flatMap((c) => [c.name, ...c.regions])
+    .flatMap((s) => s.toLowerCase().split(/[^a-z]+/))
+    .filter(Boolean)
+    .concat(country?.code === 'AE' ? ['uae', 'emirates'] : [], ['saudi', 'arabia', 'oman', 'omani']);
+}
 
 export function countryByName(name: string): Country | undefined {
   return COUNTRIES.find((c) => c.name.toLowerCase() === String(name ?? '').toLowerCase());
