@@ -50,6 +50,52 @@ export function planPages(packages: BrochurePackage[]): PlannedPage[] {
   return out;
 }
 
+/* ─────────────────────────────── ordering ─────────────────────────────── */
+
+/** Just enough of a stored page row to put the deck back in order. */
+export type OrderableRow = { id: number; sort_order: number; page_type: string; package_id: number | null };
+
+const IS_CLOSING = (t: string) => t === 'contact' || t === 'callToAction';
+
+/** The journeys a set of rows contains, in the order they first appear. */
+export function packageOrderOf(rows: OrderableRow[]): number[] {
+  const order: number[] = [];
+  for (const r of rows) if (r.package_id && !order.includes(r.package_id)) order.push(r.package_id);
+  return order;
+}
+
+/**
+ * Lay the pages out for a given order of journeys.
+ *
+ * Three bands, and they must not mix: the cover and contents lead, the
+ * journeys run in the middle, and the closing page is last. Sorting the rows
+ * as one list would let "talk to us" drift into the middle of the collection
+ * the first time a journey moved past it.
+ *
+ * A journey keeps its own pages in the order they were stored, because a
+ * reader meets it as an introduction, its courses, its days and its why page.
+ */
+export function reorderPages(rows: OrderableRow[], packageOrder: number[]): OrderableRow[] {
+  const head = rows.filter((r) => !r.package_id && !IS_CLOSING(r.page_type));
+  const tail = rows.filter((r) => !r.package_id && IS_CLOSING(r.page_type));
+  const body = packageOrder.flatMap((p) => rows.filter((r) => r.package_id === p));
+  // Anything belonging to a journey the caller did not name still travels with
+  // the deck rather than being dropped on the floor.
+  const named = new Set(packageOrder);
+  const orphans = rows.filter((r) => r.package_id && !named.has(r.package_id));
+  return [...head, ...body, ...orphans, ...tail];
+}
+
+/** Move one journey up or down. Returns the new order, unchanged at the ends. */
+export function movePackageInOrder(order: number[], packageId: number, direction: -1 | 1): number[] {
+  const at = order.indexOf(packageId);
+  const to = at + direction;
+  if (at < 0 || to < 0 || to >= order.length) return order;
+  const next = [...order];
+  [next[at], next[to]] = [next[to], next[at]];
+  return next;
+}
+
 /** What the studio should warn about before a brochure goes out. */
 export type PackageWarning = { packageId: number; title: string; issues: string[] };
 

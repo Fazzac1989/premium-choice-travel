@@ -66,7 +66,12 @@ const brandItems = (key: string): NavItem[] =>
         { href: `/admin/brands/${key}/import`, label: 'AI Importer' },
         { href: `/admin/brands/${key}/destinations`, label: 'Destinations' },
         { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },
-        ...(key === 'corporate' ? [] : [{ href: `/admin/brands/${key}/offers`, label: 'Offers' }]),
+        ...(key === 'corporate'
+          ? []
+          : [
+              { href: `/admin/brands/${key}/offers`, label: 'Offers' },
+              { href: `/admin/brands/${key}/brochures`, label: 'Brochure Studio' },
+            ]),
         { href: `/admin/brands/${key}/quotes`, label: 'Quotes' },
         { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
       ];
