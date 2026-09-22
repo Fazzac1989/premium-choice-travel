@@ -1,0 +1,253 @@
+/* The brochure's own slides: contents, a package introduction, the courses,
+   the day-by-day, and why this destination. The deck shell is deck.css.
+
+   The contents, intro grid, day columns and inclusion lists are carried over
+   from the School Trips brochure, where the sizes were measured against real
+   printed sheets rather than chosen. What is new here is golf: a facts panel
+   for rounds and handicaps, a price line, and a page for the courses. */
+
+/* ---------- Contents ---------- */
+/* Two columns, because a landscape slide is wide and a single list of
+   journeys would run off the bottom of it. */
+.sl-toc-cols{columns:2;column-gap:4cqw;margin-top:1.6cqw}
+.sl-toc{list-style:none;margin:0;padding:0}
+/* A group is a region, which can run to more journeys than a column holds, so
+   it flows across both and its heading stays with the first of its entries. */
+.sl-group{margin-bottom:1.2cqw}
+.sl-group-label{break-after:avoid}
+.sl-group-label{
+  font-size:.9cqw;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--teal-ink);margin:0 0 .5cqw;padding-bottom:.4cqw;border-bottom:1px solid var(--line);
+}
+.sl-toc li{break-inside:avoid}
+.sl-toc button{
+  width:100%;display:grid;grid-template-columns:5.4cqw 1fr;gap:1cqw;
+  align-items:center;padding:.5cqw .2cqw;background:none;border:0;
+  text-align:left;cursor:pointer;font:inherit;transition:background .12s;
+  border-bottom:1px solid var(--line);
+}
+.sl-toc button:hover{background:var(--cream)}
+.sl-toc .sl-thumb{
+  width:5.4cqw;height:3.6cqw;object-fit:cover;border-radius:3px;
+  background:var(--ice);display:block;
+}
+.sl-toc .sl-t{font-family:var(--display);font-size:1.25cqw;color:var(--ink);line-height:1.2}
+/* Under the title rather than beside it: a landscape column is not wide
+   enough for both, and these names run long. */
+.sl-toc .sl-m{grid-column:2;font-size:.9cqw;color:var(--muted);margin-top:.15cqw}
+
+/* ---------- A package: the introduction ---------- */
+.sl-intro{display:grid;grid-template-columns:1.05fr .95fr;gap:3cqw;align-items:start}
+.sl-page figure{margin:0;background:var(--ice);overflow:hidden;border-radius:4px}
+.sl-page figure img{display:block;width:100%;height:100%;object-fit:cover}
+/* One big picture with two beneath it, which is what most packages have. */
+.sl-shots{display:grid;grid-template-columns:1fr 1fr;gap:1cqw}
+.sl-shots figure:first-child{grid-column:1 / -1;aspect-ratio:16/9}
+.sl-shots figure{aspect-ratio:4/3}
+.sl-meta{
+  display:flex;flex-wrap:wrap;gap:.5cqw 1.4cqw;margin:1cqw 0 0;
+  font-size:.95cqw;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+}
+.sl-meta b{color:var(--ink);font-weight:600}
+
+/* Highlights are plain lines here — the package writes them as sentences, not
+   as a name and a note — so one line each with a mark against it. */
+.sl-hl{list-style:none;margin:1.2cqw 0 0;padding:0}
+.sl-hl-two{columns:2;column-gap:2.2cqw}
+.sl-hl li{
+  display:grid;grid-template-columns:1.7cqw 1fr;gap:.8cqw;align-items:start;
+  padding:.45cqw 0;border-top:1px dashed var(--line);break-inside:avoid;
+}
+.sl-hl li:first-child{border-top:0}
+.sl-hl-two li:first-child{border-top:1px dashed var(--line)}
+.sl-hl-icon{
+  width:1.7cqw;height:1.7cqw;margin-top:.1cqw;flex:0 0 auto;
+  fill:none;stroke:var(--teal);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+.sl-hl span{display:block;font-size:1.08cqw;color:var(--ink);line-height:1.35}
+
+/* ---------- The golf facts ---------- */
+/* Rounds, handicap, buggies, caddies, club carriage, tee times. Every line is
+   the package's own wording; a fact it does not record is not printed, and
+   nothing here is inferred from anything else. */
+.sl-facts{
+  margin-top:1.2cqw;border-top:1px solid var(--line);padding-top:.9cqw;
+  display:grid;grid-template-columns:repeat(2,1fr);gap:.7cqw 2.2cqw;
+}
+.sl-fact{display:grid;grid-template-columns:auto 1fr;gap:.7cqw;align-items:start}
+.sl-fact dt{
+  font-size:.82cqw;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--teal-ink);white-space:nowrap;padding-top:.12cqw;
+}
+.sl-fact dd{margin:0;font-size:1cqw;line-height:1.35;color:var(--muted)}
+.sl-fact dd b{color:var(--ink);font-weight:600}
+/* The rounds count is the number a golfer looks for first. */
+.sl-rounds{
+  display:inline-flex;align-items:baseline;gap:.4cqw;
+  font-family:var(--display);font-size:1.5cqw;color:var(--ink);line-height:1;
+}
+.sl-rounds small{font-family:var(--body);font-size:.85cqw;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+
+/* Tee times are the thing a golf brochure must not overstate. The package
+   records a status and the copy says "access unverified"; both are printed
+   as written, and an unknown reads as unknown rather than as available. */
+.sl-teetime{
+  display:inline-flex;align-items:center;gap:.5cqw;margin-top:.15cqw;
+  font-size:.92cqw;color:var(--muted);
+}
+.sl-teetime::before{
+  content:"";width:.5cqw;height:.5cqw;border-radius:50%;flex:0 0 auto;background:var(--muted);
+}
+.sl-teetime[data-status="held"]::before{background:var(--teal)}
+.sl-teetime[data-status="requested"]::before{background:#C9891F}
+
+/* ---------- The price ---------- */
+/* A "from" price when the package carries one, and the status either way.
+   Most packages are on request, and saying so is the honest line. */
+.sl-price{
+  margin-top:1.2cqw;background:var(--cream);border-radius:5px;padding:.9cqw 1.2cqw;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:.5cqw 1cqw;
+}
+.sl-price dt{
+  font-size:.82cqw;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.sl-price dd{margin:0;font-family:var(--display);font-size:1.7cqw;color:var(--ink);line-height:1}
+.sl-price .sl-price-note{
+  flex-basis:100%;font-size:.88cqw;color:var(--muted);font-family:var(--body);line-height:1.35;
+}
+
+/* ---------- The courses ---------- */
+/* The page a golf brochure has and a school brochure does not: a written note
+   per course, straight from the package. */
+.sl-courses{list-style:none;margin:1.4cqw 0 0;padding:0;display:grid;gap:1.4cqw}
+.sl-courses-two{grid-template-columns:1fr 1fr;gap:1.1cqw 2.6cqw}
+.sl-course{counter-increment:course;border-top:2px solid var(--teal);padding-top:.7cqw;break-inside:avoid}
+.sl-course h3{
+  font-family:var(--display);font-size:1.7cqw;font-weight:400;color:var(--ink);
+  line-height:1.2;margin:0 0 .4cqw;
+}
+.sl-course p{font-size:1.15cqw;line-height:1.45;color:var(--muted);margin:0;max-width:78ch}
+.sl-courses-head{display:flex;align-items:baseline;justify-content:space-between;gap:2cqw}
+
+/* ---------- The day-by-day ---------- */
+/* Three columns of days: a landscape slide is wide, and a ten-day journey in
+   one column would not fit on it. */
+.sl-days{columns:3;column-gap:2.6cqw;margin-top:.6cqw}
+.sl-day{break-inside:avoid;margin-bottom:1.5cqw;padding-bottom:1.2cqw;border-bottom:1px solid var(--line)}
+.sl-day-n{
+  font-size:.9cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal-ink);margin:0 0 .3cqw;
+}
+.sl-day h4{margin:0 0 .35cqw;color:var(--ink)}
+.sl-day p{font-size:1.05cqw;color:var(--muted);margin:0}
+/* A long journey gets a fourth column and slightly smaller type rather than
+   splitting one package's days across two sheets. */
+.sl-days-dense{columns:4}
+.sl-days-dense .sl-day{margin-bottom:1.1cqw;padding-bottom:.9cqw}
+.sl-days-dense h4{font-size:1.25cqw}
+.sl-days-dense p{font-size:.92cqw}
+.sl-days-dense .sl-day-n{font-size:.8cqw}
+
+/* ---------- Included, and to budget for ---------- */
+.sl-incl{margin-top:1cqw;border-top:1px solid var(--line);padding-top:.8cqw;display:grid;grid-template-columns:1fr 1fr;gap:2.4cqw}
+.sl-incl b{display:block;font-size:.92cqw;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-ink);margin-bottom:.35cqw}
+.sl-incl ul{list-style:none;margin:0;padding:0;columns:2;column-gap:1.6cqw}
+.sl-incl li{position:relative;padding-left:1.2cqw;font-size:1.06cqw;line-height:1.35;color:var(--muted);margin-bottom:.22cqw;break-inside:avoid}
+.sl-incl li::before{content:"";position:absolute;left:0;top:.48cqw;width:.58cqw;height:.58cqw;border-radius:50%;background:var(--navy)}
+.sl-incl ul.sl-incl-many{columns:3;column-gap:1.4cqw}
+.sl-incl ul.sl-incl-many li{font-size:.98cqw;line-height:1.3;margin-bottom:.18cqw}
+/* Only one of the two lists: given the whole width it is half as tall, which
+   is what pays for the larger type above. */
+.sl-incl--solo{grid-template-columns:1fr}
+.sl-incl--solo ul.sl-incl-many{columns:4}
+.sl-days-dense + .sl-incl{margin-top:.6cqw;padding-top:.5cqw}
+@media print{
+  .sl-incl{display:grid!important}
+  /* The included lists are the last thing on a busy day page. A hair tighter
+     on paper keeps a long journey with many inclusions on one sheet. */
+  .sl-incl{margin-top:.45cqw;padding-top:.4cqw}
+  .sl-incl li{margin-bottom:.08cqw;line-height:1.24}
+}
+
+/* Wording that qualifies a promise — "access unverified", "subject to
+   confirmation" — printed under the lists rather than folded into them. */
+.sl-conditions{
+  margin-top:.8cqw;padding-top:.6cqw;border-top:1px solid var(--line-light);
+  font-size:.88cqw;line-height:1.4;color:var(--muted);
+}
+.sl-conditions b{color:var(--ink);font-weight:600}
+
+/* ---------- Why this destination ---------- */
+/* Navy, like the cover. The type here is literally white in both themes:
+   var(--white) is the page-ground token, which the dark theme flips to navy. */
+.sl-why-page{background:var(--navy);color:#fff}
+.sl-why-page .sl-eyebrow{color:var(--teal)}
+.sl-why-page .sl-masthead{border-bottom-color:rgba(255,255,255,.18)}
+.sl-why-page h2{color:#fff}
+.sl-why-page .sl-lede{color:rgba(255,255,255,.8)}
+.sl-why{display:grid;grid-template-columns:1.3fr .7fr;gap:3cqw;align-items:start}
+.sl-why h2{font-size:2.6cqw;margin-bottom:.8cqw}
+.sl-why-label{
+  font-size:.85cqw;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--teal);margin:0 0 .5cqw;
+}
+.sl-why-list{list-style:none;margin:1.1cqw 0 0;padding:0;display:grid;gap:1cqw}
+.sl-why-list li{
+  display:grid;grid-template-columns:1.6cqw 1fr;gap:.9cqw;align-items:start;
+  font-size:1.3cqw;line-height:1.45;color:#fff;
+}
+.sl-why-list li::before{
+  content:"";width:1.6cqw;height:1.6cqw;border-radius:50%;margin-top:.15cqw;
+  border:1.5px solid var(--teal);
+}
+.sl-why-side{display:grid;gap:1cqw}
+.sl-why-fact{background:rgba(255,255,255,.08);border-radius:5px;padding:1cqw 1.3cqw}
+.sl-why-fact span{display:block;font-size:.8cqw;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.sl-why-fact b{display:block;font-family:var(--display);font-weight:400;font-size:1.5cqw;color:#fff;margin-top:.2cqw}
+.sl-why-fact ul{list-style:none;margin:.4cqw 0 0;padding:0;display:grid;gap:.4cqw}
+.sl-why-fact li{font-size:1.1cqw;line-height:1.4;color:rgba(255,255,255,.85)}
+.sl-why-fact small{display:block;font-size:.85cqw;color:rgba(255,255,255,.65);margin-top:.4cqw}
+.sl-why-page .sl-facts{border-top-color:rgba(255,255,255,.18)}
+.sl-why-page .sl-fact dt{color:var(--teal)}
+.sl-why-page .sl-fact dd{color:rgba(255,255,255,.82)}
+.sl-why-page .sl-fact dd b{color:#fff}
+.sl-season{
+  margin-top:1.4cqw;border-left:3px solid var(--teal);padding-left:1.2cqw;
+  font-size:1.18cqw;line-height:1.55;color:#fff;font-style:italic;
+}
+@media print{
+  .sl-why-page{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sl-why,.sl-courses-two{display:grid!important}
+  .sl-why-page::after{color:rgba(255,255,255,.5)}
+}
+
+/* ---------- Closing ---------- */
+/* .sl-closing is styled in deck.css: the deck ends on navy. */
+.sl-contact{
+  margin-top:2cqw;display:flex;flex-wrap:wrap;align-items:center;gap:1.4cqw 3cqw;font-size:1.2cqw;
+  border-top:1px solid var(--line-light);padding-top:1.6cqw;
+}
+.sl-qr{display:block;width:6cqw;height:6cqw}
+
+/* ---------- An editorial page ---------- */
+.sl-ed-cols{columns:2;column-gap:3.4cqw;margin-top:1.6cqw}
+.sl-ed-cols p{break-inside:avoid}
+.sl-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-top:1.8cqw}
+.sl-steps > div{border-top:2px solid var(--teal);padding-top:1cqw}
+.sl-step-n{font-family:var(--display);font-size:1.6cqw;color:var(--teal-ink);margin:0 0 .3cqw}
+.sl-steps h3{font-size:1.3cqw;margin-bottom:.3cqw}
+.sl-steps p{font-size:1.02cqw;color:var(--muted);margin:0}
+.sl-note{
+  margin-top:1.8cqw;padding-top:1cqw;border-top:1px solid var(--line);
+  font-size:1cqw;color:var(--muted);
+}
+
+/* On the navy why page the price shares the surface of the cards beside it;
+   the figure is what makes it prominent, not a white box. */
+.sl-why-page .sl-price{
+  background:rgba(255,255,255,.08);margin-top:0;padding:1cqw 1.3cqw;
+  flex-direction:column;align-items:flex-start;gap:.25cqw;
+}
+.sl-why-page .sl-price dt{color:rgba(255,255,255,.6);letter-spacing:.12em}
+.sl-why-page .sl-price dd{color:#fff;font-size:1.9cqw}
+.sl-why-page .sl-price .sl-price-note{color:rgba(255,255,255,.65);margin-top:.2cqw}

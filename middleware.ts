@@ -46,6 +46,11 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith('/auth') ||
       pathname.startsWith('/sites') ||
       pathname.startsWith('/images') ||
+      // A brochure is a full-screen deck that prints to A4. It deliberately
+      // does not wear the site's header and footer, so it is served from the
+      // root rather than rewritten into the brand tree; the brochure record
+      // says which brand it belongs to.
+      pathname.startsWith('/brochures') ||
       pathname === '/robots.txt' ||
       pathname === '/sitemap.xml' ||
       // Installable-app files: the manifest is host-aware, the worker is static.
