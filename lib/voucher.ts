@@ -1,5 +1,5 @@
 import 'server-only';
 
-/** The app's entry point for vouchers — the implementation is shared with the test script. */
-export { renderVoucherPdf as renderVoucher, voucherFilename } from '@/lib/rates/supplier-booking';
+/** Vouchers for requests booked before the platform; platform stays use the platform's voucher. */
+export { renderVoucherPdf as renderVoucher, voucherFilename } from '@/lib/trips/legacy-voucher';
 export { voucherModel } from '@/lib/voucher-model';

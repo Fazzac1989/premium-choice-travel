@@ -1,8 +1,6 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
-import { liteapi } from './liteapi';
-import { hotelbeds, hotelbedsSearchMany } from './hotelbeds';
-import { stub } from './stub';
+import { platformRates, platformSearchMany } from './platform';
 import { convertMoney, convertOffers, convertAmount, fxRates, DISPLAY_CURRENCY } from './fx';
 import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
 
@@ -15,17 +13,16 @@ import type { DisplayRate, RateProvider, RateQuote, RoomOffer } from './types';
  * they throttle. One search should serve everyone looking at that weekend.
  */
 
-// A real supplier always wins; the sample only runs when nothing else is set.
-// Hotelbeds first: it is the contracted bed bank, LiteAPI was the sandbox.
-const PROVIDERS: RateProvider[] = [hotelbeds, liteapi, stub];
+// founder, 2026-10-02: the Premium Choice trade platform is the only rates provider. It holds
+// the suppliers (direct contracts, Hotelbeds, Travelopro) and prices with the Staycations markup.
+const PROVIDERS: RateProvider[] = [platformRates];
 
-/** How long a quote is treated as good enough to show. */
-const CACHE_HOURS = 12;
+/** How long a "from" price is reused before the platform is asked again. */
+const CACHE_HOURS = 0.5;
 
 /**
- * The provider in use. RATES_PROVIDER pins one by name (hotelbeds, liteapi,
- * sample) — useful while two sets of credentials exist — otherwise the first
- * configured one wins.
+ * The provider in use: the platform, when PLATFORM_API_URL and PLATFORM_API_KEY are set.
+ * RATES_PROVIDER pins one by name; otherwise the first configured one wins.
  */
 export function activeProvider(): RateProvider | null {
   const pinned = process.env.RATES_PROVIDER?.trim().toLowerCase();
@@ -37,9 +34,9 @@ export function activeProvider(): RateProvider | null {
 }
 
 /**
- * A supplier code only means something to the catalogue it came from: a
- * LiteAPI "lp…" code sent to Hotelbeds is a bad request, not a quote. A hotel
- * whose code belongs to another provider counts as unmapped for this one.
+ * A supplier code only means something to the catalogue it came from: a hotel whose code is
+ * not a platform hotel id (an old Hotelbeds number, before 027-platform-hotel-codes.sql) counts
+ * as unmapped.
  */
 function codeFor(provider: RateProvider, code: string | null | undefined) {
   if (!code) return null;
@@ -55,17 +52,13 @@ export function ratesEnabled() {
 export const RATES_PREVIEW_COOKIE = 'pct-rates-preview';
 
 /**
- * Whether this visitor may see live prices.
- *
- * Two switches, because "live on the real domain" and "visible to every
- * customer" are different things. While the key is a sandbox one the prices
- * are realistic but not bookable, so a booking request against them is one we
- * might not be able to honour. RATES_PUBLIC=1 opens it to everyone; until
- * then, only someone holding the preview cookie sees it.
+ * Whether this visitor may see live prices: only a signed-in customer (founder, 2026-10-02:
+ * "in order to see real prices and confirm, the user should sign in or register"). Everyone
+ * else sees the hotels with their guide prices.
  */
-export function ratesVisible(hasPreviewCookie: boolean) {
+export function ratesVisible(signedIn: boolean) {
   if (!ratesEnabled()) return false;
-  return process.env.RATES_PUBLIC === '1' || hasPreviewCookie;
+  return signedIn;
 }
 
 function toDisplay(quote: RateQuote, cached: boolean): DisplayRate {
@@ -362,13 +355,13 @@ export async function searchStayRates(params: {
   rooms?: number;
 }): Promise<StaySearch> {
   const provider = activeProvider();
-  if (!provider || provider.name !== 'hotelbeds' || !isSupabaseConfigured()) return EMPTY_SEARCH;
+  if (!provider || provider.name !== 'platform' || !isSupabaseConfigured()) return EMPTY_SEARCH;
   if ((params.rooms ?? 1) > 1) return EMPTY_SEARCH;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(params.checkIn)) return EMPTY_SEARCH;
 
   const children = params.childrenAges.length;
   const ages = cleanAges(params.childrenAges, children);
-  const mapped = params.hotels.filter((h) => h.supplierCode && /^\d+$/.test(h.supplierCode));
+  const mapped = params.hotels.filter((h) => h.supplierCode && provider.ownsCode?.(h.supplierCode));
   if (!mapped.length) return { ...EMPTY_SEARCH, ok: true };
 
   const db = createAdminClient();
@@ -403,10 +396,10 @@ export async function searchStayRates(params: {
   const missing = mapped.filter((h) => !fresh.has(h.id));
   if (!missing.length) return { rates, unavailable, ok: true };
 
-  const byCode = new Map(missing.map((h) => [Number(h.supplierCode), h.id]));
-  let found: Map<number, RoomOffer[]>;
+  const byCode = new Map(missing.map((h) => [String(h.supplierCode), h.id]));
+  let found: Map<string, RoomOffer[]>;
   try {
-    found = await hotelbedsSearchMany(
+    found = await platformSearchMany(
       { checkIn: params.checkIn, nights: params.nights, adults: params.adults, children, childrenAges: ages },
       Array.from(byCode.keys()),
     );

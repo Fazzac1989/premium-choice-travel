@@ -5,7 +5,8 @@ import Link from 'next/link';
 import BookingGate from '@/components/BookingGate';
 import { signOutAccount } from '@/lib/account-actions';
 import BrandLoader from '@/components/BrandLoader';
-import { roomOffers, submitBookingRequest } from '@/lib/rates/actions';
+import { roomOffers } from '@/lib/rates/actions';
+import { startStayBooking } from '@/lib/platform/checkout';
 import type { PublicRoomOffer } from '@/lib/rates/types';
 
 const CHANNELS = ['WhatsApp', 'Email', 'Phone'];
@@ -25,15 +26,15 @@ const EXTRAS = [
 ];
 
 /**
- * The booking request, on its own page.
+ * Booking a stay, on its own page.
  *
  * Rooms load on arrival — the visitor already asked for prices by opening this
  * page, so making them ask twice would be silly. Everything after that is one
  * scroll: choose a room, say what you want, say who you are.
  *
- * It ends in a request. No card, nothing held, and the page says so more than
- * once, because the cost of someone misreading this is a family arriving at a
- * hotel that is not expecting them.
+ * It ends on the secure payment page (founder, 2026-10-02: bookings confirm
+ * instantly). The card is held, the hotel is booked, and only then is the money
+ * taken; if the room cannot be booked the hold is released.
  */
 export default function BookingPage({
   hotelId,
@@ -51,6 +52,7 @@ export default function BookingPage({
   travellers,
   profileComplete,
   here,
+  base,
 }: {
   hotelId: number;
   hotelName: string;
@@ -73,6 +75,8 @@ export default function BookingPage({
   profileComplete: boolean;
   /** This page's own URL — where a sign-in link brings them back to. */
   here: string;
+  /** Where this brand's pages live: '' on its own domain. */
+  base: string;
 }) {
   const [pending, startTransition] = useTransition();
   const [loading, setLoading] = useState(true);
@@ -161,7 +165,7 @@ export default function BookingPage({
       ]
         .filter(Boolean)
         .join('\n');
-      const res = await submitBookingRequest({
+      const res = await startStayBooking({
         hotelId,
         checkIn,
         nights,
@@ -169,27 +173,28 @@ export default function BookingPage({
         children,
         childrenAges,
         offerId: chosen.offerId,
-        name: guest.name,
-        email: guest.email,
         phone: guest.phone,
-        channel: guest.channel,
         notes,
         travellerIds: chosenTravellers,
         acceptedTerms,
         marketingOptIn,
+        backPath: here,
+        base,
       });
-      if (res.ok) setDone(res.message);
-      else setError(res.message);
+      if (res.ok && res.payUrl) {
+        setDone(res.message);
+        window.location.assign(res.payUrl);
+      } else setError(res.message);
     });
   };
 
   if (done) {
     return (
       <div className="container-site max-w-2xl py-20 text-center">
-        <p className="font-serif text-4xl text-ink">Request sent</p>
+        <p className="font-serif text-4xl text-ink">Opening the payment page</p>
         <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-ink-soft">{done}</p>
         <div className="mx-auto mt-8 max-w-md rounded-2xl border border-line bg-sand p-6 text-left">
-          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">What you asked for</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">What you are booking</p>
           <p className="mt-2 font-serif text-xl text-ink">{hotelName}</p>
           <p className="mt-1 text-sm text-ink-soft">
             {dates} · {nights} night{nights === 1 ? '' : 's'} · {chosen?.roomName}
@@ -216,7 +221,7 @@ export default function BookingPage({
           ← {hotelName}
         </Link>
       </nav>
-      <p className="eyebrow mt-4">Booking request</p>
+      <p className="eyebrow mt-4">Book your stay</p>
       <h1 className="mt-2 font-serif text-4xl leading-tight text-ink sm:text-5xl">{hotelName}</h1>
       <p className="mt-3 text-ink-soft">
         {dates} · {nights} night{nights === 1 ? '' : 's'} · {adults} adult{adults === 1 ? '' : 's'}
@@ -349,7 +354,7 @@ export default function BookingPage({
           {/* Extras and details */}
           <div className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-2xl bg-ink p-7 text-white">
-              <h2 className="font-serif text-xl">Your request</h2>
+              <h2 className="font-serif text-xl">Your booking</h2>
 
               {chosen ? (
                 <div className="mt-3 rounded-lg bg-white/10 p-3">
@@ -534,16 +539,16 @@ export default function BookingPage({
                 className="btn-primary mt-4 w-full disabled:opacity-50"
               >
                 {pending
-                  ? 'Sending…'
+                  ? 'Opening the payment page…'
                   : !chosen
                     ? 'Choose a room to continue'
                     : !acceptedTerms
                       ? 'Accept the terms to continue'
-                      : `Send request — ${chosen.currency} ${money(chosen.total)}`}
+                      : `Book and pay — ${chosen.currency} ${money(chosen.total)}`}
               </button>
               <p className="mt-3 text-center text-[11px] leading-relaxed text-white/60">
-                This is a request, not a booking. No payment is taken here and no room is held
-                until a specialist confirms it with {hotelName}.
+                You pay on our payment provider's secure page; your card details never reach us.
+                The amount is held, {hotelName} is booked, and only then is it charged.
               </p>
                 </>
               )}

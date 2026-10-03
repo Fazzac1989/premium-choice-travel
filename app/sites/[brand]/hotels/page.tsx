@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getAccount } from '@/lib/account';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Icon from '@/components/staycations/coastal/Icon';
@@ -44,7 +45,7 @@ export default async function StayResultsPage({
 
   // Live totals need a date, a complete party and the price gate open. Until
   // then the list shows the specialists' guide bands and says so.
-  const canSeeRates = ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+  const canSeeRates = ratesVisible(Boolean(await getAccount()));
   const agesMissing = missingChildAges(criteria);
   const wantsRates = canSeeRates && Boolean(criteria.checkIn) && !agesMissing && criteria.rooms === 1;
 

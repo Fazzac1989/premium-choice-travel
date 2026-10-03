@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getAccount } from '@/lib/account';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import AvailabilityCheck from '@/components/AvailabilityCheck';
@@ -48,7 +49,7 @@ export default async function StayPage({
   if (!hotel) notFound();
 
   const criteria = parseCriteria(searchParams);
-  const canSeeRates = ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+  const canSeeRates = ratesVisible(Boolean(await getAccount()));
   const agesMissing = missingChildAges(criteria);
   const wantsRates = canSeeRates && Boolean(criteria.checkIn) && !agesMissing && criteria.rooms === 1;
 

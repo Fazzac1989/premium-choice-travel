@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { requireRequestsStaff } from '@/lib/admin/guard';
 import { renderVoucher, voucherFilename } from '@/lib/voucher';
+import { platformPdf } from '@/lib/platform/client';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,23 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   const db = createAdminClient();
   const { data: row } = await db.from('booking_requests').select('*').eq('id', Number(params.id)).maybeSingle();
   if (!row) return NextResponse.json({ ok: false, error: 'Not found' }, { status: 404 });
+
+  // booked through the platform: its voucher is the platform's
+  if (row.platform_booking_id) {
+    try {
+      const pdf = await platformPdf(`/v1/bookings/${row.platform_booking_id}/voucher`);
+      return new NextResponse(new Uint8Array(pdf), {
+        headers: {
+          'Content-Type': 'application/pdf',
+          'Content-Disposition': `inline; filename="${row.supplier_reference ?? 'voucher'}.pdf"`,
+          'Cache-Control': 'no-store',
+        },
+      });
+    } catch (e: any) {
+      console.error('[voucher pdf]', e?.message);
+      return NextResponse.json({ ok: false, error: 'The platform voucher is not ready' }, { status: 503 });
+    }
+  }
 
   try {
     const pdf = await renderVoucher(row);

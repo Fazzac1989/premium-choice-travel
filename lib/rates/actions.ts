@@ -16,8 +16,8 @@ import { sendCustomerConfirmation } from '@/lib/email-customer';
  * that hides the flow on the page has to guard the actions themselves —
  * otherwise the sandbox prices are one crafted request away from being public.
  */
-function ratesAllowed() {
-  return ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+async function ratesAllowed() {
+  return ratesVisible(Boolean(await getAccount()));
 }
 
 /**
@@ -70,7 +70,7 @@ export async function roomOffers(params: {
   children?: number;
   childrenAges?: number[];
 }): Promise<{ ok: boolean; offers: PublicRoomOffer[]; message?: string }> {
-  if (!ratesAllowed()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
+  if (!(await ratesAllowed())) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
   if (!isSupabaseConfigured()) return { ok: false, offers: [], message: 'Pricing is not available right now.' };
   if (!/^\d{4}-\d{2}-\d{2}$/.test(params.checkIn)) return { ok: false, offers: [], message: 'Pick a check-in date.' };
 
@@ -156,7 +156,7 @@ export async function submitBookingRequest(payload: {
   if (!payload.acceptedTerms) {
     return { ok: false, message: 'Please accept the booking terms and privacy notice to send your request.' };
   }
-  if (!ratesAllowed()) return { ok: false, message: 'Something went wrong — please call us.' };
+  if (!(await ratesAllowed())) return { ok: false, message: 'Something went wrong — please call us.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Something went wrong — please call us.' };
 
   const nights = Math.max(1, Math.min(30, Number(payload.nights) || 1));

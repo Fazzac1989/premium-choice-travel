@@ -1,4 +1,37 @@
-import type { SupplierBooking, SupplierPax } from '@/lib/rates/hotelbeds';
+/** A guest as the supplier's reply named them (bookings made before the platform). */
+export type SupplierPax = { type: 'AD' | 'CH'; name: string; surname: string; age?: number };
+
+/** The supplier's reply kept on a request booked before the platform. */
+export type SupplierBooking = {
+  reference: string;
+  clientReference: string;
+  status: string;
+  creationDate: string;
+  holder: { name: string; surname: string };
+  remark: string;
+  totalNet: number;
+  pendingAmount: number | null;
+  currency: string;
+  invoiceCompany: { code: string; company: string; registrationNumber: string } | null;
+  hotel: {
+    code: number;
+    name: string;
+    categoryName: string;
+    destinationName: string;
+    checkIn: string;
+    checkOut: string;
+    supplier: { name: string; vatNumber: string } | null;
+    rooms: {
+      code: string;
+      name: string;
+      status: string;
+      paxes: SupplierPax[];
+      rates: { boardName: string; net: number; rateClass: string; rateComments: string; cancellationPolicies: { amount: number; from: string }[] }[];
+    }[];
+  };
+  /** Everything the supplier sent, kept for disputes and reprints. */
+  raw: any;
+};
 
 /** Everything the voucher prints, already resolved. Shared by the PDF and its tests. */
 export type VoucherModel = {

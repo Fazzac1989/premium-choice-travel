@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import Icon from './Icon';
 import { sendTripRequest } from '@/lib/trips/actions';
+import { cancelTrip, previewTripCancel, type CancelPreview } from '@/lib/platform/cancel';
 import type { ChangeRequest, TripPayment } from '@/lib/trips/portal';
 
 /**
@@ -16,6 +18,10 @@ import type { ChangeRequest, TripPayment } from '@/lib/trips/portal';
  *
  * The cancellation form deliberately shows what cancelling costs *before* the
  * text box, not after it.
+ *
+ * A stay booked online (`selfCancel`) is cancelled here and now, not by request:
+ * the customer sees today's charge and refund from the hotel's own terms, and one
+ * button cancels at exactly that figure.
  */
 
 type Kind = 'amend' | 'cancel' | 'question';
@@ -48,8 +54,10 @@ export default function TripActions({
   cancellationText,
   payment,
   history,
+  selfCancel = false,
 }: {
   bookingId: number;
+  selfCancel?: boolean;
   confirmed: boolean;
   cancelled: boolean;
   cancellationText: string;
@@ -60,11 +68,28 @@ export default function TripActions({
   const [message, setMessage] = useState('');
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, start] = useTransition();
+  const [preview, setPreview] = useState<CancelPreview | null>(null);
+  const router = useRouter();
 
   const openForm = (kind: Kind) => {
-    setOpen(open === kind ? null : kind);
+    const next = open === kind ? null : kind;
+    setOpen(next);
     setResult(null);
+    if (next === 'cancel' && selfCancel) {
+      setPreview(null);
+      start(async () => setPreview(await previewTripCancel(bookingId)));
+    }
   };
+
+  const cancelNow = () =>
+    start(async () => {
+      const res = await cancelTrip(bookingId);
+      setResult(res);
+      if (res.ok) {
+        setOpen(null);
+        router.refresh();
+      }
+    });
 
   const submit = () => {
     if (!open) return;
@@ -149,7 +174,26 @@ export default function TripActions({
         </p>
       )}
 
-      {open && (
+      {open === 'cancel' && selfCancel && (
+        <div className="mt-4 rounded-[10px] border border-sea-line bg-shell p-4">
+          <h4 className="cc-h4 text-[19px] leading-[25px]">Cancel this stay</h4>
+          <p className="mt-2 rounded-[8px] bg-wait-bg px-3 py-2 text-[14px] leading-[20px] text-wait-ink" role="status">
+            {preview ? preview.text : 'Checking what cancelling costs today…'}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {preview?.ok && (
+              <button type="button" onClick={cancelNow} disabled={pending} className="cc-btn-primary !min-h-[44px] !px-5 text-[15px]">
+                {pending ? 'Cancelling…' : 'Cancel my stay'}
+              </button>
+            )}
+            <button type="button" onClick={() => setOpen(null)} className="cc-btn-quiet !min-h-[44px] !px-4 text-[15px]">
+              Keep my stay
+            </button>
+          </div>
+        </div>
+      )}
+
+      {open && !(open === 'cancel' && selfCancel) && (
         <div className="mt-4 rounded-[10px] border border-sea-line bg-shell p-4">
           <h4 className="cc-h4 text-[19px] leading-[25px]">{FORM[open].title}</h4>
           {open === 'cancel' && (

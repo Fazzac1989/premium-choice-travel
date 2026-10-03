@@ -11,6 +11,7 @@ import { badgeClass, tripStatus } from '@/lib/staycations/trip-status';
 import { boardLabel, roomLabel } from '@/lib/staycations/format';
 import { addDays, longDateLabel, todayInDubai, ymd } from '@/lib/staycations/search-criteria';
 import { cancellationStanding, changeRequestsFor, tripPayment, type ChangeRequest, type TripPayment } from '@/lib/trips/portal';
+import { syncPlatformTrip } from '@/lib/platform/trips';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,15 @@ export default async function TripsPage({ params }: { params: { brand: string } 
   const base = brandBase(brand);
 
   const account = await getAccount();
-  const activity = account ? await getAccountActivity(account) : null;
+  let activity = account ? await getAccountActivity(account) : null;
+  // a stay paid for on the platform but not yet showing as booked: ask the platform first
+  const unsettled = (activity?.bookings ?? []).filter(
+    (r: any) => r.platform_checkout_id && !r.supplier_reference && r.status !== 'closed',
+  );
+  if (account && unsettled.length) {
+    await Promise.all(unsettled.map((r: any) => syncPlatformTrip(r)));
+    activity = await getAccountActivity(account);
+  }
   const requests: any[] = activity?.bookings ?? [];
   const today = ymd(todayInDubai());
 
@@ -118,6 +127,7 @@ export default async function TripsPage({ params }: { params: { brand: string } 
 
         <TripActions
           bookingId={r.id}
+          selfCancel={Boolean(r.platform_booking_id) && !r.supplier_cancelled_at}
           confirmed={Boolean(r.supplier_reference)}
           cancelled={Boolean(r.supplier_cancelled_at)}
           cancellationText={standing.text}

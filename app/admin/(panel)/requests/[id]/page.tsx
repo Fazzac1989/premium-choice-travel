@@ -4,7 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { requireRequestsStaff } from '@/lib/admin/guard';
 import { createQuoteFromBookingRequest, updateBookingRequest } from '@/lib/admin/quote-actions';
 import { getTravellers, passportWarning } from '@/lib/travellers';
-import SupplierBookingPanel from '@/components/admin/SupplierBookingPanel';
+import BookingPanel from '@/components/admin/BookingPanel';
 import ChangeRequests from '@/components/admin/ChangeRequests';
 import { listChangeRequests } from '@/lib/admin/change-request-actions';
 import { listLinksForBooking } from '@/lib/payments/links-core';
@@ -133,10 +133,10 @@ export default async function AdminRequestPage({
           </form>
 
           {/* What the customer has asked from their own trips page, above the
-              supplier panel so an unread cancellation cannot be missed. */}
+              booking panel so an unread cancellation cannot be missed. */}
           <ChangeRequests id={r.id} rows={await listChangeRequests(db, r.id)} />
 
-          <SupplierBookingPanel
+          <BookingPanel
             r={r}
             note={searchParams.note}
             links={await listLinksForBooking(db, r.id)}

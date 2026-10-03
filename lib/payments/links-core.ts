@@ -7,7 +7,7 @@ import {
   paymentGateway,
   paymentMethodLabel,
 } from './gateway';
-import { emailVoucherFor } from '@/lib/rates/supplier-booking';
+import { emailVoucherFor } from '@/lib/trips/legacy-voucher';
 import { emailShell, sendEmail } from '@/lib/email-core';
 import { emailBrand } from '@/lib/email-brand-core';
 

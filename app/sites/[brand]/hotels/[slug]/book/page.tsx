@@ -3,8 +3,7 @@ import BookingPage from '@/components/BookingPage';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { RATES_PREVIEW_COOKIE, ratesVisible } from '@/lib/rates';
-import { cookies } from 'next/headers';
+import { ratesVisible } from '@/lib/rates';
 import { getAccount } from '@/lib/account';
 import { getTravellers, leadTraveller, travelDetailsOnFile } from '@/lib/travellers';
 
@@ -13,7 +12,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: { brand: string; slug: string } }) {
   const hotel = (await getStaycationHotels()).find((h) => hotelSlug(h.name) === params.slug);
   return {
-    title: hotel ? `Book ${hotel.name}` : 'Booking request',
+    title: hotel ? `Book ${hotel.name}` : 'Book your stay',
     // A live-priced page has nothing to offer a search engine and everything
     // to lose from being crawled — every visit is a supplier search.
     robots: { index: false, follow: false },
@@ -37,7 +36,7 @@ export default async function HotelBookingPage({
   const hotelHref = `${base}/hotels/${params.slug}`;
   // Nothing to book without a supplier or a date — send them back to the hotel
   // rather than showing an empty page.
-  const visible = ratesVisible(cookies().get(RATES_PREVIEW_COOKIE)?.value === '1');
+  const visible = ratesVisible(Boolean(await getAccount()));
   if (!visible || !hotel.supplierCode || !/^\d{4}-\d{2}-\d{2}$/.test(searchParams.from ?? '')) {
     redirect(hotelHref);
   }
@@ -85,6 +84,7 @@ export default async function HotelBookingPage({
       travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
       profileComplete={profileComplete}
       here={here}
+      base={base}
     />
   );
 }
