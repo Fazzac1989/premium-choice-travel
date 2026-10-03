@@ -40,6 +40,9 @@ export default function PackageDetailBody({
   const hotelHref = (h: Hotel) => (hotelBase ? `${hotelBase}/${hotelSlug(h.name)}` : null);
   const priceApproved = pkg.priceFrom !== null && (pkg.priceStatus === undefined || pkg.priceStatus === 'approved');
   const details = (pkg.details ?? {}) as Record<string, any>;
+  // Journeys built around a private vehicle and guide are bought per party and
+  // sold per person, so the party the price assumes is part of the price.
+  const priceBasis = typeof details.priceBasis === 'string' ? details.priceBasis.trim() : '';
   const golfCourses = (details.courses ?? []) as { heading: string; body: string }[];
   const cruisePorts = (details.ports ?? []) as string[];
   return (
@@ -63,6 +66,7 @@ export default function PackageDetailBody({
             ...(priceApproved
               ? [['From', `${formatPrice(pkg.currency, pkg.priceFrom!)} per person`] as [string, string]]
               : [['Price', 'On request'] as [string, string]]),
+            ...(priceBasis ? [['Basis', priceBasis] as [string, string]] : []),
           ].map(([label, value]) => (
             <div key={label}>
               <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">{label}</p>
@@ -384,6 +388,7 @@ export default function PackageDetailBody({
                   <span className="ml-1 font-sans text-sm text-ink-soft">per person</span>
                 </p>
                 <p className="mt-1 text-xs text-ink-soft">{durationLabel(pkg)} · flights quoted separately</p>
+                {priceBasis ? <p className="mt-1 text-xs font-semibold text-teal-deep">{priceBasis}</p> : null}
               </div>
             ) : (
               <div className="mb-5 border-b border-line pb-5">
@@ -391,6 +396,7 @@ export default function PackageDetailBody({
                 <p className="mt-1 text-xs text-ink-soft">
                   {durationLabel(pkg)} · every journey is priced to your dates, rooms and preferences
                 </p>
+                {priceBasis ? <p className="mt-1 text-xs font-semibold text-teal-deep">{priceBasis}</p> : null}
               </div>
             )}
             <h3 className="font-serif text-xl text-ink">Make this trip yours</h3>
