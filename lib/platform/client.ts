@@ -34,7 +34,7 @@ export async function platform<T>(
   method: 'GET' | 'POST',
   path: string,
   body?: unknown,
-  opts: { timeoutMs?: number } = {},
+  opts: { timeoutMs?: number; revalidateSeconds?: number } = {},
 ): Promise<T> {
   if (!platformConfigured()) throw new PlatformError(503, 'not_configured', 'Prices are not available right now.', null);
   let res: Response;
@@ -47,7 +47,8 @@ export async function platform<T>(
         ...(body !== undefined ? { 'content-type': 'application/json' } : {}),
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
-      cache: 'no-store',
+      // prices and bookings are never cached; reference content (photos, descriptions) may be
+      ...(opts.revalidateSeconds ? { next: { revalidate: opts.revalidateSeconds } } : { cache: 'no-store' as const }),
       signal: AbortSignal.timeout(opts.timeoutMs ?? 30_000),
     });
   } catch {

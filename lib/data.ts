@@ -1,5 +1,6 @@
 import 'server-only';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
+import { hotelContents } from '@/lib/platform/content';
 import { sampleDestinations, samplePackages } from '@/lib/sample-data';
 import { catalogueBySlug } from '@/lib/destination-catalogue';
 import type { Destination, Package } from '@/lib/types';
@@ -246,7 +247,24 @@ export async function getHotels() {
   if (!isSupabaseConfigured()) return [];
   const db = createAdminClient();
   const { data } = await db.from('hotels').select('*').order('sort_order');
-  return (data ?? []).map(mapHotel);
+  return withPlatformPhotos((data ?? []).map(mapHotel));
+}
+
+/**
+ * Photographs come from the trade platform, never from Google (founder, 2026-10-03: Google's
+ * photos cost too much to pull). A hotel the platform knows takes the supplier's own pictures;
+ * any other keeps what was chosen by hand, or the branded panel.
+ */
+async function withPlatformPhotos<H extends { supplierCode?: string | null; image: string; gallery: string[]; photos?: unknown }>(
+  hotels: H[],
+): Promise<H[]> {
+  const content = await hotelContents(hotels.map((h) => h.supplierCode ?? '').filter(Boolean));
+  return hotels.map((h) => {
+    const images = (h.supplierCode && content.get(h.supplierCode)?.images) || [];
+    return images.length
+      ? { ...h, photos: [], image: images[0] ?? h.image, gallery: images.slice(0, 16) }
+      : { ...h, photos: [] };
+  });
 }
 
 /**

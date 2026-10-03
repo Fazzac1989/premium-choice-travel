@@ -2,7 +2,6 @@ import 'server-only';
 import type { Hotel } from '@/lib/types';
 import type { StayRate } from '@/lib/rates';
 import { hotelSlug } from '@/lib/data';
-import { hotelPhotoSrc } from '@/lib/images/google-places';
 import { priceBand } from '@/lib/price-bands';
 import { criteriaQuery, type SearchCriteria } from './search-criteria';
 
@@ -62,7 +61,7 @@ export function toStayCard(
   rates?: { rates: Map<number, StayRate>; unavailable: Set<number> },
 ): StayCardModel {
   const rate = rates?.rates.get(h.id);
-  const photo = (h.photos ?? []).map((p) => hotelPhotoSrc(p, 800)).find(Boolean) || h.image || h.gallery[0] || null;
+  const photo = h.image || h.gallery[0] || null;
   const slug = hotelSlug(h.name);
   return {
     slug,

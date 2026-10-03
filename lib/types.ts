@@ -124,7 +124,7 @@ export type Hotel = {
   priceGuide?: string;
   /** Google place id — stable, so it is safe to keep. */
   placeId?: string;
-  /** Real photography of the property, fetched live via /api/place-photo. */
+  /** No longer read: Google photos were switched off (2026-10-03); photos come from the platform. */
   photos?: PlacePhotoRef[];
 };
 

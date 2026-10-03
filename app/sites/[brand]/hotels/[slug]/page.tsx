@@ -9,7 +9,6 @@ import StayGallery from '@/components/staycations/coastal/StayGallery';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { hotelPhotoSrc } from '@/lib/images/google-places';
 import { priceBand } from '@/lib/price-bands';
 import { RATES_PREVIEW_COOKIE, getOffers, ratesVisible } from '@/lib/rates';
 import { toPublicOffer } from '@/lib/rates/types';
@@ -67,17 +66,10 @@ export default async function StayPage({
       ).map(toPublicOffer)
     : [];
 
-  // Real photographs of this property only — our own cached copies of the
-  // hotel's Google photos, then anything curated by hand.
-  type Shot = { url: string; alt: string; credit: string };
-  const placePhotos: Shot[] = ((hotel.photos ?? []) as PlacePhotoRef[])
-    .map((p) => ({ url: hotelPhotoSrc(p, 1600) ?? '', alt: hotel.name, credit: p.attribution }))
-    .filter((p) => Boolean(p.url));
-  const images: { url: string; alt: string }[] = [
-    ...placePhotos.map((p) => ({ url: p.url, alt: p.alt })),
-    ...((hotel.gallery ?? []) as string[]).map((url) => ({ url, alt: hotel.name })),
-  ];
-  const credits: string[] = Array.from(new Set(placePhotos.map((p) => p.credit).filter(Boolean)));
+  // Real photographs of this property only: the platform's (the supplier's own library), or
+  // what was chosen by hand. No Google photos (founder, 2026-10-03).
+  const images: { url: string; alt: string }[] = ((hotel.gallery ?? []) as string[]).map((url) => ({ url, alt: hotel.name }));
+  const credits: string[] = [];
 
   const ratesNotice = agesMissing
     ? 'Add each child’s age to see prices — hotels price children by age.'
