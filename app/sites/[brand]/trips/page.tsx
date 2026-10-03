@@ -39,7 +39,11 @@ export default async function TripsPage({ params }: { params: { brand: string } 
     await Promise.all(unsettled.map((r: any) => syncPlatformTrip(r)));
     activity = await getAccountActivity(account);
   }
-  const requests: any[] = activity?.bookings ?? [];
+  // a stay paid for online that was never booked (payment not finished, or the room went) is
+  // not a trip: the card was never charged, so there is nothing to show
+  const requests: any[] = (activity?.bookings ?? []).filter(
+    (r: any) => !(r.provider === 'platform' && r.status === 'closed' && !r.platform_booking_id),
+  );
   const today = ymd(todayInDubai());
 
   // Payment state and past messages for every stay, in two round trips rather

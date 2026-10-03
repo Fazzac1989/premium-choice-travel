@@ -50,7 +50,7 @@ const FORM: Record<Kind, { title: string; hint: string; placeholder: string; cta
 export default function TripActions({
   bookingId,
   confirmed,
-  cancelled,
+  cancelled: cancelledBefore,
   cancellationText,
   payment,
   history,
@@ -69,6 +69,9 @@ export default function TripActions({
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   const [pending, start] = useTransition();
   const [preview, setPreview] = useState<CancelPreview | null>(null);
+  // cancelled from this card just now: the buttons go at once, whatever the page still shows
+  const [cancelledNow, setCancelledNow] = useState(false);
+  const cancelled = cancelledBefore || cancelledNow;
   const router = useRouter();
 
   const openForm = (kind: Kind) => {
@@ -87,6 +90,7 @@ export default function TripActions({
       setResult(res);
       if (res.ok) {
         setOpen(null);
+        setCancelledNow(true);
         router.refresh();
       }
     });

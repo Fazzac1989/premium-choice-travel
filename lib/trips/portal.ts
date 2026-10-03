@@ -85,6 +85,21 @@ export type TripPayment = {
  */
 export async function tripPayment(booking: any): Promise<TripPayment> {
   const base: TripPayment = { payUrl: '', amount: 0, currency: 'AED', expiresAt: '', paid: false, note: '' };
+  // a stay booked and paid online, then cancelled: the platform refunds the card itself
+  if (booking.provider === 'platform' && booking.paid_at && booking.supplier_cancelled_at) {
+    const kept = Number(booking.cancellation_cost) || 0;
+    const back = Math.max(0, Number(booking.amount) - kept);
+    const fmt = (n: number) => `${booking.currency ?? 'AED'} ${n.toLocaleString('en-GB', { maximumFractionDigits: 2 })}`;
+    return {
+      ...base,
+      note:
+        kept === 0
+          ? 'Refunded in full to the card you paid with. Your bank may take a few days to show it.'
+          : back > 0
+            ? `${fmt(back)} refunded to the card you paid with; ${fmt(kept)} kept under the hotel's cancellation terms.`
+            : "Nothing was refunded: the hotel's cancellation terms kept the full amount.",
+    };
+  }
   if (booking.paid_at) return { ...base, paid: true, note: 'Paid in full. Thank you.' };
 
   const db = createAdminClient();
