@@ -50,7 +50,8 @@ export type CuratedEntry = { slug: string; image: string | null; name: string };
 /** Our hand-picked hotels by their platform id: they keep their own page and write-up. */
 export async function curatedByPlatformId(): Promise<Map<string, CuratedEntry>> {
   const out = new Map<string, CuratedEntry>();
-  for (const h of await getStaycationHotels()) {
+  // ids and names only: this runs on every read of a search, so no photographs are fetched
+  for (const h of await getStaycationHotels({ photos: false })) {
     const code = h.supplierCode?.toLowerCase();
     if (code && /^[0-9a-f-]{36}$/.test(code))
       out.set(code, { slug: hotelSlug(h.name), image: h.image || h.gallery[0] || null, name: h.name });

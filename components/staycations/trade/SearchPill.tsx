@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Icon from '@/components/staycations/coastal/Icon';
+import SearchLoader from './SearchLoader';
 import { suggestPlaces, type PlaceSuggestion } from '@/lib/staycations/search-actions';
 import {
   MAX_ADULTS,
@@ -43,6 +44,8 @@ export default function SearchPill({
   const [adults, setAdults] = useState(initial.adults);
   const [ages, setAges] = useState<number[]>(initial.childAges);
   const [error, setError] = useState('');
+  // the next page asks the hotels for prices, which takes seconds: show it is happening at once
+  const [navigating, startNavigating] = useTransition();
 
   // where: the list under the field
   const [open, setOpen] = useState(false);
@@ -130,8 +133,10 @@ export default function SearchPill({
     }
     const code = cityCode ?? UAE_DESTINATIONS.find((d) => d.label.toLowerCase() === where.trim().toLowerCase())?.cityCode ?? null;
     const query = staySearchQuery({ checkIn, nights, adults, childAges: ages });
-    if (hotelSlug) router.push(`${base}/hotels/${hotelSlug}${query}`);
-    else router.push(`${base}/hotels${staySearchQuery({ where: where.trim(), cityCode: code, checkIn, nights, adults, childAges: ages })}`);
+    const to = hotelSlug
+      ? `${base}/hotels/${hotelSlug}${query}`
+      : `${base}/hotels${staySearchQuery({ where: where.trim(), cityCode: code, checkIn, nights, adults, childAges: ages })}`;
+    startNavigating(() => router.push(to));
   };
 
   const segment = 'flex min-w-0 flex-col px-4 py-2.5';
@@ -141,6 +146,11 @@ export default function SearchPill({
 
   return (
     <form role="search" onSubmit={submit} aria-label="Search stays" className="w-full">
+      {navigating && (
+        <div className="fixed inset-0 z-[60] overflow-y-auto bg-white">
+          <SearchLoader />
+        </div>
+      )}
       <div className="cc-panel grid md:grid-cols-[1.6fr_1fr_0.8fr_1.2fr_auto] md:items-stretch md:rounded-full">
         {/* where */}
         <div ref={boxRef} className={`relative ${segment} ${divider} md:ps-6`}>

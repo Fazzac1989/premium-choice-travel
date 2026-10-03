@@ -34,14 +34,22 @@ export function isPlatformHotelId(code: string | null | undefined): code is stri
   return Boolean(code && UUID.test(code));
 }
 
+/** Content already read by this server, for six hours: the same hotels are shown again and again. */
+const remembered = new Map<string, { at: number; content: HotelContent }>();
+const KEEP_MS = 6 * 60 * 60 * 1000;
+
 export async function hotelContent(platformHotelId: string): Promise<HotelContent | null> {
   if (!platformConfigured() || !isPlatformHotelId(platformHotelId)) return null;
+  const known = remembered.get(platformHotelId);
+  if (known && Date.now() - known.at < KEEP_MS) return known.content;
   try {
     const c = await platform<HotelContent>('GET', `/v1/hotels/${platformHotelId}/content`, undefined, {
       timeoutMs: 8_000,
       revalidateSeconds: DAY,
     });
-    return { ...c, images: c.images.map(sharper) };
+    const content = { ...c, images: c.images.map(sharper) };
+    remembered.set(platformHotelId, { at: Date.now(), content });
+    return content;
   } catch (e: any) {
     console.warn('[hotel content]', platformHotelId, e?.message);
     return null;
@@ -53,8 +61,8 @@ export async function hotelContents(ids: string[]): Promise<Map<string, HotelCon
   const unique = Array.from(new Set(ids.filter(isPlatformHotelId)));
   const out = new Map<string, HotelContent>();
   // a few at a time: the first visit of the day reads them all, every later one is cached
-  for (let i = 0; i < unique.length; i += 10) {
-    const batch = await Promise.all(unique.slice(i, i + 10).map((id) => hotelContent(id)));
+  for (let i = 0; i < unique.length; i += 5) {
+    const batch = await Promise.all(unique.slice(i, i + 5).map((id) => hotelContent(id)));
     for (const c of batch) if (c) out.set(c.id, c);
   }
   return out;

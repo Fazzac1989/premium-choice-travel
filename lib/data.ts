@@ -243,11 +243,13 @@ export const hotelSlug = (name: string) =>
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/[\s_-]+/g, '-');
 
-export async function getHotels() {
+/** Every hotel; `{ photos: false }` skips the platform photographs for callers that do not show them. */
+export async function getHotels(opts: { photos?: boolean } = {}) {
   if (!isSupabaseConfigured()) return [];
   const db = createAdminClient();
   const { data } = await db.from('hotels').select('*').order('sort_order');
-  return withPlatformPhotos((data ?? []).map(mapHotel));
+  const hotels = (data ?? []).map(mapHotel);
+  return opts.photos === false ? hotels : withPlatformPhotos(hotels);
 }
 
 /**
@@ -275,8 +277,8 @@ async function withPlatformPhotos<H extends { supplierCode?: string | null; imag
  * Omani hotel a region and it is not an emirate; leave it blank and it
  * vanishes. The mapper above fills the country in for older rows.
  */
-export async function getStaycationHotels() {
-  const hotels = await getHotels();
+export async function getStaycationHotels(opts: { photos?: boolean } = {}) {
+  const hotels = await getHotels(opts);
   return hotels
     .filter((h) => h.status !== 'draft' && h.country)
     .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || (b.stars ?? 0) - (a.stars ?? 0) || a.name.localeCompare(b.name));
