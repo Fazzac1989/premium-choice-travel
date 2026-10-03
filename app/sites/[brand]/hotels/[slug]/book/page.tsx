@@ -1,90 +1,108 @@
-import { notFound, redirect } from 'next/navigation';
-import BookingPage from '@/components/BookingPage';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import CheckoutScreen from '@/components/staycations/trade/CheckoutScreen';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { ratesVisible } from '@/lib/rates';
 import { getAccount } from '@/lib/account';
+import { boardName, getQuote, type PlatformQuote } from '@/lib/platform/client';
+import { resolveStay } from '@/lib/staycations/stay-search-server';
+import { staySearchQuery } from '@/lib/staycations/stay-search';
 import { getTravellers, leadTraveller, travelDetailsOnFile } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: { brand: string; slug: string } }) {
-  const hotel = (await getStaycationHotels()).find((h) => hotelSlug(h.name) === params.slug);
-  return {
-    title: hotel ? `Book ${hotel.name}` : 'Book your stay',
-    // A live-priced page has nothing to offer a search engine and everything
-    // to lose from being crawled — every visit is a supplier search.
-    robots: { index: false, follow: false },
-  };
-}
+export const metadata = {
+  title: 'Book your stay',
+  robots: { index: false, follow: false },
+};
 
+/**
+ * The checkout for one room whose price was locked on the hotel page (?quote=). Everything shown
+ * comes from that quote; the customer adds who is travelling and pays.
+ */
 export default async function HotelBookingPage({
   params,
   searchParams,
 }: {
   params: { brand: string; slug: string };
-  searchParams: { from?: string; nights?: string; adults?: string; children?: string; ages?: string; offer?: string };
+  searchParams: { quote?: string };
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.slug !== 'staycations') notFound();
   const base = brandBase(brand);
-
-  const hotel = (await getStaycationHotels()).find((h) => hotelSlug(h.name) === params.slug);
-  if (!hotel) notFound();
-
+  const stay = await resolveStay(params.slug);
+  if (!stay) notFound();
   const hotelHref = `${base}/hotels/${params.slug}`;
-  // Nothing to book without a supplier or a date — send them back to the hotel
-  // rather than showing an empty page.
-  const visible = ratesVisible(Boolean(await getAccount()));
-  if (!visible || !hotel.supplierCode || !/^\d{4}-\d{2}-\d{2}$/.test(searchParams.from ?? '')) {
-    redirect(hotelHref);
+  const here = `${hotelHref}/book?quote=${searchParams.quote ?? ''}`;
+
+  const account = await getAccount();
+  if (!account)
+    return (
+      <div className="cc-wrap max-w-xl py-16 text-center">
+        <h1 className="cc-h2">Sign in to book</h1>
+        <p className="cc-body mt-3 text-sea-soft">Your stays, vouchers and payments live in your account.</p>
+        <Link href={`/account/sign-in?next=${encodeURIComponent(here)}`} className="cc-btn-primary mt-6 !rounded-full">
+          Sign in or create an account
+        </Link>
+      </div>
+    );
+
+  let quote: PlatformQuote | null = null;
+  if (searchParams.quote && /^[0-9a-f-]{36}$/i.test(searchParams.quote)) {
+    quote = await getQuote(searchParams.quote).catch(() => null);
+  }
+  if (!quote || quote.status === 'consumed' || quote.status === 'released' || (stay.platformId && quote.hotel.id.toLowerCase() !== stay.platformId)) {
+    return (
+      <div className="cc-wrap max-w-xl py-16 text-center">
+        <h1 className="cc-h2">{quote?.status === 'consumed' ? 'This room is already booked' : 'Choose your room again'}</h1>
+        <p className="cc-body mt-3 text-sea-soft">
+          {quote?.status === 'consumed'
+            ? 'You will find it under My trips.'
+            : 'The price we held for this room has ended. Pick the room again to see today’s price.'}
+        </p>
+        <Link href={quote?.status === 'consumed' ? `${base}/trips` : hotelHref} className="cc-btn-primary mt-6 !rounded-full">
+          {quote?.status === 'consumed' ? 'My trips' : `Back to ${stay.name}`}
+        </Link>
+      </div>
+    );
   }
 
-  const nights = Math.max(1, Math.min(30, Number(searchParams.nights) || 2));
-  const adults = Math.max(1, Math.min(12, Number(searchParams.adults) || 2));
-  const children = Math.max(0, Math.min(8, Number(searchParams.children) || 0));
-  const childrenAges = String(searchParams.ages ?? '')
-    .split(/[^0-9]+/)
-    .filter(Boolean)
-    .map((n) => Math.max(0, Math.min(17, Number(n))))
-    .slice(0, children);
-
-  // A booking belongs to an account now. The page asks for an email it can
-  // prove, then for the name and date of birth a hotel will check them in
-  // against — once, and never again. The sign-in link returns to this URL, so
-  // the room and price they chose survive the round trip to their inbox.
-  const account = await getAccount();
-  const travellers = account ? await getTravellers(account.id) : [];
-  // One saved traveller with a name and a date of birth is enough. Requiring
-  // the profile's own name as well asked people who had added their family on
-  // the travellers screen to type it all again.
-  const profileComplete = travelDetailsOnFile(travellers);
+  const travellers = await getTravellers(account.id);
   const lead = leadTraveller(travellers);
-  const bookingName = account?.fullName || lead?.fullName || '';
-
-  const here =
-    `${hotelHref}/book?from=${searchParams.from}&nights=${nights}&adults=${adults}&children=${children}` +
-    (childrenAges.length ? `&ages=${childrenAges.join(',')}` : '');
+  const image = stay.curated?.gallery?.[0] || stay.curated?.image || stay.content?.images[0] || null;
+  const backToHotel = `${hotelHref}${staySearchQuery({
+    checkIn: quote.checkIn,
+    nights: quote.nights,
+    adults: quote.adults,
+    childAges: quote.childAges,
+  })}`;
 
   return (
-    <BookingPage
-      hotelId={hotel.id}
-      hotelName={hotel.name}
-      emirate={hotel.emirate ?? ''}
-      logo={brand.logo}
-      hotelHref={hotelHref}
-      checkIn={searchParams.from!}
-      nights={nights}
-      adults={adults}
-      children={children}
-      childrenAges={childrenAges}
-      preselectOfferId={searchParams.offer ?? ''}
-      account={account ? { email: account.email, fullName: bookingName, phone: account.phone } : null}
-      travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
-      profileComplete={profileComplete}
-      here={here}
+    <CheckoutScreen
       base={base}
+      hotelHref={backToHotel}
+      here={here}
+      image={image}
+      account={{ email: account.email, fullName: account.fullName || lead?.fullName || '', phone: account.phone }}
+      travellers={travellers.map((t) => ({ id: t.id, fullName: t.fullName, label: t.label }))}
+      profileComplete={travelDetailsOnFile(travellers)}
+      quote={{
+        id: quote.id,
+        hotelName: quote.hotel.name,
+        city: quote.hotel.city,
+        roomName: quote.roomName,
+        board: boardName(quote.board),
+        checkIn: quote.checkIn,
+        nights: quote.nights,
+        adults: quote.adults,
+        childAges: quote.childAges,
+        refundable: quote.refundable,
+        refundDeadline: quote.refundDeadline,
+        total: quote.price.total.amount / 100,
+        perNight: quote.price.perNight.amount / 100,
+        currency: quote.price.total.currency,
+        expiresAt: quote.expiresAt,
+      }}
     />
   );
 }

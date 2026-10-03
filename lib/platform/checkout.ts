@@ -4,15 +4,15 @@ import { headers } from 'next/headers';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { getAccount } from '@/lib/account';
 import { getTravellers, leadTraveller } from '@/lib/travellers';
-import { cleanAges, findCachedOffer, ratesVisible } from '@/lib/rates';
-import { PlatformError, quoteOffer, startCheckout } from '@/lib/platform/client';
+import { ratesVisible } from '@/lib/rates';
+import { boardName, getQuote, PlatformError, quoteOffer, startCheckout, type PlatformQuote } from '@/lib/platform/client';
 
 /**
- * Book a stay: lock today's price on the platform, open the payment page, and come back to
- * /trips/confirm, where the booking is confirmed once the card is held (founder, 2026-10-02:
- * "bookings confirm instantly"). The card is only held, not charged, until the hotel is booked;
- * if it cannot be booked the hold is released. Nothing here trusts a price from the browser:
- * the offer is re-read from our cache, and the platform prices it again.
+ * Book a stay: the room's price was locked on the platform when "Book this room" was pressed (a
+ * quote); this opens the payment page for it and comes back to /trips/confirm, where the booking
+ * is confirmed once the card is held (founder, 2026-10-02: "bookings confirm instantly"). The card
+ * is only held, not charged, until the hotel is booked; if it cannot be booked the hold is
+ * released. Nothing here trusts a price or a room from the browser: both come from the quote.
  */
 export type StartBookingResult = { ok: boolean; message: string; payUrl?: string };
 
@@ -31,20 +31,41 @@ function originOf(): string {
   return `${proto}://${host}`;
 }
 
+/** A quote still usable now: an expired one is priced again, and a changed price is told, not taken. */
+async function liveQuote(quoteId: string): Promise<{ quote: PlatformQuote } | { message: string }> {
+  let quote: PlatformQuote;
+  try {
+    quote = await getQuote(quoteId);
+  } catch {
+    return { message: 'We could not find that price any more. Choose the room again.' };
+  }
+  if (quote.status === 'consumed') return { message: 'This room has already been booked. See it under My trips.' };
+  if (quote.status === 'active' && Date.parse(quote.expiresAt) > Date.now() + 30_000) return { quote };
+  try {
+    const fresh = await quoteOffer(quote.offerId);
+    if (Math.abs(fresh.price.total.amount - quote.price.total.amount) >= 100)
+      return {
+        message: `The price for this room has changed to ${fresh.price.total.currency} ${(fresh.price.total.amount / 100).toLocaleString('en-GB')}. Choose the room again to see it.`,
+      };
+    return { quote: fresh };
+  } catch (e) {
+    const gone = e instanceof PlatformError && (e.status === 404 || e.status === 409 || e.status === 410);
+    return {
+      message: gone
+        ? 'That room has just gone or its price has changed. Choose the room again to see what is available now.'
+        : 'We could not reach our booking system just now. Please try again in a moment.',
+    };
+  }
+}
+
 export async function startStayBooking(payload: {
-  hotelId: number;
-  checkIn: string;
-  nights: number;
-  adults: number;
-  children?: number;
-  childrenAges?: number[];
-  offerId: string;
+  quoteId: string;
   phone: string;
   notes: string;
   travellerIds?: number[];
   acceptedTerms?: boolean;
   marketingOptIn?: boolean;
-  /** the stay page to go back to if they leave the payment page */
+  /** the checkout page to go back to if they leave the payment page */
   backPath: string;
   /** where this brand's pages live: '' on its own domain, '/sites/staycations' on the master */
   base: string;
@@ -55,26 +76,11 @@ export async function startStayBooking(payload: {
   if (!payload.acceptedTerms)
     return { ok: false, message: 'Please accept the booking terms and privacy notice to continue.' };
   if (!isSupabaseConfigured()) return { ok: false, message: 'Booking is not available right now. Please call us.' };
+  if (!/^[0-9a-f-]{36}$/i.test(payload.quoteId)) return { ok: false, message: 'Choose the room again.' };
 
-  const nights = Math.max(1, Math.min(30, Number(payload.nights) || 1));
-  const adults = Math.max(1, Math.min(12, Number(payload.adults) || 2));
-  const children = Math.max(0, Math.min(8, Number(payload.children) || 0));
-  const ages = cleanAges(payload.childrenAges, children);
-
-  const db = createAdminClient();
-  const { data: hotel } = await db.from('hotels').select('id, name, emirate').eq('id', payload.hotelId).maybeSingle();
-  if (!hotel) return { ok: false, message: 'We could not find that hotel. Please search again.' };
-
-  const offer = await findCachedOffer({
-    hotelId: payload.hotelId,
-    checkIn: payload.checkIn,
-    nights,
-    adults,
-    children,
-    offerId: payload.offerId,
-  });
-  if (!offer)
-    return { ok: false, message: 'That price has expired — check the dates again and we’ll show you what’s available now.' };
+  const live = await liveQuote(payload.quoteId);
+  if ('message' in live) return { ok: false, message: live.message };
+  const quote = live.quote;
 
   // The guests' names, as their passports have them: chosen from the saved travellers on this
   // account (never trusted from the browser); anyone not chosen travels under the lead's name.
@@ -84,8 +90,8 @@ export async function startStayBooking(payload: {
   const leadName = splitName(lead?.fullName || account.fullName || '');
   if (!leadName.last) return { ok: false, message: 'Add the name your booking should be in — your passport name.' };
   const party: ('adult' | 'child')[] = [
-    ...Array.from({ length: adults }, () => 'adult' as const),
-    ...Array.from({ length: children }, () => 'child' as const),
+    ...Array.from({ length: quote.adults }, () => 'adult' as const),
+    ...quote.childAges.map(() => 'child' as const),
   ];
   const travellers = party.map((type, i) => {
     const t = chosen[i];
@@ -93,44 +99,28 @@ export async function startStayBooking(payload: {
     return { firstName: n.first, lastName: n.last, type };
   });
 
-  // Today's price on the platform; a different figure is told, never charged quietly.
-  let quote;
-  try {
-    quote = await quoteOffer(offer.offerId);
-  } catch (e) {
-    const gone = e instanceof PlatformError && (e.status === 404 || e.status === 409 || e.status === 410);
-    return {
-      ok: false,
-      message: gone
-        ? 'That room has just gone or its price has changed. Check the dates again to see what is available now.'
-        : 'We could not reach our booking system just now. Please try again in a moment.',
-    };
-  }
+  const db = createAdminClient();
+  // one of our curated hotels keeps its link; any other is known by name on the trip
+  const { data: curated } = await db.from('hotels').select('id, emirate').eq('supplier_code', quote.hotel.id).maybeSingle();
   const total = quote.price.total.amount / 100;
-  if (Math.abs(total - offer.total) >= 1)
-    return {
-      ok: false,
-      message: `The price for this room has changed to ${quote.price.total.currency} ${total.toLocaleString('en-GB')}. Check the dates again to see it.`,
-    };
-
   const now = new Date().toISOString();
   const { data: row, error } = await db
     .from('booking_requests')
     .insert({
-      hotel_id: hotel.id,
-      hotel_name: hotel.name,
-      emirate: hotel.emirate,
-      check_in: payload.checkIn,
-      nights,
-      adults,
-      children,
-      room_name: offer.roomName,
-      board: offer.board,
-      refundable: offer.refundable,
-      cancel_by: offer.cancelBy,
+      hotel_id: curated?.id ?? null,
+      hotel_name: quote.hotel.name,
+      emirate: curated?.emirate ?? quote.hotel.city,
+      check_in: quote.checkIn,
+      nights: quote.nights,
+      adults: quote.adults,
+      children: quote.childAges.length,
+      room_name: quote.roomName,
+      board: boardName(quote.board),
+      refundable: quote.refundable,
+      cancel_by: quote.refundDeadline,
       currency: quote.price.total.currency,
       amount: total,
-      offer_id: offer.offerId,
+      offer_id: quote.offerId,
       provider: 'platform',
       name: `${leadName.first} ${leadName.last}`.trim(),
       email: account.email,
@@ -139,7 +129,7 @@ export async function startStayBooking(payload: {
       status: 'new',
       traveller_ids: chosen.map((t) => t.id),
       customer_id: account.id,
-      children_ages: ages.length ? ages : null,
+      children_ages: quote.childAges.length ? quote.childAges : null,
       terms_accepted_at: now,
       marketing_opt_in: Boolean(payload.marketingOptIn),
       marketing_opt_in_at: payload.marketingOptIn ? now : null,
@@ -152,6 +142,7 @@ export async function startStayBooking(payload: {
   }
 
   const origin = originOf();
+  const phone = (payload.phone.trim() || account.phone || '').slice(0, 32);
   let checkout;
   try {
     checkout = await startCheckout({
@@ -160,7 +151,7 @@ export async function startStayBooking(payload: {
         email: account.email,
         firstName: leadName.first,
         lastName: leadName.last,
-        ...(payload.phone.trim() || account.phone ? { phone: (payload.phone.trim() || account.phone).slice(0, 32) } : {}),
+        ...(phone ? { phone } : {}),
         externalId: account.id,
       },
       travellers,

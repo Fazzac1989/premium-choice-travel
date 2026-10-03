@@ -11,6 +11,7 @@ import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } f
 import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
 import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
+import { parseStaySearch } from '@/lib/staycations/stay-search';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +39,7 @@ export default async function BrandHomePage({
 
   // Staycations opens on Explore — the app's search screen, not a brochure.
   if (isStaycations) {
-    return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} />;
+    return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} search={parseStaySearch(searchParams)} />;
   }
 
   // Staycations sells hotels, not packages.

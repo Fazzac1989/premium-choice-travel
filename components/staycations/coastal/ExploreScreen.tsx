@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Icon from './Icon';
-import StaySearchForm from './StaySearchForm';
+import SearchPill from '@/components/staycations/trade/SearchPill';
 import { CompactStayCard } from './StayCard';
 import { getStaycationHotels } from '@/lib/data';
 import { CATEGORIES } from '@/lib/staycations/filters';
 import { criteriaQuery, type SearchCriteria } from '@/lib/staycations/search-criteria';
 import { toStayCard } from '@/lib/staycations/stay-card';
 import { pickHero } from '@/lib/staycations/hero';
-import { placeGroups } from '@/lib/staycations/places';
+import type { StaySearch } from '@/lib/staycations/stay-search';
 
 /**
  * Explore — the app's first screen.
@@ -26,13 +26,14 @@ const CATEGORY_ICON = { wave: 'wave', dune: 'dune', spa: 'spa', family: 'family'
 export default async function ExploreScreen({
   base,
   criteria,
+  search,
 }: {
   base: string;
   criteria: SearchCriteria;
+  search: StaySearch;
 }) {
   const hero = pickHero();
   const hotels = await getStaycationHotels();
-  const places = placeGroups(hotels.map((h) => h.emirate ?? ''));
 
   // The rule behind "Selected for a slower weekend": a specialist has marked
   // the hotel as a pick, or tagged it as a long-weekend stay. No scoring.
@@ -66,7 +67,7 @@ export default async function ExploreScreen({
         {/* One wide bar across the page rather than a card in the corner:
             on a laptop the fields sit in a row and fill the window. */}
         <div className="cc-wrap relative -mt-16 lg:-mt-20">
-          <StaySearchForm base={base} initial={criteria} places={places} />
+          <SearchPill base={base} initial={search} />
           {/* The quiet alternative to searching: ask someone. */}
           <p className="mt-3.5 text-center text-[15px] leading-[22px] text-sea-soft">
             Not sure where to go?{' '}
@@ -130,10 +131,10 @@ export default async function ExploreScreen({
       <section className="cc-wrap mt-8">
         <div className="rounded-[12px] bg-mist p-5 lg:flex lg:items-center lg:justify-between lg:gap-6">
           <div>
-            <h2 className="cc-h4">Booked by people, not a machine</h2>
+            <h2 className="cc-h4">Book online, with people behind it</h2>
             <p className="cc-body mt-1.5 max-w-xl text-sea-soft">
-              Every stay is checked and confirmed by a Premium Choice specialist in Dubai. Prices come from our hotel
-              partners; anything unusual, we will tell you before you commit.
+              Book online and your stay is confirmed straight away, with the price checked again before you pay. If
+              anything is unusual, or you would rather talk it through, a Premium Choice specialist in Dubai is a call away.
             </p>
           </div>
           <a href="tel:+97144206965" className="cc-btn-quiet mt-4 lg:mt-0 lg:shrink-0">

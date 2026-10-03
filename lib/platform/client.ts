@@ -98,6 +98,13 @@ export type PlatformOffer = {
 export type PlatformCard = {
   hotelId: string;
   name: string;
+  city: string;
+  countryCode: string;
+  starRating: string | null;
+  description: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  image: string | null;
   best: PlatformOffer;
   alternatives: PlatformOffer[];
 };
@@ -105,14 +112,45 @@ export type PlatformCard = {
 export type PlatformSearch = {
   sessionId: string;
   pending: boolean;
+  destination: { label: string; cityCode: string | null; hotelId: string | null };
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  total: number;
+  page: { limit: number; offset: number; nextOffset: number | null };
   cards: PlatformCard[];
 };
 
 export type PlatformQuote = {
   id: string;
+  offerId: string;
+  hotel: { id: string; name: string; city: string };
+  roomName: string;
+  board: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  adults: number;
+  childAges: number[];
+  availabilityMode: string;
+  refundable: boolean;
+  refundDeadline: string | null;
+  status: 'active' | 'expired' | 'consumed' | 'released';
   expiresAt: string;
-  price: { total: Money };
+  price: { total: Money; perNight: Money };
 };
+
+export type PlatformSuggestion = {
+  type: 'city' | 'hotel';
+  label: string;
+  cityCode: string | null;
+  hotelId: string | null;
+  country: string;
+  hotelCityCode?: string | null;
+};
+
+export type SearchFilters = { refundable?: boolean; board?: string[]; minStars?: number };
+export type SearchSort = 'best' | 'price' | 'stars';
 
 export type PlatformCheckout = {
   id: string;
@@ -163,6 +201,58 @@ export async function searchHotels(input: {
     res = await platform<PlatformSearch>('GET', `/v1/search/${res.sessionId}?sort=price&limit=100`);
   }
   return res;
+}
+
+/** Cities and hotels matching what the customer typed (the platform's own catalogue). */
+export async function suggestDestinations(q: string): Promise<PlatformSuggestion[]> {
+  const out = await platform<{ results: PlatformSuggestion[] }>(
+    'GET',
+    `/v1/search/destinations?q=${encodeURIComponent(q.slice(0, 80))}`,
+    undefined,
+    { timeoutMs: 6_000 },
+  );
+  return out.results;
+}
+
+const searchQuery = (o: { sort?: SearchSort; filters?: SearchFilters; offset?: number }) => {
+  const p = new URLSearchParams({ sort: o.sort ?? 'best', limit: '30', offset: String(o.offset ?? 0) });
+  if (o.filters && Object.keys(o.filters).length) p.set('filters', JSON.stringify(o.filters));
+  return p.toString();
+};
+
+/** Start a search and return the first page without waiting for every supplier (the page polls). */
+export async function startSearch(input: {
+  destination: { cityCode: string } | { hotelId: string } | { text: string };
+  checkIn: string;
+  checkOut: string;
+  rooms: { adults: number; childAges: number[] }[];
+  sort?: SearchSort;
+  filters?: SearchFilters;
+}): Promise<PlatformSearch> {
+  return platform<PlatformSearch>('POST', '/v1/search', {
+    destination: input.destination,
+    checkIn: input.checkIn,
+    checkOut: input.checkOut,
+    rooms: input.rooms,
+    currency: 'AED',
+    sort: input.sort ?? 'best',
+    limit: 30,
+    ...(input.filters && Object.keys(input.filters).length ? { filters: input.filters } : {}),
+  });
+}
+
+/** The same search again: more suppliers answered, another sort or filter, or the next page. */
+export async function readSearch(
+  sessionId: string,
+  o: { sort?: SearchSort; filters?: SearchFilters; offset?: number } = {},
+): Promise<PlatformSearch> {
+  return platform<PlatformSearch>('GET', `/v1/search/${sessionId}?${searchQuery(o)}`);
+}
+
+/** A quote with its lock status. */
+export async function getQuote(id: string): Promise<PlatformQuote> {
+  const out = await platform<{ quote: PlatformQuote } | PlatformQuote>('GET', `/v1/quotes/${id}`);
+  return 'quote' in out ? out.quote : out;
 }
 
 /** Lock today's price for one room: the step before paying. */
