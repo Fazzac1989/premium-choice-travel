@@ -1,18 +1,11 @@
 import { notFound } from 'next/navigation';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
-import HolidayResultCard from '@/components/holidays/HolidayResultCard';
+import HolidayResults from '@/components/holidays/HolidayResults';
 import { getBrand } from '@/lib/brands';
 import { getDestinations } from '@/lib/data';
 import { platformConfigured, PlatformError } from '@/lib/platform/client';
 import { startHolidaySearch, type HolidaySearchPage } from '@/lib/holidays/holiday-search';
-import {
-  airportLabel,
-  isSearchable,
-  nightsLabel,
-  parseHolidayCriteria,
-  partySummary,
-  tripDatesLabel,
-} from '@/lib/holidays/search-criteria';
+import { isSearchable, parseHolidayCriteria } from '@/lib/holidays/search-criteria';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,9 +17,14 @@ export const metadata = {
 /**
  * The results.
  *
- * The hotels are live from the platform. The flight is not yet — the platform
- * can book one but cannot search one — so a result says plainly whether its
- * price includes the flight. Nothing here invents a fare to fill the gap.
+ * The first page is rendered on the server so there is something to read
+ * immediately, then the browser keeps asking until the platform says every
+ * supplier has answered — a search is reported as empty only once it is
+ * actually finished.
+ *
+ * The hotels are live. The flight is not yet: the platform can book one but
+ * cannot search one, so a result says plainly whether its price includes the
+ * flight. Nothing here invents a fare to fill the gap.
  */
 export default async function HolidaySearchResults({
   params,
@@ -41,6 +39,13 @@ export default async function HolidaySearchResults({
   const criteria = parseHolidayCriteria(searchParams);
   const destinations = await getDestinations();
   const suggestions = destinations.map((d) => ({ name: d.name, region: d.region }));
+
+  // Flattened for the poll action, which re-parses them rather than trusting them.
+  const flatParams: Record<string, string> = {};
+  for (const [k, v] of Object.entries(searchParams)) {
+    const one = Array.isArray(v) ? v[0] : v;
+    if (one !== undefined) flatParams[k] = one;
+  }
 
   let page: HolidaySearchPage | null = null;
   let failure: string | null = null;
@@ -77,63 +82,9 @@ export default async function HolidaySearchResults({
         ) : failure ? (
           <Empty heading="We could not price this just now" body={failure} />
         ) : page ? (
-          <Results criteria={criteria} page={page} />
+          <HolidayResults initial={page} criteria={criteria} params={flatParams} />
         ) : null}
       </section>
-    </>
-  );
-}
-
-function Results({
-  criteria,
-  page,
-}: {
-  criteria: ReturnType<typeof parseHolidayCriteria>;
-  page: HolidaySearchPage;
-}) {
-  const flightsMissing = !page.flights.available;
-  return (
-    <>
-      <header className="mb-6">
-        <h1 className="font-serif text-3xl text-ink sm:text-4xl">
-          {page.destinationLabel || criteria.destination}
-        </h1>
-        <p className="mt-1.5 text-sm text-ink-soft">
-          {nightsLabel(page.nights)} · {tripDatesLabel(criteria)} · {partySummary(criteria)} · from{' '}
-          {airportLabel(criteria.origin)}
-        </p>
-        <p className="mt-1 text-sm text-ink-soft">
-          {page.total > 0
-            ? `${page.total} ${page.total === 1 ? 'hotel' : 'hotels'} available`
-            : 'No hotels available for these dates'}
-          {page.pending ? ' · still hearing from suppliers' : ''}
-        </p>
-      </header>
-
-      {flightsMissing ? (
-        <div className="mb-6 rounded-xl border-l-4 border-teal-deep bg-teal/5 px-5 py-4">
-          <p className="text-sm font-semibold text-ink">Prices below are for the hotel only</p>
-          <p className="mt-1 text-sm text-ink-soft">
-            {page.flights.note} Tell us which hotel you like and we will price the flights from{' '}
-            {airportLabel(criteria.origin)} with it.
-          </p>
-        </div>
-      ) : null}
-
-      {page.results.length === 0 ? (
-        <Empty
-          heading="Nothing available for these dates"
-          body="Try a different week, a nearby airport, or a shorter stay."
-        />
-      ) : (
-        <ul className="grid gap-4">
-          {page.results.map((r) => (
-            <li key={r.platformHotelId}>
-              <HolidayResultCard result={r} travellers={page.travellers} />
-            </li>
-          ))}
-        </ul>
-      )}
     </>
   );
 }

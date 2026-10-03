@@ -196,20 +196,36 @@ export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySea
   return compose(search, flights, travellers);
 }
 
-/** The same search again: more suppliers have answered, or the customer re-sorted. */
+/**
+ * The same search again: more suppliers have answered, or the customer re-sorted.
+ *
+ * The flights are asked for again rather than carried back from the browser,
+ * because nothing about a price may come from the browser. While flight search
+ * is switched off that costs nothing; once it is live this should read a flight
+ * result cached against the session rather than calling the supplier each poll.
+ */
 export async function readHolidaySearch(
   sessionId: string,
   c: HolidayCriteria,
-  flights: FlightSearchResult,
   offset = 0,
 ): Promise<HolidaySearchPage> {
-  const search = await readSearch(sessionId, {
-    sort: c.sort,
-    offset,
-    filters: {
-      ...(c.board ? { board: [c.board] } : {}),
-      ...(c.stars ? { minStars: Number(c.stars) } : {}),
-    },
-  });
+  const [search, flights] = await Promise.all([
+    readSearch(sessionId, {
+      sort: c.sort,
+      offset,
+      filters: {
+        ...(c.board ? { board: [c.board] } : {}),
+        ...(c.stars ? { minStars: Number(c.stars) } : {}),
+      },
+    }),
+    searchFlights({
+      origin: c.origin,
+      destination: destinationOf(c),
+      departDate: c.departDate,
+      returnDate: returnDateOf(c),
+      adults: c.adults,
+      childAges: c.childrenAges,
+    }),
+  ]);
   return compose(search, flights, travellersIn(c));
 }
