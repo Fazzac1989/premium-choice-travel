@@ -16,6 +16,16 @@ export const UAE_DESTINATIONS: readonly { cityCode: string; label: string }[] = 
   { cityCode: 'AAN', label: 'Al Ain' },
 ];
 
+/**
+ * Where the platform's catalogue holds the bed banks' hotels, so a search finds them. Dubai only
+ * for now (founder, 2026-10-03: the bed banks' content-import allowance is used up); add an
+ * emirate's code here once its import is done on the trade console. Anywhere else shows our
+ * curated stays with guide prices and the "ask us" route.
+ */
+export const LIVE_CITY_CODES: ReadonlySet<string> = new Set(['DXB']);
+export const isLiveDestination = (cityCode: string | null | undefined) =>
+  Boolean(cityCode && LIVE_CITY_CODES.has(cityCode));
+
 /** The curated list's emirate names, mapped to the platform's destination. */
 export function cityCodeForEmirate(emirate: string | null | undefined): string | null {
   if (!emirate) return null;

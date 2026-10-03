@@ -18,6 +18,7 @@ import {
   datesLabel,
   parseStaySearch,
   partyLabel,
+  isLiveDestination,
   staySearchQuery,
   UAE_DESTINATIONS,
 } from '@/lib/staycations/stay-search';
@@ -52,7 +53,9 @@ export default async function StayResultsPage({
   // a theme from the home screen (By the sea, Desert…) is one of our curated collections
   const tagParam = searchParams.tag;
   const tag = tagByKey(Array.isArray(tagParam) ? tagParam[0] ?? '' : tagParam ?? '');
-  const live = !tag && canSeeRates && Boolean(search.checkIn) && Boolean(search.cityCode) && !agesMissing(search);
+  // only where the catalogue holds the bed banks' hotels (Dubai for now) is there anything to search
+  const bookable = isLiveDestination(search.cityCode);
+  const live = !tag && canSeeRates && Boolean(search.checkIn) && bookable && !agesMissing(search);
   const place = UAE_DESTINATIONS.find((d) => d.cityCode === search.cityCode)?.label ?? (search.where || 'the UAE');
 
   const initial = live ? await runStaySearch(search) : null;
@@ -67,6 +70,11 @@ export default async function StayResultsPage({
 
   const notice = tag
     ? { tone: 'quiet' as const, text: 'Our specialists’ picks. Open a stay to see live prices for your dates, or search an emirate above to see every hotel.' }
+    : search.cityCode && !bookable
+      ? {
+          tone: 'quiet' as const,
+          text: `Online booking is open for Dubai today, and ${place} is coming soon. These are our specialists’ picks here: ask us for prices and dates, and we will book it for you.`,
+        }
     : agesMissing(search)
     ? { tone: 'wait' as const, text: 'Add each child’s age to see prices — hotels price children by age, so we will not guess one.' }
     : !canSeeRates
@@ -124,7 +132,9 @@ export default async function StayResultsPage({
             <div className="rounded-[12px] border border-sea-line p-8 text-center">
               <h2 className="cc-h4">No hand-picked stays here yet.</h2>
               <p className="cc-body mx-auto mt-2 max-w-md text-sea-soft">
-                Sign in and add your dates to see every hotel in {place}, or tell us what you have in mind.
+                {bookable
+                  ? `Sign in and add your dates to see every hotel in ${place}, or tell us what you have in mind.`
+                  : 'Tell us what you have in mind and we will find it and book it for you.'}
               </p>
               <Link href={`${base}/concierge`} className="cc-btn-primary mt-5">
                 Ask a specialist
