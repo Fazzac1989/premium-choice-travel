@@ -84,7 +84,7 @@ export default async function StayPage({
     : criteria.rooms > 1
       ? 'We confirm one room at a time online; a specialist prices multi-room stays.'
       : !canSeeRates
-        ? 'Live prices are in testing. A specialist confirms the exact rate for your dates.'
+        ? 'Sign in or create an account to see live prices for your dates and book.'
         : !criteria.checkIn
           ? null
           : offers.length === 0

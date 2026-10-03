@@ -81,7 +81,7 @@ export default async function StayResultsPage({
     : criteria.rooms > 1
       ? { tone: 'wait' as const, text: 'We confirm one room at a time online. Guide prices are shown; a specialist will price the extra rooms with you.' }
       : !canSeeRates
-        ? { tone: 'quiet' as const, text: 'Guide prices shown while live rates are in testing. A specialist confirms the exact price for your dates.' }
+        ? { tone: 'quiet' as const, text: 'Guide prices shown. Sign in or create an account to see live prices for your dates and book.' }
         : !criteria.checkIn
           ? { tone: 'quiet' as const, text: 'Add your dates to see a real total for each stay.' }
           : search?.problem

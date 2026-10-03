@@ -54,26 +54,31 @@ export function BookingTerms() {
     <Shell
       eyebrow="Booking terms"
       title="How booking with us works"
-      standfirst="These terms cover what happens when you send a request through this website, what the price means, and who confirms what. They are written plainly because they describe real steps, not a process nobody follows."
+      standfirst="These terms cover what happens when you book a stay on this website, what the price means, how you pay and how you cancel. They are written plainly because they describe real steps, not a process nobody follows."
     >
-      <Section title="A request is not a booking">
+      <Section title="How a booking is made">
         <p>
-          Sending a request tells us what you want. It does not book a room, hold a room, or oblige
-          you to anything. No payment is taken on this website, and there is no card form anywhere
-          on it.
+          Live prices and online booking are for signed-in customers. When you book, we check the
+          price with the hotel again; if it has changed we tell you and nothing is booked.
         </p>
         <p>
-          A stay is booked only when a Premium Choice specialist confirms it with the hotel and
-          sends you a confirmation and a voucher. Until you have that voucher, nothing is reserved
-          in your name.
+          You then pay on our payment provider's secure page. Your card is first only authorised:
+          the amount is held, not taken. We book the room, and only once the hotel or supplier has
+          confirmed it is the amount taken. If the room cannot be booked, the hold is released and
+          nothing is charged. Your confirmation and voucher are emailed to you and kept under My
+          trips.
+        </p>
+        <p>
+          Occasionally a hotel's answer is delayed. Your payment then stays held, not taken, while
+          our team confirms the stay, and we email you. Please do not book again in the meantime.
         </p>
       </Section>
 
       <Section title="Prices">
         <p>
           Prices shown for specific dates come live from our hotel partners and can change or sell
-          out at any time, including between the moment you send a request and the moment we reply.
-          If the price has moved, we tell you before anything is confirmed, and you decide.
+          out at any time. We check the price again when you book; if it has moved, we tell you
+          before anything is booked or charged, and you decide.
         </p>
         <p>
           Where we cannot show a live price, we show a guide band instead and label it as one. A
@@ -97,22 +102,24 @@ export function BookingTerms() {
 
       <Section title="Rooms">
         <p>
-          This website confirms one room at a time. If you need more than one, send the request
-          anyway and a specialist will price the additional rooms with you, because multi-room rates
-          are frequently different from one room multiplied.
+          This website books one room at a time. If you need more than one, ask us and a specialist
+          will price the additional rooms with you, because multi-room rates are frequently
+          different from one room multiplied.
         </p>
       </Section>
 
       <Section title="Cancellation and changes">
         <p>
           Cancellation terms belong to the hotel and the rate you choose, not to us. They are shown
-          on the room before you request it, repeated on your request, and printed on your voucher.
-          A rate marked non-refundable is exactly that.
+          on the room before you book it and printed on your voucher. A rate marked non-refundable
+          is exactly that.
         </p>
         <p>
-          To change or cancel a confirmed booking, contact us and we will tell you what it costs
-          before anything is done. Where a charge applies, it is the charge the hotel or supplier
-          reports to us.
+          You can cancel a booking yourself under My trips until your check-in day. Before you
+          confirm, we show what cancelling costs that day under the hotel's terms and what is
+          refunded; the refund goes back to the card you paid with. From the check-in day, or to
+          change a stay, call or message us and we will tell you what it costs before anything is
+          done. Where a charge applies, it is the charge the hotel or supplier reports to us.
         </p>
       </Section>
 
@@ -130,7 +137,7 @@ export function BookingTerms() {
 
       <Section title="Getting hold of us">
         <p>
-          A specialist in Dubai answers every request personally, usually the same working day. If
+          A specialist in Dubai answers every message personally, usually the same working day. If
           something is wrong with a booking, call us rather than waiting — a problem is nearly
           always cheaper to fix before you travel.
         </p>
@@ -153,11 +160,11 @@ export function PrivacyNotice() {
       title="What we do with your information"
       standfirst="This describes what this website actually collects, where it goes, and how to get it back or have it removed. It is deliberately specific rather than general."
     >
-      <Section title="What we collect when you send a request">
+      <Section title="What we collect when you book or send a request">
         <p>
-          Your name, email address and mobile number. The stay you asked about: the hotel, your
-          dates, how many adults and children, each child's age at check-in, the room and rate you
-          chose, and anything you typed into the notes.
+          Your name, email address and mobile number. The stay you booked or asked about: the
+          hotel, your dates, how many adults and children, each child's age at check-in, the room
+          and rate you chose, and anything you typed into the notes.
         </p>
         <p>
           We also record that you accepted these terms, and whether you asked to receive offers by
@@ -179,12 +186,13 @@ export function PrivacyNotice() {
 
       <Section title="Who else sees it">
         <p>
-          <strong className="text-ink">Our team.</strong> A request is emailed to our specialists in
-          Dubai so a person can act on it.
+          <strong className="text-ink">Our team.</strong> Bookings are made in our own booking
+          system, which our team in Dubai uses to look after them, and a request or message is
+          emailed to our specialists so a person can act on it.
         </p>
         <p>
           <strong className="text-ink">The hotel, and the supplier we book through.</strong> When
-          you ask us to confirm a stay, the lead guest's name, the names of the people in the room
+          you book a stay, the lead guest's name, the names of the people in the room
           and any children's ages are sent to the hotel or to the wholesale supplier the rate comes
           from. A hotel cannot check you in otherwise.
         </p>
@@ -199,9 +207,9 @@ export function PrivacyNotice() {
 
       <Section title="Payment details">
         <p>
-          We never take card details on this website. When a payment is due, it is taken on a
-          payment provider's own secure page, and the card number never reaches our servers or our
-          database. We see that a payment succeeded and the provider's reference for it, nothing
+          We never take card details on this website. You pay on a payment provider's own secure
+          page, and the card number never reaches our servers or our database. We see whether a
+          payment was authorised, taken or refunded and the provider's reference for it, nothing
           more.
         </p>
       </Section>
@@ -209,7 +217,7 @@ export function PrivacyNotice() {
       <Section title="Offers by email">
         <p>
           You only receive offers if you tick the box asking for them. It is separate from accepting
-          these terms on purpose: you can send a booking request without ever agreeing to marketing,
+          these terms on purpose: you can book without ever agreeing to marketing,
           and refusing changes nothing about the service you get.
         </p>
         <p>

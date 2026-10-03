@@ -264,7 +264,7 @@ export default function TripActions({
 
       {!confirmed && !cancelled && (
         <p className="cc-support mt-3">
-          A voucher appears here as soon as your specialist confirms this stay with the hotel.
+          Your voucher appears here as soon as this stay is confirmed.
         </p>
       )}
 

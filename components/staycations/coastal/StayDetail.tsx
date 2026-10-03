@@ -230,7 +230,7 @@ export default function StayDetail(props: StayDetailProps) {
                               ? 'This rate is non-refundable. Once confirmed, the full amount is charged even if you cancel.'
                               : selected.cancelBy
                                 ? `Cancel free of charge until ${selected.cancelBy.slice(0, 16).replace('T', ' ')} at the hotel’s local time. After that the hotel’s charge applies.`
-                                : 'The hotel has not published cancellation terms for this rate. A specialist confirms them in writing before anything is booked.'}
+                                : 'The hotel has not published cancellation terms for this rate. Call us before you book and we will check them for you.'}
                           </p>
                           {selected.comments && (
                             <p className="cc-support mt-2 whitespace-pre-line">{selected.comments}</p>
@@ -442,8 +442,9 @@ export default function StayDetail(props: StayDetailProps) {
             />
             <ActionButton canBook={canBook} href={requestHref} selected={Boolean(selected)} />
             <p className="cc-support mt-3">
-              A request, not a booking. No card is taken here and nothing is held until a specialist confirms it with{' '}
-              {hotelName}.
+              {canBook
+                ? `Booked online and confirmed straight away. You pay on our payment provider’s secure page, and the amount is only taken once ${hotelName} is booked.`
+                : 'Sign in or create an account to see live prices for your dates and book online.'}
             </p>
             <a href="tel:+97144206965" className="cc-btn-quiet mt-3 w-full">
               <Icon name="phone" size={18} />
@@ -517,7 +518,7 @@ function ActionButton({
   selected: boolean;
   compact?: boolean;
 }) {
-  const label = canBook && selected ? 'Check availability' : 'Ask about this stay';
+  const label = canBook && selected ? 'Book this room' : 'Ask about this stay';
   const to = canBook && selected ? href : '#ask';
   return (
     <Link href={to} className={`cc-btn-primary ${compact ? 'shrink-0 !px-5' : 'mt-4 w-full'}`}>
