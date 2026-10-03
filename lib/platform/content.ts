@@ -24,6 +24,9 @@ export type HotelContent = {
 };
 
 const DAY = 24 * 60 * 60;
+
+/** Hotelbeds' 'bigger' pictures are about 350 px wide; its 'xl' copy of the same photo is 800. */
+export const sharper = (url: string) => url.replace('/giata/bigger/', '/giata/xl/');
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** True when a hotel's supplier code is a platform hotel id. */
@@ -34,10 +37,11 @@ export function isPlatformHotelId(code: string | null | undefined): code is stri
 export async function hotelContent(platformHotelId: string): Promise<HotelContent | null> {
   if (!platformConfigured() || !isPlatformHotelId(platformHotelId)) return null;
   try {
-    return await platform<HotelContent>('GET', `/v1/hotels/${platformHotelId}/content`, undefined, {
+    const c = await platform<HotelContent>('GET', `/v1/hotels/${platformHotelId}/content`, undefined, {
       timeoutMs: 8_000,
       revalidateSeconds: DAY,
     });
+    return { ...c, images: c.images.map(sharper) };
   } catch (e: any) {
     console.warn('[hotel content]', platformHotelId, e?.message);
     return null;

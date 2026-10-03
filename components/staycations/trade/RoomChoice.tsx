@@ -25,7 +25,11 @@ export function RoomChoiceProvider({ rates, children }: { rates: PublicRate[]; c
 export function RoomList({ nights }: { nights: number }) {
   const { rates, chosen, choose } = useContext(Choice);
   const groups = new Map<string, PublicRate[]>();
-  for (const r of rates) groups.set(r.roomName, [...(groups.get(r.roomName) ?? []), r]);
+  // the same room from two suppliers can differ only in capitals: one group, cheapest first
+  for (const r of rates) {
+    const key = r.roomName.toLowerCase().replace(/\s+/g, ' ').trim();
+    groups.set(key, [...(groups.get(key) ?? []), r]);
+  }
   const [all, setAll] = useState(false);
   const shown = Array.from(groups.entries()).slice(0, all ? undefined : 8);
 
@@ -36,7 +40,7 @@ export function RoomList({ nights }: { nights: number }) {
           <li key={room} className="cc-panel overflow-hidden">
             <h3 className="flex items-center gap-2 border-b border-sea-line bg-shell px-4 py-3 text-[16px] font-semibold text-sea-ink">
               <Icon name="bed" size={18} />
-              {room}
+              {list[0]!.roomName}
             </h3>
             <ul>
               {list.map((r) => {

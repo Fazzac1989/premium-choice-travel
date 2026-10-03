@@ -1,6 +1,6 @@
 import 'server-only';
 import { getStaycationHotels, hotelSlug } from '@/lib/data';
-import { hotelContent, type HotelContent } from '@/lib/platform/content';
+import { hotelContent, sharper, type HotelContent } from '@/lib/platform/content';
 import type { Hotel } from '@/lib/types';
 import {
   boardName,
@@ -17,6 +17,7 @@ import {
   checkOutOf,
   platformIdFromSlug,
   platformSlug,
+  roomTitle,
   type PublicRate,
   type StaySearch,
   type StayResult,
@@ -33,7 +34,7 @@ const major = (minor: number) => Math.round(minor) / 100;
 export function toPublicRate(o: PlatformOffer): PublicRate {
   return {
     offerId: o.offerId,
-    roomName: o.roomName,
+    roomName: roomTitle(o.roomName),
     board: boardName(o.board),
     boardCode: o.board,
     refundable: o.refundable,
@@ -72,7 +73,7 @@ function toResult(card: PlatformCard, curated: Map<string, CuratedEntry>): StayR
     name: card.name,
     city: card.city,
     stars: stars && stars > 0 ? stars : null,
-    image: card.image ?? mine?.image ?? null,
+    image: card.image ? sharper(card.image) : (mine?.image ?? null),
     curated: Boolean(mine),
     slug: slugFor(card, curated),
     best: toPublicRate(best),

@@ -135,7 +135,7 @@ export default function CheckoutScreen({
           </div>
           <div className="shrink-0 text-end">
             <p className="font-display text-[24px] font-semibold leading-[28px] text-sea-ink">{moneyLabel(quote.total, quote.currency)}</p>
-            <p className="text-[12px] text-sea-soft">total, taxes in · held until {held}</p>
+            <p className="text-[12px] text-sea-soft">total, taxes in · held until {held} UAE time</p>
           </div>
         </div>
       </div>
@@ -299,7 +299,7 @@ export default function CheckoutScreen({
                   {leaving ? 'Opening the payment page…' : pending ? 'Checking the price…' : `Book and pay — ${moneyLabel(quote.total, quote.currency)}`}
                 </button>
                 <p className="cc-support mt-3 text-center">
-                  The price is held until {held}; after that we check it with the hotel again before you pay.
+                  The price is held until {held} UAE time; after that we check it with the hotel again before you pay.
                 </p>
               </section>
             </>

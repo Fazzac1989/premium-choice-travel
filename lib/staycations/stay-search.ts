@@ -162,6 +162,15 @@ export function platformIdFromSlug(slug: string): string | null {
 
 /* ------------------------------------------------------------- what a page shows */
 
+/** A supplier's room name as a heading: "double or twin standard" and "ROVER SEA VIEW" read as "Double or twin standard" and "Rover sea view". */
+export function roomTitle(name: string): string {
+  const t = name.trim();
+  if (!t) return t;
+  const shouting = t === t.toUpperCase() && /[A-Z]{3}/.test(t);
+  const base = shouting ? t.toLowerCase() : t;
+  return base.charAt(0).toUpperCase() + base.slice(1);
+}
+
 /** A room as a customer sees it: never the supplier, the source or how the price was built. */
 export type PublicRate = {
   offerId: string;

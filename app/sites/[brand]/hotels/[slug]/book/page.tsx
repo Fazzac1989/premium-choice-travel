@@ -6,7 +6,7 @@ import { brandBase } from '@/lib/brand-site';
 import { getAccount } from '@/lib/account';
 import { boardName, getQuote, type PlatformQuote } from '@/lib/platform/client';
 import { resolveStay } from '@/lib/staycations/stay-search-server';
-import { staySearchQuery } from '@/lib/staycations/stay-search';
+import { roomTitle, staySearchQuery } from '@/lib/staycations/stay-search';
 import { getTravellers, leadTraveller, travelDetailsOnFile } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
@@ -90,7 +90,7 @@ export default async function HotelBookingPage({
         id: quote.id,
         hotelName: quote.hotel.name,
         city: quote.hotel.city,
-        roomName: quote.roomName,
+        roomName: roomTitle(quote.roomName),
         board: boardName(quote.board),
         checkIn: quote.checkIn,
         nights: quote.nights,
