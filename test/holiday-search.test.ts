@@ -143,3 +143,49 @@ describe('how the party reads back to the customer', () => {
     expect(nightsLabel(7)).toBe('7 nights');
   });
 });
+
+describe('narrowing the results', () => {
+  it('carries a refundable-only filter through the URL', () => {
+    const before = criteria({ refundable: true, board: 'HB', stars: '4', sort: 'price' });
+    const after = parseHolidayCriteria(
+      Object.fromEntries(new URLSearchParams(holidayQuery(before)).entries()),
+    );
+    expect(after.refundable).toBe(true);
+    expect(after.board).toBe('HB');
+    expect(after.stars).toBe('4');
+    expect(after.sort).toBe('price');
+  });
+
+  it('leaves refundable out of the URL when it is off', () => {
+    expect(holidayQuery(criteria({ refundable: false }))).not.toContain('refundable');
+  });
+
+  it('treats anything but 1 as not filtering', () => {
+    expect(parseHolidayCriteria({ refundable: 'true' }).refundable).toBe(false);
+    expect(parseHolidayCriteria({ refundable: '0' }).refundable).toBe(false);
+    expect(parseHolidayCriteria({ refundable: '1' }).refundable).toBe(true);
+  });
+});
+
+describe('the filters sent to the platform', () => {
+  it('sends nothing when the customer has narrowed nothing', async () => {
+    const { filtersOf } = await import('@/lib/holidays/holiday-search');
+    expect(filtersOf(criteria())).toEqual({});
+  });
+
+  it('sends only what was chosen', async () => {
+    const { filtersOf } = await import('@/lib/holidays/holiday-search');
+    expect(filtersOf(criteria({ stars: '4' }))).toEqual({ minStars: 4 });
+    expect(filtersOf(criteria({ board: 'AI' }))).toEqual({ board: ['AI'] });
+    expect(filtersOf(criteria({ refundable: true }))).toEqual({ refundable: true });
+  });
+
+  it('sends them together', async () => {
+    const { filtersOf } = await import('@/lib/holidays/holiday-search');
+    expect(filtersOf(criteria({ stars: '5', board: 'BB', refundable: true }))).toEqual({
+      refundable: true,
+      board: ['BB'],
+      minStars: 5,
+    });
+  });
+});

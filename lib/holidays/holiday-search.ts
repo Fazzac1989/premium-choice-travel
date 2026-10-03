@@ -3,9 +3,11 @@ import {
   boardName,
   startSearch,
   readSearch,
+  searchHotels,
   type PlatformCard,
   type PlatformOffer,
   type PlatformSearch,
+  type SearchFilters,
 } from '@/lib/platform/client';
 import { cheapestFlight, searchFlights, type FlightOffer, type FlightSearchResult } from '@/lib/platform/flights';
 import { sharper } from '@/lib/platform/content';
@@ -164,6 +166,15 @@ const roomsFor = (c: HolidayCriteria) => {
 const destinationOf = (c: HolidayCriteria) =>
   c.cityCode ? { cityCode: c.cityCode } : { text: c.destination };
 
+/** What the customer has narrowed to, in the shape the platform filters on. */
+export function filtersOf(c: HolidayCriteria): SearchFilters {
+  const f: SearchFilters = {};
+  if (c.refundable) f.refundable = true;
+  if (c.board) f.board = [c.board];
+  if (c.stars) f.minStars = Number(c.stars);
+  return f;
+}
+
 /** Start a holiday search. Returns the first page; the caller polls for the rest. */
 export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySearchPage> {
   const checkOut = returnDateOf(c);
@@ -178,10 +189,7 @@ export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySea
       checkOut,
       rooms: roomsFor(c),
       sort: c.sort,
-      filters: {
-        ...(c.board ? { board: [c.board] } : {}),
-        ...(c.stars ? { minStars: Number(c.stars) } : {}),
-      },
+      filters: filtersOf(c),
     }),
     searchFlights({
       origin: c.origin,
@@ -194,6 +202,84 @@ export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySea
   ]);
 
   return compose(search, flights, travellers);
+}
+
+export type HolidayHotel = {
+  platformHotelId: string;
+  name: string;
+  city: string;
+  countryCode: string;
+  stars: number | null;
+  description: string | null;
+  image: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  nights: number;
+  travellers: number;
+  /** Every room that can be confirmed on payment, cheapest first. */
+  rooms: HolidayRoom[];
+  flight: FlightOffer | null;
+  flights: FlightSearchResult;
+};
+
+/**
+ * One hotel, priced for these dates and this party.
+ *
+ * Asked for by its own id rather than read out of the search session, because a
+ * customer can arrive on this page from a link, hours later, when that session
+ * is long gone. The price has to be fetched fresh anyway: it is what they are
+ * about to be asked to pay.
+ */
+export async function holidayHotel(
+  platformHotelId: string,
+  c: HolidayCriteria,
+): Promise<HolidayHotel | null> {
+  const checkOut = returnDateOf(c);
+  if (!checkOut) return null;
+
+  const [res, flights] = await Promise.all([
+    searchHotels({
+      destination: { hotelId: platformHotelId },
+      checkIn: c.departDate,
+      checkOut,
+      rooms: roomsFor(c),
+    }),
+    searchFlights({
+      origin: c.origin,
+      destination: destinationOf(c),
+      departDate: c.departDate,
+      returnDate: checkOut,
+      adults: c.adults,
+      childAges: c.childrenAges,
+    }),
+  ]);
+
+  const card = res.cards.find((x) => x.hotelId.toLowerCase() === platformHotelId.toLowerCase());
+  if (!card) return null;
+
+  const rooms = [card.best, ...card.alternatives]
+    .filter(bookable)
+    .map(toRoom)
+    .sort((a, b) => a.total - b.total);
+  if (!rooms.length) return null;
+
+  const stars = card.starRating === null ? null : Math.round(Number(card.starRating));
+  return {
+    platformHotelId: card.hotelId,
+    name: card.name,
+    city: card.city,
+    countryCode: card.countryCode,
+    stars: stars && stars > 0 ? stars : null,
+    description: card.description,
+    image: card.image ? sharper(card.image) : null,
+    latitude: card.latitude,
+    longitude: card.longitude,
+    nights: res.nights,
+    travellers: travellersIn(c),
+    rooms,
+    flight: cheapestFlight(flights.offers),
+    flights,
+  };
 }
 
 /**
@@ -213,10 +299,7 @@ export async function readHolidaySearch(
     readSearch(sessionId, {
       sort: c.sort,
       offset,
-      filters: {
-        ...(c.board ? { board: [c.board] } : {}),
-        ...(c.stars ? { minStars: Number(c.stars) } : {}),
-      },
+      filters: filtersOf(c),
     }),
     searchFlights({
       origin: c.origin,

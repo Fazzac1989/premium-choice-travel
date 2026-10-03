@@ -65,6 +65,8 @@ export type HolidayCriteria = {
   board: string;
   /** Minimum stars as a string, '' for any. */
   stars: string;
+  /** Only rooms that can still be cancelled without charge. */
+  refundable: boolean;
   sort: HolidaySort;
 };
 
@@ -79,6 +81,7 @@ export const EMPTY_HOLIDAY_CRITERIA: HolidayCriteria = {
   rooms: 1,
   board: '',
   stars: '',
+  refundable: false,
   sort: 'best',
 };
 
@@ -149,6 +152,7 @@ export function parseHolidayCriteria(params: Params): HolidayCriteria {
     rooms: clampInt(one(params, 'rooms'), 1, MAX_ROOMS, 1),
     board: one(params, 'board').slice(0, 10),
     stars: one(params, 'stars').slice(0, 2),
+    refundable: one(params, 'refundable') === '1',
     sort: sort === 'price' || sort === 'stars' ? sort : 'best',
   };
 }
@@ -168,6 +172,7 @@ export function holidayQuery(c: Partial<HolidayCriteria>, extra: Record<string, 
   if (c.rooms && c.rooms > 1) p.set('rooms', String(c.rooms));
   if (c.board) p.set('board', c.board);
   if (c.stars) p.set('stars', c.stars);
+  if (c.refundable) p.set('refundable', '1');
   if (c.sort && c.sort !== 'best') p.set('sort', c.sort);
   for (const [k, v] of Object.entries(extra)) if (v) p.set(k, v);
   return p.toString();

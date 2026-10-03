@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import type { HolidayResult } from '@/lib/holidays/holiday-search';
 
 /**
@@ -28,13 +29,17 @@ function Stars({ count }: { count: number }) {
 export default function HolidayResultCard({
   result,
   travellers,
+  params,
 }: {
   result: HolidayResult;
   travellers: number;
+  /** The search this result came from, carried so the hotel can be re-priced. */
+  params: Record<string, string>;
 }) {
   const { room, flight } = result;
+  const href = `/search/${result.platformHotelId}?${new URLSearchParams(params).toString()}`;
   return (
-    <article className="grid overflow-hidden rounded-2xl border border-line bg-white sm:grid-cols-[260px_1fr]">
+    <article className="group relative grid overflow-hidden rounded-2xl border border-line bg-white transition-colors focus-within:border-teal-deep hover:border-teal-deep sm:grid-cols-[260px_1fr]">
       <div className="relative aspect-[4/3] bg-sand sm:aspect-auto sm:min-h-[200px]">
         {result.image ? (
           <Image
@@ -50,7 +55,13 @@ export default function HolidayResultCard({
       <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-stretch sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-            <h3 className="font-serif text-xl leading-snug text-ink">{result.name}</h3>
+            <h3 className="font-serif text-xl leading-snug text-ink">
+              {/* The whole card is the target; the stretched link keeps one
+                  tab stop and one accessible name for it. */}
+              <Link href={href} className="after:absolute after:inset-0 group-hover:text-teal-deep">
+                {result.name}
+              </Link>
+            </h3>
             {result.stars ? <Stars count={result.stars} /> : null}
           </div>
           <p className="mt-1 text-sm text-ink-soft">{result.city}</p>
