@@ -57,6 +57,7 @@ export default async function HolidayHotelPage({
       hotel = await holidayHotel(params.hotelId, criteria);
       if (!hotel) failure = 'This hotel has no rooms left for your dates.';
     } catch (e) {
+      console.error('[holiday hotel]', e instanceof Error ? e.message : e);
       failure =
         e instanceof PlatformError
           ? e.message

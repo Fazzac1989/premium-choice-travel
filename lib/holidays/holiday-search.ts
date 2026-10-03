@@ -11,6 +11,8 @@ import {
 } from '@/lib/platform/client';
 import { cheapestFlight, searchFlights, type FlightOffer, type FlightSearchResult } from '@/lib/platform/flights';
 import { sharper } from '@/lib/platform/content';
+// Suppliers shout room names in capitals; the same tidier both brands use.
+import { roomTitle } from '@/lib/staycations/stay-search';
 import {
   returnDateOf,
   type HolidayCriteria,
@@ -83,7 +85,7 @@ export const travellersIn = (c: HolidayCriteria) => c.adults + c.childrenAges.le
 function toRoom(o: PlatformOffer): HolidayRoom {
   return {
     offerId: o.offerId,
-    roomName: o.roomName,
+    roomName: roomTitle(o.roomName),
     board: boardName(o.board),
     refundable: o.refundable,
     refundDeadline: o.refundDeadline,
@@ -93,13 +95,23 @@ function toRoom(o: PlatformOffer): HolidayRoom {
   };
 }
 
+/**
+ * Every offer on a card.
+ *
+ * A supplier may send a card with no alternatives at all, and one that omits
+ * the field rather than sending an empty list would otherwise throw and take
+ * the whole page down with it.
+ */
+const offersOn = (card: PlatformCard) =>
+  [card.best, ...(Array.isArray(card.alternatives) ? card.alternatives : [])].filter(Boolean);
+
 function toResult(
   card: PlatformCard,
   nights: number,
   travellers: number,
   flight: FlightOffer | null,
 ): HolidayResult | null {
-  const offers = [card.best, ...card.alternatives].filter(bookable);
+  const offers = offersOn(card).filter(bookable);
   const best = offers.sort((a, b) => a.price.total.amount - b.price.total.amount)[0];
   if (!best) return null;
 
@@ -257,7 +269,7 @@ export async function holidayHotel(
   const card = res.cards.find((x) => x.hotelId.toLowerCase() === platformHotelId.toLowerCase());
   if (!card) return null;
 
-  const rooms = [card.best, ...card.alternatives]
+  const rooms = offersOn(card)
     .filter(bookable)
     .map(toRoom)
     .sort((a, b) => a.total - b.total);

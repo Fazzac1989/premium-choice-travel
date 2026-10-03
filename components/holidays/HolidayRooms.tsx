@@ -39,7 +39,25 @@ export default function HolidayRooms({
 }) {
   const name = useId();
   const [chosen, setChosen] = useState(rooms[0]?.offerId ?? '');
+  const [showAll, setShowAll] = useState(false);
   const room = rooms.find((r) => r.offerId === chosen) ?? rooms[0];
+
+  // A supplier returns every rate combination it holds — one Dubai hotel came
+  // back with 137, which is not a choice, it is a wall. What a customer is
+  // actually choosing between is the room, the board and whether they can
+  // cancel, so keep the cheapest rate for each of those and drop the rest.
+  // `rooms` arrives cheapest first, so the first of each kind is the one to keep.
+  const groups = new Map<string, HolidayRoom[]>();
+  const seen = new Set<string>();
+  for (const r of rooms) {
+    const kind = `${r.roomName.toLowerCase()}|${r.board}|${r.refundable}`;
+    if (seen.has(kind)) continue;
+    seen.add(kind);
+    const key = r.roomName.toLowerCase().replace(/\s+/g, ' ').trim();
+    groups.set(key, [...(groups.get(key) ?? []), r]);
+  }
+  const all = Array.from(groups.entries());
+  const shown = showAll ? all : all.slice(0, 8);
 
   const enquiryTitle = room
     ? `${hotelName} — ${room.roomName}, ${room.board} — ${tripLabel}`
@@ -57,48 +75,66 @@ export default function HolidayRooms({
         </p>
 
         <ul className="mt-4 grid gap-3">
-          {rooms.map((r) => {
-            const selected = r.offerId === chosen;
-            const perPerson = Math.round(r.total / Math.max(1, travellers));
-            return (
-              <li key={r.offerId}>
-                <label
-                  className={`flex cursor-pointer flex-col gap-3 rounded-xl border p-4 transition-colors sm:flex-row sm:items-center sm:justify-between ${
-                    selected ? 'border-teal-deep bg-teal/5' : 'border-line bg-white hover:border-teal-deep'
-                  }`}
-                >
-                  <span className="flex min-w-0 items-start gap-3">
-                    <input
-                      type="radio"
-                      name={name}
-                      value={r.offerId}
-                      checked={selected}
-                      onChange={() => setChosen(r.offerId)}
-                      className="mt-1 h-4 w-4 shrink-0 accent-teal-deep"
-                    />
-                    <span className="min-w-0">
-                      <span className="block font-semibold text-ink">{r.roomName}</span>
-                      <span className="block text-sm text-ink-soft">{r.board}</span>
-                      <span className="mt-1 block text-xs text-ink-soft">
-                        {r.refundable
-                          ? r.refundDeadline
-                            ? `Free cancellation until ${new Date(r.refundDeadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`
-                            : 'Free cancellation available'
-                          : 'Non-refundable rate'}
-                      </span>
-                    </span>
-                  </span>
-                  <span className="shrink-0 sm:text-right">
-                    <span className="block font-serif text-2xl text-ink">{aed.format(perPerson)}</span>
-                    <span className="block text-xs text-ink-soft">
-                      per person &middot; {aed.format(r.total)} total
-                    </span>
-                  </span>
-                </label>
-              </li>
-            );
-          })}
+          {shown.map(([key, list]) => (
+            <li key={key} className="overflow-hidden rounded-xl border border-line bg-white">
+              <h3 className="border-b border-line bg-sand/50 px-4 py-3 font-semibold text-ink">
+                {list[0].roomName}
+              </h3>
+              <ul>
+                {list.map((r) => {
+                  const selected = r.offerId === chosen;
+                  const perPerson = Math.round(r.total / Math.max(1, travellers));
+                  return (
+                    <li key={r.offerId} className="border-b border-line last:border-b-0">
+                      <label
+                        className={`flex cursor-pointer flex-col gap-3 px-4 py-3 transition-colors sm:flex-row sm:items-center sm:justify-between ${
+                          selected ? 'bg-teal/5' : 'hover:bg-sand/40'
+                        }`}
+                      >
+                        <span className="flex min-w-0 items-start gap-3">
+                          <input
+                            type="radio"
+                            name={name}
+                            value={r.offerId}
+                            checked={selected}
+                            onChange={() => setChosen(r.offerId)}
+                            className="mt-0.5 h-4 w-4 shrink-0 accent-teal-deep"
+                          />
+                          <span className="min-w-0">
+                            <span className="block text-sm font-semibold text-ink">{r.board}</span>
+                            <span className="mt-0.5 block text-xs text-ink-soft">
+                              {r.refundable
+                                ? r.refundDeadline
+                                  ? `Free cancellation until ${new Date(r.refundDeadline).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`
+                                  : 'Free cancellation available'
+                                : 'Non-refundable rate'}
+                            </span>
+                          </span>
+                        </span>
+                        <span className="shrink-0 pl-7 sm:pl-0 sm:text-right">
+                          <span className="block font-serif text-xl text-ink">{aed.format(perPerson)}</span>
+                          <span className="block text-xs text-ink-soft">
+                            per person &middot; {aed.format(r.total)} total
+                          </span>
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          ))}
         </ul>
+
+        {all.length > 8 ? (
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            className="mt-4 text-sm font-semibold text-teal-deep underline-offset-4 hover:underline"
+          >
+            {showAll ? 'Show fewer room types' : `Show all ${all.length} room types`}
+          </button>
+        ) : null}
       </section>
 
       <section aria-labelledby="enquire-heading" className="mt-10 border-t border-line pt-8">
