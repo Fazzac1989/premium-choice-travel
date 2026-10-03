@@ -10,6 +10,7 @@ import { brandBase } from '@/lib/brand-site';
 import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } from '@/lib/data';
 import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
 import ServiceCircles from '@/components/brand-site/ServiceCircles';
+import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
 import { parseStaySearch } from '@/lib/staycations/stay-search';
 
@@ -69,32 +70,30 @@ export default async function BrandHomePage({
               Your holiday. <em className="not-italic text-teal">Your way.</em>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
-              Tailor-made holidays, city breaks, beach escapes and extraordinary journeys
-              around the world — planned by real specialists in Dubai.
+              Flight and hotel together, from Dubai, Abu Dhabi, Sharjah and Ras Al Khaimah —
+              planned by real specialists here in the UAE.
             </p>
 
-            {/* Dual path */}
-            <div className="mt-8 grid max-w-lg gap-3 sm:grid-cols-2">
-              <Link
-                href={`${base}/destinations`}
-                className="group rounded-xl border border-white/25 bg-ink/40 px-4 py-3 backdrop-blur transition-colors hover:border-teal"
-              >
-                <p className="text-xs text-white/70">Know where you want to go?</p>
-                <p className="mt-0.5 font-serif text-lg text-white group-hover:text-teal">
-                  Explore destinations <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
-                </p>
+            {/* The search leads. Everything else on this page is for the visitor
+                who does not yet know where they are going. */}
+            <div className="mt-8 max-w-5xl">
+              <HolidaySearchPanel
+                suggestions={holidayDestinations.map((d) => ({ name: d.name, region: d.region }))}
+                action={`${base}/search`}
+              />
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-semibold text-white/75">
+              <Link href={`${base}/destinations`} className="underline-offset-4 hover:text-teal hover:underline">
+                Explore destinations →
               </Link>
-              <Link
-                href={`${base}/inspiration`}
-                className="group rounded-xl border border-teal/60 bg-teal/20 px-4 py-3 backdrop-blur transition-colors hover:bg-teal"
-              >
-                <p className="text-xs text-white/80">No idea where to start?</p>
-                <p className="mt-0.5 font-serif text-lg text-white">✨ Inspire me</p>
+              <Link href={`${base}/inspiration`} className="underline-offset-4 hover:text-teal hover:underline">
+                ✨ Inspire me
+              </Link>
+              <Link href={`${base}/about`} className="underline-offset-4 hover:text-teal hover:underline">
+                Our story →
               </Link>
             </div>
-            <Link href={`${base}/about`} className="mt-6 inline-block text-sm font-semibold text-white/70 underline-offset-4 hover:text-teal hover:underline">
-              Our story →
-            </Link>
           </div>
         </section>
 

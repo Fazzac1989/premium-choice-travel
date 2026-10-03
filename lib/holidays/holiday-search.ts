@@ -1,0 +1,215 @@
+import 'server-only';
+import {
+  boardName,
+  startSearch,
+  readSearch,
+  type PlatformCard,
+  type PlatformOffer,
+  type PlatformSearch,
+} from '@/lib/platform/client';
+import { cheapestFlight, searchFlights, type FlightOffer, type FlightSearchResult } from '@/lib/platform/flights';
+import { sharper } from '@/lib/platform/content';
+import {
+  returnDateOf,
+  type HolidayCriteria,
+} from './search-criteria';
+
+/**
+ * A holiday is a flight and a hotel with one price on it.
+ *
+ * The platform answers for hotels today and not yet for flights, so this returns
+ * the hotels either way and says, per result, whether the flight is in the price.
+ * A result whose flight is missing is still a real, bookable hotel — it is just
+ * not yet a package, and the page must say so rather than imply a total that
+ * nobody has quoted.
+ */
+
+/** minor units → dirhams */
+const major = (minor: number) => Math.round(minor) / 100;
+
+/** Only a room that confirms on payment is offered. "On request" is not a holiday. */
+const bookable = (o: PlatformOffer) => o.availabilityMode !== 'on_request';
+
+export type HolidayRoom = {
+  offerId: string;
+  roomName: string;
+  board: string;
+  refundable: boolean;
+  refundDeadline: string | null;
+  /** The whole stay for the whole party, in dirhams. */
+  total: number;
+  perNight: number;
+  currency: string;
+};
+
+export type HolidayResult = {
+  platformHotelId: string;
+  name: string;
+  city: string;
+  countryCode: string;
+  stars: number | null;
+  image: string | null;
+  nights: number;
+  room: HolidayRoom;
+  /** The cheapest flight that fits these dates, when the platform can price one. */
+  flight: FlightOffer | null;
+  /** Hotel plus flights for everyone travelling, in dirhams. Null when no flight. */
+  packageTotal: number | null;
+  /** What the holiday costs each traveller. Hotel-only when there is no flight. */
+  perPerson: number;
+  /** True when the price above is the hotel alone and the flight is still to come. */
+  flightPending: boolean;
+};
+
+export type HolidaySearchPage = {
+  sessionId: string;
+  pending: boolean;
+  destinationLabel: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  total: number;
+  nextOffset: number | null;
+  results: HolidayResult[];
+  flights: FlightSearchResult;
+  /** Everyone who needs a seat and a bed. */
+  travellers: number;
+};
+
+export const travellersIn = (c: HolidayCriteria) => c.adults + c.childrenAges.length;
+
+function toRoom(o: PlatformOffer): HolidayRoom {
+  return {
+    offerId: o.offerId,
+    roomName: o.roomName,
+    board: boardName(o.board),
+    refundable: o.refundable,
+    refundDeadline: o.refundDeadline,
+    total: major(o.price.total.amount),
+    perNight: major(o.price.perNight.amount),
+    currency: o.price.total.currency,
+  };
+}
+
+function toResult(
+  card: PlatformCard,
+  nights: number,
+  travellers: number,
+  flight: FlightOffer | null,
+): HolidayResult | null {
+  const offers = [card.best, ...card.alternatives].filter(bookable);
+  const best = offers.sort((a, b) => a.price.total.amount - b.price.total.amount)[0];
+  if (!best) return null;
+
+  const room = toRoom(best);
+  const stars = card.starRating === null ? null : Math.round(Number(card.starRating));
+  // A flight is priced per person; a room is priced for the party in it.
+  const flightTotal = flight ? major(flight.price.amount) * travellers : null;
+  const packageTotal = flightTotal === null ? null : room.total + flightTotal;
+  const perPerson = (packageTotal ?? room.total) / Math.max(1, travellers);
+
+  return {
+    platformHotelId: card.hotelId,
+    name: card.name,
+    city: card.city,
+    countryCode: card.countryCode,
+    stars: stars && stars > 0 ? stars : null,
+    image: card.image ? sharper(card.image) : null,
+    nights,
+    room,
+    flight,
+    packageTotal,
+    perPerson: Math.round(perPerson),
+    flightPending: flight === null,
+  };
+}
+
+function compose(
+  search: PlatformSearch,
+  flights: FlightSearchResult,
+  travellers: number,
+): HolidaySearchPage {
+  const flight = cheapestFlight(flights.offers);
+  return {
+    sessionId: search.sessionId,
+    pending: search.pending,
+    destinationLabel: search.destination.label,
+    checkIn: search.checkIn,
+    checkOut: search.checkOut,
+    nights: search.nights,
+    total: search.total,
+    nextOffset: search.page.nextOffset,
+    results: search.cards
+      .map((c) => toResult(c, search.nights, travellers, flight))
+      .filter((r): r is HolidayResult => r !== null),
+    flights,
+    travellers,
+  };
+}
+
+const roomsFor = (c: HolidayCriteria) => {
+  // Children are put in the first room; the platform splits them across rooms itself
+  // when it has to, and a family searching two rooms still prices as one party.
+  const rooms: { adults: number; childAges: number[] }[] = [];
+  const perRoom = Math.max(1, Math.floor(c.adults / c.rooms));
+  let left = c.adults;
+  for (let i = 0; i < c.rooms; i += 1) {
+    const adults = i === c.rooms - 1 ? left : Math.min(perRoom, left);
+    left -= adults;
+    rooms.push({ adults, childAges: i === 0 ? c.childrenAges : [] });
+  }
+  return rooms.filter((r) => r.adults > 0);
+};
+
+const destinationOf = (c: HolidayCriteria) =>
+  c.cityCode ? { cityCode: c.cityCode } : { text: c.destination };
+
+/** Start a holiday search. Returns the first page; the caller polls for the rest. */
+export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySearchPage> {
+  const checkOut = returnDateOf(c);
+  const travellers = travellersIn(c);
+
+  // The hotels and the flights are asked for at the same time: neither waits on
+  // the other, and a flight search that cannot answer must not delay the page.
+  const [search, flights] = await Promise.all([
+    startSearch({
+      destination: destinationOf(c),
+      checkIn: c.departDate,
+      checkOut,
+      rooms: roomsFor(c),
+      sort: c.sort,
+      filters: {
+        ...(c.board ? { board: [c.board] } : {}),
+        ...(c.stars ? { minStars: Number(c.stars) } : {}),
+      },
+    }),
+    searchFlights({
+      origin: c.origin,
+      destination: destinationOf(c),
+      departDate: c.departDate,
+      returnDate: checkOut,
+      adults: c.adults,
+      childAges: c.childrenAges,
+    }),
+  ]);
+
+  return compose(search, flights, travellers);
+}
+
+/** The same search again: more suppliers have answered, or the customer re-sorted. */
+export async function readHolidaySearch(
+  sessionId: string,
+  c: HolidayCriteria,
+  flights: FlightSearchResult,
+  offset = 0,
+): Promise<HolidaySearchPage> {
+  const search = await readSearch(sessionId, {
+    sort: c.sort,
+    offset,
+    filters: {
+      ...(c.board ? { board: [c.board] } : {}),
+      ...(c.stars ? { minStars: Number(c.stars) } : {}),
+    },
+  });
+  return compose(search, flights, travellersIn(c));
+}
