@@ -30,6 +30,24 @@ export type CollectionGroup = {
   items: Collection[];
 };
 
+/**
+ * Collections a holiday has been put in by hand, in `details.collections`.
+ *
+ * `category` is what a holiday *is*, and it shows on the card. This is where it
+ * also *belongs*, which is a different question and often several answers: an
+ * adults-only overwater villa is a beach holiday on its card and a couples
+ * holiday in the menu. Keeping them apart means a commercial decision about
+ * where something is offered never rewrites what a customer reads about it.
+ *
+ * A tag is only ever added to what the rules already find, never subtracted.
+ */
+const tags = (p: Package): string[] => {
+  const raw = (p.details as Record<string, unknown> | undefined)?.collections;
+  return Array.isArray(raw) ? raw.filter((x): x is string => typeof x === 'string') : [];
+};
+
+export const taggedInto = (p: Package, slug: string) => tags(p).includes(slug);
+
 /** Anything a holiday says about itself, lower-cased, for matching. */
 const words = (p: Package) =>
   [p.title, p.tagline, p.category, p.boardBasis ?? '', ...(p.highlights ?? [])]
@@ -156,12 +174,22 @@ export function collectionBySlug(slug: string): Collection | null {
 }
 
 /**
+ * Does this holiday belong here — by its own words, or because somebody said so?
+ *
+ * Every read goes through this rather than calling a collection's `match`
+ * directly, so a hand-placed holiday cannot appear in the menu's count and then
+ * be missing from the page, or the other way round.
+ */
+export const belongsIn = (collection: Collection, p: Package) =>
+  collection.match(p) || taggedInto(p, collection.slug);
+
+/**
  * The holidays in a collection, featured first and then alphabetically, so the
  * order is deliberate rather than whatever the database happened to return.
  */
 export function packagesIn(collection: Collection, packages: Package[]): Package[] {
   return packages
-    .filter((p) => collection.match(p))
+    .filter((p) => belongsIn(collection, p))
     .sort((a, b) => Number(b.featured) - Number(a.featured) || a.title.localeCompare(b.title));
 }
 
@@ -169,6 +197,6 @@ export function packagesIn(collection: Collection, packages: Package[]): Package
 export function groupsWithContent(packages: Package[]): CollectionGroup[] {
   return COLLECTION_GROUPS.map((g) => ({
     heading: g.heading,
-    items: g.items.filter((c) => packages.some((p) => c.match(p))),
+    items: g.items.filter((c) => packages.some((p) => belongsIn(c, p))),
   })).filter((g) => g.items.length > 0);
 }

@@ -10,10 +10,10 @@ export type HeaderDestinationGroup = {
   items: { slug: string; name: string }[];
 };
 
-/** The kinds of holiday offered in the Holidays menu. */
+/** A column of links in a mega panel: the Holidays menu and the Offers menu. */
 export type HeaderHolidayGroup = {
   heading: string;
-  items: { slug: string; title: string }[];
+  items: { slug: string; title: string; href?: string }[];
 };
 
 /**
@@ -32,6 +32,7 @@ export default function BrandHeader({
   showOffers = false,
   destinationGroups = [],
   holidayGroups = [],
+  offerGroups = [],
 }: {
   base: string;
   name: string;
@@ -43,12 +44,14 @@ export default function BrandHeader({
   showOffers?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
   holidayGroups?: HeaderHolidayGroup[];
+  offerGroups?: HeaderHolidayGroup[];
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
   const [holOpen, setHolOpen] = useState(false);
+  const [offersOpen, setOffersOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // As an installed app, Staycations has no front page: the logo goes to the hotels.
   const [standalone, setStandalone] = useState(false);
@@ -82,19 +85,31 @@ export default function BrandHeader({
     setOpen(false);
     setDestOpen(false);
     setHolOpen(false);
+    setOffersOpen(false);
   }, [pathname]);
 
-  const isSolid = !isHeroPage || scrolled || open || destOpen || holOpen;
+  const isSolid = !isHeroPage || scrolled || open || destOpen || holOpen || offersOpen;
 
   const enterDest = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setHolOpen(false);
+    setOffersOpen(false);
     setDestOpen(true);
   };
   const enterHol = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setDestOpen(false);
+    setOffersOpen(false);
     setHolOpen(true);
+  };
+  const enterOffers = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setDestOpen(false);
+    setHolOpen(false);
+    setOffersOpen(true);
+  };
+  const leaveOffers = () => {
+    closeTimer.current = setTimeout(() => setOffersOpen(false), 150);
   };
   const leaveHol = () => {
     closeTimer.current = setTimeout(() => setHolOpen(false), 150);
@@ -119,7 +134,9 @@ export default function BrandHeader({
           : [{ href: '/holidays', label: 'Holidays' }]
         : [{ href: '/journeys', label: 'Journeys' }]),
 
-    ...(showOffers ? [{ href: '/offers', label: 'Offers' }] : []),
+    ...(showOffers && !(isHolidays && offerGroups.length > 0)
+      ? [{ href: '/offers', label: 'Offers' }]
+      : []),
     ...(isHolidays ? [] : [{ href: '/about', label: 'Our story' }]),
     { href: '/enquire', label: 'Contact' },
   ];
@@ -189,6 +206,21 @@ export default function BrandHeader({
                 </button>
               </div>
             )}
+            {isHolidays && offerGroups.length > 0 && (
+              <div onMouseEnter={enterOffers} onMouseLeave={leaveOffers} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setOffersOpen((v) => !v)}
+                  aria-expanded={offersOpen}
+                  className={`flex items-center gap-1.5 ${linkCls('/offers')}`}
+                >
+                  Offers
+                  <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${offersOpen ? 'rotate-180' : ''}`}>
+                    <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+            )}
             {links.map((l) => (
               <Link key={l.href} href={`${base}${l.href}`} className={linkCls(l.href)}>
                 {l.label}
@@ -221,39 +253,28 @@ export default function BrandHeader({
 
         {/* Kinds of holiday — Holidays only, and only when there are some */}
         {isHolidays && holOpen && holidayGroups.length > 0 && (
-          <div
-            onMouseEnter={enterHol}
-            onMouseLeave={leaveHol}
-            className="hidden max-h-[70svh] overflow-y-auto border-t border-line bg-white shadow-2xl shadow-ink/20 lg:block"
-          >
-            <div className="container-site grid grid-cols-3 gap-x-10 gap-y-6 py-7">
-              {holidayGroups.map((g) => (
-                <div key={g.heading}>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-deep">{g.heading}</p>
-                  <ul className="mt-2.5 space-y-1.5">
-                    {g.items.map((c) => (
-                      <li key={c.slug}>
-                        <Link
-                          href={`${base}/holidays/${c.slug}`}
-                          className="text-sm font-medium text-ink-soft hover:text-teal-deep"
-                        >
-                          {c.title}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-line bg-sand">
-              <div className="container-site flex items-center justify-between py-3.5">
-                <p className="text-sm text-ink-soft">Not sure yet? Every holiday is reshaped around you.</p>
-                <Link href={`${base}/holidays`} className="text-sm font-bold text-teal-deep hover:underline">
-                  See all holidays &rarr;
-                </Link>
-              </div>
-            </div>
-          </div>
+          <MegaPanel
+            groups={holidayGroups}
+            hrefFor={(c) => `${base}/holidays/${c.slug}`}
+            footNote="Not sure yet? Every holiday is reshaped around you."
+            footHref={`${base}/holidays`}
+            footLabel="See all holidays"
+            onEnter={enterHol}
+            onLeave={leaveHol}
+          />
+        )}
+
+        {/* Offers — only the ones that are real; see lib/holidays/offers-menu */}
+        {isHolidays && offersOpen && offerGroups.length > 0 && (
+          <MegaPanel
+            groups={offerGroups}
+            hrefFor={(c) => `${base}${c.href ?? `/holidays/${c.slug}`}`}
+            footNote="Every holiday is priced for your dates, so the saving is in the planning."
+            footHref={`${base}/offers`}
+            footLabel="See all offers"
+            onEnter={enterOffers}
+            onLeave={leaveOffers}
+          />
         )}
 
         {/* Landscape destinations panel — Holidays only */}
@@ -306,6 +327,11 @@ export default function BrandHeader({
                 <Link href={`${base}/destinations`} className="block py-3 text-base font-semibold text-ink">
                   Destinations
                 </Link>
+                {offerGroups.length > 0 && (
+                  <Link href={`${base}/offers`} className="block py-3 text-base font-semibold text-ink">
+                    Offers
+                  </Link>
+                )}
               </>
             )}
             {links.map((l) => (
@@ -328,5 +354,62 @@ export default function BrandHeader({
       {/* Fixed header needs an offset on pages without a full-bleed hero. */}
       {!isHeroPage && <div className="h-[84px]" />}
     </>
+  );
+}
+
+/**
+ * One wide panel of linked columns, shared by the Holidays and Offers menus.
+ *
+ * Destinations keeps its own markup: it is a different shape, grouped by region
+ * and five columns wide, and folding it in here would make this take a flag.
+ */
+function MegaPanel({
+  groups,
+  hrefFor,
+  footNote,
+  footHref,
+  footLabel,
+  onEnter,
+  onLeave,
+}: {
+  groups: HeaderHolidayGroup[];
+  hrefFor: (item: HeaderHolidayGroup['items'][number]) => string;
+  footNote: string;
+  footHref: string;
+  footLabel: string;
+  onEnter: () => void;
+  onLeave: () => void;
+}) {
+  return (
+    <div
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      className="hidden max-h-[70svh] overflow-y-auto border-t border-line bg-white shadow-2xl shadow-ink/20 lg:block"
+    >
+      <div className="container-site grid grid-cols-3 gap-x-10 gap-y-6 py-7">
+        {groups.map((g) => (
+          <div key={g.heading}>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-deep">{g.heading}</p>
+            <ul className="mt-2.5 space-y-1.5">
+              {g.items.map((item) => (
+                <li key={item.slug}>
+                  <Link href={hrefFor(item)} className="text-sm font-medium text-ink-soft hover:text-teal-deep">
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="border-t border-line bg-sand">
+        <div className="container-site flex items-center justify-between py-3.5">
+          <p className="text-sm text-ink-soft">{footNote}</p>
+          <Link href={footHref} className="text-sm font-bold text-teal-deep hover:underline">
+            {footLabel} &rarr;
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }

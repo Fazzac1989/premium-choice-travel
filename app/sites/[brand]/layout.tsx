@@ -5,6 +5,7 @@ import BrandHeader, {
   type HeaderHolidayGroup,
 } from '@/components/brand-site/BrandHeader';
 import { groupsWithContent } from '@/lib/holidays/collections';
+import { liveOfferGroups } from '@/lib/holidays/offers-menu';
 import BrandFooter from '@/components/brand-site/BrandFooter';
 import PwaSetup from '@/components/brand-site/PwaSetup';
 import { CoastalHeader, CoastalTabBar } from '@/components/staycations/coastal/CoastalNav';
@@ -89,6 +90,7 @@ export default async function BrandSiteLayout({
 
   let destinationGroups: HeaderDestinationGroup[] = [];
   let holidayGroups: HeaderHolidayGroup[] = [];
+  let offerGroups: HeaderHolidayGroup[] = [];
   if (isHolidays) {
     const all = (await getDestinations()).filter((d) => d.region !== 'Cruise Seas');
     destinationGroups = DROPDOWN_REGIONS.map((region) => ({
@@ -106,6 +108,12 @@ export default async function BrandSiteLayout({
       heading: g.heading,
       items: g.items.map((c) => ({ slug: c.slug, title: c.title })),
     }));
+
+    // Only the offers that are real; the rest stay off until there are terms.
+    offerGroups = liveOfferGroups().map((g) => ({
+      heading: g.heading,
+      items: g.items.map((i) => ({ slug: i.slug, title: i.title, href: i.href })),
+    }));
   }
 
   return (
@@ -121,6 +129,7 @@ export default async function BrandSiteLayout({
         showOffers={showOffers}
         destinationGroups={destinationGroups}
         holidayGroups={holidayGroups}
+        offerGroups={offerGroups}
       />
       {children}
       <BrandFooter
