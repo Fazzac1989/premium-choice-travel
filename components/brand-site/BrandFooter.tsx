@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
+import { CORPORATE_APP_URL, CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
 
 export default function BrandFooter({
   name,
@@ -28,7 +28,7 @@ export default function BrandFooter({
     ...CORPORATE_NAV.map((l) => ({ href: `${base}${l.href}`, label: l.label })),
     { href: `${base}/about`, label: 'About' },
     { href: `${base}${REVIEW_HREF}`, label: 'Book a programme review' },
-    { href: `${base}/workspace`, label: 'Client login' },
+    { href: CORPORATE_APP_URL, label: 'Client login' },
   ] : [
     ...(isHolidays ? [
       { href: `${base}/destinations`, label: 'Destinations' },

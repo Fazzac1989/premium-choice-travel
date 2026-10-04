@@ -1,33 +1,22 @@
 import { NextResponse } from 'next/server';
-import { getAccount } from '@/lib/account';
 import { tripLifecycle } from '@/lib/corporate/workspace/budget';
 import { demoSnapshot } from '@/lib/corporate/workspace/demo';
-import { getMembership, loadSnapshot } from '@/lib/corporate/workspace/repo';
-import { currentApproval, hasRole, tripStage, STAGE_LABELS } from '@/lib/corporate/workspace/rules';
-import type { Snapshot } from '@/lib/corporate/workspace/types';
+import { currentApproval, tripStage, STAGE_LABELS } from '@/lib/corporate/workspace/rules';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Finance export: one row per trip, coded the way the client reports, with the
  * lifecycle amounts in separate columns so the sheet sums without double
- * counting. Finance role only; ?demo=1 exports the fictional demo company.
+ * counting. Only the fictional demo company: the real export is in the platform workspace.
  */
 export async function GET(request: Request, { params }: { params: { brand: string } }) {
   if (params.brand !== 'corporate') return new NextResponse('Not found', { status: 404 });
   const url = new URL(request.url);
   const now = new Date();
 
-  let s: Snapshot;
-  if (url.searchParams.get('demo') === '1') {
-    s = demoSnapshot(now);
-  } else {
-    const account = await getAccount();
-    if (!account) return new NextResponse('Sign in first', { status: 401 });
-    const membership = await getMembership(account);
-    if (!membership || !hasRole(membership.member, 'finance')) return new NextResponse('Not authorised', { status: 403 });
-    s = await loadSnapshot(membership.companyId);
-  }
+  if (url.searchParams.get('demo') !== '1') return new NextResponse('Not found', { status: 404 });
+  const s = demoSnapshot(now);
 
   const amount = (minor: number) => (minor / 100).toFixed(2);
   const cell = (v: string | number | null | undefined) => {

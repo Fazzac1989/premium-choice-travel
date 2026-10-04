@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeading from '@/components/SectionHeading';
 import ReviewBand from '@/components/corporate/ReviewBand';
-import { REVIEW_CTA, REVIEW_HREF } from '@/lib/corporate/content';
+import { CORPORATE_APP_URL, REVIEW_CTA, REVIEW_HREF } from '@/lib/corporate/content';
 
 const PROBLEMS = [
   'Trip requests arriving by email, WhatsApp and phone, with nobody sure which is current',
@@ -204,12 +204,12 @@ export default function CorporateHome({ base, heroImage }: { base: string; heroI
               Every trip, approval and invoice in one place.
             </h2>
             <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">
-              Travellers see their trips. Approvers approve the exact option and price. Finance sees budget, spend,
-              commitments, refunds and airline credits — each amount counted once — and downloads it for the accounts.
+              Travellers find a hotel and book it on the spot when it is within your policy; anything else goes to
+              their manager, who approves the exact room and price. Finance sees budget, spend and commitments.
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href={`${base}/workspace/demo/finance`} className="btn-primary !px-6 !py-3">See the client workspace</Link>
-              <Link href={`${base}/workspace`} className="btn-outline !px-6 !py-3">Client login</Link>
+              <a href={CORPORATE_APP_URL} className="btn-outline !px-6 !py-3">Client login</a>
             </div>
             <p className="mt-3 text-xs text-ink-soft">The demo uses a fictional company and invented figures.</p>
           </div>

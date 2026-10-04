@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { decideOffer, requestTrip } from '@/lib/corporate/workspace/actions';
 import { centreBudgets, openItems, tripLifecycle, uncodedLifecycle } from '@/lib/corporate/workspace/budget';
 import {
   canApprove, currentApproval, hasRole, isOfferLive, tripStage, visibleTrips,
@@ -343,7 +342,7 @@ function OfferCard({ c, offer }: { c: Ctx; offer: Offer }) {
       <p className="mt-3 text-xs font-semibold text-ink-soft">{status}</p>
 
       {verdict.ok && (
-        <form action={demo ? undefined : decideOffer} className="mt-4 space-y-3 border-t border-line pt-4">
+        <form className="mt-4 space-y-3 border-t border-line pt-4">
           <input type="hidden" name="offer" value={offer.id} />
           <label className="field-label" htmlFor={`cm-${offer.id}`}>Comment (optional)</label>
           <input id={`cm-${offer.id}`} name="comment" className="field" placeholder="e.g. Approved — client meeting confirmed" />
@@ -549,7 +548,7 @@ export function RequestTrip(c: Ctx) {
     <div className="mx-auto max-w-2xl space-y-6">
       <Header title="Request a trip" text="Tell us where and when. Your account team sends suitable options with the full cost; nothing is booked until it is approved." />
       {search.error && <Banner tone="error">{search.error}</Banner>}
-      <form action={demo ? undefined : requestTrip} className="card space-y-4 p-6">
+      <form className="card space-y-4 p-6">
         {arranger ? (
           <div>
             <label className="field-label" htmlFor="rq-traveller">Who is travelling?</label>

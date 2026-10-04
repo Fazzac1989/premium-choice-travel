@@ -14,17 +14,14 @@ import { isSupabaseConfigured } from '@/lib/supabase/admin';
  */
 export type LinkResult = { ok: true } | { ok: false; reason: 'rate_limited' | 'failed' | 'off' };
 
-export async function sendSignInLink(email: string, next: string, origin?: string): Promise<LinkResult> {
+export async function sendSignInLink(email: string, next: string): Promise<LinkResult> {
   if (!isSupabaseConfigured()) return { ok: false, reason: 'off' };
 
   // Come back to the site they were on, not the master one. A Supabase session
   // is a cookie and cookies do not cross domains, so landing someone on
   // premiumchoicetravel.com would leave them signed out where they actually were.
   const host = headers().get('host') ?? '';
-  // A caller on another domain (staff inviting a client) names the site instead.
-  const site = origin
-    ? origin
-    : host
+  const site = host
     ? `${host.startsWith('localhost') ? 'http' : 'https'}://${host}`
     : process.env.NEXT_PUBLIC_SITE_URL || 'https://www.premiumchoicetravel.com';
 

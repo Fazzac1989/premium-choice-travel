@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import SignOut from './SignOut';
 import { WORKSPACE_NAV, type Ctx } from './parts';
 
 export const DEMO_ROLES = [
@@ -74,9 +73,6 @@ export default function Shell({
           <div className="mt-3 flex flex-wrap items-baseline gap-x-3 text-sm lg:mt-6 lg:block lg:border-t lg:border-line lg:pt-4">
             <p className="font-semibold text-ink">{c.me.fullName}</p>
             <p className="text-xs text-ink-soft">{c.s.company.name}</p>
-            {!c.demo && (
-              <SignOut next={c.base} />
-            )}
             <p className="mt-4 hidden text-xs leading-relaxed text-ink-soft lg:block">
               Need help with a trip? Call your account team on{' '}
               <a href="tel:+97144206965" className="font-semibold text-teal-deep">+971 4 420 6965</a>, or the 24/7 number in your travel documents out of hours.

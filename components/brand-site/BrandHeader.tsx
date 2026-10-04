@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
+import { CORPORATE_APP_URL, CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
 
 export type HeaderDestinationGroup = {
   region: string;
@@ -246,9 +246,9 @@ export default function BrandHeader({
               </Link>
             ))}
             {isCorporate ? (
-              <Link href={`${base}/workspace`} className={`whitespace-nowrap text-sm font-semibold ${isSolid ? 'text-ink-soft hover:text-teal-deep' : 'text-white/80 hover:text-white'}`}>
+              <a href={CORPORATE_APP_URL} className={`whitespace-nowrap text-sm font-semibold ${isSolid ? 'text-ink-soft hover:text-teal-deep' : 'text-white/80 hover:text-white'}`}>
                 Client login
-              </Link>
+              </a>
             ) : (
               <a href="tel:+97144206965" className={`hidden whitespace-nowrap text-sm font-semibold xl:block ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
                 +971 4 420 6965
@@ -374,9 +374,9 @@ export default function BrandHeader({
               </Link>
             ) : isCorporate ? (
               <>
-                <Link href={`${base}/workspace`} className="block py-3 text-base font-semibold text-ink">
+                <a href={CORPORATE_APP_URL} className="block py-3 text-base font-semibold text-ink">
                   Client login
-                </Link>
+                </a>
                 <Link href={`${base}${REVIEW_HREF}`} className="btn-primary mt-3 w-full">
                   Book a programme review
                 </Link>

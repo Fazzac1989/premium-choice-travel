@@ -24,6 +24,12 @@ export const CORPORATE_NAV: CorporateLink[] = [
   { href: '/how-we-work', label: 'How we work' },
 ];
 
+/**
+ * The client workspace itself: Premium Choice Corporate on the trade platform (founder,
+ * 2026-10-04) — live search, booking on the spot, approvals. This site keeps only its demo.
+ */
+export const CORPORATE_APP_URL = 'https://app.premiumchoicecorporate.com';
+
 export const REVIEW_HREF = '/programme-review';
 export const REVIEW_CTA = 'Book a travel programme review';
 
