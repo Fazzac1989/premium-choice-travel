@@ -11,6 +11,7 @@ import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } f
 import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
 import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
+import TrustRail from '@/components/holidays/TrustRail';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
 import { parseStaySearch } from '@/lib/staycations/stay-search';
 
@@ -65,9 +66,9 @@ export default async function BrandHomePage({
           <HeroSlideshow />
           <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/70" />
           <div className="container-site relative pb-16 pt-28 text-white">
-            <p className="eyebrow !text-teal">A Premium Choice Travel brand · Dubai</p>
+            <p className="eyebrow !text-sun">A Premium Choice Travel brand · Dubai</p>
             <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-              Your holiday. <em className="not-italic text-teal">Your way.</em>
+              Your holiday. <em className="not-italic text-sun">Your way.</em>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
               Flight and hotel together, from Dubai, Abu Dhabi, Sharjah and Ras Al Khaimah —
@@ -96,6 +97,8 @@ export default async function BrandHomePage({
             </div>
           </div>
         </section>
+
+        <TrustRail />
 
         <ServiceCircles base={base} services={brand.services} heading="What kind of trip are you after?" />
 

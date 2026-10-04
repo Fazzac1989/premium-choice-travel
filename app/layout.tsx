@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Archivo, Cormorant_Garamond, Fraunces, Great_Vibes, Inter } from 'next/font/google';
+import { Archivo, Cormorant_Garamond, Figtree, Fraunces, Great_Vibes, Inter } from 'next/font/google';
 import './globals.css';
 
 const archivo = Archivo({
@@ -37,6 +37,21 @@ const cormorant = Cormorant_Garamond({
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+  display: 'swap',
+  fallback: ['system-ui', 'Segoe UI', 'sans-serif'],
+});
+
+/**
+ * Premium Choice Holidays (founder, 2026-10-04): a package-holiday face.
+ * Figtree is geometric and friendly with a heavy weight that can carry a price
+ * at 48px, which is what this brand's pages are built around. The serif is
+ * retired on Holidays — a Fraunces headline reads as a tour operator, and this
+ * site is meant to read as a holiday.
+ */
+const figtree = Figtree({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-figtree',
   display: 'swap',
   fallback: ['system-ui', 'Segoe UI', 'sans-serif'],
 });
@@ -81,7 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${fraunces.variable} ${greatVibes.variable} ${cormorant.variable} ${inter.variable}`}
+      className={`${archivo.variable} ${fraunces.variable} ${greatVibes.variable} ${cormorant.variable} ${inter.variable} ${figtree.variable}`}
     >
       <body className="font-sans">
         {children}

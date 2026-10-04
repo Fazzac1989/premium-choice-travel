@@ -97,7 +97,8 @@ export default async function BrandSiteLayout({
   }
 
   return (
-    <div className="coastal min-h-screen">
+    // Holidays wears its own palette; every other brand stays on Coastal Calm.
+    <div className={`${isHolidays ? 'holidays' : 'coastal'} min-h-screen`}>
       <BrandHeader
         base={base}
         name={brand.name}

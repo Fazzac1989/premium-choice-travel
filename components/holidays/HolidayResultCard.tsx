@@ -3,13 +3,16 @@ import Link from 'next/link';
 import type { HolidayResult } from '@/lib/holidays/holiday-search';
 
 /**
- * One holiday in the list.
+ * One holiday in the list, in the package-holiday idiom (founder, 2026-10-04).
  *
- * The price a UAE family compares on is the per-person price, so that is the
- * big number. What it does and does not include is stated next to it rather
- * than in a footnote: while flights are not yet live, a price that looks like a
- * package but is really a hotel would be the single most misleading thing on
- * the site.
+ * The price is the loudest thing on the card, because that is what a UAE family
+ * compares on. Everything else earns its place or goes.
+ *
+ * What it does not do is invent urgency. A bed bank tells us whether a rate is
+ * on allotment, not how many rooms are left, so there is no honest "only 3
+ * left" to print here. The badges below are facts the supplier actually sent:
+ * the board, whether it can be cancelled, the star rating. When flights go
+ * live, Duffel does return a seat count, and that one is real enough to show.
  */
 
 const aed = new Intl.NumberFormat('en-AE', {
@@ -20,9 +23,19 @@ const aed = new Intl.NumberFormat('en-AE', {
 
 function Stars({ count }: { count: number }) {
   return (
-    <span className="text-teal-deep" aria-label={`${count} star`}>
+    <span className="text-sun-deep" aria-label={`${count} star`}>
       {'★'.repeat(count)}
     </span>
+  );
+}
+
+function Badge({ tone = 'plain', children }: { tone?: 'plain' | 'deal'; children: React.ReactNode }) {
+  const look =
+    tone === 'deal'
+      ? 'bg-deal-bg text-deal-ink'
+      : 'bg-cloud text-slate-soft';
+  return (
+    <span className={`inline-block rounded-md px-2 py-1 text-xs font-bold ${look}`}>{children}</span>
   );
 }
 
@@ -39,14 +52,14 @@ export default function HolidayResultCard({
   const { room, flight } = result;
   const href = `/search/${result.platformHotelId}?${new URLSearchParams(params).toString()}`;
   return (
-    <article className="group relative grid overflow-hidden rounded-2xl border border-line bg-white transition-colors focus-within:border-teal-deep hover:border-teal-deep sm:grid-cols-[260px_1fr]">
-      <div className="relative aspect-[4/3] bg-sand sm:aspect-auto sm:min-h-[200px]">
+    <article className="group relative grid overflow-hidden rounded-2xl border border-cloud-line bg-white shadow-[0_2px_8px_rgba(22,32,42,0.06)] transition-shadow hover:shadow-[0_6px_20px_rgba(22,32,42,0.12)] sm:grid-cols-[300px_1fr]">
+      <div className="relative aspect-[4/3] bg-cloud sm:aspect-auto sm:min-h-[220px]">
         {result.image ? (
           <Image
             src={result.image}
             alt=""
             fill
-            sizes="(max-width: 640px) 100vw, 260px"
+            sizes="(max-width: 640px) 100vw, 300px"
             className="object-cover"
           />
         ) : null}
@@ -55,57 +68,59 @@ export default function HolidayResultCard({
       <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-stretch sm:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-            <h3 className="font-serif text-xl leading-snug text-ink">
+            <h3 className="text-xl font-extrabold leading-snug tracking-[-0.01em] text-slate">
               {/* The whole card is the target; the stretched link keeps one
                   tab stop and one accessible name for it. */}
-              <Link href={href} className="after:absolute after:inset-0 group-hover:text-teal-deep">
+              <Link href={href} className="after:absolute after:inset-0 group-hover:text-flame">
                 {result.name}
               </Link>
             </h3>
             {result.stars ? <Stars count={result.stars} /> : null}
           </div>
-          <p className="mt-1 text-sm text-ink-soft">{result.city}</p>
+          <p className="mt-1 text-sm font-medium text-slate-soft">{result.city}</p>
 
-          <dl className="mt-3 grid gap-1 text-sm">
-            <div className="flex gap-2">
-              <dt className="text-ink-soft">Room</dt>
-              <dd className="min-w-0 text-ink">{room.roomName}</dd>
-            </div>
-            <div className="flex gap-2">
-              <dt className="text-ink-soft">Board</dt>
-              <dd className="text-ink">{room.board}</dd>
-            </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge>{room.board}</Badge>
+            {room.refundable ? <Badge tone="deal">Free cancellation</Badge> : null}
             {flight ? (
-              <div className="flex gap-2">
-                <dt className="text-ink-soft">Flight</dt>
-                <dd className="text-ink">
-                  {flight.outbound.carrierName} · {flight.outbound.stops === 0 ? 'direct' : `${flight.outbound.stops} stop`}
-                </dd>
-              </div>
+              <Badge>
+                {flight.outbound.carrierName} ·{' '}
+                {flight.outbound.stops === 0 ? 'Direct' : `${flight.outbound.stops} stop`}
+              </Badge>
             ) : null}
-          </dl>
-
-          <p className="mt-3 text-xs text-ink-soft">
-            {room.refundable ? 'Free cancellation available' : 'Non-refundable rate'}
-          </p>
-        </div>
-
-        <div className="flex shrink-0 flex-col justify-between gap-3 border-t border-line pt-4 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0 sm:text-right">
-          <div>
-            <p className="text-xs text-ink-soft">
-              {result.flightPending ? 'Hotel only, per person' : 'Per person, flight and hotel'}
-            </p>
-            <p className="font-serif text-3xl text-ink">{aed.format(result.perPerson)}</p>
-            <p className="mt-0.5 text-xs text-ink-soft">
-              {result.nights} nights · {travellers} travelling
-            </p>
-            {result.flightPending ? (
-              <p className="mt-1.5 text-xs font-semibold text-teal-deep">Flights quoted separately</p>
+            {/* Real scarcity only: a seat count the carrier actually sent. */}
+            {flight?.seatsLeft && flight.seatsLeft <= 9 ? (
+              <Badge tone="deal">
+                {flight.seatsLeft} {flight.seatsLeft === 1 ? 'seat' : 'seats'} left at this fare
+              </Badge>
             ) : null}
           </div>
-          <p className="text-xs text-ink-soft">
-            {aed.format(result.packageTotal ?? room.total)} total
-          </p>
+
+          <p className="mt-3 truncate text-sm text-slate-soft">{room.roomName}</p>
+        </div>
+
+        <div className="flex shrink-0 flex-col justify-between gap-3 border-t border-cloud-line pt-4 sm:min-w-[190px] sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0 sm:text-right">
+          <div>
+            <p className="text-xs font-semibold text-slate-soft">
+              {result.flightPending ? 'Hotel only, from' : 'From'}
+            </p>
+            <p className="text-[34px] font-black leading-none tracking-[-0.03em] text-flame tabular-nums">
+              {aed.format(result.perPerson)}
+            </p>
+            <p className="mt-1 text-xs font-bold text-slate">per person</p>
+            <p className="mt-1 text-xs text-slate-soft">
+              {aed.format(result.packageTotal ?? room.total)} total &middot; {result.nights} nights
+              &middot; {travellers} travelling
+            </p>
+          </div>
+          <div>
+            <span className="inline-block rounded-full bg-flame px-6 py-2.5 text-sm font-bold text-white transition-colors group-hover:bg-flame-deep">
+              View holiday
+            </span>
+            {result.flightPending ? (
+              <p className="mt-2 text-xs font-semibold text-slate-soft">Flights quoted separately</p>
+            ) : null}
+          </div>
         </div>
       </div>
     </article>

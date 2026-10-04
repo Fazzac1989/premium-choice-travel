@@ -40,6 +40,22 @@ const config: Config = {
       'wait-ink': '#885006',
       'err-bg': '#FCECE9',
       'err-ink': '#A43C31',
+
+      // ── Premium Choice Holidays — package-holiday palette ───────
+      // Additive: only the Holidays brand uses these. Red carries the
+      // action, sun carries the price, and nothing else competes.
+      flame: '#E0301E',
+      'flame-deep': '#B82414',
+      'flame-wash': '#FDEEEC',
+      sun: '#FFC72C',
+      'sun-deep': '#E8A800',
+      'sun-wash': '#FFF7E3',
+      slate: '#16202A',
+      'slate-soft': '#55636F',
+      cloud: '#F3F5F7',
+      'cloud-line': '#E3E7EB',
+      'deal-bg': '#E8F5EC',
+      'deal-ink': '#1C7A3E',
     },
     fontFamily: {
       sans: ['var(--font-archivo)', 'sans-serif'],
@@ -47,6 +63,8 @@ const config: Config = {
       // Coastal Calm: Cormorant Garamond display, Inter interface.
       display: ['var(--font-cormorant)', 'Georgia', 'serif'],
       ui: ['var(--font-inter)', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      // Premium Choice Holidays: one face, used at every weight.
+      holiday: ['var(--font-figtree)', 'system-ui', 'Segoe UI', 'sans-serif'],
     },
     extend: {
       maxWidth: { site: '1240px' },

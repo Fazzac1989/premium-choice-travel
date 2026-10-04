@@ -213,6 +213,78 @@
   .coastal .border-line {
     @apply border-sea-line;
   }
+}
+
+/* ── Premium Choice Holidays ────────────────────────────────────────────
+   A package-holiday site, not a tour operator's brochure (founder,
+   2026-10-04). The channel tokens are restated so every existing component
+   follows without being touched, exactly as Coastal Calm does for
+   Staycations. Red carries every action, sun-yellow carries every price,
+   and the serif is retired: one face at many weights.                    */
+@layer base {
+  .holidays {
+    --c-ink: 22 32 42; /* slate       #16202A */
+    --c-ink-soft: 85 99 111; /* slate-soft  #55636F */
+    --c-teal: 224 48 30; /* flame       #E0301E */
+    --c-teal-deep: 224 48 30; /* flame       — the action colour */
+    --c-teal-hover: 184 36 20; /* flame-deep  #B82414 */
+    --c-sand: 243 245 247; /* cloud       #F3F5F7 */
+    --c-line: 227 231 235; /* cloud-line  #E3E7EB */
+  }
+  .holidays ::selection {
+    @apply bg-sun text-slate;
+  }
+}
+
+@layer components {
+  /* One face. A Fraunces headline reads as a tour operator; this brand is a
+     holiday, so the serif maps to the same sans at a heavier weight. */
+  .holidays .font-serif {
+    @apply font-holiday font-extrabold tracking-[-0.02em];
+  }
+  .holidays {
+    @apply font-holiday;
+  }
+  .holidays .eyebrow {
+    @apply font-bold text-flame;
+  }
+  .holidays .btn-primary {
+    @apply rounded-full bg-flame font-bold hover:bg-flame-deep;
+  }
+  .holidays .btn-outline {
+    @apply rounded-full font-bold;
+  }
+  .holidays .btn-outline:hover {
+    @apply border-flame text-flame;
+  }
+  .holidays .bg-sand {
+    @apply bg-cloud;
+  }
+  .holidays .bg-ink {
+    @apply bg-slate;
+  }
+  /* The accent maps to flame, which disappears on a dark panel. */
+  .holidays .bg-ink a.text-teal,
+  .holidays .bg-ink a.text-teal-deep {
+    @apply text-sun underline decoration-sun/40 underline-offset-2 hover:decoration-sun;
+  }
+  .holidays .bg-ink .text-teal,
+  .holidays .bg-ink .text-teal-deep {
+    @apply text-sun;
+  }
+  .holidays .bg-ink .bg-teal {
+    @apply bg-flame;
+  }
+  .holidays .bg-ink .border-teal {
+    @apply border-sun;
+  }
+  .holidays .border-line {
+    @apply border-cloud-line;
+  }
+  /* Cards on a holiday site are objects you can pick up, not panels. */
+  .holidays .card {
+    @apply rounded-2xl border-cloud-line shadow-[0_2px_8px_rgba(22,32,42,0.06)];
+  }
   .coastal .text-ink {
     @apply text-sea-ink;
   }
