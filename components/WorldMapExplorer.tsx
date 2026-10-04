@@ -44,8 +44,17 @@ const ISLAND_MARKERS: { slug: string; coordinates: [number, number] }[] = [
   { slug: 'singapore', coordinates: [103.8, 1.35] },
 ];
 
-const TEAL = '#19BAAB';
-const TEAL_SOFT = '#8ADCD3';
+/**
+ * The map wears whichever brand it is sitting in.
+ *
+ * These read the same channel variables the brand scopes redefine, so the map
+ * lights up teal on the master site and red on Holidays without this component
+ * knowing which brand it is in. The fallback is the original teal, for the one
+ * case where a stylesheet has not loaded yet.
+ */
+const ACCENT = 'rgb(var(--c-teal, 25 186 171))';
+const ACCENT_SOFT = 'rgb(var(--c-teal, 25 186 171) / 0.45)';
+const ACCENT_FAINT = 'rgb(var(--c-teal, 25 186 171) / 0.2)';
 const LAND = '#E7E3DA';
 const LAND_STROKE = '#FFFFFF';
 
@@ -91,9 +100,9 @@ export default function WorldMapExplorer({
 
   const fillFor = (dest: MapDestination | undefined) => {
     if (!dest) return LAND;
-    if (active?.slug === dest.slug) return TEAL;
-    if (active && active.region === dest.region) return TEAL_SOFT;
-    return active ? '#BFE9E3' : TEAL_SOFT;
+    if (active?.slug === dest.slug) return ACCENT;
+    if (active && active.region === dest.region) return ACCENT_SOFT;
+    return active ? ACCENT_FAINT : ACCENT_SOFT;
   };
 
   return (
@@ -152,13 +161,13 @@ export default function WorldMapExplorer({
                         cursor: dest ? 'pointer' : 'default',
                       },
                       hover: {
-                        fill: dest ? TEAL : LAND,
+                        fill: dest ? ACCENT : LAND,
                         stroke: LAND_STROKE,
                         strokeWidth: 0.5,
                         outline: 'none',
                         cursor: dest ? 'pointer' : 'default',
                       },
-                      pressed: { fill: dest ? TEAL : LAND, outline: 'none' },
+                      pressed: { fill: dest ? ACCENT : LAND, outline: 'none' },
                     }}
                   />
                 );
@@ -181,13 +190,13 @@ export default function WorldMapExplorer({
               >
                 <circle
                   r={lit ? 7 : 5}
-                  fill={lit ? TEAL : TEAL_SOFT}
+                  fill={lit ? ACCENT : ACCENT_SOFT}
                   stroke="#fff"
                   strokeWidth={1.5}
                   style={{ transition: 'all 250ms ease' }}
                 />
                 {lit && (
-                  <circle r={11} fill="none" stroke={TEAL} strokeWidth={1.5} opacity={0.5} />
+                  <circle r={11} fill="none" stroke={ACCENT} strokeWidth={1.5} opacity={0.5} />
                 )}
               </Marker>
             );

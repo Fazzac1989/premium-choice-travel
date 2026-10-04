@@ -36,7 +36,7 @@ export default async function BrandDestinationsPage({ params }: { params: { bran
           </h1>
           <p className="mt-4 max-w-xl text-ink-soft">
             {all.length} destinations, hand-picked for travellers from the UAE. Glide over
-            the map — the places we know light up in Premium Choice teal.
+            the map — the places we know light up in our colours.
           </p>
         </div>
       </section>
