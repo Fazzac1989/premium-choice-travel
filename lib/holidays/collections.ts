@@ -133,12 +133,9 @@ export const COLLECTION_GROUPS: CollectionGroup[] = [
   {
     heading: 'Time of year',
     items: [
-      {
-        slug: 'winter-sun',
-        title: 'Winter sun',
-        blurb: 'Short flights to reliable warmth, for the months the Gulf finally cools.',
-        match: (p) => /winter sun/.test(cat(p)),
-      },
+      // No "Winter sun" collection. It is a Northern European idea — escaping a
+      // grey December — and December is the good season here. What a UAE
+      // resident needs to escape is July, which is the collection below.
       {
         slug: 'escape-the-heat',
         title: 'Escape the summer heat',
