@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient, isSupabaseConfigured } from '@/lib/supabase/admin';
 import { getAccount } from '@/lib/account';
 import { describeRejection, guardPayloadFromForm, guardSubmission, remoteIpFrom } from '@/lib/spam-guard';
+import { sendSignInLink } from '@/lib/sign-in-link';
 
 export type AccountState = { ok: boolean; message: string } | null;
 
@@ -40,29 +41,11 @@ export async function requestSignInLink(_prev: AccountState, formData: FormData)
     return verdict.silent ? { ok: true, message: SENT(email) } : { ok: false, message: verdict.message };
   }
 
-  // Come back to the site they signed in from, not to the master one. A
-  // Supabase session is a cookie and cookies do not cross domains, so landing
-  // someone on premiumchoicetravel.com after they asked to sign in from
-  // Staycations would leave them signed out where they actually were.
-  const host = headers().get('host') ?? '';
-  const site = host
-    ? `${host.startsWith('localhost') ? 'http' : 'https'}://${host}`
-    : process.env.NEXT_PUBLIC_SITE_URL || 'https://www.premiumchoicetravel.com';
-
-  const supabase = createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${site}/auth/callback?next=${encodeURIComponent(next)}`,
-      shouldCreateUser: true,
-    },
-  });
-
-  if (error) {
-    console.error('[account] sign-in link', error.status, error.message);
+  const sent = await sendSignInLink(email, next);
+  if (!sent.ok) {
     // The mailer limits how many links can go out in an hour. Saying "try
     // again" to someone who has already tried twice is the wrong advice.
-    if (error.status === 429) {
+    if (sent.reason === 'rate_limited') {
       return {
         ok: false,
         message: 'Too many sign-in links have been requested just now. Wait a few minutes and try again, or call us on +971 4 420 6965.',

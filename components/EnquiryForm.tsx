@@ -70,6 +70,21 @@ export default function EnquiryForm({
         <label className="field-label" htmlFor="enq-message">Tell us about your trip</label>
         <textarea id="enq-message" name="message" rows={4} className="field" placeholder="Where would you like to go? Any special occasions?" />
       </div>
+      {/* Signing in here is a link in an email, so there is no password to
+          invent and nothing to confirm. Ticked by default because the whole
+          point of the enquiry is to hear back, and this is where the answer
+          will be — but it is a tick box, so it can be unticked. */}
+      <label className="flex cursor-pointer items-start gap-2.5 text-sm text-ink-soft">
+        <input
+          type="checkbox"
+          name="create_account"
+          defaultChecked
+          className="mt-0.5 h-4 w-4 shrink-0 accent-teal-deep"
+        />
+        <span>
+          Email me a link so I can follow this enquiry and see any quote online. No password needed.
+        </span>
+      </label>
       <GuardFields onChange={setGuard} />
       {state && !state.ok && <p className="text-sm text-danger">{state.message}</p>}
       <SubmitButton ready={guard.ready} />

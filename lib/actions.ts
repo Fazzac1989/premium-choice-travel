@@ -7,10 +7,15 @@ import { emailShell, sendEmail } from '@/lib/email';
 import { emailBrand } from '@/lib/email-brand';
 import { getAccount } from '@/lib/account';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
+import { sendSignInLink } from '@/lib/sign-in-link';
 
 export type EnquiryState = { ok: boolean; message: string } | null;
 
 const THANKS = 'Thank you — we’ll come back to you as quickly as we can, typically within one working day. We have emailed you a copy.';
+
+/** Said only when a link actually went out, so it is never a promise of an email nobody sent. */
+const TRACK = (email: string) =>
+  `We have also sent  a link to sign in, so you can follow this enquiry and see any quote online.`;
 
 export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Promise<EnquiryState> {
   const name = String(formData.get('name') ?? '').trim();
@@ -95,6 +100,25 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
     ],
     caveat: 'Nothing is booked or held at this stage. We will come back to you with ideas and prices first.',
   });
+
+  /**
+   * An account, if they asked for one.
+   *
+   * There is nothing to create: signing in here is a link in an email and
+   * Supabase makes the account when the address is new. The enquiry just went
+   * in under this address, and /auth/callback claims past activity by email,
+   * so clicking the link is enough to see it.
+   *
+   * Only when the box was ticked, and never for somebody already signed in —
+   * their enquiry already carries their id, and a sign-in link to someone with
+   * a live session is noise. If the link fails to send, the enquiry still
+   * succeeded: that is the thing they came to do, and it is already saved.
+   */
+  if (formData.get('create_account') === 'on' && !(await getAccount())) {
+    const sent = await sendSignInLink(email, brand.key === 'holidays' ? '/manage' : '/account');
+    if (sent.ok) return { ok: true, message: `${THANKS} ${TRACK(email)}` };
+    console.warn('[enquiry] sign-in link not sent:', sent.reason);
+  }
 
   return { ok: true, message: THANKS };
 }
