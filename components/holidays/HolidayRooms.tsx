@@ -3,6 +3,7 @@
 import { useId, useState } from 'react';
 import EnquiryForm from '@/components/EnquiryForm';
 import type { HolidayRoom } from '@/lib/holidays/holiday-search';
+import { DEPOSIT_SCHEDULE, depositAmount, depositFor } from '@/lib/holidays/deposit';
 
 /**
  * Choosing a room, and saying what you want.
@@ -27,6 +28,7 @@ export default function HolidayRooms({
   tripLabel,
   flightPending,
   brand,
+  departDate,
 }: {
   rooms: HolidayRoom[];
   travellers: number;
@@ -36,11 +38,14 @@ export default function HolidayRooms({
   tripLabel: string;
   flightPending: boolean;
   brand: string;
+  /** The day they fly, which decides the deposit. */
+  departDate: string;
 }) {
   const name = useId();
   const [chosen, setChosen] = useState(rooms[0]?.offerId ?? '');
   const [showAll, setShowAll] = useState(false);
   const room = rooms.find((r) => r.offerId === chosen) ?? rooms[0];
+  const band = depositFor(departDate);
 
   // A supplier returns every rate combination it holds — one Dubai hotel came
   // back with 137, which is not a choice, it is a wall. What a customer is
@@ -136,6 +141,33 @@ export default function HolidayRooms({
           </button>
         ) : null}
       </section>
+
+      {room ? (
+        <section
+          aria-labelledby="deposit-heading"
+          className="mt-6 rounded-2xl border border-cloud-line bg-sun-wash p-5"
+        >
+          <h2 id="deposit-heading" className="text-lg font-extrabold text-slate">
+            {band.percent < 100
+              ? `Book this for ${aed.format(depositAmount(room.total, band))} today`
+              : 'This holiday is paid in full'}
+          </h2>
+          <p className="mt-1 text-sm text-slate-soft">
+            {band.because}
+            {band.percent < 100
+              ? ` The balance of ${aed.format(room.total - depositAmount(room.total, band))} is due before you travel.`
+              : ''}
+          </p>
+          <dl className="mt-3 grid gap-1 text-xs text-slate-soft sm:grid-cols-3">
+            {DEPOSIT_SCHEDULE.map((row) => (
+              <div key={row.when} className="flex gap-1.5">
+                <dt>{row.when}:</dt>
+                <dd className="font-bold text-slate">{row.pay}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ) : null}
 
       <section aria-labelledby="enquire-heading" className="mt-10 border-t border-line pt-8">
         <h2 id="enquire-heading" className="font-serif text-2xl text-ink">

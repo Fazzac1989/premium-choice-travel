@@ -23,11 +23,12 @@ export const TRUST = {
   /** IATA accreditation number, for ticketing. Awaiting the number. */
   iataNumber: null as string | null,
   /**
-   * Low-deposit messaging. Off until the founder supplies the amount and the
-   * conditions — and it only makes sense once a holiday can be paid for at all,
-   * which today it cannot, because every journey ends in an enquiry.
+   * Deposits, on the founder's schedule (2026-10-04): 5% from six months out,
+   * 10% from three, in full inside three. The exact figure depends on the
+   * departure date, so the rail states the entry point and the search itself
+   * tells a customer what they would actually pay — see lib/holidays/deposit.
    */
-  deposit: null as { amount: string; terms: string } | null,
+  deposit: true,
 };
 
 function Mark({ icon, title, sub }: { icon: React.ReactNode; title: string; sub: string }) {
@@ -94,7 +95,11 @@ export default function TrustRail({ compact = false }: { compact?: boolean }) {
           <Mark icon={Badge} title="IATA accredited" sub={`IATA ${TRUST.iataNumber}`} />
         ) : null}
         {TRUST.deposit ? (
-          <Mark icon={Tag} title={`Book from ${TRUST.deposit.amount}`} sub={TRUST.deposit.terms} />
+          <Mark
+            icon={Tag}
+            title="Book from a 5% deposit"
+            sub="Booking six months ahead. We tell you your exact deposit as you search"
+          />
         ) : null}
       </ul>
     </section>

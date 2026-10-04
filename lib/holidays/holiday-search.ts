@@ -9,7 +9,7 @@ import {
   type PlatformSearch,
   type SearchFilters,
 } from '@/lib/platform/client';
-import { cheapestFlight, searchFlights, type FlightOffer, type FlightSearchResult } from '@/lib/platform/flights';
+import { searchFlights, type FlightQuote, type FlightSearchResult } from '@/lib/platform/flights';
 import { sharper } from '@/lib/platform/content';
 // Suppliers shout room names in capitals; the same tidier both brands use.
 import { roomTitle } from '@/lib/staycations/stay-search';
@@ -56,7 +56,7 @@ export type HolidayResult = {
   nights: number;
   room: HolidayRoom;
   /** The cheapest flight that fits these dates, when the platform can price one. */
-  flight: FlightOffer | null;
+  flight: FlightQuote | null;
   /** Hotel plus flights for everyone travelling, in dirhams. Null when no flight. */
   packageTotal: number | null;
   /** What the holiday costs each traveller. Hotel-only when there is no flight. */
@@ -109,7 +109,7 @@ function toResult(
   card: PlatformCard,
   nights: number,
   travellers: number,
-  flight: FlightOffer | null,
+  flight: FlightQuote | null,
 ): HolidayResult | null {
   const offers = offersOn(card).filter(bookable);
   const best = offers.sort((a, b) => a.price.total.amount - b.price.total.amount)[0];
@@ -117,8 +117,9 @@ function toResult(
 
   const room = toRoom(best);
   const stars = card.starRating === null ? null : Math.round(Number(card.starRating));
-  // A flight is priced per person; a room is priced for the party in it.
-  const flightTotal = flight ? major(flight.price.amount) * travellers : null;
+  // The platform quotes the cheapest whole trip for the whole party, so this
+  // is added once. Multiplying it by head count would double-charge a family.
+  const flightTotal = flight ? flight.tripTotal : null;
   const packageTotal = flightTotal === null ? null : room.total + flightTotal;
   const perPerson = (packageTotal ?? room.total) / Math.max(1, travellers);
 
@@ -143,7 +144,7 @@ function compose(
   flights: FlightSearchResult,
   travellers: number,
 ): HolidaySearchPage {
-  const flight = cheapestFlight(flights.offers);
+  const flight = flights.quote;
   return {
     sessionId: search.sessionId,
     pending: search.pending,
@@ -205,7 +206,7 @@ export async function startHolidaySearch(c: HolidayCriteria): Promise<HolidaySea
     }),
     searchFlights({
       origin: c.origin,
-      destination: destinationOf(c),
+      destination: c.cityCode ? { code: c.cityCode } : { text: c.destination },
       departDate: c.departDate,
       returnDate: checkOut,
       adults: c.adults,
@@ -230,7 +231,7 @@ export type HolidayHotel = {
   travellers: number;
   /** Every room that can be confirmed on payment, cheapest first. */
   rooms: HolidayRoom[];
-  flight: FlightOffer | null;
+  flight: FlightQuote | null;
   flights: FlightSearchResult;
 };
 
@@ -258,7 +259,7 @@ export async function holidayHotel(
     }),
     searchFlights({
       origin: c.origin,
-      destination: destinationOf(c),
+      destination: c.cityCode ? { code: c.cityCode } : { text: c.destination },
       departDate: c.departDate,
       returnDate: checkOut,
       adults: c.adults,
@@ -289,7 +290,7 @@ export async function holidayHotel(
     nights: res.nights,
     travellers: travellersIn(c),
     rooms,
-    flight: cheapestFlight(flights.offers),
+    flight: flights.quote,
     flights,
   };
 }
@@ -315,7 +316,7 @@ export async function readHolidaySearch(
     }),
     searchFlights({
       origin: c.origin,
-      destination: destinationOf(c),
+      destination: c.cityCode ? { code: c.cityCode } : { text: c.destination },
       departDate: c.departDate,
       returnDate: returnDateOf(c),
       adults: c.adults,

@@ -143,6 +143,7 @@ export default async function HolidayHotelPage({
               tripLabel={tripLabel}
               flightPending={!hotel.flights.available}
               brand={brand.key}
+              departDate={criteria.departDate}
             />
           </div>
         </>

@@ -92,7 +92,7 @@ export const EMPTY_HOLIDAY_CRITERIA: HolidayCriteria = {
  * well-formed impossible date would otherwise be accepted and then quietly
  * searched for the wrong week. Round-tripping it back to a string catches that.
  */
-const isDate = (s: string) => {
+export const isCalendarDate = (s: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
   const d = new Date(`${s}T00:00:00Z`);
   return !Number.isNaN(d.getTime()) && ymd(d) === s;
@@ -145,7 +145,7 @@ export function parseHolidayCriteria(params: Params): HolidayCriteria {
     origin: isAirport(origin) ? origin : 'DXB',
     destination: one(params, 'to').slice(0, 80).trim(),
     cityCode: one(params, 'city').slice(0, 20).trim(),
-    departDate: isDate(departDate) ? departDate : '',
+    departDate: isCalendarDate(departDate) ? departDate : '',
     nights: clampInt(one(params, 'nights'), 1, MAX_NIGHTS, 7),
     adults: clampInt(one(params, 'adults'), 1, MAX_ADULTS, 2),
     childrenAges: parseAges(one(params, 'ages'), childCount),

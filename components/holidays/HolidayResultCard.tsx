@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { HolidayResult } from '@/lib/holidays/holiday-search';
+import { depositAmount, depositFor } from '@/lib/holidays/deposit';
 
 /**
  * One holiday in the list, in the package-holiday idiom (founder, 2026-10-04).
@@ -51,6 +52,11 @@ export default function HolidayResultCard({
 }) {
   const { room, flight } = result;
   const href = `/search/${result.platformHotelId}?${new URLSearchParams(params).toString()}`;
+  // The deposit falls out of the date they searched, so this is their figure,
+  // not a general claim. Inside three months there is no deposit to advertise.
+  const total = result.packageTotal ?? room.total;
+  const band = depositFor(params.depart ?? '');
+  const payToday = band.percent < 100 ? depositAmount(total, band) : null;
   return (
     <article className="group relative grid overflow-hidden rounded-2xl border border-cloud-line bg-white shadow-[0_2px_8px_rgba(22,32,42,0.06)] transition-shadow hover:shadow-[0_6px_20px_rgba(22,32,42,0.12)] sm:grid-cols-[300px_1fr]">
       <div className="relative aspect-[4/3] bg-cloud sm:aspect-auto sm:min-h-[220px]">
@@ -84,16 +90,17 @@ export default function HolidayResultCard({
             {room.refundable ? <Badge tone="deal">Free cancellation</Badge> : null}
             {flight ? (
               <Badge>
-                {flight.outbound.carrierName} ·{' '}
-                {flight.outbound.stops === 0 ? 'Direct' : `${flight.outbound.stops} stop`}
+                {flight.airlineName} ·{' '}
+                {flight.outbound.stops === 0
+                  ? 'Direct'
+                  : `${flight.outbound.stops} stop${flight.outbound.stops > 1 ? 's' : ''}`}
               </Badge>
             ) : null}
-            {/* Real scarcity only: a seat count the carrier actually sent. */}
-            {flight?.seatsLeft && flight.seatsLeft <= 9 ? (
-              <Badge tone="deal">
-                {flight.seatsLeft} {flight.seatsLeft === 1 ? 'seat' : 'seats'} left at this fare
-              </Badge>
-            ) : null}
+            {/* No scarcity badge. The flight search returns the cheapest trip
+                and the fares behind it, never a seat count, so there is no
+                honest "only 3 left" to print. A refundable fare being on offer
+                is a fact, and is worth more to a customer than a countdown. */}
+            {flight?.refundableFrom ? <Badge tone="deal">Refundable fares available</Badge> : null}
           </div>
 
           <p className="mt-3 truncate text-sm text-slate-soft">{room.roomName}</p>
@@ -109,9 +116,14 @@ export default function HolidayResultCard({
             </p>
             <p className="mt-1 text-xs font-bold text-slate">per person</p>
             <p className="mt-1 text-xs text-slate-soft">
-              {aed.format(result.packageTotal ?? room.total)} total &middot; {result.nights} nights
-              &middot; {travellers} travelling
+              {aed.format(total)} total &middot; {result.nights} nights &middot; {travellers}{' '}
+              travelling
             </p>
+            {payToday !== null ? (
+              <p className="mt-2 inline-block rounded-md bg-sun-wash px-2 py-1 text-xs font-bold text-slate">
+                {aed.format(payToday)} to book &middot; {band.percent}% deposit
+              </p>
+            ) : null}
           </div>
           <div>
             <span className="inline-block rounded-full bg-flame px-6 py-2.5 text-sm font-bold text-white transition-colors group-hover:bg-flame-deep">
