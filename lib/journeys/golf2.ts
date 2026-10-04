@@ -7,7 +7,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: "Seven nights on Vietnam's central coast with four designer courses in one short transfer radius.",
     brand: 'golf',
     destinationSlug: 'vietnam',
-    category: 'Golf and culture',
+    category: 'Golf & culture',
     nights: 7,
     days: 8,
     overview: [
@@ -109,7 +109,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'Hanoi parkland golf and old-quarter evenings, then the Da Nang coast — nine nights, five rounds.',
     brand: 'golf',
     destinationSlug: 'vietnam',
-    category: 'Touring golf',
+    category: 'Touring & two-centre',
     nights: 9,
     days: 10,
     overview: [
@@ -308,7 +308,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'Tour-venue links golf and Old Muscat in four nights — a drive or a forty-five-minute hop from the UAE.',
     brand: 'golf',
     destinationSlug: 'oman',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 4,
     days: 5,
     overview: [
@@ -413,7 +413,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'Five nights where the rainforest meets the Andaman Sea — with the Els Club Teluk Datai as the headline round.',
     brand: 'golf',
     destinationSlug: 'malaysia',
-    category: 'Golf and beach',
+    category: 'Golf & beach',
     nights: 5,
     days: 6,
     overview: [
@@ -507,7 +507,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'Five mild-weather nights on the Atlantic garden island, with golf played above the clouds.',
     brand: 'golf',
     destinationSlug: 'portugal',
-    category: 'Golf and scenery',
+    category: 'Resort golf',
     nights: 5,
     days: 6,
     overview: [
@@ -602,7 +602,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: "Seven nights at Camiral — home of the 2031 Ryder Cup — with the Girona course set around it.",
     brand: 'golf',
     destinationSlug: 'spain',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 7,
     days: 8,
     overview: [
@@ -897,7 +897,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'Marco Simone with the dome of St Peter\'s on the horizon, plus two full Roman days — in four nights.',
     brand: 'golf',
     destinationSlug: 'italy',
-    category: 'Golf and city',
+    category: 'Golf & city',
     nights: 4,
     days: 5,
     overview: [
@@ -1001,7 +1001,7 @@ export const GOLF_JOURNEYS_2: JourneySeed[] = [
     tagline: 'The Albatros course of the 2018 Ryder Cup, Versailles next door, and Paris for the evenings.',
     brand: 'golf',
     destinationSlug: 'france',
-    category: 'Golf and city',
+    category: 'Golf & city',
     nights: 4,
     days: 5,
     overview: [

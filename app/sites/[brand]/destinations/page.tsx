@@ -3,18 +3,30 @@ import { notFound } from 'next/navigation';
 import WorldMapExplorer from '@/components/WorldMapExplorer';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getDestinations } from '@/lib/data';
+import { getDestinations, getPackagesByBrand } from '@/lib/data';
+import GolfDestinations from '@/components/golf/GolfDestinations';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Destinations',
-  description:
-    'Explore our world map of 60+ destinations hand-picked for travellers from the UAE — hover to light up a region, click to filter the countries below.',
-};
+export async function generateMetadata({ params }: { params: { brand: string } }) {
+  if (getBrand(params.brand)?.key === 'golf') {
+    return {
+      title: 'Golf destinations',
+      description: 'Golf holidays by region and country — from UAE golf weekends to links golf in Scotland and Ireland.',
+    };
+  }
+  return {
+    title: 'Destinations',
+    description:
+      'Explore our world map of 60+ destinations hand-picked for travellers from the UAE — hover to light up a region, click to filter the countries below.',
+  };
+}
 
 export default async function BrandDestinationsPage({ params }: { params: { brand: string } }) {
   const brand = getBrand(params.brand);
+  if (brand?.key === 'golf') {
+    return <GolfDestinations base={brandBase(brand)} packages={await getPackagesByBrand('golf')} />;
+  }
   if (!brand || brand.slug !== 'holidays') notFound();
   const base = brandBase(brand);
 

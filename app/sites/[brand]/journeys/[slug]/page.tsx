@@ -1,11 +1,40 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import PackageDetailBody from '@/components/PackageDetailBody';
-import { getBrand } from '@/lib/brands';
+import { brandSiteUrl, getBrand } from '@/lib/brands';
+import { golfFacts } from '@/lib/golf/catalogue';
 import { brandBase } from '@/lib/brand-site';
 import { getDestination, getJourneyStays, getPackage, getRelatedJourneys } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
+
+/**
+ * Each journey's own title and description. Without this every brand-site
+ * journey inherited the plain brand name as its browser title. The layout's
+ * template adds the brand, so a brand suffix authored into seoTitle
+ * ("… | Premium Choice Golf") is dropped rather than said twice.
+ */
+export async function generateMetadata({ params }: { params: { brand: string; slug: string } }) {
+  const brand = getBrand(params.brand);
+  const pkg = await getPackage(params.slug);
+  if (!brand || !pkg || pkg.status !== 'published' || pkg.brand !== brand.key) return {};
+  const place = brand.key === 'golf' ? golfFacts(pkg).country : pkg.destinationName;
+  const authored = (pkg.seoTitle ?? '').replace(/\s*[|—-]\s*Premium Choice.*$/i, '').trim();
+  const kind = brand.key === 'golf' ? 'golf holiday' : 'holiday';
+  const title = authored || `${pkg.title} — ${place} ${kind} from the UAE`;
+  const description = pkg.seoDescription || pkg.tagline || pkg.overview[0]?.slice(0, 155);
+  const site = brandSiteUrl(brand.key);
+  return {
+    title,
+    description,
+    alternates: site ? { canonical: `${site}/journeys/${pkg.slug}` } : undefined,
+    openGraph: {
+      title: `${title} | ${brand.name}`,
+      description,
+      images: pkg.heroImage ? [{ url: pkg.heroImage }] : undefined,
+    },
+  };
+}
 
 export default async function BrandPackagePage({
   params,
@@ -34,7 +63,9 @@ export default async function BrandPackagePage({
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
         <div className="container-site relative pb-12 pt-36 text-white">
           <p className="eyebrow !text-teal">
-            {pkg.destinationName} · {pkg.category}
+            {brand.key === 'golf'
+              ? `${golfFacts(pkg).country} · ${golfFacts(pkg).tripTypeLabel}`
+              : `${pkg.destinationName} · ${pkg.category}`}
           </p>
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{pkg.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/85">{pkg.tagline}</p>

@@ -7,7 +7,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: "Three of Dubai's tournament courses in four nights — no flight required.",
     brand: 'golf',
     destinationSlug: 'united-arab-emirates',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 4,
     days: 5,
     overview: [
@@ -111,7 +111,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Yas Links, Saadiyat and the National in one unhurried four-night break.',
     brand: 'golf',
     destinationSlug: 'united-arab-emirates',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 4,
     days: 5,
     overview: [
@@ -216,7 +216,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: "Quinta do Lago, Vale do Lobo and Monte Rei — the Algarve's headline acts in one week.",
     brand: 'golf',
     destinationSlug: 'portugal',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 6,
     days: 7,
     overview: [
@@ -327,7 +327,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Cascais elegance and Atlantic-cliff golf at Óbidos in one six-night journey.',
     brand: 'golf',
     destinationSlug: 'portugal',
-    category: 'Two-centre golf',
+    category: 'Touring & two-centre',
     nights: 6,
     days: 7,
     overview: [
@@ -554,7 +554,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Finca Cortesín, Sotogrande and the coast’s serious side over six nights.',
     brand: 'golf',
     destinationSlug: 'spain',
-    category: 'Championship golf',
+    category: 'Championship courses',
     nights: 6,
     days: 7,
     overview: [
@@ -666,7 +666,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Alcanada’s sea views, Son Gual’s polish and Palma evenings in five nights.',
     brand: 'golf',
     destinationSlug: 'spain',
-    category: 'Golf & leisure',
+    category: 'Resort golf',
     nights: 5,
     days: 6,
     overview: [
@@ -1458,7 +1458,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Black Mountain, Pineapple Valley and Thailand’s royal seaside golf town.',
     brand: 'golf',
     destinationSlug: 'thailand',
-    category: 'Golf & leisure',
+    category: 'Resort golf',
     nights: 7,
     days: 8,
     overview: [
@@ -1687,7 +1687,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Steenberg, Pearl Valley and Arabella with Table Mountain as the backdrop.',
     brand: 'golf',
     destinationSlug: 'south-africa',
-    category: 'Golf & touring',
+    category: 'Touring & two-centre',
     nights: 7,
     days: 8,
     overview: [
@@ -2037,7 +2037,7 @@ export const GOLF_JOURNEYS: JourneySeed[] = [
     tagline: 'Sawgrass country and Orlando’s tour venues on one two-centre American week.',
     brand: 'golf',
     destinationSlug: 'united-states',
-    category: 'Two-centre golf',
+    category: 'Touring & two-centre',
     nights: 7,
     days: 8,
     overview: [

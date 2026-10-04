@@ -8,6 +8,7 @@ export default function BrandFooter({
   base = '',
   isHolidays = false,
   isStaycations = false,
+  isGolf = false,
   showOffers = false,
 }: {
   name: string;
@@ -16,6 +17,7 @@ export default function BrandFooter({
   base?: string;
   isHolidays?: boolean;
   isStaycations?: boolean;
+  isGolf?: boolean;
   showOffers?: boolean;
 }) {
   const masterUrl = 'https://premiumchoicetravel.com';
@@ -26,7 +28,14 @@ export default function BrandFooter({
     ] : []),
     ...(isStaycations
       ? [{ href: `${base}/hotels`, label: 'Hotels' }]
-      : [{ href: `${base}/journeys`, label: 'Journeys' }]),
+      : isGolf
+        ? [
+            { href: `${base}/journeys`, label: 'Golf holidays' },
+            { href: `${base}/destinations`, label: 'Destinations' },
+            { href: `${base}/journeys?length=short`, label: 'Golf breaks' },
+            { href: `${base}/groups`, label: 'Groups & societies' },
+          ]
+        : [{ href: `${base}/journeys`, label: 'Journeys' }]),
     ...(showOffers ? [{ href: `${base}/offers`, label: 'Offers' }] : []),
     { href: `${base}/about`, label: 'Our story' },
     { href: `${base}/enquire`, label: 'Plan my trip' },

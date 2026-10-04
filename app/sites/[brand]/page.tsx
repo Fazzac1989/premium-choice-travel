@@ -12,6 +12,8 @@ import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
 import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
 import TrustRail from '@/components/holidays/TrustRail';
+import GolfHome from '@/components/golf/GolfHome';
+import { getOffers } from '@/lib/offers';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
 import { parseStaySearch } from '@/lib/staycations/stay-search';
 
@@ -42,6 +44,12 @@ export default async function BrandHomePage({
   // Staycations opens on Explore — the app's search screen, not a brochure.
   if (isStaycations) {
     return <ExploreScreen base={base} criteria={parseCriteria(searchParams)} search={parseStaySearch(searchParams)} />;
+  }
+
+  // Golf is entered by trip type, time available, party and place.
+  if (brand.key === 'golf') {
+    const [golfPackages, { offers }] = await Promise.all([getPackagesByBrand('golf'), getOffers({ site: 'golf' })]);
+    return <GolfHome brand={brand} base={base} packages={golfPackages} offers={offers} />;
   }
 
   // Staycations sells hotels, not packages.

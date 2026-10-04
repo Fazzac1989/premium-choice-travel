@@ -36,7 +36,14 @@ export default async function BrandOffersPage({ params }: { params: { brand: str
               <p className="mx-auto mt-3 max-w-md text-ink-soft">
                 Tell us what you have in mind and we’ll come back with a personal quote.
               </p>
-              <Link href={`${base}/enquire`} className="btn-primary mt-6">Plan my trip</Link>
+              {brand.key === 'golf' ? (
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
+                  <Link href={`${base}/journeys`} className="btn-outline">Browse golf holidays</Link>
+                  <Link href={`${base}/enquire`} className="btn-primary">Ask a golf specialist</Link>
+                </div>
+              ) : (
+                <Link href={`${base}/enquire`} className="btn-primary mt-6">Plan my trip</Link>
+              )}
             </div>
           ) : (
             <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">

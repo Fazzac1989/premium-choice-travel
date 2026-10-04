@@ -5,6 +5,8 @@ import EnquiryForm from '@/components/EnquiryForm';
 import SeasonalityBar from '@/components/SeasonalityBar';
 import type { Destination, Experience, Hotel, Package } from '@/lib/types';
 import { durationLabel, formatPrice } from '@/lib/types';
+import { TEE_TIME_STATUS, golfFacts, stripAccessNote } from '@/lib/golf/catalogue';
+import WhatsAppLink from '@/components/WhatsAppLink';
 
 /**
  * Everything below the hero on a journey page — shared between the master
@@ -45,6 +47,21 @@ export default function PackageDetailBody({
   const priceBasis = typeof details.priceBasis === 'string' ? details.priceBasis.trim() : '';
   const golfCourses = (details.courses ?? []) as { heading: string; body: string }[];
   const cruisePorts = (details.ports ?? []) as string[];
+  const isGolf = pkg.brand === 'golf';
+  const golf = isGolf ? golfFacts(pkg) : null;
+  const teeTimes = TEE_TIME_STATUS[String(details.teeTimeStatus ?? 'unknown')] ?? TEE_TIME_STATUS.unknown;
+  // Golf copy was written with an access caveat after every course; the golf
+  // section now states the tee-time status once, from the record.
+  const tidy = (text: string) => (isGolf ? stripAccessNote(text) : text);
+  const golfSections: [string, string][] = isGolf
+    ? [
+        ['overview', 'Overview'],
+        ...(pkg.itinerary.length > 0 ? [['itinerary', 'Day by day'] as [string, string]] : []),
+        ['golf', 'The golf'],
+        ['included', 'What’s included'],
+        ...(destination || pkg.seasonalNotes ? [['when', 'When to go'] as [string, string]] : []),
+      ]
+    : [];
   return (
     <>
       {/* Facts bar */}
@@ -57,9 +74,8 @@ export default function PackageDetailBody({
             ...(pkg.brand === 'staycations' && details.emirate
               ? [['Emirate', String(details.emirate)] as [string, string]]
               : []),
-            ...(pkg.brand === 'golf' && details.rounds
-              ? [['Golf', `${details.rounds} rounds`] as [string, string]]
-              : []),
+            ...(golf?.roundsLabel ? [['Golf', golf.roundsLabel] as [string, string]] : []),
+            ...(golf ? [['Flights', golf.flights] as [string, string]] : []),
             ...(pkg.brand === 'cruises' && details.cruiseRegion
               ? [['Cruise region', String(details.cruiseRegion)] as [string, string]]
               : []),
@@ -76,9 +92,19 @@ export default function PackageDetailBody({
         </div>
       </div>
 
+      {golfSections.length > 0 && (
+        <nav aria-label="On this page" className="sticky top-[72px] z-30 border-b border-line bg-white/95 backdrop-blur">
+          <div className="container-site flex gap-6 overflow-x-auto py-3 text-sm font-semibold text-ink-soft">
+            {golfSections.map(([id, label]) => (
+              <a key={id} href={`#${id}`} className="shrink-0 hover:text-teal-deep">{label}</a>
+            ))}
+          </div>
+        </nav>
+      )}
+
       <main className="container-site grid gap-14 py-14 lg:grid-cols-[1fr_380px] lg:gap-16">
         <div className="min-w-0">
-          <section>
+          <section id="overview" className="scroll-mt-36">
             <p className="eyebrow">The trip</p>
             <h2 className="mt-2 font-serif text-3xl text-ink">Overview</h2>
             <div className="mt-5 space-y-4 text-[15px] leading-relaxed text-ink-soft">
@@ -134,7 +160,7 @@ export default function PackageDetailBody({
           )}
 
           {pkg.itinerary.length > 0 && (
-            <section className="mt-12">
+            <section id="itinerary" className="mt-12 scroll-mt-36">
               <h2 className="font-serif text-2xl text-ink">Day by day</h2>
               <ol className="mt-6 space-y-0">
                 {pkg.itinerary.map((day, i) => {
@@ -149,7 +175,7 @@ export default function PackageDetailBody({
                       <span className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-teal" />
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-deep">{day.label}</p>
                       <h3 className="mt-1 font-semibold text-ink">{day.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{day.description}</p>
+                      <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{tidy(day.description)}</p>
                       {stayNames.length > 0 && (
                         <p className="mt-2 text-xs text-ink">
                           <span className="font-bold uppercase tracking-wider text-ink-soft">Stay:</span>{' '}
@@ -187,15 +213,19 @@ export default function PackageDetailBody({
 
           {/* Golf detail */}
           {pkg.brand === 'golf' && (golfCourses.length > 0 || details.rounds) && (
-            <section className="mt-12">
+            <section id="golf" className="mt-12 scroll-mt-36">
               <h2 className="font-serif text-2xl text-ink">The golf</h2>
               <div className="mt-4 flex flex-wrap gap-x-10 gap-y-3 rounded-2xl bg-sand p-5 text-sm">
                 {(details.rounds || details.roundsNote) && (
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Rounds</p>
-                    <p className="mt-0.5 font-semibold text-ink">{details.rounds || details.roundsNote}</p>
+                    <p className="mt-0.5 font-semibold text-ink">{golf?.roundsLabel ?? details.roundsNote}</p>
                   </div>
                 )}
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Tee times</p>
+                  <p className={`mt-0.5 font-semibold ${teeTimes.tone === 'held' ? 'text-teal-deep' : 'text-ink'}`}>{teeTimes.label}</p>
+                </div>
                 {details.handicap && (
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Handicap</p>
@@ -206,6 +236,12 @@ export default function PackageDetailBody({
                   <div>
                     <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Buggies</p>
                     <p className="mt-0.5 font-semibold text-ink">{details.buggies}</p>
+                  </div>
+                )}
+                {details.caddies && !/^unknown$/i.test(String(details.caddies)) && (
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-soft">Caddies</p>
+                    <p className="mt-0.5 font-semibold text-ink">{details.caddies}</p>
                   </div>
                 )}
                 {details.clubCarriage && (
@@ -220,14 +256,12 @@ export default function PackageDetailBody({
                   {golfCourses.map((c, i) => (
                     <div key={i} className="rounded-xl border border-line p-4">
                       <h3 className="font-semibold text-ink">{c.heading}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">{c.body}</p>
+                      <p className="mt-1 text-sm leading-relaxed text-ink-soft">{tidy(c.body)}</p>
                     </div>
                   ))}
                 </div>
               )}
-              <p className="mt-4 text-xs text-ink-soft">
-                Tee times are requested and confirmed at booking — we never guarantee a tee time until the course has.
-              </p>
+              <p className="mt-4 text-xs leading-relaxed text-ink-soft">{teeTimes.detail}</p>
               {((details.nonGolfer ?? []) as string[]).length > 0 && (
                 <div className="mt-5">
                   <h3 className="font-semibold text-ink">For non-golfers</h3>
@@ -304,7 +338,7 @@ export default function PackageDetailBody({
 
           {/* When to go */}
           {((destination && destination.seasonality.best.length > 0) || pkg.seasonalNotes) && (
-            <section className="mt-12">
+            <section id="when" className="mt-12 scroll-mt-36">
               <h2 className="font-serif text-2xl text-ink">When to go</h2>
               {destination && destination.seasonality.best.length > 0 && (
                 <div className="mt-5">
@@ -325,7 +359,7 @@ export default function PackageDetailBody({
             </section>
           )}
 
-          <section className="mt-12 grid gap-8 sm:grid-cols-2">
+          <section id="included" className="mt-12 grid scroll-mt-36 gap-8 sm:grid-cols-2">
             <div className="rounded-2xl border border-teal/30 bg-teal/5 p-6">
               <h3 className="font-serif text-xl text-teal-deep">What’s included</h3>
               <ul className="mt-4 space-y-2.5 text-sm text-ink">
@@ -378,7 +412,7 @@ export default function PackageDetailBody({
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start">
+        <aside className={`lg:sticky lg:self-start ${isGolf ? 'lg:top-36' : 'lg:top-24'}`}>
           <div className="card p-7">
             {priceApproved ? (
               <div className="mb-5 border-b border-line pb-5">
@@ -399,11 +433,25 @@ export default function PackageDetailBody({
                 {priceBasis ? <p className="mt-1 text-xs font-semibold text-teal-deep">{priceBasis}</p> : null}
               </div>
             )}
+            {golf && (
+              <ul className="mb-5 space-y-1.5 border-b border-line pb-5 text-sm text-ink">
+                <li><span className="text-ink-soft">Stay:</span> {golf.stay ?? 'Hotel chosen with you'}</li>
+                <li><span className="text-ink-soft">Board:</span> {golf.board ?? 'To be agreed'}</li>
+                <li><span className="text-ink-soft">Golf:</span> {golf.roundsLabel ?? 'To be agreed'} · {teeTimes.label.toLowerCase()}</li>
+                <li><span className="text-ink-soft">Flights:</span> {golf.flights}</li>
+              </ul>
+            )}
             <h3 className="font-serif text-xl text-ink">Make this trip yours</h3>
             <p className="mb-5 mt-1.5 text-sm text-ink-soft">
               Send an enquiry and a specialist will tailor dates, rooms and price to you.
             </p>
             <EnquiryForm brand={pkg.brand} packageId={pkg.id} packageTitle={pkg.title} compact />
+            {golf && (
+              <WhatsAppLink
+                className="mt-3"
+                text={`Hello, I'm interested in ${pkg.title} (${pkg.nights} nights). My dates are: `}
+              />
+            )}
           </div>
         </aside>
       </main>

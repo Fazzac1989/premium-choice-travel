@@ -3,13 +3,32 @@ import { notFound, redirect } from 'next/navigation';
 import PackageCard from '@/components/PackageCard';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getPackagesByBrand } from '@/lib/data';
+import { getDestinations, getPackagesByBrand } from '@/lib/data';
+import GolfCatalogue from '@/components/golf/GolfCatalogue';
+import { parseGolfCriteria } from '@/lib/golf/catalogue';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = { title: 'Our trips' };
+type SearchParams = Record<string, string | string[] | undefined>;
 
-export default async function BrandPackagesPage({ params }: { params: { brand: string } }) {
+export async function generateMetadata({ params, searchParams }: { params: { brand: string }; searchParams: SearchParams }) {
+  if (getBrand(params.brand)?.key !== 'golf') return { title: 'Our trips' };
+  const short = parseGolfCriteria(searchParams).length === 'short';
+  return {
+    title: short ? 'Golf breaks of two to four nights' : 'Golf holidays from the UAE',
+    description: short
+      ? 'Short golf breaks for UAE residents: named courses, nights, rounds and board on every trip.'
+      : 'Search golf holidays by destination, nights, rounds, board, month and trip type — every trip shows where you stay and what is included.',
+  };
+}
+
+export default async function BrandPackagesPage({
+  params,
+  searchParams = {},
+}: {
+  params: { brand: string };
+  searchParams?: SearchParams;
+}) {
   const brand = getBrand(params.brand);
   if (!brand || brand.externalUrl) notFound();
   const base = brandBase(brand);
@@ -20,6 +39,19 @@ export default async function BrandPackagesPage({ params }: { params: { brand: s
   if (brand.slug === 'holidays') redirect(`${base}/holidays`);
 
   const packages = await getPackagesByBrand(brand.key);
+
+  // Golf is searched and filtered rather than read as one long list.
+  if (brand.key === 'golf') {
+    const destinations = await getDestinations();
+    return (
+      <GolfCatalogue
+        base={base}
+        packages={packages}
+        criteria={parseGolfCriteria(searchParams)}
+        seasonality={Object.fromEntries(destinations.map((d) => [d.slug, d.seasonality]))}
+      />
+    );
+  }
 
   return (
     <main>

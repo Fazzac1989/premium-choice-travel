@@ -17,13 +17,39 @@ const THANKS = 'Thank you — we’ll come back to you as quickly as we can, typ
 const TRACK = (email: string) =>
   `We have also sent  a link to sign in, so you can follow this enquiry and see any quote online.`;
 
+/**
+ * The golf form's trip brief (golfers, non-golfers, rooms, departure, budget).
+ * It goes into the enquiry's existing travellers and message fields, so the
+ * specialist sees it everywhere an enquiry is shown and no column is needed.
+ */
+function golfBrief(formData: FormData): { travellers: string; lines: string[] } {
+  const field = (k: string) => String(formData.get(k) ?? '').trim().slice(0, 120);
+  const count = (k: string) => {
+    const n = Number(field(k));
+    return Number.isFinite(n) && n > 0 ? Math.min(Math.round(n), 500) : 0;
+  };
+  const golfers = count('golfers');
+  const nonGolfers = count('non_golfers');
+  const travellers = [
+    golfers ? `${golfers} golfer${golfers === 1 ? '' : 's'}` : '',
+    nonGolfers ? `${nonGolfers} non-golfer${nonGolfers === 1 ? '' : 's'}` : '',
+  ].filter(Boolean).join(', ');
+  const lines = [
+    field('rooms') && `Rooms: ${field('rooms')}`,
+    field('departure') && `Travelling from: ${field('departure')}`,
+    field('budget') && `Budget per person: ${field('budget')}`,
+  ].filter(Boolean) as string[];
+  return { travellers, lines };
+}
+
 export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Promise<EnquiryState> {
   const name = String(formData.get('name') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
   const phone = String(formData.get('phone') ?? '').trim();
   const travelDates = String(formData.get('travel_dates') ?? '').trim();
-  const travellers = String(formData.get('travellers') ?? '').trim();
-  const message = String(formData.get('message') ?? '').trim();
+  const brief = golfBrief(formData);
+  const travellers = String(formData.get('travellers') ?? '').trim() || brief.travellers;
+  const message = [brief.lines.join('\n'), String(formData.get('message') ?? '').trim()].filter(Boolean).join('\n\n');
   const packageId = formData.get('package_id') ? Number(formData.get('package_id')) : null;
   const packageTitle = String(formData.get('package_title') ?? '').trim() || null;
   // Which of the six sites this form was on; the master site sends nothing.

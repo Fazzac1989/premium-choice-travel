@@ -29,6 +29,7 @@ export default function BrandHeader({
   logoWhite,
   isHolidays = false,
   isStaycations = false,
+  isGolf = false,
   showOffers = false,
   destinationGroups = [],
   holidayGroups = [],
@@ -40,6 +41,8 @@ export default function BrandHeader({
   logoWhite: string | null;
   isHolidays?: boolean;
   isStaycations?: boolean;
+  /** Golf is entered by geography, time available or party type. */
+  isGolf?: boolean;
   /** Offers pages exist on every brand site but Corporate. */
   showOffers?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
@@ -119,11 +122,20 @@ export default function BrandHeader({
   };
 
   const linkCls = (href: string) =>
-    `text-sm font-semibold transition-colors ${
+    `whitespace-nowrap text-sm font-semibold transition-colors ${
       isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'
     } ${rel.startsWith(href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
 
-  const links = [
+  const links = isGolf
+    ? [
+        { href: '/journeys', label: 'Golf holidays' },
+        { href: '/destinations', label: 'Destinations' },
+        { href: '/journeys?length=short', label: 'Golf breaks' },
+        { href: '/groups', label: 'Groups' },
+        ...(showOffers ? [{ href: '/offers', label: 'Offers' }] : []),
+        { href: '/enquire', label: 'Contact' },
+      ]
+    : [
     // Holidays calls them holidays, and gets a panel instead of a link when
     // there are kinds to show; the other brands still sell journeys.
     ...(isStaycations
@@ -175,7 +187,7 @@ export default function BrandHeader({
             )}
           </Link>
 
-          <nav className="hidden items-center gap-7 lg:flex">
+          <nav className={`hidden items-center lg:flex ${isGolf ? 'gap-5 xl:gap-7' : 'gap-7'}`}>
             {isHolidays && holidayGroups.length > 0 && (
               <div onMouseEnter={enterHol} onMouseLeave={leaveHol} className="relative">
                 <button
@@ -234,7 +246,7 @@ export default function BrandHeader({
                 Sign in &amp; manage booking
               </Link>
             ) : (
-              <Link href={`${base}/enquire`} className="btn-primary !px-5 !py-2.5">
+              <Link href={`${base}/enquire`} className="btn-primary whitespace-nowrap !px-5 !py-2.5">
                 Plan my trip
               </Link>
             )}
