@@ -118,9 +118,9 @@ export default function BrandHeader({
           ? []
           : [{ href: '/holidays', label: 'Holidays' }]
         : [{ href: '/journeys', label: 'Journeys' }]),
-    ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
+
     ...(showOffers ? [{ href: '/offers', label: 'Offers' }] : []),
-    { href: '/about', label: 'Our story' },
+    ...(isHolidays ? [] : [{ href: '/about', label: 'Our story' }]),
     { href: '/enquire', label: 'Contact' },
   ];
 
@@ -197,9 +197,15 @@ export default function BrandHeader({
             <a href="tel:+97144206965" className={`hidden text-sm font-semibold xl:block ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
               +971 4 420 6965
             </a>
-            <Link href={`${base}/enquire`} className="btn-primary !px-5 !py-2.5">
-              Plan my trip
-            </Link>
+            {isHolidays ? (
+              <Link href={`${base}/manage`} className="btn-primary !px-5 !py-2.5">
+                Sign in &amp; manage booking
+              </Link>
+            ) : (
+              <Link href={`${base}/enquire`} className="btn-primary !px-5 !py-2.5">
+                Plan my trip
+              </Link>
+            )}
           </nav>
 
           <button
@@ -291,18 +297,31 @@ export default function BrandHeader({
         {open && (
           <nav className="max-h-[calc(100svh-84px)] overflow-y-auto border-t border-line bg-white px-5 py-4 lg:hidden">
             {isHolidays && (
-              <Link href={`${base}/destinations`} className="block py-3 text-base font-semibold text-ink">
-                Destinations
-              </Link>
+              <>
+                {/* On desktop these two are panels, so they are not in `links`
+                    and have to be named here or the phone loses them. */}
+                <Link href={`${base}/holidays`} className="block py-3 text-base font-semibold text-ink">
+                  Holidays
+                </Link>
+                <Link href={`${base}/destinations`} className="block py-3 text-base font-semibold text-ink">
+                  Destinations
+                </Link>
+              </>
             )}
             {links.map((l) => (
               <Link key={l.href} href={`${base}${l.href}`} className="block py-3 text-base font-semibold text-ink">
                 {l.label}
               </Link>
             ))}
-            <Link href={`${base}/enquire`} className="btn-primary mt-3 w-full">
-              Plan my trip
-            </Link>
+            {isHolidays ? (
+              <Link href={`${base}/manage`} className="btn-primary mt-3 w-full">
+                Sign in &amp; manage booking
+              </Link>
+            ) : (
+              <Link href={`${base}/enquire`} className="btn-primary mt-3 w-full">
+                Plan my trip
+              </Link>
+            )}
           </nav>
         )}
       </header>
