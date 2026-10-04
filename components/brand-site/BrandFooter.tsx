@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
 
 export default function BrandFooter({
   name,
@@ -9,6 +10,7 @@ export default function BrandFooter({
   isHolidays = false,
   isStaycations = false,
   isGolf = false,
+  isCorporate = false,
   showOffers = false,
 }: {
   name: string;
@@ -18,10 +20,15 @@ export default function BrandFooter({
   isHolidays?: boolean;
   isStaycations?: boolean;
   isGolf?: boolean;
+  isCorporate?: boolean;
   showOffers?: boolean;
 }) {
   const masterUrl = 'https://premiumchoicetravel.com';
-  const links = [
+  const links = isCorporate ? [
+    ...CORPORATE_NAV.map((l) => ({ href: `${base}${l.href}`, label: l.label })),
+    { href: `${base}/about`, label: 'About' },
+    { href: `${base}${REVIEW_HREF}`, label: 'Book a programme review' },
+  ] : [
     ...(isHolidays ? [
       { href: `${base}/destinations`, label: 'Destinations' },
       { href: `${base}/inspiration`, label: 'AI Inspiration' },

@@ -16,17 +16,9 @@ import GolfHome from '@/components/golf/GolfHome';
 import { getOffers } from '@/lib/offers';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
 import { parseStaySearch } from '@/lib/staycations/stay-search';
+import CorporateHome from '@/components/corporate/CorporateHome';
 
 export const dynamic = 'force-dynamic';
-
-const CORPORATE_SERVICES = [
-  ['Corporate travel', 'Flights, hotels and ground transport for business travellers — booked, changed and supported by people who know your account.'],
-  ['Group travel', 'Conferences, team off-sites and group movements handled end to end.'],
-  ['Meetings & events', 'Venues, delegate travel and accommodation in the UAE and abroad.'],
-  ['Incentive travel', 'Reward trips people actually talk about — designed around your team.'],
-  ['Account management', 'One named contact, agreed service levels and clear reporting.'],
-  ['Out-of-hours support', 'When plans change mid-trip, your travellers reach a person who can fix it.'],
-];
 
 export default async function BrandHomePage({
   params,
@@ -50,6 +42,11 @@ export default async function BrandHomePage({
   if (brand.key === 'golf') {
     const [golfPackages, { offers }] = await Promise.all([getPackagesByBrand('golf'), getOffers({ site: 'golf' })]);
     return <GolfHome brand={brand} base={base} packages={golfPackages} offers={offers} />;
+  }
+
+  // Corporate sells a managed service, not trips.
+  if (brand.key === 'corporate') {
+    return <CorporateHome base={base} heroImage={brand.heroImage} />;
   }
 
   // Staycations sells hotels, not packages.
@@ -390,22 +387,6 @@ export default async function BrandHomePage({
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {packages.map((pkg, i) => (
                 <PackageCard key={pkg.slug} pkg={pkg} priority={i < 3} hrefBase={`${base}/journeys`} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {brand.key === 'corporate' && (
-        <section className="bg-sand py-16 sm:py-20">
-          <div className="container-site">
-            <SectionHeading eyebrow="What we do" title="Corporate travel, end to end" />
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {CORPORATE_SERVICES.map(([title, text]) => (
-                <div key={title} className="rounded-2xl border border-line bg-white p-6">
-                  <h3 className="font-serif text-xl text-ink">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{text}</p>
-                </div>
               ))}
             </div>
           </div>

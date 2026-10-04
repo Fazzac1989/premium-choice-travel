@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
 
 export type HeaderDestinationGroup = {
   region: string;
@@ -30,6 +31,7 @@ export default function BrandHeader({
   isHolidays = false,
   isStaycations = false,
   isGolf = false,
+  isCorporate = false,
   showOffers = false,
   destinationGroups = [],
   holidayGroups = [],
@@ -43,6 +45,8 @@ export default function BrandHeader({
   isStaycations?: boolean;
   /** Golf is entered by geography, time available or party type. */
   isGolf?: boolean;
+  /** Corporate sells a managed service: its own pages, and a review instead of a trip. */
+  isCorporate?: boolean;
   /** Offers pages exist on every brand site but Corporate. */
   showOffers?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
@@ -126,7 +130,9 @@ export default function BrandHeader({
       isSolid ? 'text-ink hover:text-teal-deep' : 'text-white hover:text-teal'
     } ${rel.startsWith(href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
 
-  const links = isGolf
+  const links = isCorporate
+    ? [...CORPORATE_NAV, { href: '/about', label: 'About' }]
+    : isGolf
     ? [
         { href: '/journeys', label: 'Golf holidays' },
         { href: '/destinations', label: 'Destinations' },
@@ -187,7 +193,8 @@ export default function BrandHeader({
             )}
           </Link>
 
-          <nav className={`hidden items-center lg:flex ${isGolf ? 'gap-5 xl:gap-7' : 'gap-7'}`}>
+          {/* Corporate has six pages to name, so its full menu waits for a wider screen. */}
+          <nav className={`hidden items-center ${isCorporate ? 'gap-5 xl:flex' : `lg:flex ${isGolf ? 'gap-5 xl:gap-7' : 'gap-7'}`}`}>
             {isHolidays && holidayGroups.length > 0 && (
               <div onMouseEnter={enterHol} onMouseLeave={leaveHol} className="relative">
                 <button
@@ -238,12 +245,16 @@ export default function BrandHeader({
                 {l.label}
               </Link>
             ))}
-            <a href="tel:+97144206965" className={`hidden text-sm font-semibold xl:block ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
+            <a href="tel:+97144206965" className={`hidden whitespace-nowrap text-sm font-semibold ${isCorporate ? '2xl:block' : 'xl:block'} ${isSolid ? 'text-ink-soft' : 'text-white/80'}`}>
               +971 4 420 6965
             </a>
             {isHolidays ? (
               <Link href={`${base}/manage`} className="btn-primary !px-5 !py-2.5">
                 Sign in &amp; manage booking
+              </Link>
+            ) : isCorporate ? (
+              <Link href={`${base}${REVIEW_HREF}`} className="btn-primary whitespace-nowrap !px-5 !py-2.5">
+                Book a review
               </Link>
             ) : (
               <Link href={`${base}/enquire`} className="btn-primary whitespace-nowrap !px-5 !py-2.5">
@@ -253,7 +264,7 @@ export default function BrandHeader({
           </nav>
 
           <button
-            className={`lg:hidden ${isSolid ? 'text-ink' : 'text-white'}`}
+            className={`${isCorporate ? 'xl:hidden' : 'lg:hidden'} ${isSolid ? 'text-ink' : 'text-white'}`}
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -328,7 +339,7 @@ export default function BrandHeader({
 
         {/* Mobile menu */}
         {open && (
-          <nav className="max-h-[calc(100svh-84px)] overflow-y-auto border-t border-line bg-white px-5 py-4 lg:hidden">
+          <nav className={`max-h-[calc(100svh-84px)] overflow-y-auto border-t border-line bg-white px-5 py-4 ${isCorporate ? 'xl:hidden' : 'lg:hidden'}`}>
             {isHolidays && (
               <>
                 {/* On desktop these two are panels, so they are not in `links`
@@ -354,6 +365,10 @@ export default function BrandHeader({
             {isHolidays ? (
               <Link href={`${base}/manage`} className="btn-primary mt-3 w-full">
                 Sign in &amp; manage booking
+              </Link>
+            ) : isCorporate ? (
+              <Link href={`${base}${REVIEW_HREF}`} className="btn-primary mt-3 w-full">
+                Book a programme review
               </Link>
             ) : (
               <Link href={`${base}/enquire`} className="btn-primary mt-3 w-full">

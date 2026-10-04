@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { headers } from 'next/headers';
 import { getDestinations, getPublishedPackages, getStaycationHotels, hotelSlug } from '@/lib/data';
 import { BRANDS } from '@/lib/brands';
+import { CORPORATE_NAV, REVIEW_HREF } from '@/lib/corporate/content';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,6 +52,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ...hotels.map(
           (h): Entry => ({ url: `${base}/hotels/${hotelSlug(h.name)}`, changeFrequency: 'weekly', priority: 0.8 }),
         ),
+      );
+    }
+
+    // Corporate sells a service: its pages, and the review instead of /enquire.
+    if (brand.key === 'corporate') {
+      entries.splice(2, 1, { url: `${base}${REVIEW_HREF}`, changeFrequency: 'monthly', priority: 0.9 });
+      entries.push(
+        ...CORPORATE_NAV.map((l): Entry => ({ url: `${base}${l.href}`, changeFrequency: 'monthly', priority: 0.8 })),
       );
     }
 

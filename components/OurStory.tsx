@@ -33,6 +33,23 @@ const DEFAULT_VARIANT: Variant = {
 };
 
 const VARIANTS: Record<string, Partial<Variant>> = {
+  corporate: {
+    uaeIntro: 'We know that business travel from the UAE is its own thing.',
+    uaeDetail:
+      'Your teams cover the Gulf, Europe, Asia and Africa from one hub. Weekends fall differently from your clients’, projects move at short notice, and the same trip can touch three legal entities and a client recharge. The booking is rarely the hard part — it is the approvals, the changes, the missing invoices and the credits nobody remembers.',
+    rightChoice: [
+      'The right fare — and the right conditions to change it.',
+      'The right hotel, within your policy.',
+      'The right approval, before anything is booked.',
+      'The right cost code, every time.',
+      'The right paperwork, at month-end.',
+      'And people you can actually speak to when you need help.',
+    ],
+    message: '“Our team needs to be in Riyadh on Sunday — can you sort it and charge it to the project?”',
+    remembers:
+      'Someone who remembers that your director prefers the early flight, which projects are billable to the client, who approves trips over budget, and that one airline still owes you a credit.',
+    closing: { plain: 'The best business trips aren’t just booked.', emphasis: 'They’re properly managed.' },
+  },
   staycations: {
     uaeIntro: 'We know that a weekend away in the UAE is its own thing.',
     uaeDetail:

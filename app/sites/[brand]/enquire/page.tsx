@@ -1,6 +1,8 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import EnquiryForm from '@/components/EnquiryForm';
 import { getBrand } from '@/lib/brands';
+import { brandBase } from '@/lib/brand-site';
+import { REVIEW_HREF } from '@/lib/corporate/content';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +17,8 @@ export default function BrandEnquirePage({
 }) {
   const brand = getBrand(params.brand);
   if (!brand || brand.externalUrl) notFound();
+  // Corporate does not plan trips for strangers; it starts with a programme review.
+  if (brand.key === 'corporate') redirect(`${brandBase(brand)}${REVIEW_HREF}`);
 
   // Arrived from one of the circles on the home page: name what they clicked
   // on the specialist's email, and say it back to them here so it is clearly

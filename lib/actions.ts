@@ -8,6 +8,7 @@ import { emailBrand } from '@/lib/email-brand';
 import { getAccount } from '@/lib/account';
 import { sendCustomerConfirmation } from '@/lib/email-customer';
 import { sendSignInLink } from '@/lib/sign-in-link';
+import { EMPLOYEE_BANDS, MAIN_PROBLEMS, SPEND_BANDS } from '@/lib/corporate/content';
 
 export type EnquiryState = { ok: boolean; message: string } | null;
 
@@ -42,14 +43,36 @@ function golfBrief(formData: FormData): { travellers: string; lines: string[] } 
   return { travellers, lines };
 }
 
+/**
+ * The Corporate programme-review brief (company, role, size, spend, main
+ * problem). Like the golf brief it goes into the message, so it shows wherever
+ * an enquiry does. The bands only ever take one of the form's own values.
+ */
+function corporateBrief(formData: FormData): string[] {
+  if (!formData.get('corporate')) return [];
+  const field = (k: string) => String(formData.get(k) ?? '').trim().slice(0, 120);
+  const pick = (k: string, allowed: string[]) => (allowed.includes(field(k)) ? field(k) : '');
+  return [
+    field('company') && `Company: ${field('company')}`,
+    field('role') && `Role: ${field('role')}`,
+    pick('employees', EMPLOYEE_BANDS) && `Employees: ${pick('employees', EMPLOYEE_BANDS)}`,
+    pick('travel_spend', SPEND_BANDS) && `Annual travel spend: ${pick('travel_spend', SPEND_BANDS)}`,
+    pick('main_problem', MAIN_PROBLEMS) && `Main thing to fix: ${pick('main_problem', MAIN_PROBLEMS)}`,
+  ].filter(Boolean) as string[];
+}
+
 export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Promise<EnquiryState> {
   const name = String(formData.get('name') ?? '').trim();
   const email = String(formData.get('email') ?? '').trim();
   const phone = String(formData.get('phone') ?? '').trim();
   const travelDates = String(formData.get('travel_dates') ?? '').trim();
   const brief = golfBrief(formData);
+  const corporate = corporateBrief(formData);
   const travellers = String(formData.get('travellers') ?? '').trim() || brief.travellers;
-  const message = [brief.lines.join('\n'), String(formData.get('message') ?? '').trim()].filter(Boolean).join('\n\n');
+  const message = [
+    [...corporate, ...brief.lines].join('\n'),
+    String(formData.get('message') ?? '').trim(),
+  ].filter(Boolean).join('\n\n');
   const packageId = formData.get('package_id') ? Number(formData.get('package_id')) : null;
   const packageTitle = String(formData.get('package_title') ?? '').trim() || null;
   // Which of the six sites this form was on; the master site sends nothing.
@@ -124,7 +147,9 @@ export async function submitEnquiry(_prev: EnquiryState, formData: FormData): Pr
       ['Travel dates', travelDates || null],
       ['Travellers', travellers || null],
     ],
-    caveat: 'Nothing is booked or held at this stage. We will come back to you with ideas and prices first.',
+    caveat: corporate.length
+      ? 'Someone from our corporate team will be in touch to arrange a conversation about how your business travels today. Nothing is agreed or charged at this stage.'
+      : 'Nothing is booked or held at this stage. We will come back to you with ideas and prices first.',
   });
 
   /**

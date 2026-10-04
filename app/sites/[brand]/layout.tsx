@@ -127,6 +127,7 @@ export default async function BrandSiteLayout({
         isHolidays={isHolidays}
         isStaycations={false}
         isGolf={brand.key === 'golf'}
+        isCorporate={brand.key === 'corporate'}
         showOffers={showOffers}
         destinationGroups={destinationGroups}
         holidayGroups={holidayGroups}
@@ -142,6 +143,7 @@ export default async function BrandSiteLayout({
         isHolidays={isHolidays}
         isStaycations={false}
         isGolf={brand.key === 'golf'}
+        isCorporate={brand.key === 'corporate'}
       />
     </div>
   );

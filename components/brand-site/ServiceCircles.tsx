@@ -36,12 +36,12 @@ const ICONS: Record<string, IconName> = {
   'Golf & beach combinations': 'umbrella',
   'Tailor-made golf itineraries': 'note',
   // Corporate
-  'Corporate travel management': 'briefcase',
-  'Flights & accommodation': 'plane',
-  'Group travel': 'guests',
-  'Meetings & events': 'calendar',
-  'Incentive travel': 'trips',
-  'Account management': 'user',
+  'Managed business travel': 'briefcase',
+  'Approvals & spend control': 'note',
+  'Refunds & travel credits': 'trips',
+  'Monthly reconciliation': 'calendar',
+  '24/7 traveller support': 'clock',
+  'Meetings, groups & incentives': 'guests',
 };
 
 export default function ServiceCircles({
