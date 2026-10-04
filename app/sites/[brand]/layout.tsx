@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import type { Metadata, Viewport } from 'next';
-import BrandHeader, { type HeaderDestinationGroup } from '@/components/brand-site/BrandHeader';
+import BrandHeader, {
+  type HeaderDestinationGroup,
+  type HeaderHolidayGroup,
+} from '@/components/brand-site/BrandHeader';
+import { groupsWithContent } from '@/lib/holidays/collections';
 import BrandFooter from '@/components/brand-site/BrandFooter';
 import PwaSetup from '@/components/brand-site/PwaSetup';
 import { CoastalHeader, CoastalTabBar } from '@/components/staycations/coastal/CoastalNav';
@@ -8,7 +12,7 @@ import { ChromeProvider } from '@/components/staycations/coastal/Chrome';
 import CoastalFooter from '@/components/staycations/coastal/CoastalFooter';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
-import { getDestinations } from '@/lib/data';
+import { getDestinations, getPackagesByBrand } from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,6 +88,7 @@ export default async function BrandSiteLayout({
   }
 
   let destinationGroups: HeaderDestinationGroup[] = [];
+  let holidayGroups: HeaderHolidayGroup[] = [];
   if (isHolidays) {
     const all = (await getDestinations()).filter((d) => d.region !== 'Cruise Seas');
     destinationGroups = DROPDOWN_REGIONS.map((region) => ({
@@ -94,6 +99,13 @@ export default async function BrandSiteLayout({
         .slice(0, 8)
         .map((d) => ({ slug: d.slug, name: d.name })),
     })).filter((g) => g.items.length > 0);
+
+    // Only kinds of holiday we actually have are offered in the menu.
+    const packages = await getPackagesByBrand(brand.key);
+    holidayGroups = groupsWithContent(packages).map((g) => ({
+      heading: g.heading,
+      items: g.items.map((c) => ({ slug: c.slug, title: c.title })),
+    }));
   }
 
   return (
@@ -108,6 +120,7 @@ export default async function BrandSiteLayout({
         isStaycations={false}
         showOffers={showOffers}
         destinationGroups={destinationGroups}
+        holidayGroups={holidayGroups}
       />
       {children}
       <BrandFooter

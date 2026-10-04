@@ -17,6 +17,10 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
+      // Unsplash's paid tier serves from its own host. Three destination and
+      // package photographs sit here, and a single one was enough to throw
+      // inside next/image and return a 500 for the whole destinations page.
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
       { protocol: 'https', hostname: 'images.pexels.com' },
       // hotel photographs from the trade platform's supplier content (free to show, no per-view charge)
       { protocol: 'https', hostname: 'photos.hotelbeds.com' },

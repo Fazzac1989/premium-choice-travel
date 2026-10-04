@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import PackageCard from '@/components/PackageCard';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
@@ -13,6 +13,11 @@ export default async function BrandPackagesPage({ params }: { params: { brand: s
   const brand = getBrand(params.brand);
   if (!brand || brand.externalUrl) notFound();
   const base = brandBase(brand);
+
+  // Holidays sells holidays, and sells them by kind rather than as one long
+  // list. The old address still works so nothing already linked to it breaks;
+  // individual holidays stay at /journeys/<slug> and are untouched.
+  if (brand.slug === 'holidays') redirect(`${base}/holidays`);
 
   const packages = await getPackagesByBrand(brand.key);
 

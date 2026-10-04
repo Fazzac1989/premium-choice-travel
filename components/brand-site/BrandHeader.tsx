@@ -10,6 +10,12 @@ export type HeaderDestinationGroup = {
   items: { slug: string; name: string }[];
 };
 
+/** The kinds of holiday offered in the Holidays menu. */
+export type HeaderHolidayGroup = {
+  heading: string;
+  items: { slug: string; title: string }[];
+};
+
 /**
  * Brand-website header, styled to match the master Premium Choice Travel site:
  * fixed, transparent over heroes, white with the colour logo once scrolled.
@@ -25,6 +31,7 @@ export default function BrandHeader({
   isStaycations = false,
   showOffers = false,
   destinationGroups = [],
+  holidayGroups = [],
 }: {
   base: string;
   name: string;
@@ -35,11 +42,13 @@ export default function BrandHeader({
   /** Offers pages exist on every brand site but Corporate. */
   showOffers?: boolean;
   destinationGroups?: HeaderDestinationGroup[];
+  holidayGroups?: HeaderHolidayGroup[];
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [destOpen, setDestOpen] = useState(false);
+  const [holOpen, setHolOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // As an installed app, Staycations has no front page: the logo goes to the hotels.
   const [standalone, setStandalone] = useState(false);
@@ -72,13 +81,23 @@ export default function BrandHeader({
   useEffect(() => {
     setOpen(false);
     setDestOpen(false);
+    setHolOpen(false);
   }, [pathname]);
 
-  const isSolid = !isHeroPage || scrolled || open || destOpen;
+  const isSolid = !isHeroPage || scrolled || open || destOpen || holOpen;
 
   const enterDest = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    setHolOpen(false);
     setDestOpen(true);
+  };
+  const enterHol = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setDestOpen(false);
+    setHolOpen(true);
+  };
+  const leaveHol = () => {
+    closeTimer.current = setTimeout(() => setHolOpen(false), 150);
   };
   const leaveDest = () => {
     closeTimer.current = setTimeout(() => setDestOpen(false), 150);
@@ -90,7 +109,15 @@ export default function BrandHeader({
     } ${rel.startsWith(href) ? (isSolid ? '!text-teal-deep' : '!text-teal') : ''}`;
 
   const links = [
-    ...(isStaycations ? [{ href: '/hotels', label: 'Hotels' }] : [{ href: '/journeys', label: 'Journeys' }]),
+    // Holidays calls them holidays, and gets a panel instead of a link when
+    // there are kinds to show; the other brands still sell journeys.
+    ...(isStaycations
+      ? [{ href: '/hotels', label: 'Hotels' }]
+      : isHolidays
+        ? holidayGroups.length > 0
+          ? []
+          : [{ href: '/holidays', label: 'Holidays' }]
+        : [{ href: '/journeys', label: 'Journeys' }]),
     ...(isHolidays ? [{ href: '/inspiration', label: 'AI Inspiration' }] : []),
     ...(showOffers ? [{ href: '/offers', label: 'Offers' }] : []),
     { href: '/about', label: 'Our story' },
@@ -132,6 +159,21 @@ export default function BrandHeader({
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex">
+            {isHolidays && holidayGroups.length > 0 && (
+              <div onMouseEnter={enterHol} onMouseLeave={leaveHol} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setHolOpen((v) => !v)}
+                  aria-expanded={holOpen}
+                  className={`flex items-center gap-1.5 ${linkCls('/holidays')}`}
+                >
+                  Holidays
+                  <svg width="10" height="10" viewBox="0 0 10 10" className={`transition-transform ${holOpen ? 'rotate-180' : ''}`}>
+                    <path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+            )}
             {isHolidays && (
               <div onMouseEnter={enterDest} onMouseLeave={leaveDest} className="relative">
                 <button
@@ -170,6 +212,43 @@ export default function BrandHeader({
             </svg>
           </button>
         </div>
+
+        {/* Kinds of holiday — Holidays only, and only when there are some */}
+        {isHolidays && holOpen && holidayGroups.length > 0 && (
+          <div
+            onMouseEnter={enterHol}
+            onMouseLeave={leaveHol}
+            className="hidden max-h-[70svh] overflow-y-auto border-t border-line bg-white shadow-2xl shadow-ink/20 lg:block"
+          >
+            <div className="container-site grid grid-cols-3 gap-x-10 gap-y-6 py-7">
+              {holidayGroups.map((g) => (
+                <div key={g.heading}>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-deep">{g.heading}</p>
+                  <ul className="mt-2.5 space-y-1.5">
+                    {g.items.map((c) => (
+                      <li key={c.slug}>
+                        <Link
+                          href={`${base}/holidays/${c.slug}`}
+                          className="text-sm font-medium text-ink-soft hover:text-teal-deep"
+                        >
+                          {c.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-line bg-sand">
+              <div className="container-site flex items-center justify-between py-3.5">
+                <p className="text-sm text-ink-soft">Not sure yet? Every holiday is reshaped around you.</p>
+                <Link href={`${base}/holidays`} className="text-sm font-bold text-teal-deep hover:underline">
+                  See all holidays &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Landscape destinations panel — Holidays only */}
         {isHolidays && destOpen && destinationGroups.length > 0 && (
