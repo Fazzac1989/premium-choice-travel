@@ -5,6 +5,34 @@
  * Thin Resend wrapper. Without RESEND_API_KEY everything no-ops gracefully —
  * enquiries and quotes still land in the admin, emails are simply skipped.
  */
+/**
+ * Where a message is really going.
+ *
+ * With EMAIL_REDIRECT_TO set, every message this app sends goes to that one
+ * address instead of the person it was addressed to, so a real enquiry can be
+ * walked end to end without writing to a customer. The subject says whose mail
+ * it was and the body carries a banner, because the one dangerous version of
+ * this feature is the quiet one: left on in production it would silently stop
+ * every customer email, and nothing would look wrong.
+ *
+ * It does NOT catch the sign-in link. That email is sent by Supabase, not by
+ * this app, so a test must use an address whose inbox you actually hold.
+ */
+export function redirectedRecipients(recipients: string[]): {
+  to: string[];
+  intercepted: string[] | null;
+} {
+  const inbox = (process.env.EMAIL_REDIRECT_TO ?? '').trim();
+  if (!inbox) return { to: recipients, intercepted: null };
+  return { to: [inbox], intercepted: recipients };
+}
+
+const interceptBanner = (original: string[]) =>
+  `<div style="background:#FFF4D6;border-bottom:3px solid #E8A800;padding:12px 16px;font:600 13px/1.5 system-ui,sans-serif;color:#5A4200">
+     Test delivery — EMAIL_REDIRECT_TO is set. This was addressed to
+     <strong>${original.join(', ')}</strong> and was not sent to them.
+   </div>`;
+
 export async function sendEmail({
   to,
   subject,
@@ -21,9 +49,20 @@ export async function sendEmail({
 }): Promise<{ ok: boolean; skipped?: boolean; error?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   // "a@x.com, b@y.com" → both get a copy.
-  const recipients = to.split(',').map((t) => t.trim()).filter(Boolean);
+  const addressed = to.split(',').map((t) => t.trim()).filter(Boolean);
   const from = process.env.RESEND_FROM || 'Premium Choice Travel <onboarding@resend.dev>';
+  // Nothing is sent without a key, so the redirect is decided after it: saying
+  // a message "went" somewhere when none was sent would be the wrong log line.
   if (!apiKey) return { ok: true, skipped: true };
+
+  const { to: recipients, intercepted } = redirectedRecipients(addressed);
+  if (intercepted) {
+    console.warn(
+      `[email] EMAIL_REDIRECT_TO is set — "${subject}" for ${intercepted.join(', ')} went to ${recipients[0]} instead`,
+    );
+    subject = `[TEST → ${intercepted.join(', ')}] ${subject}`;
+    html = interceptBanner(intercepted) + html;
+  }
 
   try {
     const res = await fetch('https://api.resend.com/emails', {
