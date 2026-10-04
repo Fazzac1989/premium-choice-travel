@@ -53,7 +53,13 @@ const ST_ITEMS: NavEntry[] = [
 const HOTELS_ONLY = new Set(['staycations']);
 
 const brandItems = (key: string): NavItem[] =>
-  HOTELS_ONLY.has(key)
+  key === 'corporate'
+    ? [
+        { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
+        { href: '/admin/corporate', label: 'Clients & trips' },
+        { href: `/admin/brands/${key}/enquiries`, label: 'Enquiries' },
+      ]
+    : HOTELS_ONLY.has(key)
     ? [
         { href: `/admin/brands/${key}`, label: 'Overview', exact: true },
         { href: `/admin/brands/${key}/hotels`, label: 'Hotels' },

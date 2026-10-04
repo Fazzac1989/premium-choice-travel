@@ -13,7 +13,7 @@ export default function ReviewBand({ base }: { base: string }) {
           </h2>
           <p className="mt-4 max-w-xl leading-relaxed text-white/75">
             We look at how travel is requested, approved, booked and paid for today, and show you
-            what we would change — before you commit to anything.
+            what we would change. The review is free, and you commit to nothing.
           </p>
         </div>
         <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-start">

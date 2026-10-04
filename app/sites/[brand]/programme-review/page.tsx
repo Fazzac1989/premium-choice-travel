@@ -34,7 +34,7 @@ export default function ProgrammeReviewPage({ params }: { params: { brand: strin
             Let’s look at how your business travels.
           </h1>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">
-            Tell us a little about your company. We’ll arrange a conversation, look at a sample of
+            The review is free. Tell us a little about your company. We’ll arrange a conversation, look at a sample of
             recent travel with your permission, and show you what we find.
           </p>
           <ul className="mt-8 grid gap-5">

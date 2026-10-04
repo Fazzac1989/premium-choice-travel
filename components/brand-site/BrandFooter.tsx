@@ -28,6 +28,7 @@ export default function BrandFooter({
     ...CORPORATE_NAV.map((l) => ({ href: `${base}${l.href}`, label: l.label })),
     { href: `${base}/about`, label: 'About' },
     { href: `${base}${REVIEW_HREF}`, label: 'Book a programme review' },
+    { href: `${base}/workspace`, label: 'Client login' },
   ] : [
     ...(isHolidays ? [
       { href: `${base}/destinations`, label: 'Destinations' },

@@ -195,6 +195,55 @@ export default function CorporateHome({ base, heroImage }: { base: string; heroI
         </div>
       </section>
 
+      {/* 5 · The workspace, shown with sample data that says so */}
+      <section className="border-y border-line bg-sand py-16 sm:py-20">
+        <div className="container-site grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+          <div>
+            <p className="eyebrow">The client workspace</p>
+            <h2 className="mt-3 font-serif text-3xl leading-tight text-ink sm:text-4xl">
+              Every trip, approval and invoice in one place.
+            </h2>
+            <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">
+              Travellers see their trips. Approvers approve the exact option and price. Finance sees budget, spend,
+              commitments, refunds and airline credits — each amount counted once — and downloads it for the accounts.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link href={`${base}/workspace/demo/finance`} className="btn-primary !px-6 !py-3">See the client workspace</Link>
+              <Link href={`${base}/workspace`} className="btn-outline !px-6 !py-3">Client login</Link>
+            </div>
+            <p className="mt-3 text-xs text-ink-soft">The demo uses a fictional company and invented figures.</p>
+          </div>
+          <div className="rounded-2xl border border-line bg-white p-5 shadow-xl shadow-ink/5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-ink-soft">Sample data · fictional company</p>
+            <table className="mt-4 w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-line text-[11px] uppercase tracking-[0.12em] text-ink-soft">
+                  <th className="py-2 font-bold">Cost centre</th>
+                  <th className="py-2 text-right font-bold">Spent</th>
+                  <th className="py-2 text-right font-bold">Committed</th>
+                  <th className="py-2 text-right font-bold">Remaining</th>
+                </tr>
+              </thead>
+              <tbody className="tabular-nums">
+                {[
+                  ['Project · Riyadh depot', '2,140', '12,460', '165,400'],
+                  ['Business development', '0', '0', '90,000'],
+                  ['Executive office', '19,020', '5,280', '35,700'],
+                ].map(([name, spent, committed, left]) => (
+                  <tr key={name} className="border-b border-line/70 last:border-0">
+                    <td className="py-2.5 text-ink">{name}</td>
+                    <td className="py-2.5 text-right text-ink">{spent}</td>
+                    <td className="py-2.5 text-right text-ink">{committed}</td>
+                    <td className="py-2.5 text-right font-semibold text-ink">{left}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="mt-3 text-xs text-ink-soft">AED. One trip awaiting approval: AED 3,180, shown as a forecast and not deducted.</p>
+          </div>
+        </div>
+      </section>
+
       {/* 6 · What we are accountable for */}
       <section className="bg-ink py-16 text-white sm:py-20">
         <div className="container-site">
