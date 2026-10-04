@@ -63,8 +63,11 @@ const COUNTRY_BY_SLUG: Record<string, string> = {
   'jamaica-montego-bay-golf': 'jamaica',
 };
 
-export function golfPlace(pkg: Pick<Package, 'slug' | 'destinationSlug' | 'destinationName'>) {
-  const key = COUNTRY_BY_SLUG[pkg.slug] ?? pkg.destinationSlug;
+export function golfPlace(pkg: Pick<Package, 'slug' | 'destinationSlug' | 'destinationName'> & { details?: Package['details'] }) {
+  // A row can also name its country itself (details.countrySlug), as the
+  // imported sourcing briefs do, so new trips need no entry in the map above.
+  const own = typeof pkg.details?.countrySlug === 'string' ? pkg.details.countrySlug : null;
+  const key = (own && COUNTRIES[own] ? own : null) ?? COUNTRY_BY_SLUG[pkg.slug] ?? pkg.destinationSlug;
   const known = COUNTRIES[key];
   if (known) return { countrySlug: key, ...known };
   return { countrySlug: pkg.destinationSlug, country: pkg.destinationName, region: 'Europe' as GolfRegion };
