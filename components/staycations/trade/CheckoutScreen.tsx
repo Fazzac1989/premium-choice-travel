@@ -7,7 +7,8 @@ import BookingGate from '@/components/BookingGate';
 import Icon from '@/components/staycations/coastal/Icon';
 import { signOutAccount } from '@/lib/account-actions';
 import { startStayBooking } from '@/lib/platform/checkout';
-import { cancellationLabel, datesLabel, moneyLabel, partyLabel } from '@/lib/staycations/stay-search';
+import { cancellationLabel, datesLabel, moneyLabel, partyLabel, type RateInfo } from '@/lib/staycations/stay-search';
+import RateInfoBlock from './RateInfo';
 
 /**
  * The checkout, one page as on the trade portal (founder, 2026-10-03): a trip bar with the total,
@@ -31,6 +32,8 @@ export type CheckoutQuote = {
   perNight: number;
   currency: string;
   expiresAt: string;
+  /** the deal, inclusions, pay-at-hotel charges and the hotel's important information */
+  info: RateInfo | null;
 };
 
 const EXTRAS = [
@@ -153,6 +156,7 @@ export default function CheckoutScreen({
             <p className={`mt-2 text-[14px] font-medium ${quote.refundable ? 'text-ok-ink' : 'text-sea-soft'}`}>
               {cancellationLabel(quote)}
             </p>
+            <RateInfoBlock info={quote.info} className="mt-3" />
           </section>
 
           <section className={card}>

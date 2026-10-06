@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/staycations/coastal/Icon';
 import { lockRoom } from '@/lib/staycations/search-actions';
 import { cancellationLabel, moneyLabel, type PublicRate } from '@/lib/staycations/stay-search';
+import RateInfoBlock from './RateInfo';
 
 /**
  * The hotel page's rooms and its "Your stay" panel (founder, 2026-10-03: the trade portal's
@@ -58,6 +59,11 @@ export function RoomList({ nights }: { nights: number }) {
                         <span className={`block text-[14px] ${r.refundable ? 'text-ok-ink' : 'text-sea-soft'}`}>
                           {cancellationLabel(r)}
                         </span>
+                        {(r.info?.deal || (r.info?.inclusions.length ?? 0) > 0) && (
+                          <span className="block text-[13px] text-sea-soft">
+                            {[r.info?.deal, ...(r.info?.inclusions ?? [])].filter(Boolean).join(' · ')}
+                          </span>
+                        )}
                       </span>
                       <span className="flex items-center justify-between gap-4 sm:justify-end">
                         <span className="text-end">
@@ -147,6 +153,7 @@ export function StayPanel({
           </div>
         ))}
       </dl>
+      <RateInfoBlock info={chosen.info} className="mt-4" />
       {error && (
         <p role="alert" className="mt-4 rounded-[10px] bg-err-bg px-3 py-2 text-[14px] text-err-ink">
           {error}

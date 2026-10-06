@@ -1,3 +1,4 @@
+import type { RateDetails } from '@/lib/platform/client';
 /**
  * The Staycations search, laid out like the trade portal's (founder, 2026-10-03): one pill —
  * where, check-in, how long for, guests — over every UAE hotel on the trade platform, not only
@@ -181,6 +182,35 @@ export function roomTitle(name: string): string {
   return base.charAt(0).toUpperCase() + base.slice(1);
 }
 
+/**
+ * What a rate comes with, for a customer (2026-10-06): the deal's name, what is included, the
+ * hotel's important information and what is paid at the hotel, in major units. Never what a deal
+ * took off the price.
+ */
+export type RateInfo = {
+  deal: string | null;
+  inclusions: string[];
+  notes: string[];
+  payAtHotel: { label: string; amount: number; currency: string }[];
+};
+
+const EXPONENT: Record<string, number> = { KWD: 3, BHD: 3, OMR: 3, JOD: 3 };
+
+export function toRateInfo(d: RateDetails | null | undefined): RateInfo | null {
+  if (!d) return null;
+  const info: RateInfo = {
+    deal: d.offers[0] ?? null,
+    inclusions: d.inclusions,
+    notes: d.notes,
+    payAtHotel: d.payAtHotel.map((c) => ({
+      label: c.label,
+      amount: c.amount / 10 ** (EXPONENT[c.currency] ?? 2),
+      currency: c.currency,
+    })),
+  };
+  return info.deal || info.inclusions.length || info.notes.length || info.payAtHotel.length ? info : null;
+}
+
 /** A room as a customer sees it: never the supplier, the source or how the price was built. */
 export type PublicRate = {
   offerId: string;
@@ -193,6 +223,8 @@ export type PublicRate = {
   total: number;
   perNight: number;
   currency: string;
+  /** the deal, inclusions, important information and pay-at-hotel charges; null when none */
+  info: RateInfo | null;
 };
 
 export type StayResult = {

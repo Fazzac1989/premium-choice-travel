@@ -84,6 +84,18 @@ export async function platformPdf(path: string): Promise<ArrayBuffer> {
 
 export type Money = { amount: number; currency: string };
 
+/**
+ * What a rate comes with, as the platform sends it (2026-10-06): the supplier's board wording,
+ * named offers, inclusions, important information and charges paid at the hotel (minor units).
+ */
+export type RateDetails = {
+  boardName: string | null;
+  offers: string[];
+  inclusions: string[];
+  notes: string[];
+  payAtHotel: { label: string; amount: number; currency: string }[];
+};
+
 export type PlatformOffer = {
   offerId: string;
   roomName: string;
@@ -93,6 +105,7 @@ export type PlatformOffer = {
   availabilityMode: 'allotment' | 'freesale' | 'on_request';
   price: { total: Money; perNight: Money };
   priceLockExpiresAt: string;
+  details?: RateDetails | null;
 };
 
 export type PlatformCard = {
@@ -138,6 +151,7 @@ export type PlatformQuote = {
   status: 'active' | 'expired' | 'consumed' | 'released';
   expiresAt: string;
   price: { total: Money; perNight: Money };
+  details?: RateDetails | null;
 };
 
 export type PlatformSuggestion = {

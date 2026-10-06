@@ -6,7 +6,7 @@ import { brandBase } from '@/lib/brand-site';
 import { getAccount } from '@/lib/account';
 import { boardName, getQuote, type PlatformQuote } from '@/lib/platform/client';
 import { resolveStay } from '@/lib/staycations/stay-search-server';
-import { roomTitle, staySearchQuery } from '@/lib/staycations/stay-search';
+import { roomTitle, staySearchQuery, toRateInfo } from '@/lib/staycations/stay-search';
 import { getTravellers, leadTraveller, travelDetailsOnFile } from '@/lib/travellers';
 
 export const dynamic = 'force-dynamic';
@@ -102,6 +102,7 @@ export default async function HotelBookingPage({
         perNight: quote.price.perNight.amount / 100,
         currency: quote.price.total.currency,
         expiresAt: quote.expiresAt,
+        info: toRateInfo(quote.details),
       }}
     />
   );

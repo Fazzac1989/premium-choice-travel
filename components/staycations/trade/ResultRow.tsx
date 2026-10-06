@@ -66,6 +66,9 @@ export default function ResultRow({ m, priority = false }: { m: ResultRowModel; 
             <li className="rounded-[8px] border border-sea-line px-2.5 py-1">{m.rate.roomName}</li>
             {m.dates && <li className="rounded-[8px] border border-sea-line px-2.5 py-1">{m.dates}</li>}
             <li className="rounded-[8px] border border-sea-line px-2.5 py-1">{m.rate.board}</li>
+            {m.rate.info?.deal && (
+              <li className="rounded-[8px] bg-mist px-2.5 py-1 font-medium text-ok-ink">{m.rate.info.deal}</li>
+            )}
           </ul>
         )}
         {m.rate && (

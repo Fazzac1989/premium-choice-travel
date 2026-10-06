@@ -18,6 +18,7 @@ import {
   platformIdFromSlug,
   platformSlug,
   roomTitle,
+  toRateInfo,
   type PublicRate,
   type StaySearch,
   type StayResult,
@@ -42,6 +43,7 @@ export function toPublicRate(o: PlatformOffer): PublicRate {
     total: major(o.price.total.amount),
     perNight: major(o.price.perNight.amount),
     currency: o.price.total.currency,
+    info: toRateInfo(o.details),
   };
 }
 
