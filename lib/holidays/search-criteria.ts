@@ -26,6 +26,29 @@ export const MAX_MONTHS_AHEAD = 11;
 export type HolidaySort = 'best' | 'price' | 'stars';
 
 /**
+ * What the customer is shopping for (founder, 2026-10-09, after
+ * lastminute.com).
+ *
+ * The trade platform sells hotels, flights, transfers and activities as
+ * separate things, so the site should ask which one rather than forcing every
+ * search through one package shape.
+ *
+ *  package — a flight and a hotel together, the flight quoted by a specialist
+ *  hotel   — the room alone, no flight implied or promised
+ *  flight  — seats only; offered only once the platform can price them
+ */
+export type SearchMode = 'package' | 'hotel' | 'flight';
+
+export const SEARCH_MODES: { value: SearchMode; label: string; needsOrigin: boolean }[] = [
+  { value: 'package', label: 'Flight + Hotel', needsOrigin: true },
+  { value: 'hotel', label: 'Hotels', needsOrigin: false },
+  { value: 'flight', label: 'Flights', needsOrigin: true },
+];
+
+export const isSearchMode = (v: string): v is SearchMode =>
+  v === 'package' || v === 'hotel' || v === 'flight';
+
+/**
  * The airports a UAE resident actually leaves from. Order is deliberate: it is
  * the order they are offered, not alphabetical.
  */
@@ -48,7 +71,9 @@ export function airportLabel(code: string): string {
 }
 
 export type HolidayCriteria = {
-  /** IATA of the airport they fly from. */
+  /** What they are buying. Decides which fields are asked for. */
+  mode: SearchMode;
+  /** IATA of the airport they fly from. Ignored when the mode is a hotel. */
   origin: AirportCode;
   /** What they typed, e.g. "Maldives" or "Tbilisi". '' means they have not said. */
   destination: string;
@@ -71,6 +96,7 @@ export type HolidayCriteria = {
 };
 
 export const EMPTY_HOLIDAY_CRITERIA: HolidayCriteria = {
+  mode: 'package',
   origin: 'DXB',
   destination: '',
   cityCode: '',
@@ -137,11 +163,13 @@ const one = (p: Params, key: string) =>
   (Array.isArray(p[key]) ? (p[key] as string[])[0] : (p[key] as string | undefined)) ?? '';
 
 export function parseHolidayCriteria(params: Params): HolidayCriteria {
+  const mode = one(params, 'mode');
   const origin = one(params, 'from').toUpperCase();
   const departDate = one(params, 'depart');
   const childCount = clampInt(one(params, 'children'), 0, MAX_CHILDREN, 0);
   const sort = one(params, 'sort') as HolidaySort;
   return {
+    mode: isSearchMode(mode) ? mode : 'package',
     origin: isAirport(origin) ? origin : 'DXB',
     destination: one(params, 'to').slice(0, 80).trim(),
     cityCode: one(params, 'city').slice(0, 20).trim(),
@@ -159,7 +187,9 @@ export function parseHolidayCriteria(params: Params): HolidayCriteria {
 
 export function holidayQuery(c: Partial<HolidayCriteria>, extra: Record<string, string> = {}): string {
   const p = new URLSearchParams();
-  if (c.origin) p.set('from', c.origin);
+  if (c.mode && c.mode !== 'package') p.set('mode', c.mode);
+  // A hotel search has no departure airport to carry.
+  if (c.origin && c.mode !== 'hotel') p.set('from', c.origin);
   if (c.destination) p.set('to', c.destination);
   if (c.cityCode) p.set('city', c.cityCode);
   if (c.departDate) p.set('depart', c.departDate);

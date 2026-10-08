@@ -152,7 +152,9 @@ export default function HolidayResults({
         </p>
       </header>
 
-      {!page.flights.available && (page.results.length > 0 || searching) ? (
+      {/* A hotel-only search is not waiting on a flight, so it is not told
+          about one. The notice belongs to a package search alone. */}
+      {criteria.mode !== 'hotel' && !page.flights.available && (page.results.length > 0 || searching) ? (
         <div className="mb-6 rounded-xl border-l-4 border-teal-deep bg-teal/5 px-5 py-4">
           <p className="text-sm font-semibold text-ink">Prices below are for the hotel only</p>
           <p className="mt-1 text-sm text-ink-soft">

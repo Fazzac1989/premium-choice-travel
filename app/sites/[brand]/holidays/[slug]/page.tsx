@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import PackageCard from '@/components/PackageCard';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
+import { availableModes } from '@/lib/holidays/modes';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations, getPackagesByBrand } from '@/lib/data';
@@ -80,6 +81,7 @@ export default async function HolidayCollectionPage({
           <HolidaySearchPanel
             suggestions={destinations.map((d) => ({ name: d.name, region: d.region }))}
             action={`${base}/search`}
+            modes={availableModes()}
             compact
           />
         </div>

@@ -216,23 +216,27 @@
 }
 
 /* ── Premium Choice Holidays ────────────────────────────────────────────
-   A package-holiday site, not a tour operator's brochure (founder,
-   2026-10-04). The channel tokens are restated so every existing component
-   follows without being touched, exactly as Coastal Calm does for
-   Staycations. Red carries every action, sun-yellow carries every price,
-   and the serif is retired: one face at many weights.                    */
+   An online travel agent, not a tour operator's brochure (founder,
+   2026-10-09, after lastminute.com; the Jet2 pass before it got the shape
+   right and the palette is the part that moved). The channel tokens are
+   restated so every existing component follows without being touched,
+   exactly as Coastal Calm does for Staycations.
+
+   Magenta carries every action, plum is the ground under a headline, and
+   the serif stays retired: one face at many weights. The values are
+   sampled from lastminute.com rather than guessed at.                    */
 @layer base {
   .holidays {
-    --c-ink: 22 32 42; /* slate       #16202A */
-    --c-ink-soft: 85 99 111; /* slate-soft  #55636F */
-    --c-teal: 224 48 30; /* flame       #E0301E */
-    --c-teal-deep: 224 48 30; /* flame       — the action colour */
-    --c-teal-hover: 184 36 20; /* flame-deep  #B82414 */
-    --c-sand: 243 245 247; /* cloud       #F3F5F7 */
-    --c-line: 227 231 235; /* cloud-line  #E3E7EB */
+    --c-ink: 30 0 35; /* aubergine   #1E0023 */
+    --c-ink-soft: 114 110 115; /* mute        #726E73 */
+    --c-teal: 242 0 125; /* magenta     #F2007D */
+    --c-teal-deep: 242 0 125; /* magenta     — the action colour */
+    --c-teal-hover: 201 0 106; /* magenta-deep #C9006A */
+    --c-sand: 247 245 248; /* haze        #F7F5F8 */
+    --c-line: 230 225 232; /* haze-line   #E6E1E8 */
   }
   .holidays ::selection {
-    @apply bg-sun text-slate;
+    @apply bg-magenta text-white;
   }
 }
 

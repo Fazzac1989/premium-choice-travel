@@ -41,19 +41,34 @@ const config: Config = {
       'err-bg': '#FCECE9',
       'err-ink': '#A43C31',
 
-      // ── Premium Choice Holidays — package-holiday palette ───────
-      // Additive: only the Holidays brand uses these. Red carries the
-      // action, sun carries the price, and nothing else competes.
-      flame: '#E0301E',
-      'flame-deep': '#B82414',
-      'flame-wash': '#FDEEEC',
+      // ── Premium Choice Holidays — online travel agent palette ───
+      // Additive: only the Holidays brand uses these. Magenta carries the
+      // action, plum is the ground under a headline, and nothing competes.
+      // Sampled from lastminute.com (founder, 2026-10-09).
+      magenta: '#F2007D',
+      'magenta-deep': '#C9006A',
+      'magenta-wash': '#FFF0F7',
+      plum: '#3B0033',
+      'plum-deep': '#1E0023',
+      aubergine: '#1E0023',
+      'aubergine-soft': '#726E73',
+      haze: '#F7F5F8',
+      'haze-line': '#E6E1E8',
+      'deal-bg': '#E8F5EC',
+      'deal-ink': '#1C7A3E',
+      // Kept: the Jet2 pass left these on components across the brand, and
+      // renaming every use in one go would be churn for no visible gain.
+      // They are now aliases of the current palette, not a second scheme.
+      flame: '#F2007D',
+      'flame-deep': '#C9006A',
+      'flame-wash': '#FFF0F7',
       sun: '#FFC72C',
       'sun-deep': '#E8A800',
       'sun-wash': '#FFF7E3',
-      slate: '#16202A',
-      'slate-soft': '#55636F',
-      cloud: '#F3F5F7',
-      'cloud-line': '#E3E7EB',
+      slate: '#1E0023',
+      'slate-soft': '#726E73',
+      cloud: '#F7F5F8',
+      'cloud-line': '#E6E1E8',
       // ── Premium Choice Golf Holidays — the golf brand kit ───────
       // Navy is the wordmark, teal the kit's accent; fairway is that teal
       // deepened until white text on it passes AA, and carries every action.
@@ -65,8 +80,6 @@ const config: Config = {
       'fairway-wash': '#E7F5F3',
       'golf-mist': '#F3F6F7',
       'golf-line': '#E1E7EA',
-      'deal-bg': '#E8F5EC',
-      'deal-ink': '#1C7A3E',
     },
     fontFamily: {
       sans: ['var(--font-archivo)', 'sans-serif'],
