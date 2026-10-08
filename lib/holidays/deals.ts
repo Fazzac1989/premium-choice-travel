@@ -33,7 +33,7 @@ const TTL_SECONDS = 6 * 60 * 60;
  * because the key had not moved and the old entry was still good. Bump this
  * whenever ROUTES or the selection rules change.
  */
-const RECIPE = 'v3-routes-trimmed';
+const RECIPE = 'v4-45s';
 
 /** How far out to look. Far enough to be bookable, near enough to feel real. */
 const LEAD_DAYS = 45;
@@ -135,8 +135,13 @@ async function buildDeals(departDate: string): Promise<Deal[]> {
          * took over 10 s", 2026-10-03); an earlier 9 s here returned one route
          * out of eight. The cost of waiting falls on a six-hourly refresh, not
          * on each visitor, and the grid streams so nothing else is held up.
+         *
+         * Raised again after 25 s still missed Georgia: the results page reaches
+         * the same hotel by polling for longer, so the search settles slowly
+         * rather than returning nothing. Only the first request after the cache
+         * expires waits — the rest are served the stored grid while it refreshes.
          */
-        waitMs: 25_000,
+        waitMs: 45_000,
       });
       const chosen = pick(res.cards ?? []);
       if (!chosen) return null;
