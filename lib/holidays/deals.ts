@@ -24,6 +24,17 @@ import { addDays, todayInDubai, ymd } from './search-criteria';
 /** How long a built grid stands before the next visitor pays for a refresh. */
 const TTL_SECONDS = 6 * 60 * 60;
 
+/**
+ * Part of the cache key, so changing how a deal is chosen takes effect now
+ * rather than in six hours.
+ *
+ * The data cache outlives a deployment. The first version of this grid shipped
+ * a fix for picking guesthouses and went on serving the guesthouse anyway,
+ * because the key had not moved and the old entry was still good. Bump this
+ * whenever ROUTES or the selection rules change.
+ */
+const RECIPE = 'v2-4star-25s';
+
 /** How far out to look. Far enough to be bookable, near enough to feel real. */
 const LEAD_DAYS = 45;
 
@@ -156,7 +167,7 @@ async function buildDeals(departDate: string): Promise<Deal[]> {
  */
 export async function holidayDeals(): Promise<{ deals: Deal[]; departDate: string }> {
   const departDate = addDays(ymd(todayInDubai()), LEAD_DAYS);
-  const cached = unstable_cache(() => buildDeals(departDate), ['holiday-deals', departDate], {
+  const cached = unstable_cache(() => buildDeals(departDate), ['holiday-deals', RECIPE, departDate], {
     revalidate: TTL_SECONDS,
     tags: ['holiday-deals'],
   });
