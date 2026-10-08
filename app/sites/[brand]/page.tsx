@@ -23,6 +23,15 @@ import CorporateHome from '@/components/corporate/CorporateHome';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * The deal grid asks four suppliers and they settle slowly, so this page
+ * needs longer than Vercel's default before it is cut off. Without it a wait
+ * set in lib/holidays/deals never gets the chance to apply: the function dies
+ * first and the grid arrives empty. Other long pages here do the same —
+ * imports take 120, booking requests 90.
+ */
+export const maxDuration = 60;
+
 export default async function BrandHomePage({
   params,
   searchParams,

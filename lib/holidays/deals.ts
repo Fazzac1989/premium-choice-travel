@@ -33,7 +33,7 @@ const TTL_SECONDS = 6 * 60 * 60;
  * because the key had not moved and the old entry was still good. Bump this
  * whenever ROUTES or the selection rules change.
  */
-const RECIPE = 'v4-45s';
+const RECIPE = 'v5-40s-maxduration';
 
 /** How far out to look. Far enough to be bookable, near enough to feel real. */
 const LEAD_DAYS = 45;
@@ -140,8 +140,12 @@ async function buildDeals(departDate: string): Promise<Deal[]> {
          * the same hotel by polling for longer, so the search settles slowly
          * rather than returning nothing. Only the first request after the cache
          * expires waits — the rest are served the stored grid while it refreshes.
+         *
+         * Kept under the page maxDuration of 60 s. Raising this without raising
+         * that is pointless: Vercel kills the function first and the grid comes
+         * back empty, which is what the 25 s and 45 s attempts both did.
          */
-        waitMs: 45_000,
+        waitMs: 40_000,
       });
       const chosen = pick(res.cards ?? []);
       if (!chosen) return null;
