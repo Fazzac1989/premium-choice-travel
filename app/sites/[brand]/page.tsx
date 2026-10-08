@@ -40,8 +40,13 @@ export default async function BrandHomePage({
 
   // Golf is entered by trip type, time available, party and place.
   if (brand.key === 'golf') {
-    const [golfPackages, { offers }] = await Promise.all([getPackagesByBrand('golf'), getOffers({ site: 'golf' })]);
-    return <GolfHome brand={brand} base={base} packages={golfPackages} offers={offers} />;
+    const [golfPackages, { offers }, destinations] = await Promise.all([
+      getPackagesByBrand('golf'),
+      getOffers({ site: 'golf' }),
+      getDestinations(),
+    ]);
+    const seasonality = Object.fromEntries(destinations.map((d) => [d.slug, d.seasonality]));
+    return <GolfHome brand={brand} base={base} packages={golfPackages} offers={offers} seasonality={seasonality} />;
   }
 
   // Corporate sells a managed service, not trips.

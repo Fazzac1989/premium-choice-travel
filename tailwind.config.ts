@@ -54,6 +54,17 @@ const config: Config = {
       'slate-soft': '#55636F',
       cloud: '#F3F5F7',
       'cloud-line': '#E3E7EB',
+      // ── Premium Choice Golf Holidays — the golf brand kit ───────
+      // Navy is the wordmark, teal the kit's accent; fairway is that teal
+      // deepened until white text on it passes AA, and carries every action.
+      'golf-navy': '#17232D',
+      'golf-navy-soft': '#2B3B48',
+      'golf-teal': '#19BAAB',
+      fairway: '#0E7A70',
+      'fairway-deep': '#0A5F57',
+      'fairway-wash': '#E7F5F3',
+      'golf-mist': '#F3F6F7',
+      'golf-line': '#E1E7EA',
       'deal-bg': '#E8F5EC',
       'deal-ink': '#1C7A3E',
     },

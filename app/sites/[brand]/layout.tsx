@@ -1,3 +1,7 @@
+import { Suspense } from 'react';
+import GolfHeader from '@/components/golf/GolfHeader';
+import GolfFooter from '@/components/golf/GolfFooter';
+import { golfGeography } from '@/lib/golf/catalogue';
 import { notFound } from 'next/navigation';
 import type { Metadata, Viewport } from 'next';
 import BrandHeader, {
@@ -88,6 +92,21 @@ export default async function BrandSiteLayout({
     );
   }
 
+  // ── Golf: its own catalogue chrome ────────────────────────────
+  if (brand.key === 'golf') {
+    const countries = golfGeography(await getPackagesByBrand('golf')).flatMap((g) => g.countries);
+    return (
+      <div className="golf min-h-screen bg-white">
+        {/* The header reads the query string (which nav item is current). */}
+        <Suspense fallback={<div className="h-[68px] border-b border-golf-line bg-white lg:h-[113px]" />}>
+          <GolfHeader base={base} logo={brand.logo} name={brand.name} />
+        </Suspense>
+        {children}
+        <GolfFooter base={base} name={brand.name} logoWhite={brand.logoWhite} countries={countries} />
+      </div>
+    );
+  }
+
   let destinationGroups: HeaderDestinationGroup[] = [];
   let holidayGroups: HeaderHolidayGroup[] = [];
   let offerGroups: HeaderHolidayGroup[] = [];
@@ -126,7 +145,7 @@ export default async function BrandSiteLayout({
         logoWhite={brand.logoWhite}
         isHolidays={isHolidays}
         isStaycations={false}
-        isGolf={brand.key === 'golf'}
+        isGolf={false}
         isCorporate={brand.key === 'corporate'}
         showOffers={showOffers}
         destinationGroups={destinationGroups}
@@ -142,7 +161,7 @@ export default async function BrandSiteLayout({
         base={base}
         isHolidays={isHolidays}
         isStaycations={false}
-        isGolf={brand.key === 'golf'}
+        isGolf={false}
         isCorporate={brand.key === 'corporate'}
       />
     </div>

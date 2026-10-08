@@ -159,3 +159,17 @@ describe('access wording', () => {
     );
   });
 });
+
+describe('golf sort', () => {
+  it('orders by nights, and never ranks an unpriced trip as cheapest', async () => {
+    const { sortGolf } = await import('@/lib/golf/catalogue');
+    const nights = sortGolf(all, 'nights').map((p) => p.nights);
+    expect(nights).toEqual([...nights].sort((a, b) => a - b));
+    const priced = [
+      asPackage(seeds[0], { priceFrom: null }),
+      asPackage(seeds[1], { priceFrom: 9000, priceStatus: 'approved' }),
+      asPackage(seeds[2], { priceFrom: 4000, priceStatus: 'approved' }),
+    ];
+    expect(sortGolf(priced, 'price').map((p) => p.slug)).toEqual([seeds[2].slug, seeds[1].slug, seeds[0].slug]);
+  });
+});

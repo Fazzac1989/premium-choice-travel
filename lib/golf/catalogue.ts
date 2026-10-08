@@ -63,6 +63,11 @@ const COUNTRY_BY_SLUG: Record<string, string> = {
   'jamaica-montego-bay-golf': 'jamaica',
 };
 
+/** The display name of a golf country key, e.g. "northern-ireland" → "Northern Ireland". */
+export function countryLabel(slug: string): string | null {
+  return COUNTRIES[slug]?.country ?? null;
+}
+
 export function golfPlace(pkg: Pick<Package, 'slug' | 'destinationSlug' | 'destinationName'> & { details?: Package['details'] }) {
   // A row can also name its country itself (details.countrySlug), as the
   // imported sourcing briefs do, so new trips need no entry in the map above.
@@ -237,6 +242,8 @@ export type GolfCriteria = {
   month: string;
   budget: string;
   group: boolean;
+  /** Result order; not a filter, so never counted as one. */
+  sort: string;
 };
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v ?? '').trim();
@@ -253,6 +260,7 @@ export function parseGolfCriteria(sp: Record<string, string | string[] | undefin
     month: one(sp.month),
     budget: one(sp.budget),
     group: one(sp.group) === '1',
+    sort: one(sp.sort),
   };
 }
 
@@ -275,6 +283,36 @@ function searchText(pkg: Package, f: GolfFacts) {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '');
+}
+
+export const GOLF_SORTS = [
+  { key: '', label: 'Recommended' },
+  { key: 'nights', label: 'Shortest first' },
+  { key: 'nights-desc', label: 'Longest first' },
+  { key: 'rounds', label: 'Most golf' },
+  { key: 'price', label: 'Price, low to high' },
+];
+
+/**
+ * Result order. Recommended keeps featured trips first, as the admin set
+ * them. Price order puts trips without an approved price last rather than
+ * pretending they are cheapest.
+ */
+export function sortGolf(packages: Package[], sort: string): Package[] {
+  const list = [...packages];
+  const rounds = (p: Package) => (typeof p.details?.rounds === 'number' ? p.details.rounds : 0);
+  switch (sort) {
+    case 'nights':
+      return list.sort((a, b) => a.nights - b.nights);
+    case 'nights-desc':
+      return list.sort((a, b) => b.nights - a.nights);
+    case 'rounds':
+      return list.sort((a, b) => rounds(b) - rounds(a));
+    case 'price':
+      return list.sort((a, b) => (approvedPrice(a) ?? Infinity) - (approvedPrice(b) ?? Infinity));
+    default:
+      return list.sort((a, b) => Number(b.featured) - Number(a.featured));
+  }
 }
 
 export function filterGolf(

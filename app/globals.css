@@ -293,6 +293,68 @@
   }
 }
 
+/* ── Premium Choice Golf Holidays ───────────────────────────────────────
+   A golf-travel catalogue in the manner of the big golf operators (founder,
+   2026-10-09): white chrome, one sans face, a bold navy band for search,
+   photo tiles and deal cards. The colours are the golf brand kit's own —
+   navy wordmark, teal accent — never another operator's. Tokens are
+   restated so shared components follow, as .holidays and .coastal do.   */
+@layer base {
+  .golf {
+    --c-ink: 23 35 45; /* golf-navy      #17232D */
+    --c-ink-soft: 84 99 110; /*            #54636E */
+    --c-teal: 14 122 112; /* fairway        #0E7A70 — the action colour */
+    --c-teal-deep: 14 122 112;
+    --c-teal-hover: 10 95 87; /* fairway-deep #0A5F57 */
+    --c-sand: 243 246 247; /* golf-mist      #F3F6F7 */
+    --c-line: 225 231 234; /* golf-line      #E1E7EA */
+  }
+  .golf ::selection {
+    @apply bg-golf-teal/30 text-golf-navy;
+  }
+}
+
+@layer components {
+  .golf {
+    @apply font-holiday;
+  }
+  .golf .font-serif {
+    @apply font-holiday font-extrabold tracking-[-0.015em];
+  }
+  .golf .eyebrow {
+    @apply font-bold tracking-[0.14em] text-fairway;
+  }
+  .golf .btn-primary {
+    @apply rounded-full bg-fairway font-bold hover:bg-fairway-deep;
+  }
+  .golf .btn-outline {
+    @apply rounded-full font-bold;
+  }
+  .golf .btn-outline:hover {
+    @apply border-fairway text-fairway;
+  }
+  .golf .field {
+    @apply rounded-lg focus:border-fairway;
+  }
+  .golf .card {
+    @apply rounded-xl border-golf-line shadow-[0_1px_4px_rgba(23,35,45,0.08)];
+  }
+  .golf .bg-ink {
+    @apply bg-golf-navy;
+  }
+  .golf .bg-ink a.text-teal,
+  .golf .bg-ink a.text-teal-deep,
+  .golf .bg-ink .text-teal,
+  .golf .bg-ink .text-teal-deep {
+    @apply text-golf-teal;
+  }
+}
+
+.golf :focus-visible {
+  outline: 2px solid #0e7a70;
+  outline-offset: 2px;
+}
+
 .coastal :focus-visible {
   outline: 2px solid #164b57;
   outline-offset: 2px;

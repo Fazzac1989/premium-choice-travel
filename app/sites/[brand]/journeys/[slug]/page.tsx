@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import PackageDetailBody from '@/components/PackageDetailBody';
+import GolfTrip from '@/components/golf/GolfTrip';
 import { brandSiteUrl, getBrand } from '@/lib/brands';
 import { golfFacts } from '@/lib/golf/catalogue';
 import { brandBase } from '@/lib/brand-site';
@@ -54,7 +55,11 @@ export default async function BrandPackagePage({
     pkg.destinationSlug ? getDestination(pkg.destinationSlug) : Promise.resolve(null),
   ]);
   // Brand sites stay inside their own brand for suggestions.
-  const related = relatedAll.filter((p) => p.brand === brand.key).slice(0, 3);
+  const related = relatedAll.filter((p) => p.brand === brand.key).slice(0, brand.key === 'golf' ? 4 : 3);
+
+  if (brand.key === 'golf') {
+    return <GolfTrip pkg={pkg} base={base} related={related} hotels={stays.hotels} destination={destination} />;
+  }
 
   return (
     <>
@@ -63,9 +68,7 @@ export default async function BrandPackagePage({
         <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/25 to-ink/30" />
         <div className="container-site relative pb-12 pt-36 text-white">
           <p className="eyebrow !text-teal">
-            {brand.key === 'golf'
-              ? `${golfFacts(pkg).country} · ${golfFacts(pkg).tripTypeLabel}`
-              : `${pkg.destinationName} · ${pkg.category}`}
+            {pkg.destinationName} · {pkg.category}
           </p>
           <h1 className="mt-3 max-w-3xl font-serif text-4xl leading-tight sm:text-6xl">{pkg.title}</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/85">{pkg.tagline}</p>

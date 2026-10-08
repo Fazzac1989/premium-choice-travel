@@ -97,6 +97,8 @@ export default function GolfFilters({
         </select>
         <input type="hidden" name="region" defaultValue={criteria.region} />
         <input type="hidden" name="country" defaultValue={criteria.country} />
+        {/* Filtering keeps the chosen order. */}
+        <input type="hidden" name="sort" defaultValue={criteria.sort} />
       </div>
 
       <Select idPrefix={idPrefix} name="type" label="Trip type" value={criteria.type} onChange={submit}

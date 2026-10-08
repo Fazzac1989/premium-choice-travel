@@ -5,7 +5,7 @@ import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations, getPackagesByBrand } from '@/lib/data';
 import GolfCatalogue from '@/components/golf/GolfCatalogue';
-import { parseGolfCriteria } from '@/lib/golf/catalogue';
+import { countryLabel, parseGolfCriteria } from '@/lib/golf/catalogue';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +13,15 @@ type SearchParams = Record<string, string | string[] | undefined>;
 
 export async function generateMetadata({ params, searchParams }: { params: { brand: string }; searchParams: SearchParams }) {
   if (getBrand(params.brand)?.key !== 'golf') return { title: 'Our trips' };
-  const short = parseGolfCriteria(searchParams).length === 'short';
+  const c = parseGolfCriteria(searchParams);
+  const short = c.length === 'short';
+  const place = countryLabel(c.country) ?? (c.region || null);
+  if (place) {
+    return {
+      title: `${place} golf holidays from the UAE`,
+      description: `Golf holidays in ${place}: named courses, nights, rounds and board on every trip, priced in AED.`,
+    };
+  }
   return {
     title: short ? 'Golf breaks of two to four nights' : 'Golf holidays from the UAE',
     description: short
