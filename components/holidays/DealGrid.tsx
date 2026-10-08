@@ -88,7 +88,11 @@ function Card({ deal, base }: { deal: Deal; base: string }) {
 
 export default async function DealGrid({ base }: { base: string }) {
   const { deals } = await holidayDeals();
-  if (!deals.length) return null;
+  // One card is not a row. Below two, the section stays away entirely rather
+  // than looking like a grid that failed to load; the search above it is the
+  // real way in, and it loses nothing by this being absent.
+  const shown = deals.slice(0, 8);
+  if (shown.length < 2) return null;
 
   return (
     <section className="bg-haze py-12">
@@ -111,8 +115,14 @@ export default async function DealGrid({ base }: { base: string }) {
           </Link>
         </div>
 
-        <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {deals.slice(0, 8).map((d) => (
+        {/* The columns follow the count. Four tracks holding two cards reads as
+            two that failed to load; two tracks holding two reads as a choice. */}
+        <ul
+          className={`mt-5 grid gap-5 sm:grid-cols-2 ${
+            shown.length >= 4 ? 'lg:grid-cols-4' : shown.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+          }`}
+        >
+          {shown.map((d) => (
             <Card key={`${d.where}-${d.hotelId}`} deal={d} base={base} />
           ))}
         </ul>

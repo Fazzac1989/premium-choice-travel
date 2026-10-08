@@ -33,27 +33,35 @@ const TTL_SECONDS = 6 * 60 * 60;
  * because the key had not moved and the old entry was still good. Bump this
  * whenever ROUTES or the selection rules change.
  */
-const RECIPE = 'v2-4star-25s';
+const RECIPE = 'v3-routes-trimmed';
 
 /** How far out to look. Far enough to be bookable, near enough to feel real. */
 const LEAD_DAYS = 45;
 
 /**
- * The routes offered. Kept short on purpose: each one is a supplier search
+ * The routes offered.
+ *
+ * Measured against the live platform on 2026-10-09: of Maldives, Phuket,
+ * Colombo, Mauritius, Seychelles, Muscat, Tbilisi and Istanbul, only the
+ * Maldives returned a hotel, and separately Georgia returned one. Everything
+ * else came back empty — the searches ran and found nothing, so this is the
+ * supplier's coverage rather than a fault here. The UAE is well served, but
+ * Dubai is home to this audience, not a holiday.
+ *
+ * Kept short on purpose: each one is a supplier search
  * every six hours, and a page of eight good cards beats a page of twenty thin
  * ones. Destinations are given as text and resolved by the platform's own
  * catalogue, so a name it does not know simply drops out rather than breaking
  * the row.
  */
 const ROUTES: { destination: string; nights: number }[] = [
+  // Answering today.
   { destination: 'Maldives', nights: 4 },
-  { destination: 'Phuket', nights: 5 },
-  { destination: 'Colombo', nights: 5 },
-  { destination: 'Mauritius', nights: 6 },
-  { destination: 'Seychelles', nights: 6 },
-  { destination: 'Muscat', nights: 3 },
-  { destination: 'Tbilisi', nights: 4 },
-  { destination: 'Istanbul', nights: 4 },
+  { destination: 'Georgia', nights: 5 },
+  // Not yet, and kept so the grid grows by itself the day they are. Two
+  // searches every six hours is a cheap price for not having to remember.
+  { destination: 'Thailand', nights: 6 },
+  { destination: 'Sri Lanka', nights: 6 },
 ];
 
 export type Deal = {
