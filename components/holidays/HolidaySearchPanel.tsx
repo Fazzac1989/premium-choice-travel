@@ -13,8 +13,10 @@ import {
   latestDepartDate,
   todayInDubai,
   ymd,
+  SEARCH_MODES,
   type AirportCode,
   type HolidayCriteria,
+  type SearchMode,
 } from '@/lib/holidays/search-criteria';
 
 /**
@@ -37,6 +39,12 @@ type Props = {
   /** The results route, e.g. "/search" — brand sites and the master site differ. */
   action?: string;
   compact?: boolean;
+  /**
+   * Which tabs to offer. Flights are only sold once the platform can price
+   * them, so the caller decides rather than this component guessing — a tab
+   * that leads nowhere is worse than one less tab.
+   */
+  modes?: SearchMode[];
 };
 
 export default function HolidaySearchPanel({
@@ -44,11 +52,13 @@ export default function HolidaySearchPanel({
   initial,
   action = '/search',
   compact = false,
+  modes = ['package', 'hotel'],
 }: Props) {
   const router = useRouter();
   const listId = useId();
   const partyRef = useRef<HTMLDivElement>(null);
 
+  const [mode, setMode] = useState<SearchMode>(initial?.mode ?? modes[0] ?? 'package');
   const [origin, setOrigin] = useState<AirportCode>(initial?.origin ?? 'DXB');
   const [destination, setDestination] = useState(initial?.destination ?? '');
   const [departDate, setDepartDate] = useState(initial?.departDate || defaultDepartDate());
@@ -92,6 +102,7 @@ export default function HolidaySearchPanel({
       return;
     }
     const query = holidayQuery({
+      mode,
       origin,
       destination: destination.trim(),
       departDate,
@@ -116,6 +127,10 @@ export default function HolidaySearchPanel({
   const label = 'block text-[10px] font-semibold uppercase tracking-[0.16em] text-ink-soft';
   const cell = 'min-w-0 rounded-xl border border-line bg-white px-4 py-3 focus-within:border-teal-deep';
 
+  // Only the modes this site can actually serve, in the order they are listed.
+  const tabs = SEARCH_MODES.filter((m) => modes.includes(m.value));
+  const needsOrigin = SEARCH_MODES.find((m) => m.value === mode)?.needsOrigin ?? true;
+
   return (
     <form
       onSubmit={submit}
@@ -123,7 +138,38 @@ export default function HolidaySearchPanel({
         compact ? '' : 'sm:rounded-3xl'
       }`}
     >
-      <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-[1.45fr_1.6fr_1.05fr_0.55fr_1.05fr_auto]">
+      {/* What are you buying? Only offered when there is more than one answer. */}
+      {tabs.length > 1 && (
+        <div role="tablist" aria-label="What to search for" className="mb-3 flex flex-wrap gap-1 px-1">
+          {tabs.map((t) => {
+            const on = t.value === mode;
+            return (
+              <button
+                key={t.value}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                onClick={() => setMode(t.value)}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
+                  on ? 'bg-teal-deep text-white' : 'text-ink-soft hover:bg-sand hover:text-ink'
+                }`}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div
+        className={`grid grid-cols-1 gap-2.5 sm:grid-cols-2 ${
+          needsOrigin
+            ? 'lg:grid-cols-[1.45fr_1.6fr_1.05fr_0.55fr_1.05fr_auto]'
+            : 'lg:grid-cols-[2fr_1.15fr_0.6fr_1.15fr_auto]'
+        }`}
+      >
+        {/* A hotel on its own has no departure airport. */}
+        {needsOrigin && (
         <div className={cell}>
           <label className={label} htmlFor={`${listId}-from`}>
             Flying from
@@ -141,10 +187,11 @@ export default function HolidaySearchPanel({
             ))}
           </select>
         </div>
+        )}
 
         <div className={`${cell} ${touched && !destination.trim() ? 'border-danger' : ''}`}>
           <label className={label} htmlFor={`${listId}-to`}>
-            Where to
+            {mode === 'hotel' ? 'Where' : 'Where to'}
           </label>
           <input
             id={`${listId}-to`}
@@ -169,7 +216,7 @@ export default function HolidaySearchPanel({
 
         <div className={cell}>
           <label className={label} htmlFor={`${listId}-depart`}>
-            Departing
+            {mode === 'hotel' ? 'Check in' : 'Departing'}
           </label>
           <input
             id={`${listId}-depart`}
@@ -201,7 +248,7 @@ export default function HolidaySearchPanel({
         </div>
 
         <div className={`${cell} relative`} ref={partyRef}>
-          <span className={label}>Travellers</span>
+          <span className={label}>{mode === 'hotel' ? 'Guests' : 'Travellers'}</span>
           <button
             type="button"
             onClick={() => setPartyOpen((v) => !v)}

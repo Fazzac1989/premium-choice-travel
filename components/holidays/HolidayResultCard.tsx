@@ -51,6 +51,9 @@ export default function HolidayResultCard({
   params: Record<string, string>;
 }) {
   const { room, flight } = result;
+  // A hotel-only search asked for a room, so its price is not "hotel only" —
+  // that phrase only means something against a package the flight is missing from.
+  const hotelOnlySearch = params.mode === 'hotel';
   const href = `/search/${result.platformHotelId}?${new URLSearchParams(params).toString()}`;
   // The deposit falls out of the date they searched, so this is their figure,
   // not a general claim. Inside three months there is no deposit to advertise.
@@ -109,7 +112,7 @@ export default function HolidayResultCard({
         <div className="flex shrink-0 flex-col justify-between gap-3 border-t border-cloud-line pt-4 sm:min-w-[190px] sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0 sm:text-right">
           <div>
             <p className="text-xs font-semibold text-slate-soft">
-              {result.flightPending ? 'Hotel only, from' : 'From'}
+              {result.flightPending && !hotelOnlySearch ? 'Hotel only, from' : 'From'}
             </p>
             <p className="text-[34px] font-black leading-none tracking-[-0.03em] text-flame tabular-nums">
               {aed.format(result.perPerson)}
@@ -129,7 +132,7 @@ export default function HolidayResultCard({
             <span className="inline-block rounded-full bg-flame px-6 py-2.5 text-sm font-bold text-white transition-colors group-hover:bg-flame-deep">
               View holiday
             </span>
-            {result.flightPending ? (
+            {result.flightPending && !hotelOnlySearch ? (
               <p className="mt-2 text-xs font-semibold text-slate-soft">Flights quoted separately</p>
             ) : null}
           </div>

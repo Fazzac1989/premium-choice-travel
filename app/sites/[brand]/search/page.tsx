@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
+import { availableModes } from '@/lib/holidays/modes';
 import HolidayResults from '@/components/holidays/HolidayResults';
 import { getBrand } from '@/lib/brands';
 import { getDestinations } from '@/lib/data';
@@ -69,7 +70,13 @@ export default async function HolidaySearchResults({
     <>
       <section className="border-b border-line bg-sand">
         <div className="container-site py-6">
-          <HolidaySearchPanel suggestions={suggestions} initial={criteria} action="/search" compact />
+          <HolidaySearchPanel
+            suggestions={suggestions}
+            initial={criteria}
+            action="/search"
+            modes={availableModes()}
+            compact
+          />
         </div>
       </section>
 

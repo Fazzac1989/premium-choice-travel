@@ -11,6 +11,7 @@ import { getDestinations, getPackagesByBrand, getStaycationHotels, hotelSlug } f
 import ExploreScreen from '@/components/staycations/coastal/ExploreScreen';
 import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
+import { availableModes } from '@/lib/holidays/modes';
 import TrustRail from '@/components/holidays/TrustRail';
 import GolfHome from '@/components/golf/GolfHome';
 import { getOffers } from '@/lib/offers';
@@ -66,14 +67,16 @@ export default async function BrandHomePage({
   if (isHolidays) {
     return (
       <>
-        {/* Hero — identical to the master site */}
+        {/* Hero. The photograph stays, but under a plum wash heavy enough to
+            carry magenta type — the brand colour is unreadable over bare
+            photography, which is what sent the last pass to yellow. */}
         <section className="relative flex min-h-[92svh] items-center">
           <HeroSlideshow />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/20 to-ink/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-plum-deep/72 via-plum/55 to-plum-deep/85" />
           <div className="container-site relative pb-16 pt-28 text-white">
-            <p className="eyebrow !text-sun">A Premium Choice Travel brand · Dubai</p>
+            <p className="eyebrow !text-white/70">A Premium Choice Travel brand · Dubai</p>
             <h1 className="mt-4 max-w-3xl font-serif text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-              Your holiday. <em className="not-italic text-sun">Your way.</em>
+              Your holiday. <em className="not-italic text-magenta">Your way.</em>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
               Flight and hotel together, from Dubai, Abu Dhabi, Sharjah and Ras Al Khaimah —
@@ -86,6 +89,7 @@ export default async function BrandHomePage({
               <HolidaySearchPanel
                 suggestions={holidayDestinations.map((d) => ({ name: d.name, region: d.region }))}
                 action={`${base}/search`}
+                modes={availableModes()}
               />
             </div>
 

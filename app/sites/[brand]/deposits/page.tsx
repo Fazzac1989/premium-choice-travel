@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
+import { availableModes } from '@/lib/holidays/modes';
 import { getBrand } from '@/lib/brands';
 import { brandBase } from '@/lib/brand-site';
 import { getDestinations } from '@/lib/data';
@@ -75,6 +76,7 @@ export default async function DepositsPage({ params }: { params: { brand: string
           <HolidaySearchPanel
             suggestions={destinations.map((d) => ({ name: d.name, region: d.region }))}
             action={`${base}/search`}
+            modes={availableModes()}
             compact
           />
         </div>
