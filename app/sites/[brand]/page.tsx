@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -13,6 +14,7 @@ import ServiceCircles from '@/components/brand-site/ServiceCircles';
 import HolidaySearchPanel from '@/components/holidays/HolidaySearchPanel';
 import { availableModes } from '@/lib/holidays/modes';
 import TrustRail from '@/components/holidays/TrustRail';
+import DealGrid, { DealGridSkeleton } from '@/components/holidays/DealGrid';
 import GolfHome from '@/components/golf/GolfHome';
 import { getOffers } from '@/lib/offers';
 import { parseCriteria } from '@/lib/staycations/search-criteria';
@@ -113,6 +115,10 @@ export default async function BrandHomePage({
         </section>
 
         <TrustRail />
+
+        <Suspense fallback={<DealGridSkeleton />}>
+          <DealGrid base={base} />
+        </Suspense>
 
         <ServiceCircles base={base} services={brand.services} heading="What kind of trip are you after?" />
 

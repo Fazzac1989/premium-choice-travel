@@ -194,7 +194,10 @@ export const boardName = (code: string) => BOARD[code] ?? code;
  * shown half the rooms.
  */
 export async function searchHotels(input: {
-  destination: { hotelId: string } | { hotelIds: string[] } | { cityCode: string };
+  // `text` is what the platform resolves against its own catalogue — the same
+  // shape startSearch takes, and what the holiday search sends. It was missing
+  // here only because nothing had asked this call for a place by name yet.
+  destination: { hotelId: string } | { hotelIds: string[] } | { cityCode: string } | { text: string };
   checkIn: string;
   checkOut: string;
   rooms: { adults: number; childAges: number[] }[];
