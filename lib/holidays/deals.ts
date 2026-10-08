@@ -71,17 +71,34 @@ const bookable = (o: PlatformOffer) => o.availabilityMode !== 'on_request';
 const monthOf = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { timeZone: 'UTC', month: 'long' });
 
-function cheapest(cards: PlatformCard[]): { card: PlatformCard; offer: PlatformOffer } | null {
-  let best: { card: PlatformCard; offer: PlatformOffer } | null = null;
-  for (const card of cards) {
-    const offers = [card.best, ...(Array.isArray(card.alternatives) ? card.alternatives : [])].filter(
-      (o): o is PlatformOffer => Boolean(o) && bookable(o),
-    );
-    for (const offer of offers) {
-      if (!best || offer.price.total.amount < best.offer.price.total.amount) best = { card, offer };
+/** Hotels worth putting on the front page. */
+const GOOD_ENOUGH = 4;
+
+/**
+ * The best-value card for a destination.
+ *
+ * Not simply the cheapest: the cheapest room in the Maldives is a guesthouse
+ * at AED 354 room-only, which is a true price and the wrong advertisement for
+ * this brand. So this takes the cheapest room in a hotel of four stars or
+ * better, and falls back to the cheapest of anything only when a destination
+ * has nothing rated — better a modest card than an empty column.
+ */
+export function pick(cards: PlatformCard[]): { card: PlatformCard; offer: PlatformOffer } | null {
+  const cheapestIn = (from: PlatformCard[]) => {
+    let best: { card: PlatformCard; offer: PlatformOffer } | null = null;
+    for (const card of from) {
+      const offers = [card.best, ...(Array.isArray(card.alternatives) ? card.alternatives : [])].filter(
+        (o): o is PlatformOffer => Boolean(o) && bookable(o),
+      );
+      for (const offer of offers) {
+        if (!best || offer.price.total.amount < best.offer.price.total.amount) best = { card, offer };
+      }
     }
-  }
-  return best;
+    return best;
+  };
+
+  const rated = cards.filter((c) => Number(c.starRating) >= GOOD_ENOUGH);
+  return cheapestIn(rated) ?? cheapestIn(cards);
 }
 
 async function buildDeals(departDate: string): Promise<Deal[]> {
@@ -93,20 +110,26 @@ async function buildDeals(departDate: string): Promise<Deal[]> {
         checkIn: departDate,
         checkOut,
         rooms: [{ adults: 2, childAges: [] }],
-        // Short: a slow supplier costs this card, never the whole grid.
-        waitMs: 9_000,
+        /**
+         * A city search genuinely takes this long. The platform repo raised
+         * its own wait to 20 s for exactly this reason ("the test environment
+         * took over 10 s", 2026-10-03); an earlier 9 s here returned one route
+         * out of eight. The cost of waiting falls on a six-hourly refresh, not
+         * on each visitor, and the grid streams so nothing else is held up.
+         */
+        waitMs: 25_000,
       });
-      const pick = cheapest(res.cards ?? []);
-      if (!pick) return null;
+      const chosen = pick(res.cards ?? []);
+      if (!chosen) return null;
 
-      const total = major(pick.offer.price.total.amount);
+      const total = major(chosen.offer.price.total.amount);
       const deal: Deal = {
         where: res.destination?.label || route.destination,
-        hotelId: pick.card.hotelId,
-        hotel: pick.card.name,
-        stars: pick.card.starRating ? Math.round(Number(pick.card.starRating)) || null : null,
-        image: pick.card.image ? sharper(pick.card.image) : null,
-        board: pick.offer.board,
+        hotelId: chosen.card.hotelId,
+        hotel: chosen.card.name,
+        stars: chosen.card.starRating ? Math.round(Number(chosen.card.starRating)) || null : null,
+        image: chosen.card.image ? sharper(chosen.card.image) : null,
+        board: chosen.offer.board,
         nights: route.nights,
         checkIn: departDate,
         when: `${route.nights} nights in ${monthOf(departDate)}`,
