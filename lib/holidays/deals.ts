@@ -33,7 +33,7 @@ const TTL_SECONDS = 6 * 60 * 60;
  * because the key had not moved and the old entry was still good. Bump this
  * whenever ROUTES or the selection rules change.
  */
-const RECIPE = 'v5-40s-maxduration';
+const RECIPE = 'v6-no-empty-cache';
 
 /** How far out to look. Far enough to be bookable, near enough to feel real. */
 const LEAD_DAYS = 45;
@@ -184,10 +184,27 @@ async function buildDeals(departDate: string): Promise<Deal[]> {
  */
 export async function holidayDeals(): Promise<{ deals: Deal[]; departDate: string }> {
   const departDate = addDays(ymd(todayInDubai()), LEAD_DAYS);
-  const cached = unstable_cache(() => buildDeals(departDate), ['holiday-deals', RECIPE, departDate], {
-    revalidate: TTL_SECONDS,
-    tags: ['holiday-deals'],
-  });
+
+  /**
+   * An empty grid is never stored.
+   *
+   * A six-hour cache will happily keep a bad afternoon: one run where the
+   * suppliers were slow returns no deals, and that nothing is then served
+   * until the entry expires, however healthy the suppliers are in the
+   * meantime. Throwing instead of returning an empty list keeps it out of the
+   * cache, so the next visitor tries again — which is the behaviour you want
+   * from something that depends on somebody else's uptime.
+   */
+  const cached = unstable_cache(
+    async () => {
+      const deals = await buildDeals(departDate);
+      if (!deals.length) throw new Error('no deals: not worth caching');
+      return deals;
+    },
+    ['holiday-deals', RECIPE, departDate],
+    { revalidate: TTL_SECONDS, tags: ['holiday-deals'] },
+  );
+
   try {
     return { deals: await cached(), departDate };
   } catch {
