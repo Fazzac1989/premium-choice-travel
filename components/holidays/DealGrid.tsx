@@ -25,12 +25,12 @@ const aed = new Intl.NumberFormat('en-AE', {
 
 export function DealGridSkeleton() {
   return (
-    <section className="bg-haze py-12">
+    <section className="bg-cloud py-12">
       <div className="container-site">
-        <div className="h-7 w-72 animate-pulse rounded bg-haze-line" />
+        <div className="h-7 w-72 animate-pulse rounded bg-cloud-line" />
         <ul className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" aria-hidden>
           {[0, 1, 2, 3].map((i) => (
-            <li key={i} className="h-72 animate-pulse rounded-2xl border border-haze-line bg-white/70" />
+            <li key={i} className="h-72 animate-pulse rounded-2xl border border-cloud-line bg-white/70" />
           ))}
         </ul>
       </div>
@@ -49,34 +49,34 @@ function Card({ deal, base }: { deal: Deal; base: string }) {
   })}`;
   return (
     <li>
-      <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-haze-line bg-white transition-shadow hover:shadow-[0_8px_24px_rgba(30,0,35,0.12)]">
-        <div className="relative aspect-[4/3] bg-haze">
+      <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-cloud-line bg-white transition-shadow hover:shadow-[0_8px_24px_rgba(22,32,42,0.12)]">
+        <div className="relative aspect-[4/3] bg-cloud">
           {deal.image ? (
             <Image src={deal.image} alt="" fill sizes="(max-width: 640px) 100vw, 300px" className="object-cover" />
           ) : null}
-          <span className="absolute left-3 top-3 rounded-md bg-aubergine/85 px-2 py-1 text-xs font-bold text-white backdrop-blur">
+          <span className="absolute left-3 top-3 rounded-md bg-slate/85 px-2 py-1 text-xs font-bold text-white backdrop-blur">
             {deal.when}
           </span>
         </div>
 
         <div className="flex flex-1 flex-col gap-1 p-4">
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-aubergine-soft">{deal.where}</p>
-          <h3 className="text-[15px] font-extrabold leading-snug text-aubergine">
-            <Link href={href} className="after:absolute after:inset-0 group-hover:text-magenta">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-soft">{deal.where}</p>
+          <h3 className="text-[15px] font-extrabold leading-snug text-slate">
+            <Link href={href} className="after:absolute after:inset-0 group-hover:text-flame">
               {deal.hotel}
             </Link>
           </h3>
-          <p className="text-xs text-aubergine-soft">
+          <p className="text-xs text-slate-soft">
             {deal.stars ? `${deal.stars}-star · ` : ''}
             {deal.board}
           </p>
 
           <div className="mt-auto pt-3">
-            <p className="text-xs text-aubergine-soft">Hotel only, from</p>
-            <p className="text-2xl font-black leading-none tracking-[-0.02em] text-magenta tabular-nums">
+            <p className="text-xs text-slate-soft">Hotel only, from</p>
+            <p className="text-2xl font-black leading-none tracking-[-0.02em] text-flame tabular-nums">
               {aed.format(deal.perPerson)}
             </p>
-            <p className="mt-0.5 text-xs text-aubergine-soft">
+            <p className="mt-0.5 text-xs text-slate-soft">
               per person &middot; {aed.format(deal.total)} total
             </p>
           </div>
@@ -95,21 +95,21 @@ export default async function DealGrid({ base }: { base: string }) {
   if (shown.length < 2) return null;
 
   return (
-    <section className="bg-haze py-12">
+    <section className="bg-cloud py-12">
       <div className="container-site">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="text-2xl font-extrabold tracking-[-0.02em] text-aubergine sm:text-3xl">
+            <h2 className="text-2xl font-extrabold tracking-[-0.02em] text-slate sm:text-3xl">
               What a week actually costs
             </h2>
-            <p className="mt-1 max-w-2xl text-sm text-aubergine-soft">
+            <p className="mt-1 max-w-2xl text-sm text-slate-soft">
               Priced by our suppliers in the last few hours, for two sharing, flying from Dubai.
               Open one and we will search your own dates.
             </p>
           </div>
           <Link
             href={`${base}/holidays`}
-            className="text-sm font-bold text-magenta underline-offset-4 hover:underline"
+            className="text-sm font-bold text-flame underline-offset-4 hover:underline"
           >
             All holidays &rarr;
           </Link>
@@ -127,7 +127,7 @@ export default async function DealGrid({ base }: { base: string }) {
           ))}
         </ul>
 
-        <p className="mt-4 text-xs text-aubergine-soft">
+        <p className="mt-4 text-xs text-slate-soft">
           Indicative prices for the dates shown, hotel only. Flights are quoted alongside by a
           specialist. What you pay is confirmed when you search your own dates.
         </p>

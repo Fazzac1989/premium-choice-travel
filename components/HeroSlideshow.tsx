@@ -3,7 +3,15 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-const SLIDES: { src: string; alt: string }[] = [
+export type HeroSlide = {
+  src: string;
+  alt: string;
+  /** CSS object-position, for photographs whose subject is off-centre. */
+  position?: string;
+};
+
+/** The master site's own set. A brand passes its own through `slides`. */
+const SLIDES: HeroSlide[] = [
   {
     src: '/images/hero/hero-1.jpg',
     alt: 'Overwater villas curving across a turquoise lagoon under a peach sunset',
@@ -24,8 +32,8 @@ const SLIDES: { src: string; alt: string }[] = [
 
 const HOLD_MS = 8000;
 
-/** Full-bleed hero slideshow: 4 images, slow crossfade, 8 seconds per image. */
-export default function HeroSlideshow() {
+/** Full-bleed hero slideshow: slow crossfade, 8 seconds per image. */
+export default function HeroSlideshow({ slides = SLIDES }: { slides?: HeroSlide[] }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -35,13 +43,13 @@ export default function HeroSlideshow() {
       setPaused(true);
       return;
     }
-    const id = setInterval(() => setActive((i) => (i + 1) % SLIDES.length), HOLD_MS);
+    const id = setInterval(() => setActive((i) => (i + 1) % slides.length), HOLD_MS);
     return () => clearInterval(id);
-  }, []);
+  }, [slides.length]);
 
   return (
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-      {SLIDES.map((slide, i) => (
+      {slides.map((slide, i) => (
         <Image
           key={slide.src}
           src={slide.src}
@@ -49,6 +57,7 @@ export default function HeroSlideshow() {
           fill
           priority={i === 0}
           sizes="100vw"
+          style={slide.position ? { objectPosition: slide.position } : undefined}
           className={`object-cover transition-opacity duration-[1500ms] ease-in-out ${
             (paused ? i === 0 : i === active) ? 'opacity-100' : 'opacity-0'
           }`}
